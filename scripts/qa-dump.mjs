@@ -1,0 +1,12 @@
+import { chromium } from "playwright";
+const browser = await chromium.launch({ headless: true });
+const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
+page.on("pageerror", e => console.log("PE", e.message));
+page.on("console", m => { if (m.type()==="error") console.log("CE", m.text().slice(0,300)); });
+await page.goto("http://127.0.0.1:8080/c/milstead", { waitUntil: "networkidle" });
+await page.waitForTimeout(2000);
+console.log("url", page.url());
+console.log(await page.locator("body").innerText());
+console.log("buttons", await page.locator("button").count());
+console.log("main buttons", await page.locator("main button").allTextContents());
+await browser.close();
