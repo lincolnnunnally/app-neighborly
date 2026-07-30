@@ -23,14 +23,30 @@ if (!databaseUrl) {
   process.exit(0);
 }
 
+// Managed Postgres (LPL Supabase pooler) often fails Node's strict TLS verify
+// even with pg `ssl: { rejectUnauthorized: false }` when the URI includes
+// sslmode=require (treated as verify-full in newer pg). Disable only for this
+// short migrate process — not for the long-lived app server.
+if (/supabase|pooler/i.test(databaseUrl)) {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+}
+
 const migrationsDir = join(dirname(fileURLToPath(import.meta.url)), "..", "migrations");
 
 async function main() {
-  // LPL Supabase (and most managed Postgres poolers) present a chain that Node
-  // rejects under strict SSL. App traffic already uses rejectUnauthorized:false
-  // for Supabase; mirror that here so deploys don't fail at migrate.
+  // Strip sslmode from URI so pg honors rejectUnauthorized:false (sslmode=require
+  // is treated as verify-full in modern pg and ignores the ssl object).
+  let connectionString = databaseUrl;
+  try {
+    const u = new URL(databaseUrl);
+    u.searchParams.delete("sslmode");
+    u.searchParams.delete("ssl");
+    connectionString = u.toString();
+  } catch {
+    connectionString = databaseUrl.replace(/[?&]sslmode=[^&]*/gi, "");
+  }
   const pool = new pg.Pool({
-    connectionString: databaseUrl,
+    connectionString,
     max: 1,
     ssl: { rejectUnauthorized: false },
   });
