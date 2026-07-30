@@ -26,10 +26,13 @@ if (!databaseUrl) {
 const migrationsDir = join(dirname(fileURLToPath(import.meta.url)), "..", "migrations");
 
 async function main() {
+  // LPL Supabase (and most managed Postgres poolers) present a chain that Node
+  // rejects under strict SSL. App traffic already uses rejectUnauthorized:false
+  // for Supabase; mirror that here so deploys don't fail at migrate.
   const pool = new pg.Pool({
     connectionString: databaseUrl,
     max: 1,
-    ssl: databaseUrl.includes("supabase") ? { rejectUnauthorized: false } : undefined,
+    ssl: { rejectUnauthorized: false },
   });
   const client = await pool.connect();
   try {
