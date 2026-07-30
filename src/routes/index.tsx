@@ -355,11 +355,20 @@ function LandingPage() {
           <div className="flex items-center gap-2 text-fg">
             <HandHeart className="h-4 w-4 text-primary" />
             <span className="font-display font-semibold">Neighborly</span>
-            <span className="text-sm text-fg-subtle">· Milstead.US first market</span>
+            <span className="text-sm text-fg-subtle">· Milstead first market · United Under God</span>
           </div>
-          <p className="text-sm text-fg-subtle">
-            Help when you can. Ask when you need. Belong where you live.
-          </p>
+          <div className="flex flex-wrap items-center gap-4 text-sm text-fg-subtle">
+            <Link to="/privacy" className="hover:text-fg">
+              Privacy
+            </Link>
+            <Link to="/terms" className="hover:text-fg">
+              Terms
+            </Link>
+            <Link to="/how-it-works" className="hover:text-fg">
+              How it works
+            </Link>
+            <span>Help when you can. Ask when you need. Belong where you live.</span>
+          </div>
         </div>
       </footer>
     </div>
