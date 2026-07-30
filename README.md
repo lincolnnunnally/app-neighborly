@@ -16,7 +16,12 @@ Community connections for neighbors — first market **Milstead**.
 
 ## Stack
 
-TanStack Start, React 19, Tailwind v4, Better Auth, Neon/PGLite.
+TanStack Start, React 19, Tailwind v4, Better Auth.
+
+**Database (ecosystem rule):** production uses the shared **LPL Supabase**
+Postgres (`DATABASE_URL`), tables in schema `neighborly`. **Neon is not used**
+for this app — Neon is for AppEngine customer databases only. Local sandbox
+preview falls back to embedded PGLite when `DATABASE_URL` is unset.
 
 ## Scripts
 

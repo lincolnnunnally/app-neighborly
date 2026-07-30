@@ -113,13 +113,19 @@ const baseURL = explicitBaseURL ?? {
 
 // Origins Better Auth accepts on credentialed POSTs (sign-up/sign-in, etc.).
 // Missing entries here surface as FORBIDDEN "Invalid origin".
+const productionOrigins = [
+  "https://neighborly.unitedundergod.org",
+  "https://app-neighborly.vercel.app",
+  "https://app-neighborly-lincolnnunnallys-projects.vercel.app",
+];
 const trustedOrigins: string[] = explicitBaseURL
-  ? [explicitBaseURL, ...LOCAL_DEV_ORIGINS]
+  ? [explicitBaseURL, ...productionOrigins, ...LOCAL_DEV_ORIGINS]
   : [
       // Host wildcards (matched against Origin's host)
       ...previewAllowedHosts,
       // Full-origin wildcards (matched against Origin)
       ...previewAllowedHosts.flatMap((host) => [`https://${host}`, `http://${host}`]),
+      ...productionOrigins,
       ...LOCAL_DEV_ORIGINS,
     ];
 
@@ -134,12 +140,24 @@ const grokAuthorizationUrl = `${issuerBase}/api/auth/oauth2/authorize`;
 const grokTokenUrl = `${issuerBase}/api/auth/oauth2/token`;
 const grokUserInfoUrl = `${issuerBase}/api/auth/oauth2/userinfo`;
 
-// Real Postgres when `DATABASE_URL` is set (deployed apps), else the app's
-// embedded PGLite (preview) via a Kysely dialect — so Better Auth persists to the
-// SAME DB as app data, including email/password users. Both use the Better Auth
-// schema from `migrations/0001_auth.sql`.
+// Real Postgres when `DATABASE_URL` is set (deployed apps → shared LPL Supabase
+// with search_path=neighborly), else the app's embedded PGLite (preview) via a
+// Kysely dialect — so Better Auth persists to the SAME DB as app data, including
+// email/password users. Both use the Better Auth schema from migrations/0001.
 const database = databaseUrl
-  ? new Pool({ connectionString: databaseUrl })
+  ? (() => {
+      const pool = new Pool({
+        connectionString: databaseUrl,
+        ssl: databaseUrl.includes("supabase")
+          ? { rejectUnauthorized: false }
+          : undefined,
+      });
+      // Shared LPL: Better Auth tables live in schema neighborly (not public).
+      pool.on("connect", (client) => {
+        void client.query("set search_path to neighborly, public");
+      });
+      return pool;
+    })()
   : { dialect: pgliteDialect(() => getPglite()), type: "postgres" as const };
 
 /** Session token cookie name — also read by the live-preview popup completion page. */

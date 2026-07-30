@@ -3,8 +3,9 @@
  * Deploy-time database migrator (node-postgres, `pg`).
  *
  * Runs during `npm run build` — on every Vercel deploy — applying pending files
- * in ../migrations to DATABASE_URL. Each file is applied in one transaction and
- * recorded in a `_migrations` table, so it runs once and is safe to re-run.
+ * in ../migrations to DATABASE_URL (production: shared LPL Supabase, neighborly
+ * schema — not Neon). Each file is applied in one transaction and recorded in
+ * `_migrations`, so it runs once and is safe to re-run.
  *
  * No DATABASE_URL (local / preview builds) -> skip; the PGLite fallback applies
  * the same files at startup instead (see src/lib/db.ts).
@@ -25,14 +26,22 @@ if (!databaseUrl) {
 const migrationsDir = join(dirname(fileURLToPath(import.meta.url)), "..", "migrations");
 
 async function main() {
-  const pool = new pg.Pool({ connectionString: databaseUrl, max: 1 });
+  const pool = new pg.Pool({
+    connectionString: databaseUrl,
+    max: 1,
+    ssl: databaseUrl.includes("supabase") ? { rejectUnauthorized: false } : undefined,
+  });
   const client = await pool.connect();
   try {
+    // Shared LPL: keep Neighborly isolated in its own schema (Better Auth tables
+    // would otherwise collide with public.user-like names across ecosystem apps).
+    await client.query("CREATE SCHEMA IF NOT EXISTS neighborly");
+    await client.query("SET search_path TO neighborly, public");
     await client.query(
-      "CREATE TABLE IF NOT EXISTS _migrations (name TEXT PRIMARY KEY, applied_at TIMESTAMPTZ NOT NULL DEFAULT now())",
+      "CREATE TABLE IF NOT EXISTS neighborly._migrations (name TEXT PRIMARY KEY, applied_at TIMESTAMPTZ NOT NULL DEFAULT now())",
     );
     const applied = new Set(
-      (await client.query("SELECT name FROM _migrations")).rows.map((r) => r.name),
+      (await client.query("SELECT name FROM neighborly._migrations")).rows.map((r) => r.name),
     );
 
     let files;
@@ -51,7 +60,7 @@ async function main() {
         await client.query("BEGIN");
         // pg's simple-query protocol runs a whole multi-statement file at once.
         await client.query(text);
-        await client.query("INSERT INTO _migrations (name) VALUES ($1)", [name]);
+        await client.query("INSERT INTO neighborly._migrations (name) VALUES ($1)", [name]);
         await client.query("COMMIT");
       } catch (err) {
         console.error(`[migrate] error applying ${name}`);

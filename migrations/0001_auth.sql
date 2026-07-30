@@ -6,9 +6,10 @@
 -- Postgres preserves the case Better Auth queries by.
 --
 -- Migrations in this folder are the single source of truth for your schema. They
--- apply to Neon during the Vercel build (`npm run build`) and to the local
--- PGLite fallback automatically on startup, so dev matches production. Applied
--- files are recorded by name in `_migrations` and NEVER run again.
+-- apply to LPL Supabase (schema neighborly) during the Vercel build
+-- (`npm run build`) and to the local PGLite fallback automatically on startup.
+-- Applied files are recorded by name in `_migrations` and NEVER run again.
+-- Do NOT point production DATABASE_URL at Neon — Neon is for customer apps.
 --
 -- Put YOUR app's schema in NEW ordered files (0002_*.sql, 0003_*.sql, …), never
 -- in this one. For app tables, prefer snake_case and give per-user tables a
