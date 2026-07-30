@@ -86,6 +86,20 @@ function toSql(run: Run): Sql {
   return sql;
 }
 
+function connectionStringForPg(url: string): string {
+  // Modern `pg` treats sslmode=require as verify-full and ignores `ssl: {
+  // rejectUnauthorized: false }`. Strip sslmode so the ssl object is honored
+  // for LPL Supabase's pooler chain.
+  try {
+    const u = new URL(url);
+    u.searchParams.delete("sslmode");
+    u.searchParams.delete("ssl");
+    return u.toString();
+  } catch {
+    return url.replace(/[?&]sslmode=[^&]*/gi, "");
+  }
+}
+
 function createPostgresSql(): Promise<Sql> {
   globalRef.__pgSqlPromise__ ??= (async () => {
     // Regular Postgres driver (node-postgres). Production: LPL Supabase pooler.
@@ -94,10 +108,9 @@ function createPostgresSql(): Promise<Sql> {
     types.setTypeParser(OID_INT8, Number);
     types.setTypeParser(OID_DATE, identity);
     types.setTypeParser(OID_INTERVAL, identity);
-    // Supabase transaction pooler (PgBouncer) needs prepare:false-compatible settings.
     const pool = new Pool({
-      connectionString: databaseUrl,
-      ssl: databaseUrl?.includes("supabase") ? { rejectUnauthorized: false } : undefined,
+      connectionString: connectionStringForPg(databaseUrl!),
+      ssl: { rejectUnauthorized: false },
       max: 4,
     });
     pool.on("connect", (client) => {

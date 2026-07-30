@@ -146,11 +146,19 @@ const grokUserInfoUrl = `${issuerBase}/api/auth/oauth2/userinfo`;
 // email/password users. Both use the Better Auth schema from migrations/0001.
 const database = databaseUrl
   ? (() => {
+      // Strip sslmode so rejectUnauthorized:false is honored (LPL Supabase).
+      let connectionString = databaseUrl;
+      try {
+        const u = new URL(databaseUrl);
+        u.searchParams.delete("sslmode");
+        u.searchParams.delete("ssl");
+        connectionString = u.toString();
+      } catch {
+        connectionString = databaseUrl.replace(/[?&]sslmode=[^&]*/gi, "");
+      }
       const pool = new Pool({
-        connectionString: databaseUrl,
-        ssl: databaseUrl.includes("supabase")
-          ? { rejectUnauthorized: false }
-          : undefined,
+        connectionString,
+        ssl: { rejectUnauthorized: false },
       });
       // Shared LPL: Better Auth tables live in schema neighborly (not public).
       pool.on("connect", (client) => {
