@@ -367,6 +367,9 @@ function LandingPage() {
             <Link to="/how-it-works" className="hover:text-fg">
               How it works
             </Link>
+            <a href="https://appengine.unitedundergod.org/help?app=neighborly" className="hover:text-fg">
+              Need help?
+            </a>
             <span>Help when you can. Ask when you need. Belong where you live.</span>
           </div>
         </div>
