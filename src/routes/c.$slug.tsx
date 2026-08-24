@@ -61,6 +61,7 @@ function CommunityPublicPage() {
   const [facilities, setFacilities] = useState<Facility[]>([]);
   const [neighbors, setNeighbors] = useState<Neighbor[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [tab, setTab] = useState("needs");
 
   const [activeNeed, setActiveNeed] = useState<Need | null>(null);
@@ -102,8 +103,13 @@ function CommunityPublicPage() {
 
   useEffect(() => {
     setLoading(true);
+    setLoadError(false);
     reload()
-      .catch(() => setCommunity(null))
+      .then(() => setLoadError(false))
+      .catch(() => {
+        setCommunity(null);
+        setLoadError(true);
+      })
       .finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug, user?.id]);
@@ -134,7 +140,14 @@ function CommunityPublicPage() {
       <div className="min-h-dvh bg-bg">
         <SiteHeader solid />
         <div className="page-shell py-16">
-          <h1 className="font-display text-2xl font-semibold">Community not found</h1>
+          <h1 className="font-display text-2xl font-semibold">
+            {loadError ? "Could not load this community" : "Community not found"}
+          </h1>
+          <p className="mt-2 text-sm text-fg-muted">
+            {loadError
+              ? "The board failed to load. Refresh, or browse other communities."
+              : "That link does not match a community on Neighborly."}
+          </p>
           <Button asChild className="mt-4">
             <Link to="/communities">Browse communities</Link>
           </Button>
@@ -233,6 +246,11 @@ function CommunityPublicPage() {
                 </p>
               </button>
             ))}
+            {needs.length === 0 && (
+              <p className="text-sm text-fg-muted">
+                No needs posted yet. Be the first — ask for a hand, or offer one.
+              </p>
+            )}
           </TabsContent>
 
           <TabsContent value="services" className="space-y-3">
@@ -256,6 +274,11 @@ function CommunityPublicPage() {
                 </p>
               </button>
             ))}
+            {services.length === 0 && (
+              <p className="text-sm text-fg-muted">
+                No services listed yet. Offer a skill when you join.
+              </p>
+            )}
           </TabsContent>
 
           <TabsContent value="events" className="space-y-3">
@@ -279,6 +302,11 @@ function CommunityPublicPage() {
                 </p>
               </button>
             ))}
+            {events.length === 0 && (
+              <p className="text-sm text-fg-muted">
+                No gatherings posted yet. Plan the first one from your hub.
+              </p>
+            )}
           </TabsContent>
 
           <TabsContent value="places" className="space-y-3">

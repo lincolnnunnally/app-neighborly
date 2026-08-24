@@ -14,9 +14,20 @@ export const Route = createFileRoute("/communities")({
 function CommunitiesPage() {
   const [communities, setCommunities] = useState<Community[]>([]);
   const [q, setQ] = useState("");
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    listCommunities().then(setCommunities).catch(() => setCommunities([]));
+    listCommunities()
+      .then((rows) => {
+        setCommunities(rows);
+        setLoadError(null);
+      })
+      .catch(() => {
+        setCommunities([]);
+        setLoadError("Could not load communities. Please refresh and try again.");
+      })
+      .finally(() => setLoaded(true));
   }, []);
 
   const filtered = communities.filter((c) => {
@@ -48,6 +59,16 @@ function CommunitiesPage() {
           placeholder="Search by name, city, or type…"
           className="max-w-md"
         />
+
+        {loadError ? (
+          <p className="text-sm text-fg-muted" role="alert">
+            {loadError}
+          </p>
+        ) : loaded && filtered.length === 0 ? (
+          <p className="text-sm text-fg-muted">
+            {q ? "No communities match that search." : "No communities yet."}
+          </p>
+        ) : null}
 
         <div className="grid gap-4 sm:grid-cols-2">
           {filtered.map((c) => (

@@ -35,18 +35,27 @@ function LandingPage() {
   const [services, setServices] = useState<Service[]>([]);
   const [events, setEvents] = useState<CommunityEvent[]>([]);
   const [demoBusy, setDemoBusy] = useState(false);
+  const [feedStatus, setFeedStatus] = useState<"loading" | "ready" | "error">("loading");
+  const [communitiesError, setCommunitiesError] = useState(false);
 
   useEffect(() => {
     listCommunities()
-      .then(setCommunities)
-      .catch(() => setCommunities([]));
+      .then((rows) => {
+        setCommunities(rows);
+        setCommunitiesError(false);
+      })
+      .catch(() => {
+        setCommunities([]);
+        setCommunitiesError(true);
+      });
     getCommunityFeed({ data: { slug: "milstead" } })
       .then((f) => {
         setNeeds(f.needs.slice(0, 3));
         setServices(f.services.slice(0, 2));
         setEvents(f.events.slice(0, 2));
+        setFeedStatus("ready");
       })
-      .catch(() => undefined);
+      .catch(() => setFeedStatus("error"));
   }, []);
 
   const milstead = communities.find((c) => c.slug === "milstead");
@@ -121,7 +130,11 @@ function LandingPage() {
                 {milstead?.name ?? "Milstead"} right now
               </CardTitle>
               <CardDescription>
-                Live from the board — tap any row to open the community.
+                {feedStatus === "error"
+                  ? "The live board could not load."
+                  : needs[0] || services[0] || events[0]
+                    ? "Live from the board — tap any row to open the community."
+                    : "Milstead is live. The first real posts will show here."}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -176,8 +189,18 @@ function LandingPage() {
                   </span>
                 </Link>
               )}
-              {!needs[0] && (
+              {feedStatus === "loading" && !needs[0] && !services[0] && !events[0] && (
                 <div className="h-24 animate-pulse rounded-[var(--radius-lg)] bg-bg-subtle" />
+              )}
+              {feedStatus === "error" && (
+                <p className="text-sm text-fg-muted">
+                  Could not load the Milstead board. Open the full board to try again.
+                </p>
+              )}
+              {feedStatus === "ready" && !needs[0] && !services[0] && !events[0] && (
+                <p className="text-sm text-fg-muted">
+                  No posts yet — be the first neighbor to ask, offer, or gather.
+                </p>
               )}
               <Button asChild variant="soft" className="w-full">
                 <Link to="/c/$slug" params={{ slug: "milstead" }}>
@@ -328,6 +351,11 @@ function LandingPage() {
             <Link to="/communities">See all</Link>
           </Button>
         </div>
+        {communitiesError ? (
+          <p className="text-sm text-fg-muted" role="alert">
+            Could not load communities. Refresh the page, or open Milstead directly.
+          </p>
+        ) : null}
         <div className="grid gap-4 sm:grid-cols-2">
           {communities.map((c) => (
             <Link
