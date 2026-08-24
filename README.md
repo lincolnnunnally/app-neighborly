@@ -12,9 +12,10 @@ Community connections for neighbors — first market **Milstead**.
 ## Production hosts
 
 - https://neighborly.unitedundergod.org — product home
+- https://community.unitedundergod.org — Community Connections label; this app is canonical (the old Next prototype is parked)
 - In-app Milstead board: `/c/milstead`
 
-`milstead.unitedundergod.org` is **not** Neighborly (that host currently serves ChurchConnect). Do not send Neighborly users there.
+`milstead.unitedundergod.org` is **not** Neighborly (that host currently serves ChurchConnect). Do not send Neighborly users there. Do not steal that host.
 
 ## Stack
 
