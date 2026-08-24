@@ -104,7 +104,14 @@ const LOCAL_DEV_ORIGINS: string[] = [
 const baseURL = explicitBaseURL ?? {
   // Include loopback hosts so dynamic baseURL resolves for local email/password
   // (not only the preview wildcard).
-  allowedHosts: [...previewAllowedHosts, "localhost", "127.0.0.1", "[::1]"],
+  allowedHosts: [
+    ...previewAllowedHosts,
+    "localhost",
+    "127.0.0.1",
+    "[::1]",
+    "neighborly.unitedundergod.org",
+    "community.unitedundergod.org",
+  ],
   // `auto` → trust both http:// and https:// expansions of allowedHosts
   // (preview is https; local dev is http).
   protocol: "auto" as const,
@@ -115,6 +122,7 @@ const baseURL = explicitBaseURL ?? {
 // Missing entries here surface as FORBIDDEN "Invalid origin".
 const productionOrigins = [
   "https://neighborly.unitedundergod.org",
+  "https://community.unitedundergod.org",
   "https://app-neighborly.vercel.app",
   "https://app-neighborly-lincolnnunnallys-projects.vercel.app",
 ];
