@@ -44,7 +44,6 @@ import type {
   Service,
 } from "@/lib/community/types";
 import { formatEventWhen } from "@/lib/utils";
-import { startDemoNeighbor } from "@/lib/community/try-demo";
 
 export const Route = createFileRoute("/c/$slug")({
   component: CommunityPublicPage,
@@ -172,16 +171,10 @@ function CommunityPublicPage() {
                   await navigate({ to: "/app" });
                   return;
                 }
-                const res = await startDemoNeighbor({
-                  code: community.invite_code,
-                  isNew: true,
+                await navigate({
+                  to: "/signup",
+                  search: { community: community.slug, code: community.invite_code },
                 });
-                if (!res.ok) {
-                  toast.error(res.error);
-                  return;
-                }
-                toast.success("Welcome — you're a neighbor now");
-                await navigate({ to: "/app" });
               } finally {
                 setDemoBusy(false);
               }

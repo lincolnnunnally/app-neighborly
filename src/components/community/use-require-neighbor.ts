@@ -1,33 +1,26 @@
 import { toast } from "sonner";
-import { authClient } from "@/lib/auth/client";
+import { useNavigate } from "@tanstack/react-router";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { getMyMemberships, getMyProfile } from "@/lib/community/server";
-import { startDemoNeighbor } from "@/lib/community/try-demo";
 
 /**
- * Ensures the visitor can perform neighbor actions. If signed out, starts a
- * real one-click demo account so buttons never dead-end. Does not navigate away
- * mid-action — callers keep going after session is ready.
+ * Ensures the visitor can perform neighbor actions. Signed-out people go to
+ * real signup — we do not mint throwaway @neighborly.demo accounts.
  */
 export function useRequireNeighbor() {
   const { user, isPending } = useCurrentUserState();
+  const navigate = useNavigate();
 
   async function ensureReady(opts?: { code?: string }): Promise<boolean> {
     if (isPending) return false;
 
     if (!user) {
-      toast.message("Starting your neighbor session…");
-      const res = await startDemoNeighbor({
-        code: opts?.code ?? "MILSTEAD-WELCOME",
+      toast.message("Create an account to continue — we don't invent a neighbor for you.");
+      await navigate({
+        to: "/signup",
+        search: { community: "milstead", code: opts?.code ?? "MILSTEAD-WELCOME" },
       });
-      if (!res.ok) {
-        toast.error(res.error);
-        return false;
-      }
-      // Refresh client session so subsequent UI knows who we are
-      await authClient.getSession();
-      toast.success("You're in as a neighbor — action continues");
-      return true;
+      return false;
     }
 
     try {
@@ -36,15 +29,9 @@ export function useRequireNeighbor() {
         getMyMemberships(),
       ]);
       if (!profile || memberships.length === 0) {
-        const res = await startDemoNeighbor({
-          displayName: user.displayName ?? undefined,
-          code: opts?.code ?? "MILSTEAD-WELCOME",
-        });
-        if (!res.ok) {
-          toast.error(res.error);
-          return false;
-        }
-        await authClient.getSession();
+        toast.message("Finish joining a community first.");
+        await navigate({ to: "/onboarding" });
+        return false;
       }
       return true;
     } catch {

@@ -13,7 +13,6 @@ import {
   Users,
   Wrench,
 } from "lucide-react";
-import { toast } from "sonner";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -21,7 +20,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { getCommunityFeed, listCommunities } from "@/lib/community/server";
 import type { Community, CommunityEvent, Need, Service } from "@/lib/community/types";
 import { KIND_LABELS } from "@/lib/community/types";
-import { startDemoNeighbor } from "@/lib/community/try-demo";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { formatEventWhen } from "@/lib/utils";
 
@@ -34,7 +32,6 @@ function LandingPage() {
   const [needs, setNeeds] = useState<Need[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [events, setEvents] = useState<CommunityEvent[]>([]);
-  const [demoBusy, setDemoBusy] = useState(false);
   const [feedStatus, setFeedStatus] = useState<"loading" | "ready" | "error">("loading");
   const [communitiesError, setCommunitiesError] = useState(false);
 
@@ -65,21 +62,10 @@ function LandingPage() {
       await navigate({ to: "/app" });
       return;
     }
-    setDemoBusy(true);
-    try {
-      const res = await startDemoNeighbor({
-        code: "MILSTEAD-WELCOME",
-        isNew: true,
-      });
-      if (!res.ok) {
-        toast.error(res.error);
-        return;
-      }
-      toast.success("You're in Milstead — everything is live");
-      await navigate({ to: "/app" });
-    } finally {
-      setDemoBusy(false);
-    }
+    await navigate({
+      to: "/signup",
+      search: { community: "milstead", code: "MILSTEAD-WELCOME" },
+    });
   }
 
   return (
@@ -103,8 +89,8 @@ function LandingPage() {
               every card opens and every action saves.
             </p>
             <div className="flex flex-wrap gap-3">
-              <Button size="lg" disabled={demoBusy} onClick={() => void tryNow()}>
-                {demoBusy ? "Starting…" : user ? "Open my hub" : "Try Neighborly now"}
+              <Button size="lg" onClick={() => void tryNow()}>
+                {user ? "Open my hub" : "Try Neighborly now"}
                 <ArrowRight className="h-4 w-4" />
               </Button>
               <Button asChild size="lg" variant="secondary">
@@ -320,8 +306,8 @@ function LandingPage() {
             ))}
           </div>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button disabled={demoBusy} onClick={() => void tryNow()}>
-              {demoBusy ? "Starting…" : "Try now"}
+            <Button onClick={() => void tryNow()}>
+              Try now
             </Button>
             <Button asChild variant="outline">
               <Link to="/join/$code" params={{ code: "MILSTEAD-QR" }}>

@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { HandHeart } from "lucide-react";
-import { toast } from "sonner";
 import { SignedIn, SignedOut, UserButton } from "@/lib/auth/gates";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { Button } from "@/components/ui/button";
-import { startDemoNeighbor } from "@/lib/community/try-demo";
 
 export function SiteHeader({ solid = false }: { solid?: boolean }) {
   const { user, isPending } = useCurrentUserState();
@@ -67,13 +65,10 @@ export function SiteHeader({ solid = false }: { solid?: boolean }) {
                 onClick={async () => {
                   setBusy(true);
                   try {
-                    const res = await startDemoNeighbor({ code: "MILSTEAD-WELCOME" });
-                    if (!res.ok) {
-                      toast.error(res.error);
-                      return;
-                    }
-                    toast.success("Welcome to Neighborly");
-                    await navigate({ to: "/app" });
+                    await navigate({
+                      to: "/signup",
+                      search: { community: "milstead", code: "MILSTEAD-WELCOME" },
+                    });
                   } finally {
                     setBusy(false);
                   }
