@@ -65,6 +65,7 @@ function CommunityPublicPage() {
 
   const [activeNeed, setActiveNeed] = useState<Need | null>(null);
   const [needOffers, setNeedOffers] = useState<HelpOffer[]>([]);
+  const [offersError, setOffersError] = useState<string | null>(null);
   const [helpMessage, setHelpMessage] = useState("I can help — when works for you?");
   const [activeEvent, setActiveEvent] = useState<CommunityEvent | null>(null);
   const [activeService, setActiveService] = useState<Service | null>(null);
@@ -118,8 +119,10 @@ function CommunityPublicPage() {
     setHelpMessage("I can help — when works for you?");
     try {
       setNeedOffers(await listOffersForNeed({ data: n.id }));
+      setOffersError(null);
     } catch {
       setNeedOffers([]);
+      setOffersError("Could not load offers for this need.");
     }
   }
 
@@ -391,6 +394,9 @@ function CommunityPublicPage() {
                   onChange={(e) => setHelpMessage(e.target.value)}
                 />
               </div>
+              {offersError && (
+                <p className="text-sm text-red-600">{offersError}</p>
+              )}
               {needOffers.length > 0 && (
                 <div className="space-y-2 rounded-[var(--radius-lg)] border border-border bg-bg p-3">
                   <p className="text-xs font-medium text-fg-muted">
