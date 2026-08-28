@@ -540,16 +540,14 @@ function CommunityPublicPage() {
                   Close
                 </Button>
                 <Button
-                  onClick={async () => {
-                    const ok = await ensureReady({ code: community.invite_code });
-                    if (!ok) return;
-                    toast.success(`Saved interest in ${activeService.title}`);
-                    setActiveService(null);
-                    await navigate({ to: "/app/services" });
+                  onClick={() => {
+                    toast.message(
+                      `We do not save interest yet. Use the contact above to reach ${activeService.title}.`,
+                    );
                   }}
                 >
                   <Wrench className="h-4 w-4" />
-                  I want this service
+                  How do I reach them?
                 </Button>
               </DialogFooter>
             </>
