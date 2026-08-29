@@ -496,7 +496,7 @@ function CommunityPublicPage() {
                         const ok = await ensureReady({ code: community.invite_code });
                         if (!ok) return;
                         await rsvpEvent({ data: activeEvent.id });
-                        toast.success("You're on the list");
+                        toast.success("You're on the list. Showing up is the win — not this page.");
                         await reload();
                       } catch (e) {
                         toast.error(e instanceof Error ? e.message : "Could not RSVP");

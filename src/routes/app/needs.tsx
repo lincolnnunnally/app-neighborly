@@ -139,7 +139,7 @@ function NeedsPage() {
                   onClick={async () => {
                     try {
                       await acceptHelpOffer({ data: { offerId: o.id } });
-                      toast.success(`Accepted ${o.helper_name}`);
+                      toast.success(`Accepted ${o.helper_name}. Let them actually help — receiving is part of belonging.`);
                       await reload(communityId);
                     } catch (e) {
                       toast.error(e instanceof Error ? e.message : "Failed");
@@ -301,7 +301,7 @@ function NeedsPage() {
                           size="sm"
                           onClick={async () => {
                             await acceptHelpOffer({ data: { offerId: o.id } });
-                            toast.success("Helper accepted");
+                            toast.success("Helper accepted. Let them show up — the yes is off the screen.");
                             setOffers(await listOffersForNeed({ data: active.id }));
                             await reload(communityId);
                           }}
@@ -368,7 +368,11 @@ function NeedsPage() {
                           const res = await offerHelp({
                             data: { needId: active.id, message: helpMessage },
                           });
-                          toast.success(res.already ? "Already offered" : "Offer sent");
+                          toast.success(
+                            res.already
+                              ? "Already offered"
+                              : "Offer sent. Showing up in person is the gift — not the message.",
+                          );
                           setOffers(await listOffersForNeed({ data: active.id }));
                           await reload(communityId);
                         } catch (e) {

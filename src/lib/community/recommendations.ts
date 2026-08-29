@@ -37,8 +37,14 @@ export function recommendNextSteps(profile: Partial<Profile>): NextStep[] {
   steps.push({
     kind: "community",
     title: "Vidalia neighbor board",
-    why: "Your home base: events, needs, and people who actually live here.",
+    why: "Your home base: events, needs, and people who actually live here. The board is a doorway — the win is sitting with someone.",
     href: "/c/vidalia",
+  });
+  steps.push({
+    kind: "app",
+    title: "Presence — a real moment",
+    why: "Coffee, a walk, a meal. One yes with a real person beats another hour in an app.",
+    href: "https://presence.unitedundergod.org",
   });
 
   if (season === "divorced_dad") {

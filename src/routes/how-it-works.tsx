@@ -42,6 +42,10 @@ function HowItWorksPage() {
             title: "5. Welcome people in",
             body: "New residents get a lighter onboarding path: meet neighbors, learn about the area, and find their first event.",
           },
+          {
+            title: "6. The board is a doorway",
+            body: "The win is not more time on Neighborly. It is coffee, a meal, letting someone help you, or staying in the spare room instead of hiding. Receiving kindness is part of belonging. We will not score your courage. If a kind person is offering hospitality, one next yes is enough. Safety stays: public places, Report and Block, 988 in a crisis.",
+          },
         ].map((s) => (
           <Card key={s.title} className="p-6">
             <h2 className="font-display text-xl font-semibold">{s.title}</h2>

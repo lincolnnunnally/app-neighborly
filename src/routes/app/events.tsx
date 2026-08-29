@@ -240,7 +240,7 @@ function EventsPage() {
                       setBusy(true);
                       try {
                         await rsvpEvent({ data: active.id });
-                        toast.success("You're going");
+                        toast.success("You're going. The gathering is the win — not this screen.");
                         await reload(communityId);
                       } catch (e) {
                         toast.error(e instanceof Error ? e.message : "Failed");

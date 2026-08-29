@@ -31,6 +31,7 @@ import type {
 } from "@/lib/community/types";
 import { formatEventWhen } from "@/lib/utils";
 import { toast } from "sonner";
+import { PresenceNudge } from "@/components/community/presence-nudge";
 
 export const Route = createFileRoute("/app/")({
   component: AppHome,
@@ -96,6 +97,8 @@ function AppHome() {
         </div>
       </div>
 
+      <PresenceNudge />
+
       {profile && recommendNextSteps(profile).length > 0 && (
         <Card>
           <CardHeader className="pb-2">
@@ -138,7 +141,10 @@ function AppHome() {
         <Card className="border-accent/30 bg-accent-soft/30">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg">Neighbors ready to help you</CardTitle>
-            <CardDescription>Accept someone so they know you're counting on them.</CardDescription>
+            <CardDescription>
+              Accept someone so they know you&apos;re counting on them. Letting a neighbor help
+              you is part of belonging — not a debt.
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             {incoming.map((o) => (
