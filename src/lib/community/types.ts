@@ -24,6 +24,10 @@ export type Profile = {
   skills: string[];
   help_offerings: string[];
   interests: string[];
+  life_season: string;
+  faith_posture: string;
+  hoping_for: string;
+  availability: string[];
   is_new_resident: boolean;
   is_youth: boolean;
   notify_events: boolean;
@@ -133,16 +137,50 @@ export const SKILL_OPTIONS = [
 ];
 
 export const INTEREST_OPTIONS = [
+  "Pickleball",
+  "Tennis",
+  "Sports",
+  "Woodworking",
+  "Welding",
+  "Blacksmithing",
+  "Spoon carving",
+  "Nature",
+  "Mushrooming",
+  "Hiking",
   "Block parties",
   "Community cleanups",
   "Kids activities",
   "Senior visits",
   "Gardening",
-  "Sports",
   "Faith groups",
   "Book club",
   "Local business",
-  "Emergency preparedness",
+];
+
+export const LIFE_SEASON_OPTIONS = [
+  { id: "divorced_dad", label: "I'm a divorced dad" },
+  { id: "divorced_mom", label: "I'm a divorced mom" },
+  { id: "single", label: "I'm single" },
+  { id: "dating", label: "I'm dating" },
+  { id: "married", label: "I'm married" },
+  { id: "widowed", label: "I'm widowed" },
+  { id: "prefer_not", label: "I'd rather not say" },
+];
+
+export const FAITH_POSTURE_OPTIONS = [
+  { id: "rooted", label: "Deeply Christian — faith is home" },
+  { id: "attending", label: "I go to church and I'm still wondering" },
+  { id: "searching", label: "I'm searching" },
+  { id: "questioning", label: "I'm questioning" },
+  { id: "unsure", label: "I'm not sure what I believe" },
+  { id: "prefer_not", label: "I'd rather not say" },
+];
+
+export const AVAILABILITY_OPTIONS = [
+  "Weekday evenings",
+  "Weekend mornings",
+  "Weekend afternoons",
+  "Flexible",
 ];
 
 export const NEED_CATEGORIES = [

@@ -8,7 +8,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { ChipSelect } from "@/components/community/chip-select";
 import { getMyProfile, upsertProfile } from "@/lib/community/server";
-import { INTEREST_OPTIONS, SKILL_OPTIONS, type Profile } from "@/lib/community/types";
+import {
+  AVAILABILITY_OPTIONS,
+  FAITH_POSTURE_OPTIONS,
+  INTEREST_OPTIONS,
+  LIFE_SEASON_OPTIONS,
+  SKILL_OPTIONS,
+  type Profile,
+} from "@/lib/community/types";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/settings")({
   component: SettingsPage,
@@ -50,6 +58,10 @@ function SettingsPage() {
                 skills: profile.skills,
                 help_offerings: profile.skills,
                 interests: profile.interests,
+                life_season: profile.life_season,
+                faith_posture: profile.faith_posture,
+                hoping_for: profile.hoping_for,
+                availability: profile.availability,
                 is_new_resident: profile.is_new_resident,
                 is_youth: profile.is_youth,
                 notify_events: profile.notify_events,
@@ -102,6 +114,61 @@ function SettingsPage() {
             options={INTEREST_OPTIONS}
             value={profile.interests}
             onChange={(interests) => setProfile({ ...profile, interests })}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label>Life season</Label>
+          <div className="flex flex-wrap gap-2">
+            {LIFE_SEASON_OPTIONS.map((opt) => (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => setProfile({ ...profile, life_season: opt.id })}
+                className={cn(
+                  "rounded-full border px-3 py-1.5 text-sm",
+                  profile.life_season === opt.id
+                    ? "border-primary bg-primary text-primary-fg"
+                    : "border-border bg-bg-elevated text-fg-muted",
+                )}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="space-y-2">
+          <Label>Faith / meaning</Label>
+          <div className="flex flex-wrap gap-2">
+            {FAITH_POSTURE_OPTIONS.map((opt) => (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => setProfile({ ...profile, faith_posture: opt.id })}
+                className={cn(
+                  "rounded-full border px-3 py-1.5 text-left text-sm",
+                  profile.faith_posture === opt.id
+                    ? "border-primary bg-primary text-primary-fg"
+                    : "border-border bg-bg-elevated text-fg-muted",
+                )}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="space-y-1.5">
+          <Label>What you're hoping for</Label>
+          <Textarea
+            value={profile.hoping_for}
+            onChange={(e) => setProfile({ ...profile, hoping_for: e.target.value })}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label>When you can show up</Label>
+          <ChipSelect
+            options={AVAILABILITY_OPTIONS}
+            value={profile.availability}
+            onChange={(availability) => setProfile({ ...profile, availability })}
           />
         </div>
 

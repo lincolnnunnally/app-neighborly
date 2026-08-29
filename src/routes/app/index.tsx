@@ -22,6 +22,7 @@ import {
   type ActivityItem,
   type HelpOffer,
 } from "@/lib/community/server";
+import { recommendNextSteps } from "@/lib/community/recommendations";
 import type {
   CommunityEvent,
   Membership,
@@ -94,6 +95,44 @@ function AppHome() {
           </Button>
         </div>
       </div>
+
+      {profile && recommendNextSteps(profile).length > 0 && (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg">Suggested for you</CardTitle>
+            <CardDescription>
+              From what you shared. Not a lock. Friendship before dating. We do not
+              invent people or open other apps for you.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {recommendNextSteps(profile).slice(0, 5).map((rec) =>
+              rec.kind === "community" ? (
+                <Link
+                  key={rec.href}
+                  to="/c/$slug"
+                  params={{ slug: rec.href.replace("/c/", "") }}
+                  className="block rounded-[var(--radius-lg)] border border-border p-3 no-underline hover:border-border-strong"
+                >
+                  <p className="text-sm font-medium text-fg">{rec.title}</p>
+                  <p className="text-xs text-fg-muted">{rec.why}</p>
+                </Link>
+              ) : (
+                <a
+                  key={rec.href}
+                  href={rec.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="block rounded-[var(--radius-lg)] border border-border p-3 no-underline hover:border-border-strong"
+                >
+                  <p className="text-sm font-medium text-fg">{rec.title}</p>
+                  <p className="text-xs text-fg-muted">{rec.why}</p>
+                </a>
+              ),
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {incoming.length > 0 && (
         <Card className="border-accent/30 bg-accent-soft/30">

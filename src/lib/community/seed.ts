@@ -13,6 +13,7 @@ import type { Sql } from "@/lib/db";
 export async function ensureSeeded(sql: Sql): Promise<void> {
   await ensureMilsteadV1(sql);
   await ensureVidaliaV2(sql);
+  await ensureVidaliaV3(sql);
   await refreshVidaliaPublicEvents(sql);
 }
 
@@ -240,6 +241,58 @@ async function ensureVidaliaV2(sql: Sql): Promise<void> {
 
   await sql`
     insert into seed_meta (key, value) values ('community_v2_vidalia', '1')
+  `;
+}
+
+async function ensureVidaliaV3(sql: Sql): Promise<void> {
+  const rows = await sql<{ value: string }>`
+    select value from seed_meta where key = 'community_v3_vidalia_interests'
+  `;
+  if (rows.length > 0) return;
+
+  await sql`
+    insert into communities (
+      id, slug, name, tagline, description, city, state, kind,
+      member_count, cover_color, is_featured, invite_code
+    ) values
+    (
+      'comm_vidalia_makers',
+      'vidalia-makers',
+      'Vidalia makers',
+      'Wood, metal, spoons, shops',
+      'For people who like making things with their hands — woodworking, welding, blacksmithing, spoon carving. Empty until real makers join. We do not invent a workshop full of neighbors.',
+      'Vidalia',
+      'GA',
+      'interest',
+      0,
+      'clay',
+      false,
+      'VIDALIA-MAKERS'
+    ),
+    (
+      'comm_vidalia_outdoors',
+      'vidalia-outdoors',
+      'Vidalia outdoors',
+      'Off screens, into creation',
+      'Walks, trails, mushrooms, time outside. A gentle way to meet people without a performance.',
+      'Vidalia',
+      'GA',
+      'interest',
+      0,
+      'water',
+      false,
+      'VIDALIA-OUTDOORS'
+    )
+  `;
+
+  await sql`
+    insert into invites (id, community_id, code, created_by, label) values
+    ('inv_vidalia_makers', 'comm_vidalia_makers', 'VIDALIA-MAKERS', 'system', 'Makers circle'),
+    ('inv_vidalia_outdoors', 'comm_vidalia_outdoors', 'VIDALIA-OUTDOORS', 'system', 'Outdoors circle')
+  `;
+
+  await sql`
+    insert into seed_meta (key, value) values ('community_v3_vidalia_interests', '1')
   `;
 }
 

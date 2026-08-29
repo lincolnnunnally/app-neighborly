@@ -64,6 +64,10 @@ function mapProfile(row: Record<string, unknown>): Profile {
     skills: parseJsonArray(String(row.skills ?? "[]")),
     help_offerings: parseJsonArray(String(row.help_offerings ?? "[]")),
     interests: parseJsonArray(String(row.interests ?? "[]")),
+    life_season: String(row.life_season ?? ""),
+    faith_posture: String(row.faith_posture ?? ""),
+    hoping_for: String(row.hoping_for ?? ""),
+    availability: parseJsonArray(String(row.availability ?? "[]")),
     is_new_resident: Boolean(row.is_new_resident),
     is_youth: Boolean(row.is_youth),
     notify_events: Boolean(row.notify_events),
@@ -349,6 +353,10 @@ export const upsertProfile = createServerFn({ method: "POST" })
       skills?: string[];
       help_offerings?: string[];
       interests?: string[];
+      life_season?: string;
+      faith_posture?: string;
+      hoping_for?: string;
+      availability?: string[];
       is_new_resident?: boolean;
       is_youth?: boolean;
       notify_events?: boolean;
@@ -367,12 +375,17 @@ export const upsertProfile = createServerFn({ method: "POST" })
     const skills = JSON.stringify(data.skills ?? []);
     const help = JSON.stringify(data.help_offerings ?? []);
     const interests = JSON.stringify(data.interests ?? []);
+    const availability = JSON.stringify(data.availability ?? []);
+    const lifeSeason = data.life_season ?? "";
+    const faithPosture = data.faith_posture ?? "";
+    const hopingFor = data.hoping_for ?? "";
 
     if (existing.length === 0) {
       await sql`
         insert into profiles (
           user_id, display_name, bio, phone, street_hint, skills, help_offerings,
-          interests, is_new_resident, is_youth, notify_events, notify_needs,
+          interests, life_season, faith_posture, hoping_for, availability,
+          is_new_resident, is_youth, notify_events, notify_needs,
           notify_services, notify_facilities, welcome_seen
         ) values (
           ${context.userId},
@@ -383,6 +396,10 @@ export const upsertProfile = createServerFn({ method: "POST" })
           ${skills},
           ${help},
           ${interests},
+          ${lifeSeason},
+          ${faithPosture},
+          ${hopingFor},
+          ${availability},
           ${Boolean(data.is_new_resident)},
           ${Boolean(data.is_youth)},
           ${data.notify_events ?? true},
@@ -402,6 +419,10 @@ export const upsertProfile = createServerFn({ method: "POST" })
           skills = ${skills},
           help_offerings = ${help},
           interests = ${interests},
+          life_season = ${lifeSeason},
+          faith_posture = ${faithPosture},
+          hoping_for = ${hopingFor},
+          availability = ${availability},
           is_new_resident = ${Boolean(data.is_new_resident)},
           is_youth = ${Boolean(data.is_youth)},
           notify_events = ${data.notify_events ?? true},

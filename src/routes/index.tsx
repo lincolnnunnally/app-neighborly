@@ -87,8 +87,10 @@ function LandingPage() {
             <p className="max-w-xl text-lg text-fg-muted">
               Neighborly is a working community board for Vidalia: pickleball, downtown, church,
               dads looking out for their kids, and the quiet ways people still meet in a small
-              town. Post a real need, offer a real skill, RSVP to a public gathering. We will
-              not invent neighbors for you.
+              town. Create a profile, say what season of life you're in, and we'll point you
+              at groups that fit — friendship before dating, more than one circle allowed.
+              Post a real need, offer a real skill, RSVP to a gathering. We will not invent
+              neighbors for you.
             </p>
             <div className="flex flex-wrap gap-3">
               <Button size="lg" onClick={() => void tryNow()}>
