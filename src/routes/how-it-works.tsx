@@ -51,13 +51,13 @@ function HowItWorksPage() {
 
         <div className="flex flex-wrap gap-3">
           <Button asChild>
-            <Link to="/signup" search={{ community: "milstead", code: "MILSTEAD-WELCOME" }}>
-              Join Milstead
+            <Link to="/signup" search={{ community: "vidalia", code: "VIDALIA-WELCOME" }}>
+              Join Vidalia
             </Link>
           </Button>
           <Button asChild variant="secondary">
-            <Link to="/c/$slug" params={{ slug: "milstead" }}>
-              Browse without signing up
+            <Link to="/c/$slug" params={{ slug: "vidalia" }}>
+              Browse Vidalia without signing up
             </Link>
           </Button>
         </div>

@@ -42,7 +42,7 @@ export async function startDemoNeighbor(opts?: {
       data: {
         display_name: name,
         bio: "Neighbor trying Neighborly — happy to help where I can.",
-        street_hint: "Milstead area",
+        street_hint: "Vidalia area",
         skills: ["Handyman", "Yard work", "Errands", "Moving help"].slice(0, 3),
         help_offerings: ["Handyman", "Yard work", "Errands"],
         interests: ["Block parties", "Community cleanups", "Kids activities"],
@@ -56,9 +56,11 @@ export async function startDemoNeighbor(opts?: {
     });
 
     const communities = await listCommunities();
+    const vidalia = communities.find((c) => c.slug === "vidalia");
     const milstead = communities.find((c) => c.slug === "milstead");
     const ids: string[] = [];
-    if (milstead) ids.push(milstead.id);
+    if (vidalia) ids.push(vidalia.id);
+    if (milstead && !ids.includes(milstead.id)) ids.push(milstead.id);
 
     if (opts?.code) {
       const inv = await resolveInvite({ data: opts.code });
@@ -76,7 +78,7 @@ export async function startDemoNeighbor(opts?: {
         communityIds: ids,
         primaryId: ids[0],
         joinedVia: opts?.code ? "invite" : "browse",
-        inviteCode: opts?.code ?? "MILSTEAD-WELCOME",
+        inviteCode: opts?.code ?? "VIDALIA-WELCOME",
       },
     });
 

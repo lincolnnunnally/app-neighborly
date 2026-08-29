@@ -45,7 +45,7 @@ function LandingPage() {
         setCommunities([]);
         setCommunitiesError(true);
       });
-    getCommunityFeed({ data: { slug: "milstead" } })
+    getCommunityFeed({ data: { slug: "vidalia" } })
       .then((f) => {
         setNeeds(f.needs.slice(0, 3));
         setServices(f.services.slice(0, 2));
@@ -55,6 +55,7 @@ function LandingPage() {
       .catch(() => setFeedStatus("error"));
   }, []);
 
+  const vidalia = communities.find((c) => c.slug === "vidalia");
   const milstead = communities.find((c) => c.slug === "milstead");
 
   async function tryNow() {
@@ -64,7 +65,7 @@ function LandingPage() {
     }
     await navigate({
       to: "/signup",
-      search: { community: "milstead", code: "MILSTEAD-WELCOME" },
+      search: { community: "vidalia", code: "VIDALIA-WELCOME" },
     });
   }
 
@@ -79,14 +80,15 @@ function LandingPage() {
         />
         <div className="page-shell relative grid gap-10 py-14 sm:py-20 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
           <div className="space-y-6">
-            <Badge className="w-fit">First test market: Milstead.US</Badge>
+            <Badge className="w-fit">Now live in Vidalia, Georgia</Badge>
             <h1 className="font-display text-balance text-4xl font-semibold tracking-tight text-fg sm:text-5xl lg:text-[3.25rem] lg:leading-[1.1]">
               Neighbors helping neighbors — from a lightbulb to a block party
             </h1>
             <p className="max-w-xl text-lg text-fg-muted">
-              Neighborly is a working community board: post needs, offer skills, RSVP to
-              gatherings, book places, and invite neighbors with a link or QR. Not a mockup —
-              every card opens and every action saves.
+              Neighborly is a working community board for Vidalia: pickleball, downtown, church,
+              dads looking out for their kids, and the quiet ways people still meet in a small
+              town. Post a real need, offer a real skill, RSVP to a public gathering. We will
+              not invent neighbors for you.
             </p>
             <div className="flex flex-wrap gap-3">
               <Button size="lg" onClick={() => void tryNow()}>
@@ -94,12 +96,12 @@ function LandingPage() {
                 <ArrowRight className="h-4 w-4" />
               </Button>
               <Button asChild size="lg" variant="secondary">
-                <Link to="/c/$slug" params={{ slug: "milstead" }}>
-                  Browse Milstead live
+                <Link to="/c/$slug" params={{ slug: "vidalia" }}>
+                  Browse Vidalia live
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline">
-                <Link to="/join/$code" params={{ code: "MILSTEAD-QR" }}>
+                <Link to="/join/$code" params={{ code: "VIDALIA-QR" }}>
                   Invite / QR path
                 </Link>
               </Button>
@@ -113,21 +115,21 @@ function LandingPage() {
           <Card className="relative overflow-hidden">
             <CardHeader>
               <CardTitle className="text-xl">
-                {milstead?.name ?? "Milstead"} right now
+                {vidalia?.name ?? "Vidalia"} right now
               </CardTitle>
               <CardDescription>
                 {feedStatus === "error"
                   ? "The live board could not load."
                   : needs[0] || services[0] || events[0]
                     ? "Live from the board — tap any row to open the community."
-                    : "Milstead is live. The first real posts will show here."}
+                    : "Vidalia is live. The first real posts will show here."}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {needs[0] && (
                 <Link
                   to="/c/$slug"
-                  params={{ slug: "milstead" }}
+                  params={{ slug: "vidalia" }}
                   className="flex items-start gap-3 rounded-[var(--radius-lg)] border border-border bg-bg px-3 py-3 no-underline transition-colors hover:border-border-strong"
                 >
                   <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[var(--radius-sm)] bg-primary-soft text-primary">
@@ -144,7 +146,7 @@ function LandingPage() {
               {services[0] && (
                 <Link
                   to="/c/$slug"
-                  params={{ slug: "milstead" }}
+                  params={{ slug: "vidalia" }}
                   className="flex items-start gap-3 rounded-[var(--radius-lg)] border border-border bg-bg px-3 py-3 no-underline transition-colors hover:border-border-strong"
                 >
                   <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[var(--radius-sm)] bg-primary-soft text-primary">
@@ -161,7 +163,7 @@ function LandingPage() {
               {events[0] && (
                 <Link
                   to="/c/$slug"
-                  params={{ slug: "milstead" }}
+                  params={{ slug: "vidalia" }}
                   className="flex items-start gap-3 rounded-[var(--radius-lg)] border border-border bg-bg px-3 py-3 no-underline transition-colors hover:border-border-strong"
                 >
                   <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[var(--radius-sm)] bg-primary-soft text-primary">
@@ -180,7 +182,7 @@ function LandingPage() {
               )}
               {feedStatus === "error" && (
                 <p className="text-sm text-fg-muted">
-                  Could not load the Milstead board. Open the full board to try again.
+                  Could not load the Vidalia board. Open the full board to try again.
                 </p>
               )}
               {feedStatus === "ready" && !needs[0] && !services[0] && !events[0] && (
@@ -189,13 +191,77 @@ function LandingPage() {
                 </p>
               )}
               <Button asChild variant="soft" className="w-full">
-                <Link to="/c/$slug" params={{ slug: "milstead" }}>
-                  Open full Milstead board
+                <Link to="/c/$slug" params={{ slug: "vidalia" }}>
+                  Open full Vidalia board
                 </Link>
               </Button>
             </CardContent>
           </Card>
         </div>
+      </section>
+
+      <section className="page-shell py-16">
+        <div className="mb-8 max-w-2xl">
+          <h2 className="font-display text-3xl font-semibold tracking-tight">
+            Where people already gather in Vidalia
+          </h2>
+          <p className="mt-2 text-fg-muted">
+            Real public places — not invented neighbors. Show up, then post if you want company next time.
+          </p>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            {
+              title: "Pickleball",
+              body: "Outdoor courts at the Rec Complex (102 Stockyard Rd) and indoor play at First Baptist gym. Beginners welcome.",
+              href: "/c/vidalia-pickleball",
+            },
+            {
+              title: "Downtown & PAL Theatre",
+              body: "Church Street shops, coffee, The Market on Church, and the historic PAL Theatre — a way to become a regular.",
+              href: "/c/vidalia",
+            },
+            {
+              title: "Vidalia dads",
+              body: "An empty chair on purpose. Dads — including after divorce — who want to be known and stay present for their kids.",
+              href: "/c/vidalia-dads",
+            },
+            {
+              title: "Church & recovery",
+              body: "Celebrate Recovery Thursday 6pm at First Baptist. GriefShare and pickleball are also on their public calendar.",
+              href: "/c/vidalia",
+            },
+            {
+              title: "Library & civic groups",
+              body: "Vidalia Regional Library (610 Jackson St) plus Rotary and other civic tables that still meet in person.",
+              href: "/c/vidalia",
+            },
+            {
+              title: "Onion Festival & seasons",
+              body: "Late April each year — plus July 4th, downtown Christmas, and the everyday in-between.",
+              href: "/c/vidalia",
+            },
+          ].map((p) => (
+            <Link
+              key={p.title}
+              to="/c/$slug"
+              params={{ slug: p.href.replace("/c/", "") }}
+              className="surface-card block p-5 no-underline transition-colors hover:border-border-strong"
+            >
+              <h3 className="font-display text-lg font-semibold text-fg">{p.title}</h3>
+              <p className="mt-1 text-sm text-fg-muted">{p.body}</p>
+            </Link>
+          ))}
+        </div>
+        {milstead ? (
+          <p className="mt-6 text-sm text-fg-subtle">
+            Milstead remains a Neighborly market.{" "}
+            <Link to="/c/$slug" params={{ slug: "milstead" }} className="underline">
+              Open the Milstead board
+            </Link>
+            .
+          </p>
+        ) : null}
       </section>
 
       <section className="page-shell py-16">
@@ -213,31 +279,31 @@ function LandingPage() {
               title: "Ask for help",
               body: "Post a need, get real offers, accept a neighbor.",
               icon: HandHeart,
-              to: "/c/milstead" as const,
+              to: "/c/vidalia" as const,
             },
             {
               title: "Offer skills & services",
               body: "Businesses, side hustles, and kids earning money.",
               icon: Wrench,
-              to: "/c/milstead" as const,
+              to: "/c/vidalia" as const,
             },
             {
               title: "Gather together",
               body: "Block parties, cleanups, BBQs — RSVP sticks.",
               icon: CalendarDays,
-              to: "/c/milstead" as const,
+              to: "/c/vidalia" as const,
             },
             {
               title: "Reserve places",
               body: "Request the pavilion or community room.",
               icon: MapPin,
-              to: "/c/milstead" as const,
+              to: "/c/vidalia" as const,
             },
             {
               title: "Welcome newcomers",
               body: "New residents get a path to meet people fast.",
               icon: Users,
-              to: "/c/milstead" as const,
+              to: "/c/vidalia" as const,
             },
             {
               title: "Many communities",
@@ -249,7 +315,7 @@ function LandingPage() {
             <Link
               key={f.title}
               to={f.to === "/communities" ? "/communities" : "/c/$slug"}
-              params={f.to === "/communities" ? undefined : { slug: "milstead" }}
+              params={f.to === "/communities" ? undefined : { slug: "vidalia" }}
               className="surface-card block p-5 no-underline transition-colors hover:border-border-strong"
             >
               <span className="mb-3 grid h-10 w-10 place-items-center rounded-[var(--radius-md)] bg-primary-soft text-primary">

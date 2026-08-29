@@ -18,7 +18,7 @@ export function useRequireNeighbor() {
       toast.message("Create an account to continue — we don't invent a neighbor for you.");
       await navigate({
         to: "/signup",
-        search: { community: "milstead", code: opts?.code ?? "MILSTEAD-WELCOME" },
+        search: { community: "vidalia", code: opts?.code ?? "VIDALIA-WELCOME" },
       });
       return false;
     }

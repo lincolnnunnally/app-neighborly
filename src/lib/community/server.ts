@@ -293,54 +293,8 @@ export const getCommunityFeed = createServerFn({ method: "GET" })
       role: String(r.role),
     }));
 
-    if (neighbors.length === 0 && community.slug === "milstead") {
-      neighbors.push(
-        {
-          user_id: "sample_eleanor",
-          display_name: "Eleanor H.",
-          bio: "Longtime resident. Loves porch visits and garden chats.",
-          street_hint: "Near town square",
-          skills: ["Cooking", "Elder care"],
-          help_offerings: ["Companionship", "Recipes"],
-          is_new_resident: false,
-          is_youth: false,
-          role: "member",
-        },
-        {
-          user_id: "sample_marcus",
-          display_name: "Marcus T.",
-          bio: "Coach and weekend project helper.",
-          street_hint: "Oakridge side",
-          skills: ["Handyman", "Moving help"],
-          help_offerings: ["Heavy lifting", "Tool lending"],
-          is_new_resident: false,
-          is_youth: false,
-          role: "helper",
-        },
-        {
-          user_id: "sample_priya",
-          display_name: "Priya S.",
-          bio: "Just moved in — looking to meet neighbors.",
-          street_hint: "Maple Court",
-          skills: ["Tech help", "Organizing"],
-          help_offerings: ["Tech setup"],
-          is_new_resident: true,
-          is_youth: false,
-          role: "member",
-        },
-        {
-          user_id: "sample_jake",
-          display_name: "Jake M.",
-          bio: "Earning for a bike. Mows lawns after school.",
-          street_hint: "West side",
-          skills: ["Yard work"],
-          help_offerings: ["Mowing", "Raking"],
-          is_new_resident: false,
-          is_youth: true,
-          role: "helper",
-        },
-      );
-    }
+    // DC-1: never inject named sample neighbors. Empty people lists stay empty
+    // until real members join.
 
     return {
       community,

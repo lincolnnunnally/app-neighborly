@@ -111,8 +111,10 @@ function OnboardingPage() {
           if (match && !preselect.includes(match.id)) preselect.push(match.id);
         }
         if (preselect.length === 0) {
+          const vidalia = comms.find((c) => c.slug === "vidalia");
           const milstead = comms.find((c) => c.slug === "milstead");
-          if (milstead) preselect.push(milstead.id);
+          if (vidalia) preselect.push(vidalia.id);
+          else if (milstead) preselect.push(milstead.id);
         }
         setSelected(preselect);
         setPrimaryId(preselect[0]);

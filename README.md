@@ -1,6 +1,6 @@
 # Neighborly
 
-Community connections for neighbors — first market **Milstead**.
+Community connections for neighbors — live test market **Vidalia, Georgia** (Milstead remains).
 
 - Post and answer needs
 - Local services (including youth offerings)
@@ -13,7 +13,9 @@ Community connections for neighbors — first market **Milstead**.
 
 - https://neighborly.unitedundergod.org — product home
 - https://community.unitedundergod.org — Community Connections label; this app is canonical (the old Next prototype is parked)
-- In-app Milstead board: `/c/milstead`
+- In-app Vidalia board: `/c/vidalia`
+- Pickleball / dads circles: `/c/vidalia-pickleball`, `/c/vidalia-dads`
+- Milstead board still live: `/c/milstead`
 
 `milstead.unitedundergod.org` is **not** Neighborly (that host currently serves ChurchConnect). Do not send Neighborly users there. Do not steal that host.
 

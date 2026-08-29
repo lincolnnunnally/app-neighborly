@@ -35,8 +35,8 @@ export function SiteHeader({ solid = false }: { solid?: boolean }) {
           <Link to="/how-it-works" className="hover:text-fg">
             How it works
           </Link>
-          <Link to="/c/$slug" params={{ slug: "milstead" }} className="hover:text-fg">
-            Milstead board
+          <Link to="/c/$slug" params={{ slug: "vidalia" }} className="hover:text-fg">
+            Vidalia board
           </Link>
         </nav>
 
@@ -67,7 +67,7 @@ export function SiteHeader({ solid = false }: { solid?: boolean }) {
                   try {
                     await navigate({
                       to: "/signup",
-                      search: { community: "milstead", code: "MILSTEAD-WELCOME" },
+                      search: { community: "vidalia", code: "VIDALIA-WELCOME" },
                     });
                   } finally {
                     setBusy(false);

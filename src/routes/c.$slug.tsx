@@ -287,6 +287,7 @@ function CommunityPublicPage() {
               >
                 <div className="mb-2 flex flex-wrap gap-2">
                   <Badge variant="sky">{e.kind}</Badge>
+                  {e.host_name === "Public listing" && <Badge variant="outline">Public listing</Badge>}
                   <span className="text-xs text-fg-muted">{formatEventWhen(e.starts_at)}</span>
                   {e.has_rsvp && <Badge>Going</Badge>}
                 </div>

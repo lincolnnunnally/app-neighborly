@@ -43,12 +43,12 @@ function CommunitiesPage() {
           <div>
             <h1 className="font-display text-3xl font-semibold tracking-tight">Communities</h1>
             <p className="mt-1 text-fg-muted">
-              Choose one or many. Milstead is the first live test market.
+              Choose one or many. Vidalia, Georgia is the live test market now; Milstead stays available.
             </p>
           </div>
           <Button asChild>
-            <Link to="/signup" search={{ community: "milstead", code: "MILSTEAD-WELCOME" }}>
-              Join with profile
+            <Link to="/signup" search={{ community: "vidalia", code: "VIDALIA-WELCOME" }}>
+              Join Vidalia
             </Link>
           </Button>
         </div>

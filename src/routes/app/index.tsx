@@ -44,7 +44,7 @@ function AppHome() {
   const [activity, setActivity] = useState<ActivityItem[]>([]);
   const [incoming, setIncoming] = useState<HelpOffer[]>([]);
   const [primaryName, setPrimaryName] = useState("your community");
-  const [primarySlug, setPrimarySlug] = useState("milstead");
+  const [primarySlug, setPrimarySlug] = useState("vidalia");
 
   useEffect(() => {
     async function load() {
