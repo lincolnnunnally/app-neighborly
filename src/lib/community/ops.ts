@@ -4,6 +4,9 @@ import { authMiddleware } from "@/lib/auth/middleware";
 import { uid } from "@/lib/utils";
 import { ensureSeeded } from "./seed";
 import { isOwnerEmail } from "@/lib/admin-stats";
+import { fanoutGathering, fanoutServe, type FanoutResult, type FanoutTarget } from "./fanout";
+
+export type { FanoutResult, FanoutTarget };
 
 async function db() {
   const sql = await getSql();
@@ -71,12 +74,24 @@ export type OpsEvent = {
   community: string;
 };
 
+export type StandingWindow = {
+  id: string;
+  title: string;
+  location: string;
+  weekday: number;
+  start_time: string;
+  end_time: string;
+  mode: string;
+  notes: string;
+};
+
 export type ConnectionPulse = {
   communities: CommunityPulse[];
   siblings: SiblingPulse[];
   issues: OpsIssue[];
   serveNeeds: OpsNeed[];
   upcomingEvents: OpsEvent[];
+  standingWindows: StandingWindow[];
 };
 
 async function countPublic(table: string): Promise<number | null> {
@@ -273,7 +288,28 @@ export async function loadConnectionPulse(): Promise<ConnectionPulse> {
     community: String(r.community),
   }));
 
-  return { communities, siblings, issues, serveNeeds, upcomingEvents };
+  let standingWindows: StandingWindow[] = [];
+  try {
+    const winRows = await sql<Record<string, unknown>>`
+      select id, title, location, weekday, start_time, end_time, mode, notes
+      from standing_windows
+      order by weekday asc, start_time asc
+    `;
+    standingWindows = winRows.map((r) => ({
+      id: String(r.id),
+      title: String(r.title),
+      location: String(r.location ?? ""),
+      weekday: Number(r.weekday ?? 0),
+      start_time: String(r.start_time ?? ""),
+      end_time: String(r.end_time ?? ""),
+      mode: String(r.mode ?? "pick"),
+      notes: String(r.notes ?? ""),
+    }));
+  } catch {
+    standingWindows = [];
+  }
+
+  return { communities, siblings, issues, serveNeeds, upcomingEvents, standingWindows };
 }
 
 export const getConnectionPulse = createServerFn({ method: "GET" }).handler(
@@ -294,6 +330,8 @@ export const getConnectionPulse = createServerFn({ method: "GET" }).handler(
   },
 );
 
+const DEFAULT_TARGETS: FanoutTarget[] = ["kindred", "presence", "knd", "lom", "churchconnect"];
+
 export const ownerCreateEvent = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .validator(
@@ -304,6 +342,13 @@ export const ownerCreateEvent = createServerFn({ method: "POST" })
       location?: string;
       starts_at: string;
       kind?: string;
+      targets?: FanoutTarget[];
+      standing?: {
+        weekday: number;
+        start_time: string;
+        end_time?: string;
+        mode?: string;
+      };
     }) => input,
   )
   .handler(async ({ context, data }) => {
@@ -312,14 +357,42 @@ export const ownerCreateEvent = createServerFn({ method: "POST" })
     const title = data.title.trim();
     if (!title) throw new Error("Title required");
     if (!data.starts_at) throw new Error("When is required");
-    const comm = await sql<{ id: string }>`
-      select id from communities where id = ${data.communityId} limit 1
+    const comm = await sql<{ id: string; city: string }>`
+      select id, city from communities where id = ${data.communityId} limit 1
     `;
     if (!comm[0]) throw new Error("Community not found");
     const profile = await sql<{ display_name: string }>`
       select display_name from profiles where user_id = ${context.userId} limit 1
     `;
     const host = profile[0]?.display_name || "Owner listing";
+    const weekdayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    let standingNote = "";
+    if (data.standing) {
+      const day = weekdayNames[data.standing.weekday] ?? "weekly";
+      const mode = data.standing.mode || "pick";
+      standingNote = `Standing window: ${day} ${data.standing.start_time}${data.standing.end_time ? `–${data.standing.end_time}` : ""} (${mode}). Same people, new memory — not a new match.`;
+      const winId = uid("win");
+      try {
+        await sql`
+          insert into standing_windows (
+            id, community_id, title, location, weekday, start_time, end_time, mode, notes
+          ) values (
+            ${winId},
+            ${data.communityId},
+            ${title},
+            ${data.location ?? ""},
+            ${data.standing.weekday},
+            ${data.standing.start_time},
+            ${data.standing.end_time ?? ""},
+            ${mode},
+            ${data.description ?? ""}
+          )
+        `;
+      } catch (e) {
+        standingNote += ` (window row not saved: ${e instanceof Error ? e.message : "unknown"})`;
+      }
+    }
+    const description = [data.description ?? "", standingNote].filter(Boolean).join("\n\n");
     const id = uid("evt");
     await sql`
       insert into events (
@@ -330,7 +403,7 @@ export const ownerCreateEvent = createServerFn({ method: "POST" })
         ${context.userId},
         ${host},
         ${title},
-        ${data.description ?? ""},
+        ${description},
         ${data.kind ?? "social"},
         ${data.location ?? ""},
         ${data.starts_at},
@@ -339,7 +412,22 @@ export const ownerCreateEvent = createServerFn({ method: "POST" })
         0
       )
     `;
-    return { id };
+    const fanout = await fanoutGathering(
+      sql,
+      {
+        title,
+        description,
+        location: data.location ?? "",
+        startsAt: data.starts_at,
+        city: comm[0].city || "Vidalia",
+        hostName: host,
+        ownerUserId: context.userId,
+        kind: data.kind,
+        standingNote,
+      },
+      data.targets?.length ? data.targets : DEFAULT_TARGETS,
+    );
+    return { id, fanout };
   });
 
 export const ownerCreateServeNeed = createServerFn({ method: "POST" })
@@ -353,6 +441,7 @@ export const ownerCreateServeNeed = createServerFn({ method: "POST" })
       description?: string;
       whenNote?: string;
       whereNote?: string;
+      targets?: FanoutTarget[];
     }) => input,
   )
   .handler(async ({ context, data }) => {
@@ -392,20 +481,26 @@ export const ownerCreateServeNeed = createServerFn({ method: "POST" })
       )
     `;
 
-    let lomPosted = false;
-    let lomError: string | null = null;
-    try {
-      await sql.query(
-        `insert into lom_needs_requests
-          (requester_id, requester_name, title, description, category, urgency, city, date_needed, recurring, status)
-         values ($1, $2, $3, $4, 'general', 'normal', $5, $6, false, 'open')`,
-        [null, author, title, desc, "Vidalia", data.whenNote ?? ""],
-      );
-      lomPosted = true;
-    } catch (e) {
-      lomError = e instanceof Error ? e.message : "Live On Mission table not reachable from this schema";
-    }
-    return { id, lomPosted, lomError };
+    const fanout = await fanoutServe(
+      sql,
+      {
+        title,
+        description: desc,
+        orgName: author,
+        orgType: data.orgType,
+        whenNote: data.whenNote ?? "",
+        whereNote: data.whereNote ?? "",
+        city: "Vidalia",
+      },
+      data.targets?.length ? data.targets : ["lom", "kindred", "churchconnect"],
+    );
+    const lom = fanout.find((f) => f.dest === "lom");
+    return {
+      id,
+      fanout,
+      lomPosted: Boolean(lom?.ok),
+      lomError: lom?.ok ? null : lom?.error ?? null,
+    };
   });
 
 export const ownerCreateIssue = createServerFn({ method: "POST" })

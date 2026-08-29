@@ -18,6 +18,8 @@ import {
   ownerUpdateIssue,
   type CommunityPulse,
   type ConnectionPulse,
+  type FanoutResult,
+  type FanoutTarget,
   type SiblingPulse,
 } from "@/lib/community/ops";
 import {
@@ -74,6 +76,13 @@ function AdminPage() {
     location: "",
     starts_at: "",
     description: "",
+    kind: "social",
+    standing: false,
+    weekday: 4,
+    start_time: "18:00",
+    end_time: "21:00",
+    mode: "adventurous",
+    targets: ["kindred", "presence", "knd", "lom", "churchconnect"] as FanoutTarget[],
   });
   const [serveForm, setServeForm] = useState({
     communityId: "",
@@ -118,12 +127,39 @@ function AdminPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPending, user?.id]);
 
+  function reportFanout(fanout: FanoutResult[]) {
+    const ok = fanout.filter((f) => f.ok);
+    const bad = fanout.filter((f) => !f.ok);
+    if (ok.length) toast.success(ok.map((f) => f.label).join(", "));
+    for (const f of bad) toast.error(`${f.label}: ${f.error || "did not take the row"}`);
+    if (!fanout.length) toast.message("Neighborly only — no sister apps selected.");
+  }
+
   async function onCreateEvent(e: FormEvent) {
     e.preventDefault();
     setBusy(true);
     try {
-      await ownerCreateEvent({ data: eventForm });
-      toast.success("Gathering is on the board");
+      const res = await ownerCreateEvent({
+        data: {
+          communityId: eventForm.communityId,
+          title: eventForm.title,
+          location: eventForm.location,
+          starts_at: eventForm.starts_at,
+          description: eventForm.description,
+          kind: eventForm.kind,
+          targets: eventForm.targets,
+          standing: eventForm.standing
+            ? {
+                weekday: eventForm.weekday,
+                start_time: eventForm.start_time,
+                end_time: eventForm.end_time,
+                mode: eventForm.mode,
+              }
+            : undefined,
+        },
+      });
+      toast.success("On the Neighborly board");
+      reportFanout(res.fanout);
       setEventForm((f) => ({ ...f, title: "", location: "", starts_at: "", description: "" }));
       await reload();
     } catch (err) {
@@ -138,12 +174,8 @@ function AdminPage() {
     setBusy(true);
     try {
       const res = await ownerCreateServeNeed({ data: serveForm });
-      if (res.lomPosted) {
-        toast.success("Posted on Neighborly and Live On Mission");
-      } else {
-        toast.message("Posted on Neighborly. Live On Mission did not take the row.");
-        if (res.lomError) toast.error(res.lomError);
-      }
+      toast.success("On the Neighborly serve board");
+      reportFanout(res.fanout);
       setServeForm((f) => ({ ...f, orgName: "", title: "", whenNote: "", whereNote: "", description: "" }));
       await reload();
     } catch (err) {
@@ -249,7 +281,8 @@ function AdminPage() {
                 <CardHeader>
                   <CardTitle>Add a gathering</CardTitle>
                   <CardDescription>
-                    Lands on the Neighborly board. Use public listings only when they are real.
+                    One real listing. Neighborly is the owner door — not a new hub. Check where
+                    it should appear. Missing tables fail loud; we will not pretend it landed.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -289,6 +322,102 @@ function AdminPage() {
                         rows={3}
                       />
                     </Field>
+                    <Field label="Kind">
+                      <select
+                        className="flex h-10 w-full rounded-md border border-border bg-bg px-3 text-sm"
+                        value={eventForm.kind}
+                        onChange={(e) => setEventForm((f) => ({ ...f, kind: e.target.value }))}
+                      >
+                        <option value="social">Social / play</option>
+                        <option value="food">Meal</option>
+                        <option value="cleanup">Serve / cleanup</option>
+                        <option value="kids">Kids</option>
+                        <option value="meeting">Meeting</option>
+                      </select>
+                    </Field>
+                    <fieldset className="space-y-2">
+                      <legend className="text-sm font-medium">Also show on</legend>
+                      {(
+                        [
+                          ["kindred", "Kindred"],
+                          ["presence", "Presence"],
+                          ["knd", "Kids Need Dads"],
+                          ["lom", "Live On Mission"],
+                          ["churchconnect", "ChurchConnect (activities)"],
+                        ] as const
+                      ).map(([id, label]) => (
+                        <label key={id} className="flex items-center gap-2 text-sm">
+                          <input
+                            type="checkbox"
+                            checked={eventForm.targets.includes(id)}
+                            onChange={(e) =>
+                              setEventForm((f) => ({
+                                ...f,
+                                targets: e.target.checked
+                                  ? [...f.targets, id]
+                                  : f.targets.filter((t) => t !== id),
+                              }))
+                            }
+                          />
+                          {label}
+                        </label>
+                      ))}
+                    </fieldset>
+                    <label className="flex items-start gap-2 text-sm">
+                      <input
+                        type="checkbox"
+                        className="mt-1"
+                        checked={eventForm.standing}
+                        onChange={(e) => setEventForm((f) => ({ ...f, standing: e.target.checked }))}
+                      />
+                      Standing window — same people, this time each week (not a new match).
+                    </label>
+                    {eventForm.standing && (
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        <Field label="Weekday">
+                          <select
+                            className="flex h-10 w-full rounded-md border border-border bg-bg px-3 text-sm"
+                            value={eventForm.weekday}
+                            onChange={(e) =>
+                              setEventForm((f) => ({ ...f, weekday: Number(e.target.value) }))
+                            }
+                          >
+                            {["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map(
+                              (d, i) => (
+                                <option key={d} value={i}>
+                                  {d}
+                                </option>
+                              ),
+                            )}
+                          </select>
+                        </Field>
+                        <Field label="Mode">
+                          <select
+                            className="flex h-10 w-full rounded-md border border-border bg-bg px-3 text-sm"
+                            value={eventForm.mode}
+                            onChange={(e) => setEventForm((f) => ({ ...f, mode: e.target.value }))}
+                          >
+                            <option value="pick">We pick</option>
+                            <option value="vote">We vote</option>
+                            <option value="adventurous">Adventurous — try the suggestion</option>
+                          </select>
+                        </Field>
+                        <Field label="From">
+                          <Input
+                            type="time"
+                            value={eventForm.start_time}
+                            onChange={(e) => setEventForm((f) => ({ ...f, start_time: e.target.value }))}
+                          />
+                        </Field>
+                        <Field label="To">
+                          <Input
+                            type="time"
+                            value={eventForm.end_time}
+                            onChange={(e) => setEventForm((f) => ({ ...f, end_time: e.target.value }))}
+                          />
+                        </Field>
+                      </div>
+                    )}
                     <Button type="submit" disabled={busy}>
                       Post gathering
                     </Button>
@@ -300,8 +429,9 @@ function AdminPage() {
                 <CardHeader>
                   <CardTitle>Volunteer request</CardTitle>
                   <CardDescription>
-                    Church, school, government, or civic group. People who want to serve
-                    can find this on the Vidalia board. We also try Live On Mission.
+                    Church, school, government, or civic group. Lands on Neighborly serve,
+                    then we try Live On Mission, Kindred (volunteer), and ChurchConnect
+                    volunteer opportunities when a Vidalia church row exists.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -485,6 +615,28 @@ function AdminPage() {
                 </CardContent>
               </Card>
             </div>
+
+            {pulse.standingWindows.length > 0 && (
+              <section className="space-y-3">
+                <h2 className="font-display text-xl font-semibold">Standing windows</h2>
+                <p className="text-sm text-fg-muted">
+                  Recurring containers so friendship does not die after one good night. Each week
+                  still needs a real listing — we do not invent the activity.
+                </p>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {pulse.standingWindows.map((w) => (
+                    <div key={w.id} className="rounded-[var(--radius-md)] border border-border p-3">
+                      <p className="font-medium">{w.title}</p>
+                      <p className="text-xs text-fg-muted">
+                        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][w.weekday]} {w.start_time}
+                        {w.end_time ? `–${w.end_time}` : ""} · {w.mode}
+                      </p>
+                      <p className="text-xs text-fg-subtle">{w.location || "Place TBA"}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
 
             <section className="space-y-3">
               <h2 className="font-display text-xl font-semibold">Safety reports</h2>
