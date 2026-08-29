@@ -30,7 +30,15 @@ export function CommunityCover({
       <div className="relative z-10 space-y-2">
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="secondary">{KIND_LABELS[community.kind]}</Badge>
-          {community.is_featured && <Badge>First test market</Badge>}
+          {community.is_featured && (
+            <Badge>
+              {community.slug === "milstead"
+                ? "First test market"
+                : community.slug === "vidalia"
+                  ? "Live in Vidalia"
+                  : "Featured"}
+            </Badge>
+          )}
           <span className="text-xs text-fg-muted">
             {community.city}, {community.state} · {community.member_count} neighbors
           </span>
