@@ -239,7 +239,30 @@ export const auth = betterAuth({
   session: { cookieCache: { enabled: true, maxAge: 300 } },
 
   // Local email/password — toggled only via `./email-password` (not a plugin).
-  ...(emailAndPasswordEnabled ? { emailAndPassword: { enabled: true } } : {}),
+  // sendResetPassword is required for DC-10. Neighborly cannot use the shared
+  // GoTrue ecosystem-auth-reset function (this app's users live in Better Auth).
+  ...(emailAndPasswordEnabled
+    ? {
+        emailAndPassword: {
+          enabled: true,
+          resetPasswordTokenExpiresIn: 60 * 60,
+          sendResetPassword: async ({
+            user,
+            url,
+          }: {
+            user: { email: string; name?: string | null };
+            url: string;
+          }) => {
+            const { sendNeighborlyResetMail } = await import("./reset-mail");
+            await sendNeighborlyResetMail({
+              email: user.email,
+              name: user.name ?? undefined,
+              url,
+            });
+          },
+        },
+      }
+    : {}),
 
   // `__Host-` prefixed cookies: the browser REFUSES any same-named cookie that
   // carries a `Domain` attribute, so a sibling `*.grok.me` app cannot "toss" a

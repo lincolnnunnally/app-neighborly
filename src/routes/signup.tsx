@@ -164,6 +164,17 @@ function SignupPage() {
                   />
                   <p className="text-xs text-fg-subtle">At least 8 characters.</p>
                 </div>
+                <p className="text-xs text-fg-muted">
+                  By continuing you agree to Neighborly{" "}
+                  <Link to="/terms" className="text-primary underline-offset-4 hover:underline">
+                    Terms
+                  </Link>{" "}
+                  and{" "}
+                  <Link to="/privacy" className="text-primary underline-offset-4 hover:underline">
+                    Privacy
+                  </Link>
+                  . These pages are working product copy pending attorney review.
+                </p>
                 {error && (
                   <p className="rounded-[var(--radius-sm)] bg-danger-soft px-3 py-2 text-sm text-danger">
                     {error}

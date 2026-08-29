@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { ChipSelect } from "@/components/community/chip-select";
 import { getMyProfile, upsertProfile } from "@/lib/community/server";
+import { listMyBlocks, unblockUser, type UserBlock } from "@/lib/community/safety";
 import {
   AVAILABILITY_OPTIONS,
   FAITH_POSTURE_OPTIONS,
@@ -25,9 +26,11 @@ export const Route = createFileRoute("/app/settings")({
 function SettingsPage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [busy, setBusy] = useState(false);
+  const [blocks, setBlocks] = useState<UserBlock[]>([]);
 
   useEffect(() => {
     getMyProfile().then(setProfile).catch(() => setProfile(null));
+    listMyBlocks().then(setBlocks).catch(() => setBlocks([]));
   }, []);
 
   if (!profile) {
@@ -196,6 +199,42 @@ function SettingsPage() {
           {busy ? "Saving…" : "Save changes"}
         </Button>
       </form>
+
+      <section className="space-y-3 rounded-[var(--radius-xl)] border border-border bg-bg-elevated p-4">
+        <div>
+          <h2 className="font-medium">Blocked neighbors</h2>
+          <p className="text-sm text-fg-muted">
+            Blocked people leave your feed. This does not delete their account.
+          </p>
+        </div>
+        {blocks.length === 0 ? (
+          <p className="text-sm text-fg-subtle">You have not blocked anyone.</p>
+        ) : (
+          <ul className="space-y-2">
+            {blocks.map((b) => (
+              <li key={b.blocked_id} className="flex items-center justify-between gap-3">
+                <span className="text-sm">{b.display_name}</span>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={async () => {
+                    try {
+                      await unblockUser({ data: { userId: b.blocked_id } });
+                      setBlocks((prev) => prev.filter((x) => x.blocked_id !== b.blocked_id));
+                      toast.success("Unblocked");
+                    } catch (err) {
+                      toast.error(err instanceof Error ? err.message : "Could not unblock");
+                    }
+                  }}
+                >
+                  Unblock
+                </Button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
   );
 }

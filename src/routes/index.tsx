@@ -437,7 +437,7 @@ function LandingPage() {
           <div className="flex items-center gap-2 text-fg">
             <HandHeart className="h-4 w-4 text-primary" />
             <span className="font-display font-semibold">Neighborly</span>
-            <span className="text-sm text-fg-subtle">· Milstead first market · United Under God</span>
+            <span className="text-sm text-fg-subtle">· Vidalia first market · United Under God</span>
           </div>
           <div className="flex flex-wrap items-center gap-4 text-sm text-fg-subtle">
             <Link to="/privacy" className="hover:text-fg">

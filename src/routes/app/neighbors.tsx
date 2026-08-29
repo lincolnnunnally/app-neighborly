@@ -11,6 +11,7 @@ import {
 import { useCurrentUser } from "@/lib/auth/use-current-user";
 import { getCommunityFeed, getMyMemberships } from "@/lib/community/server";
 import type { Membership, Neighbor } from "@/lib/community/types";
+import { ReportBlockControls } from "@/components/safety/report-block";
 
 export const Route = createFileRoute("/app/neighbors")({
   component: NeighborsPage,
@@ -91,6 +92,18 @@ function NeighborsPage() {
                 </Badge>
               ))}
             </div>
+            {n.user_id !== user?.id && (
+              <div className="mt-3">
+                <ReportBlockControls
+                  contentType="person"
+                  reportedUserId={n.user_id}
+                  reportedUserName={n.display_name}
+                  contentExcerpt={n.bio || n.display_name}
+                  allowBlock
+                  onBlocked={() => void reload(communityId)}
+                />
+              </div>
+            )}
           </article>
         ))}
       </div>

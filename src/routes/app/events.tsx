@@ -35,6 +35,7 @@ import {
   type Membership,
 } from "@/lib/community/types";
 import { formatEventWhen } from "@/lib/utils";
+import { ReportBlockControls } from "@/components/safety/report-block";
 
 export const Route = createFileRoute("/app/events")({
   component: EventsPage,
@@ -195,6 +196,20 @@ function EventsPage() {
               <p className="text-sm text-fg-muted">
                 {active.location} · {active.rsvp_count} going · {active.host_name}
               </p>
+              {active.user_id !== user?.id && (
+                <ReportBlockControls
+                  contentType="event"
+                  contentId={active.id}
+                  reportedUserId={active.user_id}
+                  reportedUserName={active.host_name}
+                  contentExcerpt={active.title}
+                  allowBlock
+                  onBlocked={() => {
+                    setActive(null);
+                    void reload(communityId);
+                  }}
+                />
+              )}
               <DialogFooter>
                 <Button variant="secondary" onClick={() => setActive(null)}>
                   Close

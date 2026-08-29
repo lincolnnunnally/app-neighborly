@@ -20,6 +20,11 @@ import {
   type ConnectionPulse,
   type SiblingPulse,
 } from "@/lib/community/ops";
+import {
+  listOpenSafetyReports,
+  ownerUpdateSafetyReport,
+  type SafetyReport,
+} from "@/lib/community/safety";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { formatEventWhen } from "@/lib/utils";
 
@@ -60,6 +65,7 @@ function AdminPage() {
   const [email, setEmail] = useState<string | null>(null);
   const [gate, setGate] = useState<"loading" | "signed_out" | "forbidden" | "ok">("loading");
   const [pulse, setPulse] = useState<ConnectionPulse | null>(null);
+  const [reports, setReports] = useState<SafetyReport[]>([]);
   const [busy, setBusy] = useState(false);
 
   const [eventForm, setEventForm] = useState({
@@ -81,7 +87,11 @@ function AdminPage() {
   const [issueForm, setIssueForm] = useState({ title: "", body: "", source_app: "neighborly" });
 
   async function reload() {
-    const [dash, next] = await Promise.all([getOwnerDashboard(), getConnectionPulse()]);
+    const [dash, next, safety] = await Promise.all([
+      getOwnerDashboard(),
+      getConnectionPulse(),
+      listOpenSafetyReports(),
+    ]);
     if (dash.status === "signed_out" || next.status === "signed_out") {
       setGate("signed_out");
       return;
@@ -94,6 +104,7 @@ function AdminPage() {
     setGate("ok");
     setEmail(next.email);
     setPulse(next.pulse);
+    setReports(safety.status === "ok" ? safety.reports : []);
     const vidalia = next.pulse.communities.find((c) => c.slug === "vidalia") ?? next.pulse.communities[0];
     if (vidalia) {
       setEventForm((f) => ({ ...f, communityId: f.communityId || vidalia.id }));
@@ -474,6 +485,73 @@ function AdminPage() {
                 </CardContent>
               </Card>
             </div>
+
+            <section className="space-y-3">
+              <h2 className="font-display text-xl font-semibold">Safety reports</h2>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Reports and blocks</CardTitle>
+                  <CardDescription>
+                    Neighbors can report people, needs, and gatherings. Empty means no one has
+                    reported yet — we will not invent issues.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  {reports.length === 0 ? (
+                    <p className="text-sm text-fg-muted">No reports yet.</p>
+                  ) : (
+                    reports.map((r) => (
+                      <div key={r.id} className="rounded-[var(--radius-md)] border border-border p-3">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Badge variant={r.status === "resolved" ? "secondary" : "danger"}>
+                            {r.status}
+                          </Badge>
+                          <span className="text-xs text-fg-subtle">
+                            {r.content_type} · {r.reason}
+                          </span>
+                        </div>
+                        {r.content_excerpt ? (
+                          <p className="mt-1 text-sm">{r.content_excerpt}</p>
+                        ) : null}
+                        {r.details ? <p className="text-sm text-fg-muted">{r.details}</p> : null}
+                        {r.status !== "resolved" && (
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              disabled={busy}
+                              onClick={() =>
+                                void ownerUpdateSafetyReport({
+                                  data: { id: r.id, status: "reviewing" },
+                                })
+                                  .then(reload)
+                                  .catch((err) => toast.error(String(err)))
+                              }
+                            >
+                              Reviewing
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="secondary"
+                              disabled={busy}
+                              onClick={() =>
+                                void ownerUpdateSafetyReport({
+                                  data: { id: r.id, status: "resolved" },
+                                })
+                                  .then(reload)
+                                  .catch((err) => toast.error(String(err)))
+                              }
+                            >
+                              Resolved
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  )}
+                </CardContent>
+              </Card>
+            </section>
 
             <section className="grid gap-6 lg:grid-cols-2">
               <Card>

@@ -3,6 +3,7 @@ import { getSql } from "@/lib/db";
 import { authMiddleware } from "@/lib/auth/middleware";
 import { parseJsonArray, uid } from "@/lib/utils";
 import { ensureSeeded } from "./seed";
+import { blockedUserIds } from "./safety";
 import type {
   Community,
   CommunityEvent,
@@ -285,26 +286,32 @@ export const getCommunityFeed = createServerFn({ method: "GET" })
       limit 40
     `;
 
-    const neighbors: Neighbor[] = neighborRows.map((r) => ({
-      user_id: String(r.user_id),
-      display_name: String(r.display_name),
-      bio: String(r.bio ?? ""),
-      street_hint: String(r.street_hint ?? ""),
-      skills: parseJsonArray(String(r.skills ?? "[]")),
-      help_offerings: parseJsonArray(String(r.help_offerings ?? "[]")),
-      is_new_resident: Boolean(r.is_new_resident),
-      is_youth: Boolean(r.is_youth),
-      role: String(r.role),
-    }));
+    const hidden = await blockedUserIds(data.userId);
+    const visible = <T extends { user_id: string }>(rows: T[]) =>
+      hidden.size ? rows.filter((row) => !hidden.has(row.user_id)) : rows;
+
+    const neighbors: Neighbor[] = visible(
+      neighborRows.map((r) => ({
+        user_id: String(r.user_id),
+        display_name: String(r.display_name),
+        bio: String(r.bio ?? ""),
+        street_hint: String(r.street_hint ?? ""),
+        skills: parseJsonArray(String(r.skills ?? "[]")),
+        help_offerings: parseJsonArray(String(r.help_offerings ?? "[]")),
+        is_new_resident: Boolean(r.is_new_resident),
+        is_youth: Boolean(r.is_youth),
+        role: String(r.role),
+      })),
+    );
 
     // DC-1: never inject named sample neighbors. Empty people lists stay empty
     // until real members join.
 
     return {
       community,
-      needs: needsRows.map(mapNeed),
-      services: serviceRows.map(mapService),
-      events: eventRows.map(mapEvent),
+      needs: visible(needsRows.map(mapNeed)),
+      services: visible(serviceRows.map(mapService)),
+      events: visible(eventRows.map(mapEvent)),
       facilities: facilityRows.map(mapFacility),
       neighbors,
     };

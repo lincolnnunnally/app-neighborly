@@ -35,6 +35,7 @@ import {
   type HelpOffer,
 } from "@/lib/community/server";
 import { NEED_CATEGORIES, type Membership, type Need } from "@/lib/community/types";
+import { ReportBlockControls } from "@/components/safety/report-block";
 
 export const Route = createFileRoute("/app/needs")({
   component: NeedsPage,
@@ -311,6 +312,21 @@ function NeedsPage() {
                     </div>
                   ))}
                 </div>
+              )}
+
+              {active.user_id !== user?.id && (
+                <ReportBlockControls
+                  contentType="need"
+                  contentId={active.id}
+                  reportedUserId={active.user_id}
+                  reportedUserName={active.author_name}
+                  contentExcerpt={active.title}
+                  allowBlock
+                  onBlocked={() => {
+                    setActive(null);
+                    void reload(communityId);
+                  }}
+                />
               )}
 
               {active.user_id === user?.id ? (
