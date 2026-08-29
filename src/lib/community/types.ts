@@ -151,6 +151,7 @@ export const NEED_CATEGORIES = [
   { id: "errands", label: "Errands" },
   { id: "tech", label: "Tech" },
   { id: "care", label: "Care & visits" },
+  { id: "serve", label: "Volunteer / serve" },
   { id: "project", label: "Bigger project" },
   { id: "other", label: "Other" },
 ];
@@ -170,6 +171,7 @@ export const EVENT_KINDS = [
   { id: "kids", label: "Kids" },
   { id: "food", label: "Food / BBQ" },
   { id: "meeting", label: "Meeting" },
+  { id: "serve", label: "Volunteer / serve" },
   { id: "other", label: "Other" },
 ];
 

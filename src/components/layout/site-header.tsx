@@ -48,6 +48,9 @@ export function SiteHeader({ solid = false }: { solid?: boolean }) {
               <div className="hidden sm:block">
                 <UserButton />
               </div>
+              <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
+                <Link to="/admin">Ops</Link>
+              </Button>
               <Button asChild size="sm">
                 <Link to="/app">My hub</Link>
               </Button>
