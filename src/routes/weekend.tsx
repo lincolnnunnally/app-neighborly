@@ -27,9 +27,10 @@ export const Route = createFileRoute("/weekend")({
     return { plan };
   },
   head: ({ match, loaderData }) => {
-    const place = (match.search as WeekendSearch).place || loaderData?.plan.place.slug || "vidalia";
+    const place =
+      (match.search as WeekendSearch).place || loaderData?.plan?.place?.slug || "vidalia";
     const label =
-      loaderData?.plan.place.name
+      loaderData?.plan?.place?.name
         ? `${loaderData.plan.place.name}, ${loaderData.plan.place.state}`
         : place === "vidalia"
           ? "Vidalia, GA"
@@ -92,7 +93,7 @@ function WeekendPage() {
   const search = Route.useSearch();
   const loaded = Route.useLoaderData();
   const { user } = useCurrentUserState();
-  const [plan, setPlan] = useState<WeekendPlan | null>(loaded.plan);
+  const [plan, setPlan] = useState<WeekendPlan | null>(loaded?.plan ?? null);
   const [error, setError] = useState("");
   const [mode, setMode] = useState<"child" | "alone">("child");
 
