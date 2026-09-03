@@ -9,7 +9,7 @@ import { PlaceSearch } from "@/components/community/place-search";
 import { JsonLd } from "@/components/community/json-ld";
 import { getMyProfile } from "@/lib/community/server";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
-import { buildWeekendPlan, type WeekendPlan, type WeekendSlot } from "@/lib/community/weekend";
+import type { WeekendPlan, WeekendSlot } from "@/lib/community/weekend";
 import { formatEventWhen } from "@/lib/utils";
 
 type WeekendSearch = { place?: string; q?: string };
@@ -19,22 +19,10 @@ export const Route = createFileRoute("/weekend")({
     place: typeof s.place === "string" ? s.place : undefined,
     q: typeof s.q === "string" ? s.q : undefined,
   }),
-  loader: async ({ search }) => {
-    const plan = await buildWeekendPlan({
-      slug: search.place,
-      query: search.place || search.q || "vidalia",
-    });
-    return { plan };
-  },
-  head: ({ match, loaderData }) => {
-    const place =
-      (match.search as WeekendSearch).place || loaderData?.plan?.place?.slug || "vidalia";
-    const label =
-      loaderData?.plan?.place?.name
-        ? `${loaderData.plan.place.name}, ${loaderData.plan.place.state}`
-        : place === "vidalia"
-          ? "Vidalia, GA"
-          : place;
+  head: ({ match }) => {
+    const search = (match.search ?? {}) as WeekendSearch;
+    const place = search.place || "vidalia";
+    const label = place === "vidalia" ? "Vidalia, GA" : place.replace(/-/g, " ");
     return {
       meta: [
         { title: `What's going on in ${label} this week — Neighborly` },
@@ -91,9 +79,8 @@ function SlotCard({ slot }: { slot: WeekendSlot }) {
 
 function WeekendPage() {
   const search = Route.useSearch();
-  const loaded = Route.useLoaderData();
   const { user } = useCurrentUserState();
-  const [plan, setPlan] = useState<WeekendPlan | null>(loaded?.plan ?? null);
+  const [plan, setPlan] = useState<WeekendPlan | null>(null);
   const [error, setError] = useState("");
   const [mode, setMode] = useState<"child" | "alone">("child");
 
