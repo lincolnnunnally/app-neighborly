@@ -296,6 +296,29 @@ async function ensureVidaliaV3(sql: Sql): Promise<void> {
   `;
 }
 
+/** Fixed calendar date in America/New_York. */
+function easternDateISO(dateStr: string, hour: number, minute: number): string {
+  const hh = String(hour).padStart(2, "0");
+  const mm = String(minute).padStart(2, "0");
+  for (const off of ["-04:00", "-05:00"] as const) {
+    const iso = `${dateStr}T${hh}:${mm}:00${off}`;
+    const dt = new Date(iso);
+    const checkDate = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "America/New_York",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(dt);
+    const checkHour = Number(
+      new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", hour: "2-digit", hour12: false })
+        .format(dt)
+        .replace("24", "0"),
+    );
+    if (checkDate === dateStr && checkHour === hour) return iso;
+  }
+  return `${dateStr}T${hh}:${mm}:00-04:00`;
+}
+
 /** Sunday=0 … Saturday=6 in America/New_York. Returns an offset ISO string. */
 function nextEasternISO(sundayBasedDow: number, hour: number, minute: number): string {
   const tz = "America/New_York";
@@ -464,6 +487,66 @@ async function refreshVidaliaPublicEvents(sql: Sql): Promise<void> {
       kind: "social",
       location: "Downtown Vidalia — host names the table when they RSVP",
       starts_at: nextEasternISO(6, 9, 0),
+    },
+    {
+      id: "evt_pal_paw_party_20260905",
+      community_id: "comm_vidalia",
+      title: "PAW Patrol: Dino Movie watch party",
+      description:
+        "Public listing from The Pal Theatre (thepaltheatre.com): Saturday Sept 5, 2026 at 10:00am. $5. Decorations, photo ops, themed treats, crafts, tattoos, raffle. Confirm tickets on the Pal site before you go. Air-conditioned — a good heat-of-the-day plan with a child.",
+      kind: "family",
+      location: "The Pal Theatre, 122 Church St, Vidalia",
+      starts_at: easternDateISO("2026-09-05", 10, 0),
+    },
+    {
+      id: "evt_pal_paw_sat_1400",
+      community_id: "comm_vidalia",
+      title: "PAW Patrol: Dino Movie — 2pm show",
+      description:
+        "Public listing: Pal Theatre regular showing Saturday Sept 5, 2026 at 2:00pm. Confirm showtimes at thepaltheatre.com. Indoor.",
+      kind: "family",
+      location: "The Pal Theatre, 122 Church St, Vidalia",
+      starts_at: easternDateISO("2026-09-05", 14, 0),
+    },
+    {
+      id: "evt_pal_freebird_20260903",
+      community_id: "comm_vidalia",
+      title: "Freebird: The Ultimate Lynyrd Skynyrd Experience",
+      description:
+        "Public listing from The Pal Theatre: Thursday Sept 3, 2026 at 7:00pm. Southern rock tribute. Tickets at thepaltheatre.com. Not a kid show.",
+      kind: "social",
+      location: "The Pal Theatre, 122 Church St, Vidalia",
+      starts_at: easternDateISO("2026-09-03", 19, 0),
+    },
+    {
+      id: "evt_altama_lipsync_20260910",
+      community_id: "comm_vidalia",
+      title: "Altama Museum Lip Sync Battle at STC",
+      description:
+        "Public listing via Visit Vidalia: Thursday Sept 10, 2026. Confirm time and tickets with Altama Museum / Visit Vidalia before you go (visitvidaliaga.com).",
+      kind: "social",
+      location: "Southeastern Technical College, Vidalia",
+      starts_at: easternDateISO("2026-09-10", 19, 0),
+    },
+    {
+      id: "evt_pal_gno_20260912",
+      community_id: "comm_vidalia",
+      title: "Girls Night Out: Practical Magic 2",
+      description:
+        "Public listing from The Pal Theatre: Saturday Sept 12, 2026 at 6:00pm. Two glasses of wine or wine slushies and charcuterie included. 21+ energy — not a child plan. Tickets at thepaltheatre.com.",
+      kind: "social",
+      location: "The Pal Theatre, 122 Church St, Vidalia",
+      starts_at: easternDateISO("2026-09-12", 18, 0),
+    },
+    {
+      id: "evt_dva_winedown_20260917",
+      community_id: "comm_vidalia",
+      title: "Wine Down Downtown",
+      description:
+        "Public listing via Visit Vidalia / Downtown Vidalia Association: Thursday Sept 17, 2026. Confirm details at visitvidaliaga.com before you go. A way to meet people who already live here.",
+      kind: "social",
+      location: "Downtown Vidalia",
+      starts_at: easternDateISO("2026-09-17", 18, 0),
     },
   ];
 
