@@ -66,7 +66,9 @@ function OnboardingPage() {
   const [faithPosture, setFaithPosture] = useState("");
   const [hopingFor, setHopingFor] = useState("");
   const [availability, setAvailability] = useState<string[]>([]);
-  const [isNew, setIsNew] = useState(false);
+  const [isNew, setIsNew] = useState(
+    () => search.code === "VIDALIA-WELCOME" || search.community === "vidalia",
+  );
   const [isYouth, setIsYouth] = useState(false);
   const [notifyEvents, setNotifyEvents] = useState(true);
   const [notifyNeeds, setNotifyNeeds] = useState(true);

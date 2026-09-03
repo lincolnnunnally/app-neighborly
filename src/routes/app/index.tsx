@@ -92,6 +92,9 @@ function AppHome() {
             </Link>
           </Button>
           <Button asChild size="sm" variant="secondary">
+            <Link to="/weekend">This weekend</Link>
+          </Button>
+          <Button asChild size="sm" variant="secondary">
             <Link to="/app/needs">Post or answer a need</Link>
           </Button>
         </div>
@@ -110,7 +113,7 @@ function AppHome() {
           </CardHeader>
           <CardContent className="space-y-2">
             {recommendNextSteps(profile).slice(0, 5).map((rec) =>
-              rec.kind === "community" ? (
+              rec.href.startsWith("/c/") ? (
                 <Link
                   key={rec.href}
                   to="/c/$slug"
@@ -120,6 +123,15 @@ function AppHome() {
                   <p className="text-sm font-medium text-fg">{rec.title}</p>
                   <p className="text-xs text-fg-muted">{rec.why}</p>
                 </Link>
+              ) : rec.href.startsWith("/") ? (
+                <a
+                  key={rec.href}
+                  href={rec.href}
+                  className="block rounded-[var(--radius-lg)] border border-border p-3 no-underline hover:border-border-strong"
+                >
+                  <p className="text-sm font-medium text-fg">{rec.title}</p>
+                  <p className="text-xs text-fg-muted">{rec.why}</p>
+                </a>
               ) : (
                 <a
                   key={rec.href}

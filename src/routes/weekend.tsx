@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { getWeekendPlan, type WeekendPlan, type WeekendSlot } from "@/lib/community/weekend";
+import type { WeekendPlan, WeekendSlot } from "@/lib/community/weekend";
 import { formatEventWhen } from "@/lib/utils";
 
 export const Route = createFileRoute("/weekend")({
@@ -58,8 +58,15 @@ function WeekendPage() {
   const [mode, setMode] = useState<"child" | "alone">("child");
 
   useEffect(() => {
-    getWeekendPlan()
-      .then(setPlan)
+    fetch("/api/weekend")
+      .then(async (res) => {
+        const d = (await res.json()) as { ok?: boolean; plan?: WeekendPlan; error?: string };
+        if (!res.ok || !d.ok || !d.plan) {
+          setError(d.error || "Could not load this weekend's plan. Try the Vidalia board.");
+          return;
+        }
+        setPlan(d.plan);
+      })
       .catch(() => setError("Could not load this weekend's plan. Try the Vidalia board."));
   }, []);
 

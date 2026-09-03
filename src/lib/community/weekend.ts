@@ -105,11 +105,19 @@ function hourEastern(iso: string): number {
   );
 }
 
-export const getWeekendPlan = createServerFn({ method: "GET" }).handler(async () => {
+function saturdayOn(days: WeatherDay[]): WeatherDay | undefined {
+  return days.find((d) => {
+    const [y, m, dd] = d.date.split("-").map(Number);
+    return new Date(Date.UTC(y, m - 1, dd, 16, 0, 0)).getUTCDay() === 6;
+  });
+}
+
+export async function buildWeekendPlan(): Promise<WeekendPlan> {
   const sql = await getSql();
   await ensureSeeded(sql);
   const { days, error } = await fetchWeather();
-  const rows = await sql<{
+  const cutoffMs = Date.now() - 6 * 3600 * 1000;
+  const rawRows = await sql<{
     id: string;
     title: string;
     description: string;
@@ -118,13 +126,16 @@ export const getWeekendPlan = createServerFn({ method: "GET" }).handler(async ()
     starts_at: string;
     community_id: string;
   }>`
-    select id, title, description, kind, location, starts_at::text, community_id
+    select id, title, description, kind, location, starts_at::text as starts_at, community_id
     from events
     where community_id in ('comm_vidalia', 'comm_vidalia_pickleball', 'comm_vidalia_dads')
-      and starts_at > now() - interval '6 hours'
     order by starts_at asc
-    limit 40
+    limit 80
   `;
+  const rows = rawRows.filter((row) => {
+    const t = Date.parse(String(row.starts_at));
+    return Number.isFinite(t) && t >= cutoffMs;
+  });
 
   const withChild: WeekendSlot[] = [];
   const alone: WeekendSlot[] = [];
@@ -173,7 +184,7 @@ export const getWeekendPlan = createServerFn({ method: "GET" }).handler(async ()
   }
 
   // Standing places (not ticketed events) — honest labels.
-  const sat = days.find((d) => new Date(d.date + "T12:00:00").getUTCDay() === 6) ?? days[2];
+  const sat = saturdayOn(days) ?? days[2];
   if (sat) {
     withChild.push({
       id: "place_ben_smith",
@@ -225,4 +236,8 @@ export const getWeekendPlan = createServerFn({ method: "GET" }).handler(async ()
     weatherError: error,
   };
   return plan;
+}
+
+export const getWeekendPlan = createServerFn({ method: "GET" }).handler(async () => {
+  return buildWeekendPlan();
 });
