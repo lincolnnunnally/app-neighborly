@@ -212,8 +212,8 @@ function SettingsPage() {
             ))}
           </div>
           <p className="text-xs text-fg-subtle">
-            If you need seated options, we will not lead with hiking. Fit matters more if you
-            ever pay for a digest.
+            This ranks what we show first. We still list the rest of the town — a library
+            night stays visible if you love trails, and a park stays visible if you prefer a chair.
           </p>
         </div>
         <div className="space-y-2">

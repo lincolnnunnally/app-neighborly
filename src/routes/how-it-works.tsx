@@ -49,7 +49,7 @@ function HowItWorksPage() {
           },
           {
             title: "7. Fit, not a firehose",
-            body: "If you prefer seated indoor time, we will not lead with hiking. If 30 neighbors mark knitting, a church or library can see that demand — we do not invent a class. A weekly email of fits is the paid shape later. We will not charge until that mail actually arrives.",
+            body: "Tell us if you want a chair at the library, pickleball, or canoeing. We sort closer-to-you first and still list the rest of the town. If neighbors mark crochet, a church or library can see that demand — we do not invent a class. Host “who’s interested?” for free. A paid highlight for restaurants or coaches comes later, only when a real person sees it.",
           },
           {
             title: "8. The board is a doorway",

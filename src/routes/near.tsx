@@ -52,11 +52,10 @@ function NearPage() {
               or organizer adds a public listing.
             </p>
             <p>
-              A weekly fit email (indoor vs outdoor, seated vs hiking, knitting vs pickleball)
-              is the Pro shape — a few dollars a month —{" "}
-              <strong className="text-fg">when we can actually send it</strong>. We will not
-              take money first. Ads on a belonging board would fight the product; we are not
-              turning those on.
+              Empty towns fill when a neighbor hosts: “who wants spoon carving?” or a
+              restaurant posts trivia. Posting is free. A paid highlight / banner for
+              businesses is the later shape — we will not charge until that slot is actually
+              shown. We are not running display ads on the belonging board.
             </p>
             <p>
               <Link to="/weekend" search={{ place: "vidalia" }} className="underline">

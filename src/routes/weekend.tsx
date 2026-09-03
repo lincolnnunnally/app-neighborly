@@ -52,6 +52,8 @@ function SlotCard({ slot }: { slot: WeekendSlot }) {
     <article className="surface-card space-y-3 p-4">
       <div className="flex flex-wrap items-center gap-2">
         <Badge variant={slot.indoor ? "secondary" : "accent"}>{slot.indoor ? "Indoor" : "Outside"}</Badge>
+        {slot.fitLabel === "good" && <Badge variant="sky">Closer to you</Badge>}
+        {slot.fitLabel === "stretch" && <Badge variant="outline">A stretch</Badge>}
         <span className="text-sm text-fg-muted">{formatEventWhen(slot.starts_at)}</span>
       </div>
       <h3 className="font-display text-lg font-semibold text-fg">{slot.title}</h3>
@@ -196,8 +198,8 @@ function WeekendPage() {
         <div className="grid gap-4 lg:grid-cols-2">
           {slots.length === 0 && !error && (
             <p className="text-sm text-fg-muted">
-              No dated listings in this window yet. The Pal, Visit Vidalia, and Parks & Rec links
-              below still work.
+              No dated listings in this window yet. Host one — a book club, tennis, trivia —
+              or use the Pal, Visit Vidalia, and Parks & Rec links below. We will not invent a crowd.
             </p>
           )}
           {slots.map((slot) => (
@@ -252,7 +254,7 @@ function WeekendPage() {
                 to="/c/$slug"
                 params={{ slug: plan?.place?.slug || "vidalia" }}
               >
-                {plan?.place?.name || "Vidalia"} board — needs, services, events
+                {plan?.place?.name || "Vidalia"} board — host, needs, services, events
               </Link>
               <a className="block underline" href="https://churchconnect.unitedundergod.org/">
                 Find a church

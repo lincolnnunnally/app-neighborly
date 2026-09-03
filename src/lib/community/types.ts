@@ -135,6 +135,8 @@ export const SKILL_OPTIONS = [
   "Cooking",
   "Pet sitting",
   "Tutoring",
+  "Tennis coaching",
+  "Coaching",
   "Moving help",
   "Cleaning",
   "Car help",
@@ -163,23 +165,34 @@ export const INTEREST_OPTIONS = [
   "Book club",
   "Local business",
   "Knitting",
+  "Crochet",
   "Fiber arts",
   "Movies",
   "Music",
   "Cooking",
   "Indoor games",
+  "Story time",
+  "Teaching",
+  "Rock climbing",
+  "Canoeing",
+  "Sailing",
+  "Karaoke",
+  "Trivia",
+  "Wine tasting",
 ];
 
 export const SETTING_PREF_OPTIONS = [
-  { id: "mixed", label: "Mix of indoor and outdoor" },
-  { id: "indoor", label: "Mostly indoor" },
-  { id: "outdoor", label: "Mostly outdoor" },
+  { id: "mixed", label: "Either indoor or outdoor is fine" },
+  { id: "indoor", label: "I usually prefer indoor" },
+  { id: "outdoor", label: "I usually prefer outdoor" },
 ];
 
 export const MOBILITY_OPTIONS = [
-  { id: "mixed", label: "I can walk, sit, or hike" },
-  { id: "seated", label: "I need seated / indoor-friendly options" },
-  { id: "walking", label: "I want to be on my feet outside" },
+  { id: "seated", label: "Mostly seated — library, crochet, a reading" },
+  { id: "easy", label: "Easy going — I can get there and sit or stroll" },
+  { id: "active", label: "Active — pickleball, tennis, I like to move" },
+  { id: "high", label: "High energy — trails, climbing, canoeing" },
+  { id: "mixed", label: "Depends on the day" },
 ];
 
 export const LIFE_SEASON_OPTIONS = [
@@ -223,12 +236,19 @@ export const SERVICE_CATEGORIES = [
   { id: "household", label: "Household" },
   { id: "yard", label: "Yard" },
   { id: "kids", label: "Kids / youth" },
+  { id: "coaching", label: "Coaching (tennis, pickleball, skills)" },
+  { id: "restaurant", label: "Restaurant / nights out" },
   { id: "professional", label: "Professional" },
   { id: "care", label: "Care" },
+  { id: "recreation", label: "Recreation" },
   { id: "other", label: "Other" },
 ];
 
 export const EVENT_KINDS = [
+  { id: "invite", label: "Who's interested? I'll host if people come" },
+  { id: "quiet", label: "Quiet / seated (book club, crafts)" },
+  { id: "active", label: "Active / outdoors" },
+  { id: "restaurant", label: "Restaurant night (trivia, karaoke, special)" },
   { id: "social", label: "Social" },
   { id: "cleanup", label: "Cleanup" },
   { id: "kids", label: "Kids" },
