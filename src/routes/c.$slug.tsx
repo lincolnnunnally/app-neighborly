@@ -200,6 +200,11 @@ function CommunityPublicPage() {
           Tap any card to open it. Actions (help, RSVP, book) work for real — if
           you're not signed in yet, we start a neighbor session for you.
         </p>
+        <p className="mt-3">
+          <Link to="/weekend" className="text-sm font-medium text-primary underline">
+            Plan this weekend with weather and a calendar file
+          </Link>
+        </p>
 
         <Tabs value={tab} onValueChange={setTab}>
           <TabsList className="grid grid-cols-3 sm:grid-cols-5">

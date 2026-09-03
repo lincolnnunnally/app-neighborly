@@ -38,6 +38,9 @@ export function SiteHeader({ solid = false }: { solid?: boolean }) {
           <Link to="/c/$slug" params={{ slug: "vidalia" }} className="hover:text-fg">
             Vidalia board
           </Link>
+          <Link to="/weekend" className="hover:text-fg">
+            This weekend
+          </Link>
         </nav>
 
         <div className="flex items-center gap-2">

@@ -14,6 +14,7 @@ Community connections for neighbors — live test market **Vidalia, Georgia** (M
 - https://neighborly.unitedundergod.org — product home
 - https://community.unitedundergod.org — Community Connections label; this app is canonical (the old Next prototype is parked)
 - In-app Vidalia board: `/c/vidalia`
+- Weekend planner (weather + Pal/Visit Vidalia listings + calendar .ics): `/weekend`
 - Pickleball / dads circles: `/c/vidalia-pickleball`, `/c/vidalia-dads`
 - Milstead board still live: `/c/milstead`
 

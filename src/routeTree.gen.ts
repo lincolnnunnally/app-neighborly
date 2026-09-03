@@ -17,9 +17,12 @@ import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as WeekendRouteImport } from './routes/weekend'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
+import { Route as ApiIcsRouteImport } from './routes/api/ics'
 import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as AppCommunitiesRouteImport } from './routes/app/communities'
 import { Route as AppEventsRouteImport } from './routes/app/events'
@@ -74,6 +77,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
@@ -84,9 +92,19 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WeekendRoute = WeekendRouteImport.update({
+  id: '/weekend',
+  path: '/weekend',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiHealthRoute = ApiHealthRouteImport.update({
   id: '/api/health',
   path: '/api/health',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiIcsRoute = ApiIcsRouteImport.update({
+  id: '/api/ics',
+  path: '/api/ics',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppIndexRoute = AppIndexRouteImport.update({
@@ -164,9 +182,12 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
+  '/weekend': typeof WeekendRoute
   '/api/health': typeof ApiHealthRoute
+  '/api/ics': typeof ApiIcsRoute
   '/app/communities': typeof AppCommunitiesRoute
   '/app/events': typeof AppEventsRoute
   '/app/invite': typeof AppInviteRoute
@@ -189,9 +210,12 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
+  '/weekend': typeof WeekendRoute
   '/api/health': typeof ApiHealthRoute
+  '/api/ics': typeof ApiIcsRoute
   '/app/communities': typeof AppCommunitiesRoute
   '/app/events': typeof AppEventsRoute
   '/app/invite': typeof AppInviteRoute
@@ -216,9 +240,12 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
+  '/weekend': typeof WeekendRoute
   '/api/health': typeof ApiHealthRoute
+  '/api/ics': typeof ApiIcsRoute
   '/app/communities': typeof AppCommunitiesRoute
   '/app/events': typeof AppEventsRoute
   '/app/invite': typeof AppInviteRoute
@@ -244,9 +271,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/privacy'
+    | '/reset-password'
     | '/signup'
     | '/terms'
+    | '/weekend'
     | '/api/health'
+    | '/api/ics'
     | '/app/communities'
     | '/app/events'
     | '/app/invite'
@@ -269,9 +299,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/privacy'
+    | '/reset-password'
     | '/signup'
     | '/terms'
+    | '/weekend'
     | '/api/health'
+    | '/api/ics'
     | '/app/communities'
     | '/app/events'
     | '/app/invite'
@@ -295,9 +328,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/privacy'
+    | '/reset-password'
     | '/signup'
     | '/terms'
+    | '/weekend'
     | '/api/health'
+    | '/api/ics'
     | '/app/communities'
     | '/app/events'
     | '/app/invite'
@@ -322,9 +358,12 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRoute
   PrivacyRoute: typeof PrivacyRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SignupRoute: typeof SignupRoute
   TermsRoute: typeof TermsRoute
+  WeekendRoute: typeof WeekendRoute
   ApiHealthRoute: typeof ApiHealthRoute
+  ApiIcsRoute: typeof ApiIcsRoute
   CSlugRoute: typeof CSlugRoute
   JoinCodeRoute: typeof JoinCodeRoute
   ApiAdminStatsRoute: typeof ApiAdminStatsRoute
@@ -389,6 +428,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/signup': {
       id: '/signup'
       path: '/signup'
@@ -403,11 +449,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/weekend': {
+      id: '/weekend'
+      path: '/weekend'
+      fullPath: '/weekend'
+      preLoaderRoute: typeof WeekendRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/health': {
       id: '/api/health'
       path: '/api/health'
       fullPath: '/api/health'
       preLoaderRoute: typeof ApiHealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/ics': {
+      id: '/api/ics'
+      path: '/api/ics'
+      fullPath: '/api/ics'
+      preLoaderRoute: typeof ApiIcsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app/': {
@@ -539,9 +599,12 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
   PrivacyRoute: PrivacyRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SignupRoute: SignupRoute,
   TermsRoute: TermsRoute,
+  WeekendRoute: WeekendRoute,
   ApiHealthRoute: ApiHealthRoute,
+  ApiIcsRoute: ApiIcsRoute,
   CSlugRoute: CSlugRoute,
   JoinCodeRoute: JoinCodeRoute,
   ApiAdminStatsRoute: ApiAdminStatsRoute,

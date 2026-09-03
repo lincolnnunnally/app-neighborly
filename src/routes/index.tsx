@@ -98,6 +98,11 @@ function LandingPage() {
                 <ArrowRight className="h-4 w-4" />
               </Button>
               <Button asChild size="lg" variant="secondary">
+                <Link to="/weekend">
+                  Plan this weekend
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="secondary">
                 <Link to="/c/$slug" params={{ slug: "vidalia" }}>
                   Browse Vidalia live
                 </Link>
