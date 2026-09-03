@@ -25,7 +25,7 @@ function HowItWorksPage() {
         {[
           {
             title: "1. See this weekend first",
-            body: "Weather, the Pal Theatre, parks, pickleball, and church listings — no account required. Add a slot to your calendar with a .ics file. Confirm on their sites before you go.",
+            body: "Type a ZIP or City, ST. Weather, public calendars, pickleball, and church listings — no account required. Add a slot with a .ics file. Confirm on their sites before you go. A new town stays empty until someone adds a real listing — we will not invent a festival.",
           },
           {
             title: "2. Sign up the practical way",
@@ -48,7 +48,11 @@ function HowItWorksPage() {
             body: "New residents get a lighter onboarding path: meet neighbors, learn about the area, and find their first event.",
           },
           {
-            title: "7. The board is a doorway",
+            title: "7. Fit, not a firehose",
+            body: "If you prefer seated indoor time, we will not lead with hiking. If 30 neighbors mark knitting, a church or library can see that demand — we do not invent a class. A weekly email of fits is the paid shape later. We will not charge until that mail actually arrives.",
+          },
+          {
+            title: "8. The board is a doorway",
             body: "The win is not more time on Neighborly. It is coffee, a meal, letting someone help you, or staying in the spare room instead of hiding. Receiving kindness is part of belonging. We will not score your courage. If a kind person is offering hospitality, one next yes is enough. Safety stays: public places, Report and Block, 988 in a crisis.",
           },
         ].map((s) => (
@@ -60,7 +64,10 @@ function HowItWorksPage() {
 
         <div className="flex flex-wrap gap-3">
           <Button asChild>
-            <Link to="/weekend">This weekend</Link>
+            <Link to="/weekend" search={{ place: "vidalia" }}>This weekend</Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link to="/near">Find a town</Link>
           </Button>
           <Button asChild variant="secondary">
             <Link to="/c/$slug" params={{ slug: "vidalia" }}>

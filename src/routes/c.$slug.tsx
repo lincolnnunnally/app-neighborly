@@ -29,6 +29,7 @@ import {
   cancelRsvp,
   createNeed,
   getCommunityFeed,
+  getInterestDemand,
   listOffersForNeed,
   offerHelp,
   requestFacility,
@@ -46,20 +47,53 @@ import type {
 import { formatEventWhen } from "@/lib/utils";
 
 export const Route = createFileRoute("/c/$slug")({
+  loader: async ({ params }) => {
+    try {
+      return await getCommunityFeed({ data: { slug: params.slug } });
+    } catch {
+      return {
+        community: null,
+        needs: [],
+        services: [],
+        events: [],
+        facilities: [],
+        neighbors: [],
+      };
+    }
+  },
+  head: ({ loaderData, params }) => {
+    const c = loaderData?.community;
+    const name = c?.name || params.slug;
+    const city = c ? `${c.city}, ${c.state}` : name;
+    const title = `What's going on in ${name} — Neighborly`;
+    const description = c?.tagline
+      ? `${c.tagline} Public board for ${city}. We will not invent neighbors or events.`
+      : `Neighbor board for ${city}.`;
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+      ],
+    };
+  },
   component: CommunityPublicPage,
 });
 
 function CommunityPublicPage() {
   const { slug } = Route.useParams();
+  const loaded = Route.useLoaderData();
   const { user, ensureReady } = useRequireNeighbor();
   const navigate = useNavigate();
-  const [community, setCommunity] = useState<Community | null>(null);
-  const [needs, setNeeds] = useState<Need[]>([]);
-  const [services, setServices] = useState<Service[]>([]);
-  const [events, setEvents] = useState<CommunityEvent[]>([]);
-  const [facilities, setFacilities] = useState<Facility[]>([]);
-  const [neighbors, setNeighbors] = useState<Neighbor[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [community, setCommunity] = useState<Community | null>(loaded.community);
+  const [needs, setNeeds] = useState<Need[]>(loaded.needs);
+  const [services, setServices] = useState<Service[]>(loaded.services);
+  const [events, setEvents] = useState<CommunityEvent[]>(loaded.events);
+  const [facilities, setFacilities] = useState<Facility[]>(loaded.facilities);
+  const [neighbors, setNeighbors] = useState<Neighbor[]>(loaded.neighbors);
+  const [demand, setDemand] = useState<{ interest: string; n: number }[]>([]);
+  const [loading, setLoading] = useState(!loaded.community);
   const [loadError, setLoadError] = useState(false);
   const [tab, setTab] = useState(() => (slug.startsWith("vidalia") ? "events" : "needs"));
 
@@ -112,6 +146,9 @@ function CommunityPublicPage() {
         setLoadError(true);
       })
       .finally(() => setLoading(false));
+    getInterestDemand({ data: { slug } })
+      .then((d) => setDemand(d.counts.filter((c) => c.n > 0)))
+      .catch(() => setDemand([]));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug, user?.id]);
 
@@ -187,7 +224,7 @@ function CommunityPublicPage() {
             {user ? "Open my hub" : demoBusy ? "Joining…" : "Join & start helping"}
           </Button>
           <Button asChild variant="secondary">
-            <Link to="/weekend">This weekend</Link>
+            <Link to="/weekend" search={{ place: slug }}>This weekend</Link>
           </Button>
           <Button asChild variant="secondary">
             <Link to="/join/$code" params={{ code: community.invite_code }}>
@@ -204,6 +241,24 @@ function CommunityPublicPage() {
           Browse freely. To RSVP, offer help, or book a place, create a real
           account — we will not invent a neighbor for you.
         </p>
+        {demand.length > 0 && (
+          <aside className="rounded-[var(--radius-lg)] border border-border bg-bg-elevated p-4">
+            <p className="text-sm font-medium text-fg">What neighbors here actually marked</p>
+            <p className="mt-1 text-xs text-fg-subtle">
+              Real profiles only. A church, library, or organizer can host a first table — we
+              do not invent a class or email a room that does not exist.
+            </p>
+            <ul className="mt-2 flex flex-wrap gap-2">
+              {demand.map((d) => (
+                <li key={d.interest}>
+                  <Badge variant="secondary">
+                    {d.interest} · {d.n}
+                  </Badge>
+                </li>
+              ))}
+            </ul>
+          </aside>
+        )}
 
         <Tabs value={tab} onValueChange={setTab}>
           <TabsList className="grid grid-cols-3 sm:grid-cols-5">

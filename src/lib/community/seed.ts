@@ -14,7 +14,20 @@ export async function ensureSeeded(sql: Sql): Promise<void> {
   await ensureMilsteadV1(sql);
   await ensureVidaliaV2(sql);
   await ensureVidaliaV3(sql);
+  await ensurePlaceCoords(sql);
   await refreshVidaliaPublicEvents(sql);
+}
+
+async function ensurePlaceCoords(sql: Sql): Promise<void> {
+  try {
+    await sql`
+      update communities
+      set zip = '30474', lat = 32.2174, lon = -82.4135
+      where id = 'comm_vidalia' and (coalesce(zip, '') = '' or lat is null)
+    `;
+  } catch {
+    /* column missing until 0007 runs */
+  }
 }
 
 async function ensureMilsteadV1(sql: Sql): Promise<void> {
@@ -411,7 +424,7 @@ async function upsertSystemEvent(
   `;
 }
 
-async function refreshVidaliaPublicEvents(sql: Sql): Promise<void> {
+export async function refreshVidaliaPublicEvents(sql: Sql): Promise<void> {
   const communities = await sql<{ id: string }>`
     select id from communities where id = 'comm_vidalia'
   `;

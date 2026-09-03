@@ -1,8 +1,12 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getSql } from "@/lib/db";
 import { ensureSeeded } from "./seed";
+import { findOrCreatePlace } from "./place";
+import { scoreFit, splitByFit, type FitPrefs } from "./fit";
+import type { Community } from "./types";
 
-const VIDALIA = { lat: 32.2174, lon: -82.4135, tz: "America/New_York" };
+const DEFAULT_TZ = "America/New_York";
+const VIDALIA_COORDS = { lat: 32.2174, lon: -82.4135 };
 
 export type WeatherDay = {
   date: string;
@@ -26,6 +30,8 @@ export type WeekendSlot = {
   source: string;
   sourceUrl: string;
   eventId: string | null;
+  fitLabel?: "good" | "ok" | "poor";
+  fitWhy?: string;
 };
 
 export type WeekendPlan = {
@@ -34,8 +40,19 @@ export type WeekendPlan = {
   arrivingNote: string;
   withChild: WeekendSlot[];
   alone: WeekendSlot[];
+  other: WeekendSlot[];
   sources: { name: string; url: string; note: string }[];
   weatherError: string | null;
+  place: {
+    slug: string;
+    name: string;
+    city: string;
+    state: string;
+    zip: string;
+    created: boolean;
+  };
+  refresh: { status: string; note: string };
+  fitApplied: boolean;
 };
 
 function wmoSummary(code: number): string {
@@ -49,11 +66,15 @@ function wmoSummary(code: number): string {
   return "Mixed";
 }
 
-async function fetchWeather(): Promise<{ days: WeatherDay[]; error: string | null }> {
+async function fetchWeather(
+  lat: number,
+  lon: number,
+  tz: string,
+): Promise<{ days: WeatherDay[]; error: string | null }> {
   const url =
-    `https://api.open-meteo.com/v1/forecast?latitude=${VIDALIA.lat}&longitude=${VIDALIA.lon}` +
+    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
     `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max` +
-    `&temperature_unit=fahrenheit&timezone=${encodeURIComponent(VIDALIA.tz)}&forecast_days=7`;
+    `&temperature_unit=fahrenheit&timezone=${encodeURIComponent(tz)}&forecast_days=7`;
   try {
     const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
     if (!res.ok) return { days: [], error: "Weather did not load. Assume September heat — indoor midday." };
@@ -89,15 +110,15 @@ async function fetchWeather(): Promise<{ days: WeatherDay[]; error: string | nul
   }
 }
 
-function weatherFor(days: WeatherDay[], iso: string): WeatherDay | null {
-  const date = new Intl.DateTimeFormat("en-CA", { timeZone: VIDALIA.tz }).format(new Date(iso));
+function weatherFor(days: WeatherDay[], iso: string, tz: string): WeatherDay | null {
+  const date = new Intl.DateTimeFormat("en-CA", { timeZone: tz }).format(new Date(iso));
   return days.find((d) => d.date === date) ?? null;
 }
 
-function hourEastern(iso: string): number {
+function hourInTz(iso: string, tz: string): number {
   return Number(
     new Intl.DateTimeFormat("en-US", {
-      timeZone: VIDALIA.tz,
+      timeZone: tz,
       hour: "2-digit",
       hour12: false,
     })
@@ -123,26 +144,50 @@ function formatWeatherDay(d: WeatherDay): string {
   return `${label}: ${d.summary.toLowerCase()}, high ${d.maxF}°${rain}`;
 }
 
-function buildArrivingNote(days: WeatherDay[], withChild: WeekendSlot[]): string {
+function buildArrivingNote(days: WeatherDay[], withChild: WeekendSlot[], placeName: string): string {
   const today = days[0];
   const tomorrow = days[1];
-  if (!today) return "Check the heat before you linger outside. Confirm listings before you go.";
+  if (!today) return `Check the weather in ${placeName} before you linger outside. Confirm listings before you go.`;
   const paw = withChild.find((s) => /paw patrol/i.test(s.title) && /watch party|10:00/i.test(`${s.title} ${s.starts_at}`));
   const parts = [
-    `If you are arriving now — ${formatWeatherDay(today)}${tomorrow ? `. Next day: ${formatWeatherDay(tomorrow)}` : ""}. Indoor and morning first.`,
+    `If you are arriving in ${placeName} now — ${formatWeatherDay(today)}${tomorrow ? `. Next day: ${formatWeatherDay(tomorrow)}` : ""}. Indoor and morning first when it is hot.`,
   ];
   if (paw) {
     parts.push(`Saturday with a child: ${paw.title} at the Pal Theatre (122 Church St) — air-conditioned.`);
   }
-  parts.push("Parks after the heat breaks, not at noon. We will not invent a crowd.");
+  parts.push("We will not invent a crowd.");
   return parts.join(" ");
 }
 
-export async function buildWeekendPlan(): Promise<WeekendPlan> {
+function applyFit(slots: WeekendSlot[], prefs?: FitPrefs | null): WeekendSlot[] {
+  return slots.map((slot) => {
+    const fit = scoreFit(slot, prefs);
+    return {
+      ...slot,
+      why: fit.why ? `${slot.why} ${fit.why}`.trim() : slot.why,
+      fitLabel: fit.label,
+      fitWhy: fit.why,
+    };
+  });
+}
+
+export async function buildWeekendPlan(opts?: {
+  slug?: string;
+  query?: string;
+  prefs?: FitPrefs | null;
+}): Promise<WeekendPlan> {
   const sql = await getSql();
   await ensureSeeded(sql);
-  const { days, error } = await fetchWeather();
+  const q = (opts?.query || opts?.slug || "vidalia").trim() || "vidalia";
+  const looked = await findOrCreatePlace(sql, q);
+  const community: Community = looked.community;
+  const tz = DEFAULT_TZ;
+  const lat = community.lat ?? looked.geo?.lat ?? VIDALIA_COORDS.lat;
+  const lon = community.lon ?? looked.geo?.lon ?? VIDALIA_COORDS.lon;
+  const { days, error } = await fetchWeather(lat, lon, tz);
   const cutoffMs = Date.now() - 6 * 3600 * 1000;
+  const city = community.city || "Vidalia";
+  const state = community.state || "GA";
   const rawRows = await sql<{
     id: string;
     title: string;
@@ -152,10 +197,12 @@ export async function buildWeekendPlan(): Promise<WeekendPlan> {
     starts_at: string;
     community_id: string;
   }>`
-    select id, title, description, kind, location, starts_at::text as starts_at, community_id
-    from events
-    where community_id in ('comm_vidalia', 'comm_vidalia_pickleball', 'comm_vidalia_dads')
-    order by starts_at asc
+    select e.id, e.title, e.description, e.kind, e.location, e.starts_at::text as starts_at, e.community_id
+    from events e
+    join communities c on c.id = e.community_id
+    where lower(c.city) = ${city.toLowerCase()}
+      and lower(c.state) = ${state.toLowerCase()}
+    order by e.starts_at asc
     limit 80
   `;
   const rows = rawRows.filter((row) => {
@@ -167,8 +214,8 @@ export async function buildWeekendPlan(): Promise<WeekendPlan> {
   const alone: WeekendSlot[] = [];
 
   for (const row of rows) {
-    const wx = weatherFor(days, row.starts_at);
-    const hour = hourEastern(row.starts_at);
+    const wx = weatherFor(days, row.starts_at, tz);
+    const hour = hourInTz(row.starts_at, tz);
     const indoor = /theatre|theater|gym|museum|library|church|indoor/i.test(`${row.title} ${row.location} ${row.description}`);
     const family = row.kind === "family" || /paw patrol|watch party|splash|kids|child|fun run/i.test(`${row.title} ${row.description}`);
     const adultOnly = /wine|girls night|21\+|not a kid|tribute|skynyrd|freebird/i.test(`${row.title} ${row.description}`);
@@ -202,16 +249,16 @@ export async function buildWeekendPlan(): Promise<WeekendPlan> {
           ? "https://visitvidaliaga.com/things-to-do/events/"
           : row.description.includes("fbcvidalia")
             ? "https://fbcvidalia.com/events"
-            : "https://neighborly.unitedundergod.org/c/vidalia",
+            : `https://neighborly.unitedundergod.org/c/${community.slug}`,
       eventId: row.id,
     };
     if (slot.withChild) withChild.push(slot);
     if (slot.alone) alone.push(slot);
   }
 
-  // Standing places (not ticketed events) — honest labels.
+  // Standing places only where we have verified public parks — not invented for a new ZIP.
   const sat = saturdayOn(days) ?? days[2];
-  if (sat) {
+  if (sat && community.slug === "vidalia") {
     withChild.push({
       id: "place_ben_smith",
       starts_at: `${sat.date}T17:30:00-04:00`,
@@ -248,22 +295,58 @@ export async function buildWeekendPlan(): Promise<WeekendPlan> {
       ? "South Georgia September: do indoor or morning first. Save parks for evening."
       : "Outdoor is reasonable. Still pack water.";
 
-  const withChildSorted = withChild.sort((a, b) => a.starts_at.localeCompare(b.starts_at));
-  const aloneSorted = alone.sort((a, b) => a.starts_at.localeCompare(b.starts_at));
+  const prefs = opts?.prefs ?? null;
+  const withChildSorted = applyFit(
+    withChild.sort((a, b) => a.starts_at.localeCompare(b.starts_at)),
+    prefs,
+  );
+  const aloneSorted = applyFit(
+    alone.sort((a, b) => a.starts_at.localeCompare(b.starts_at)),
+    prefs,
+  );
+  const childSplit = splitByFit(withChildSorted, prefs);
+  const aloneSplit = splitByFit(aloneSorted, prefs);
+  const other = [...childSplit.other, ...aloneSplit.other].filter(
+    (s, i, arr) => arr.findIndex((x) => x.id === s.id) === i,
+  );
+
+  const vidaliaSources = [
+    { name: "Visit Vidalia", url: "https://visitvidaliaga.com/things-to-do/events/", note: "City tourism calendar" },
+    { name: "The Pal Theatre", url: "https://thepaltheatre.com/", note: "Movies and live shows" },
+    { name: "Vidalia Parks & Rec", url: "https://vidaliaga.gov/departments/parks-and-recreation/", note: "Parks and fields" },
+    { name: "First Baptist Vidalia", url: "https://fbcvidalia.com/events", note: "Pickleball, recovery, grief groups" },
+  ];
 
   const plan: WeekendPlan = {
     weather: days.slice(0, 5),
     weatherNote,
-    arrivingNote: buildArrivingNote(days, withChildSorted),
-    withChild: withChildSorted,
-    alone: aloneSorted,
-    sources: [
-      { name: "Visit Vidalia", url: "https://visitvidaliaga.com/things-to-do/events/", note: "City tourism calendar" },
-      { name: "The Pal Theatre", url: "https://thepaltheatre.com/", note: "Movies and live shows" },
-      { name: "Vidalia Parks & Rec", url: "https://vidaliaga.gov/departments/parks-and-recreation/", note: "Parks and fields" },
-      { name: "First Baptist Vidalia", url: "https://fbcvidalia.com/events", note: "Pickleball, recovery, grief groups" },
-    ],
+    arrivingNote: buildArrivingNote(days, childSplit.primary, community.name),
+    withChild: childSplit.primary,
+    alone: aloneSplit.primary,
+    other,
+    sources:
+      community.slug === "vidalia"
+        ? vidaliaSources
+        : [
+            {
+              name: `${community.name} board`,
+              url: `https://neighborly.unitedundergod.org/c/${community.slug}`,
+              note: looked.created
+                ? "New town board — empty until a real public listing is added."
+                : "Public listings only. We do not invent a calendar.",
+            },
+          ],
     weatherError: error,
+    place: {
+      slug: community.slug,
+      name: community.name,
+      city: community.city,
+      state: community.state,
+      zip: community.zip || looked.geo?.zip || "",
+      created: looked.created,
+    },
+    refresh: looked.refresh,
+    fitApplied: Boolean(prefs && (prefs.interests.length || prefs.setting_pref || prefs.mobility)),
   };
   return plan;
 }
