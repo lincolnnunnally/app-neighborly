@@ -67,7 +67,8 @@ function ServicesPage() {
         <div>
           <h1 className="font-display text-2xl font-semibold">Services & businesses</h1>
           <p className="text-sm text-fg-muted">
-            Local pros, side hustles, and kids earning for good work.
+            Tennis coaching, a restaurant karaoke night, a kid offering lawn work — post it
+            free. Highlighted / sponsored slots are not billed yet.
           </p>
         </div>
         <Button onClick={() => setShowForm((v) => !v)}>

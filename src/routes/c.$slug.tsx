@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/dialog";
 import {
   cancelRsvp,
+  createEvent,
   createNeed,
   getCommunityFeed,
   getInterestDemand,
@@ -36,13 +37,14 @@ import {
   rsvpEvent,
   type HelpOffer,
 } from "@/lib/community/server";
-import type {
-  Community,
-  CommunityEvent,
-  Facility,
-  Need,
-  Neighbor,
-  Service,
+import {
+  EVENT_KINDS,
+  type Community,
+  type CommunityEvent,
+  type Facility,
+  type Need,
+  type Neighbor,
+  type Service,
 } from "@/lib/community/types";
 import { formatEventWhen } from "@/lib/utils";
 
@@ -110,6 +112,12 @@ function CommunityPublicPage() {
   const [showPostNeed, setShowPostNeed] = useState(false);
   const [needTitle, setNeedTitle] = useState("");
   const [needDesc, setNeedDesc] = useState("");
+  const [showHost, setShowHost] = useState(false);
+  const [hostTitle, setHostTitle] = useState("");
+  const [hostDesc, setHostDesc] = useState("");
+  const [hostWhere, setHostWhere] = useState("");
+  const [hostWhen, setHostWhen] = useState("");
+  const [hostKind, setHostKind] = useState("invite");
   const [busy, setBusy] = useState(false);
   const [demoBusy, setDemoBusy] = useState(false);
 
@@ -234,6 +242,9 @@ function CommunityPublicPage() {
           <Button variant="outline" onClick={() => setShowPostNeed(true)}>
             Post a need
           </Button>
+          <Button variant="outline" onClick={() => setShowHost(true)}>
+            Host / who's interested
+          </Button>
         </div>
 
         <p className="max-w-3xl text-fg-muted">{community.description}</p>
@@ -347,6 +358,7 @@ function CommunityPublicPage() {
                 <div className="mb-2 flex flex-wrap gap-2">
                   <Badge variant="sky">{e.kind}</Badge>
                   {e.host_name === "Public listing" && <Badge variant="outline">Public listing</Badge>}
+                  {e.kind === "invite" && <Badge variant="accent">Who's interested</Badge>}
                   <span className="text-xs text-fg-muted">{formatEventWhen(e.starts_at)}</span>
                   {e.has_rsvp && <Badge>Going</Badge>}
                 </div>
@@ -354,14 +366,21 @@ function CommunityPublicPage() {
                 <p className="line-clamp-2 text-sm text-fg-muted">{e.description}</p>
                 <p className="mt-2 flex items-center gap-1 text-xs text-fg-subtle">
                   <MapPin className="h-3.5 w-3.5" />
-                  {e.location || "TBA"} · {e.rsvp_count} going · tap to RSVP
+                  {e.location || "TBA"} · {e.rsvp_count}{" "}
+                  {e.kind === "invite" ? "interested" : "going"} · tap to respond
                 </p>
               </button>
             ))}
             {events.length === 0 && (
-              <p className="text-sm text-fg-muted">
-                No gatherings posted yet. Plan the first one from your hub.
-              </p>
+              <div className="space-y-2">
+                <p className="text-sm text-fg-muted">
+                  Nothing dated yet. If the town is quiet, host the first table — a book club,
+                  crochet, spoon carving, trivia at a restaurant, tennis. We will not invent a crowd.
+                </p>
+                <Button size="sm" onClick={() => setShowHost(true)}>
+                  Ask who&apos;s interested
+                </Button>
+              </div>
             )}
           </TabsContent>
 
@@ -522,7 +541,10 @@ function CommunityPublicPage() {
                 <MapPin className="mr-1 inline h-3.5 w-3.5" />
                 {activeEvent.location || "Location TBA"} · hosted by {activeEvent.host_name}
               </p>
-              <p className="text-sm font-medium">{activeEvent.rsvp_count} neighbors going</p>
+              <p className="text-sm font-medium">
+                {activeEvent.rsvp_count}{" "}
+                {activeEvent.kind === "invite" ? "neighbors interested" : "neighbors going"}
+              </p>
               <DialogFooter>
                 <Button variant="secondary" onClick={() => setActiveEvent(null)}>
                   Close
@@ -555,7 +577,11 @@ function CommunityPublicPage() {
                         const ok = await ensureReady({ code: community.invite_code });
                         if (!ok) return;
                         await rsvpEvent({ data: activeEvent.id });
-                        toast.success("You're on the list. Showing up is the win — not this page.");
+                        toast.success(
+                          activeEvent.kind === "invite"
+                            ? "You're interested. If this becomes a real table, the host can find you."
+                            : "You're on the list. Showing up is the win — not this page.",
+                        );
                         await reload();
                       } catch (e) {
                         toast.error(e instanceof Error ? e.message : "Could not RSVP");
@@ -565,7 +591,7 @@ function CommunityPublicPage() {
                     }}
                   >
                     <CalendarDays className="h-4 w-4" />
-                    {busy ? "Saving…" : "RSVP"}
+                    {busy ? "Saving…" : activeEvent.kind === "invite" ? "I'm interested" : "RSVP"}
                   </Button>
                 )}
               </DialogFooter>
@@ -686,6 +712,121 @@ function CommunityPublicPage() {
               </DialogFooter>
             </>
           )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showHost} onOpenChange={setShowHost}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Host something in {community.name}</DialogTitle>
+            <DialogDescription>
+              Book club, crochet, tennis, trivia, spoon carving. Posting is free. We will
+              not invent people who said yes.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="space-y-1.5">
+              <Label>What is it?</Label>
+              <Input
+                value={hostTitle}
+                onChange={(e) => setHostTitle(e.target.value)}
+                placeholder="Saturday spoon carving, or library book club"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Details</Label>
+              <Textarea
+                value={hostDesc}
+                onChange={(e) => setHostDesc(e.target.value)}
+                placeholder="Seated or active, indoor or outdoor, beginners welcome…"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Kind</Label>
+              <div className="flex flex-wrap gap-2">
+                {EVENT_KINDS.slice(0, 6).map((k) => (
+                  <Button
+                    key={k.id}
+                    type="button"
+                    size="sm"
+                    variant={hostKind === k.id ? "default" : "outline"}
+                    onClick={() => setHostKind(k.id)}
+                  >
+                    {k.label}
+                  </Button>
+                ))}
+              </div>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <Label>When (proposed)</Label>
+                <Input
+                  type="datetime-local"
+                  value={hostWhen}
+                  onChange={(e) => setHostWhen(e.target.value)}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Where</Label>
+                <Input
+                  value={hostWhere}
+                  onChange={(e) => setHostWhere(e.target.value)}
+                  placeholder="Library, park, restaurant…"
+                />
+              </div>
+            </div>
+            <p className="text-xs text-fg-subtle">
+              A paid highlight or banner is not for sale yet. Free post first. We will not
+              take money until a sponsored slot is actually shown to neighbors.
+            </p>
+          </div>
+          <DialogFooter>
+            <Button variant="secondary" onClick={() => setShowHost(false)}>
+              Cancel
+            </Button>
+            <Button
+              disabled={busy}
+              onClick={async () => {
+                setBusy(true);
+                try {
+                  const ok = await ensureReady({ code: community.invite_code });
+                  if (!ok) return;
+                  if (!hostTitle.trim() || !hostWhen) {
+                    toast.error("Add a title and a proposed time");
+                    return;
+                  }
+                  await createEvent({
+                    data: {
+                      communityId: community.id,
+                      title: hostTitle,
+                      description: hostDesc,
+                      kind: hostKind,
+                      location: hostWhere,
+                      starts_at: new Date(hostWhen).toISOString(),
+                    },
+                  });
+                  toast.success(
+                    hostKind === "invite"
+                      ? "Posted. Neighbors can tap interested — no invented crowd."
+                      : "Gathering posted.",
+                  );
+                  setShowHost(false);
+                  setHostTitle("");
+                  setHostDesc("");
+                  setHostWhere("");
+                  setHostWhen("");
+                  setTab("events");
+                  await reload();
+                } catch (e) {
+                  toast.error(e instanceof Error ? e.message : "Could not post");
+                } finally {
+                  setBusy(false);
+                }
+              }}
+            >
+              {busy ? "Posting…" : hostKind === "invite" ? "Ask who's interested" : "Publish"}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 

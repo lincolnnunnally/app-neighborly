@@ -30,7 +30,7 @@ export type WeekendSlot = {
   source: string;
   sourceUrl: string;
   eventId: string | null;
-  fitLabel?: "good" | "ok" | "poor";
+  fitLabel?: "good" | "ok" | "stretch";
   fitWhy?: string;
 };
 
@@ -296,19 +296,11 @@ export async function buildWeekendPlan(opts?: {
       : "Outdoor is reasonable. Still pack water.";
 
   const prefs = opts?.prefs ?? null;
-  const withChildSorted = applyFit(
-    withChild.sort((a, b) => a.starts_at.localeCompare(b.starts_at)),
-    prefs,
-  );
-  const aloneSorted = applyFit(
-    alone.sort((a, b) => a.starts_at.localeCompare(b.starts_at)),
-    prefs,
-  );
+  const withChildSorted = applyFit(withChild, prefs);
+  const aloneSorted = applyFit(alone, prefs);
   const childSplit = splitByFit(withChildSorted, prefs);
   const aloneSplit = splitByFit(aloneSorted, prefs);
-  const other = [...childSplit.other, ...aloneSplit.other].filter(
-    (s, i, arr) => arr.findIndex((x) => x.id === s.id) === i,
-  );
+  const other: WeekendSlot[] = [];
 
   const vidaliaSources = [
     { name: "Visit Vidalia", url: "https://visitvidaliaga.com/things-to-do/events/", note: "City tourism calendar" },

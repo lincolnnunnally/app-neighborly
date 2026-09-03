@@ -484,7 +484,8 @@ function OnboardingPage() {
                   ))}
                 </div>
                 <p className="text-xs text-fg-subtle">
-                  Seated / indoor-friendly means we will not lead with hiking.
+                  We use this to sort, not to hide. A chair person still sees the park; a
+                  trail person still sees the library.
                 </p>
               </div>
               <div className="space-y-2">
