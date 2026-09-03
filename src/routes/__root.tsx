@@ -14,7 +14,7 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "What's happening in Vidalia this week: weather, the Pal Theatre, parks, pickleball, and a board for real needs. No invented neighbors. Account optional until you RSVP or ask for a hand.",
+          "What's going on around you this week. Type a ZIP or city. Weather, public gatherings, and a neighbor board. No invented people. Account optional until you RSVP or ask for a hand.",
       },
     ],
     links: [{ rel: "stylesheet", href: appCss }],

@@ -13,6 +13,9 @@ export type Community = {
   cover_color: string;
   is_featured: boolean;
   invite_code: string;
+  zip?: string;
+  lat?: number | null;
+  lon?: number | null;
 };
 
 export type Profile = {
@@ -35,6 +38,10 @@ export type Profile = {
   notify_services: boolean;
   notify_facilities: boolean;
   welcome_seen: boolean;
+  setting_pref: string;
+  mobility: string;
+  digest_opt_in: boolean;
+  digest_cadence: string;
 };
 
 export type Membership = {
@@ -155,6 +162,24 @@ export const INTEREST_OPTIONS = [
   "Faith groups",
   "Book club",
   "Local business",
+  "Knitting",
+  "Fiber arts",
+  "Movies",
+  "Music",
+  "Cooking",
+  "Indoor games",
+];
+
+export const SETTING_PREF_OPTIONS = [
+  { id: "mixed", label: "Mix of indoor and outdoor" },
+  { id: "indoor", label: "Mostly indoor" },
+  { id: "outdoor", label: "Mostly outdoor" },
+];
+
+export const MOBILITY_OPTIONS = [
+  { id: "mixed", label: "I can walk, sit, or hike" },
+  { id: "seated", label: "I need seated / indoor-friendly options" },
+  { id: "walking", label: "I want to be on my feet outside" },
 ];
 
 export const LIFE_SEASON_OPTIONS = [

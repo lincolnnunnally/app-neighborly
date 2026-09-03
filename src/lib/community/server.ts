@@ -76,6 +76,10 @@ function mapProfile(row: Record<string, unknown>): Profile {
     notify_services: Boolean(row.notify_services),
     notify_facilities: Boolean(row.notify_facilities),
     welcome_seen: Boolean(row.welcome_seen),
+    setting_pref: String(row.setting_pref ?? ""),
+    mobility: String(row.mobility ?? ""),
+    digest_opt_in: Boolean(row.digest_opt_in),
+    digest_cadence: String(row.digest_cadence ?? "off"),
   };
 }
 
@@ -93,6 +97,9 @@ function mapCommunity(row: Record<string, unknown>): Community {
     cover_color: String(row.cover_color ?? "sage"),
     is_featured: Boolean(row.is_featured),
     invite_code: String(row.invite_code),
+    zip: String(row.zip ?? ""),
+    lat: row.lat == null || row.lat === "" ? null : Number(row.lat),
+    lon: row.lon == null || row.lon === "" ? null : Number(row.lon),
   };
 }
 
@@ -175,6 +182,34 @@ async function ensureMember(sql: Awaited<ReturnType<typeof db>>, userId: string,
 }
 
 // ── Public reads ────────────────────────────────────────────────────────────
+
+export const getInterestDemand = createServerFn({ method: "GET" })
+  .validator((input: { slug: string }) => input)
+  .handler(async ({ data }) => {
+    const sql = await db();
+    const comm = await sql<{ id: string; name: string }>`
+      select id, name from communities where slug = ${data.slug} limit 1
+    `;
+    if (!comm[0]) return { community: null as string | null, counts: [] as { interest: string; n: number }[] };
+    const rows = await sql<{ interests: string }>`
+      select p.interests from profiles p
+      join memberships m on m.user_id = p.user_id
+      where m.community_id = ${comm[0].id} and m.status = 'active'
+    `;
+    const tally = new Map<string, number>();
+    for (const row of rows) {
+      for (const interest of parseJsonArray(row.interests)) {
+        const key = interest.trim();
+        if (!key) continue;
+        tally.set(key, (tally.get(key) || 0) + 1);
+      }
+    }
+    const counts = [...tally.entries()]
+      .map(([interest, n]) => ({ interest, n }))
+      .sort((a, b) => b.n - a.n)
+      .slice(0, 12);
+    return { community: comm[0].name, counts };
+  });
 
 export const listCommunities = createServerFn({ method: "GET" }).handler(async () => {
   const sql = await db();
@@ -371,6 +406,10 @@ export const upsertProfile = createServerFn({ method: "POST" })
       notify_services?: boolean;
       notify_facilities?: boolean;
       welcome_seen?: boolean;
+      setting_pref?: string;
+      mobility?: string;
+      digest_opt_in?: boolean;
+      digest_cadence?: string;
     }) => input,
   )
   .handler(async ({ context, data }) => {
@@ -386,6 +425,10 @@ export const upsertProfile = createServerFn({ method: "POST" })
     const lifeSeason = data.life_season ?? "";
     const faithPosture = data.faith_posture ?? "";
     const hopingFor = data.hoping_for ?? "";
+    const settingPref = data.setting_pref ?? "";
+    const mobility = data.mobility ?? "";
+    const digestOptIn = Boolean(data.digest_opt_in);
+    const digestCadence = data.digest_cadence ?? (digestOptIn ? "weekly" : "off");
 
     if (existing.length === 0) {
       await sql`
@@ -393,7 +436,8 @@ export const upsertProfile = createServerFn({ method: "POST" })
           user_id, display_name, bio, phone, street_hint, skills, help_offerings,
           interests, life_season, faith_posture, hoping_for, availability,
           is_new_resident, is_youth, notify_events, notify_needs,
-          notify_services, notify_facilities, welcome_seen
+          notify_services, notify_facilities, welcome_seen,
+          setting_pref, mobility, digest_opt_in, digest_cadence
         ) values (
           ${context.userId},
           ${name},
@@ -413,7 +457,11 @@ export const upsertProfile = createServerFn({ method: "POST" })
           ${data.notify_needs ?? true},
           ${data.notify_services ?? true},
           ${data.notify_facilities ?? false},
-          ${Boolean(data.welcome_seen)}
+          ${Boolean(data.welcome_seen)},
+          ${settingPref},
+          ${mobility},
+          ${digestOptIn},
+          ${digestCadence}
         )
       `;
     } else {
@@ -437,6 +485,10 @@ export const upsertProfile = createServerFn({ method: "POST" })
           notify_services = ${data.notify_services ?? true},
           notify_facilities = ${data.notify_facilities ?? false},
           welcome_seen = coalesce(${data.welcome_seen ?? null}, welcome_seen),
+          setting_pref = ${settingPref},
+          mobility = ${mobility},
+          digest_opt_in = ${digestOptIn},
+          digest_cadence = ${digestCadence},
           updated_at = now()
         where user_id = ${context.userId}
       `;

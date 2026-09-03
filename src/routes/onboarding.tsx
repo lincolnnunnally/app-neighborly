@@ -27,6 +27,8 @@ import {
   INTEREST_OPTIONS,
   KIND_LABELS,
   LIFE_SEASON_OPTIONS,
+  MOBILITY_OPTIONS,
+  SETTING_PREF_OPTIONS,
   SKILL_OPTIONS,
   type Community,
 } from "@/lib/community/types";
@@ -66,6 +68,8 @@ function OnboardingPage() {
   const [faithPosture, setFaithPosture] = useState("");
   const [hopingFor, setHopingFor] = useState("");
   const [availability, setAvailability] = useState<string[]>([]);
+  const [settingPref, setSettingPref] = useState("");
+  const [mobility, setMobility] = useState("");
   const [isNew, setIsNew] = useState(
     () => search.code === "VIDALIA-WELCOME" || search.community === "vidalia",
   );
@@ -106,6 +110,8 @@ function OnboardingPage() {
           setFaithPosture(profile.faith_posture);
           setHopingFor(profile.hoping_for);
           setAvailability(profile.availability);
+          setSettingPref(profile.setting_pref || "");
+          setMobility(profile.mobility || "");
           setIsNew(profile.is_new_resident);
           setIsYouth(profile.is_youth);
           setNotifyEvents(profile.notify_events);
@@ -164,6 +170,8 @@ function OnboardingPage() {
       faith_posture: faithPosture,
       hoping_for: hopingFor,
       availability,
+      setting_pref: settingPref,
+      mobility,
       is_new_resident: isNew,
       is_youth: isYouth,
       notify_events: notifyEvents,
@@ -435,6 +443,49 @@ function OnboardingPage() {
               <div className="space-y-2">
                 <Label>Interests</Label>
                 <ChipSelect options={INTEREST_OPTIONS} value={interests} onChange={setInterests} />
+              </div>
+              <div className="space-y-2">
+                <Label>Indoor or outdoor</Label>
+                <div className="flex flex-wrap gap-2">
+                  {SETTING_PREF_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() => setSettingPref(opt.id)}
+                      className={cn(
+                        "rounded-full border px-3 py-1.5 text-sm",
+                        settingPref === opt.id
+                          ? "border-primary bg-primary text-primary-fg"
+                          : "border-border bg-bg-elevated text-fg-muted",
+                      )}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>How you like to move</Label>
+                <div className="flex flex-wrap gap-2">
+                  {MOBILITY_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() => setMobility(opt.id)}
+                      className={cn(
+                        "rounded-full border px-3 py-1.5 text-left text-sm",
+                        mobility === opt.id
+                          ? "border-primary bg-primary text-primary-fg"
+                          : "border-border bg-bg-elevated text-fg-muted",
+                      )}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-fg-subtle">
+                  Seated / indoor-friendly means we will not lead with hiking.
+                </p>
               </div>
               <div className="space-y-2">
                 <Label>When you can show up</Label>

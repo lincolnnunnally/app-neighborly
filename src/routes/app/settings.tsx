@@ -14,6 +14,8 @@ import {
   FAITH_POSTURE_OPTIONS,
   INTEREST_OPTIONS,
   LIFE_SEASON_OPTIONS,
+  MOBILITY_OPTIONS,
+  SETTING_PREF_OPTIONS,
   SKILL_OPTIONS,
   type Profile,
 } from "@/lib/community/types";
@@ -71,6 +73,10 @@ function SettingsPage() {
                 notify_needs: profile.notify_needs,
                 notify_services: profile.notify_services,
                 notify_facilities: profile.notify_facilities,
+                setting_pref: profile.setting_pref,
+                mobility: profile.mobility,
+                digest_opt_in: profile.digest_opt_in,
+                digest_cadence: profile.digest_cadence,
               },
             });
             setProfile(next);
@@ -167,12 +173,78 @@ function SettingsPage() {
           />
         </div>
         <div className="space-y-2">
+          <Label>Indoor or outdoor</Label>
+          <div className="flex flex-wrap gap-2">
+            {SETTING_PREF_OPTIONS.map((opt) => (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => setProfile({ ...profile, setting_pref: opt.id })}
+                className={cn(
+                  "rounded-full border px-3 py-1.5 text-sm",
+                  profile.setting_pref === opt.id
+                    ? "border-primary bg-primary text-primary-fg"
+                    : "border-border bg-bg-elevated text-fg-muted",
+                )}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="space-y-2">
+          <Label>How you like to move</Label>
+          <div className="flex flex-wrap gap-2">
+            {MOBILITY_OPTIONS.map((opt) => (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => setProfile({ ...profile, mobility: opt.id })}
+                className={cn(
+                  "rounded-full border px-3 py-1.5 text-left text-sm",
+                  profile.mobility === opt.id
+                    ? "border-primary bg-primary text-primary-fg"
+                    : "border-border bg-bg-elevated text-fg-muted",
+                )}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+          <p className="text-xs text-fg-subtle">
+            If you need seated options, we will not lead with hiking. Fit matters more if you
+            ever pay for a digest.
+          </p>
+        </div>
+        <div className="space-y-2">
           <Label>When you can show up</Label>
           <ChipSelect
             options={AVAILABILITY_OPTIONS}
             value={profile.availability}
             onChange={(availability) => setProfile({ ...profile, availability })}
           />
+        </div>
+
+        <div className="space-y-3 rounded-[var(--radius-xl)] border border-border bg-bg-elevated p-4">
+          <p className="text-sm font-medium">Weekly fit list (not billed yet)</p>
+          <p className="text-xs text-fg-muted">
+            When we can actually email things that match you, a few dollars a month would
+            cover a weekly note with Add to calendar / not interested. We will not take
+            money until that mail arrives. Join the waitlist if you want it.
+          </p>
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-sm text-fg-muted">Email me a weekly fit list when it is real</span>
+            <Switch
+              checked={profile.digest_opt_in}
+              onCheckedChange={(v) =>
+                setProfile({
+                  ...profile,
+                  digest_opt_in: v,
+                  digest_cadence: v ? "weekly" : "off",
+                })
+              }
+            />
+          </div>
         </div>
 
         <div className="space-y-3 rounded-[var(--radius-xl)] border border-border bg-bg-elevated p-4">

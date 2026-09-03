@@ -17,6 +17,8 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PlaceSearch } from "@/components/community/place-search";
+import { JsonLd } from "@/components/community/json-ld";
 import { getCommunityFeed, listCommunities } from "@/lib/community/server";
 import type { Community, CommunityEvent, Need, Service } from "@/lib/community/types";
 import type { WeekendPlan } from "@/lib/community/weekend";
@@ -100,11 +102,12 @@ function LandingPage() {
               Just landed? Start with this weekend.
             </h1>
             <p className="max-w-xl text-lg text-fg-muted">
-              Neighborly is the local board for Vidalia: weather, the Pal Theatre, parks,
-              pickleball, church listings, and a place to ask for a real hand. No account
-              needed to see what is happening. When you are ready, join — friendship before
-              dating, more than one circle allowed. We will not invent neighbors for you.
+              Neighborly is a local board for what is actually happening — starting in
+              Vidalia, and any ZIP you type. Weather, public calendars, pickleball, church
+              listings, and a place to ask for a real hand. No account needed to look.
+              We will not invent neighbors or events for you.
             </p>
+            <PlaceSearch size="lg" defaultValue="30474" />
             {weekend?.arrivingNote ? (
               <p className="max-w-xl rounded-[var(--radius-lg)] border border-primary/25 bg-primary-soft/40 p-4 text-sm text-fg">
                 {weekend.arrivingNote}
@@ -112,7 +115,7 @@ function LandingPage() {
             ) : null}
             <div className="flex flex-wrap gap-3">
               <Button asChild size="lg">
-                <Link to="/weekend">
+                <Link to="/weekend" search={{ place: "vidalia" }}>
                   This weekend in Vidalia
                   <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -524,6 +527,21 @@ function LandingPage() {
         </div>
       </section>
 
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Neighborly",
+          url: "https://neighborly.unitedundergod.org/",
+          description:
+            "What's going on in your town this week. Public gatherings, a neighbor board, no invented people.",
+          potentialAction: {
+            "@type": "SearchAction",
+            target: "https://neighborly.unitedundergod.org/near?q={search_term_string}",
+            "query-input": "required name=search_term_string",
+          },
+        }}
+      />
       <footer className="border-t border-border py-10">
         <div className="page-shell flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2 text-fg">

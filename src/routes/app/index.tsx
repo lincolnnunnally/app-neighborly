@@ -92,7 +92,7 @@ function AppHome() {
             </Link>
           </Button>
           <Button asChild size="sm" variant="secondary">
-            <Link to="/weekend">This weekend</Link>
+            <Link to="/weekend" search={{ place: primarySlug }}>This weekend</Link>
           </Button>
           <Button asChild size="sm" variant="secondary">
             <Link to="/app/needs">Post or answer a need</Link>

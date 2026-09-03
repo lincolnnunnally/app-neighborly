@@ -29,8 +29,11 @@ export function SiteHeader({ solid = false }: { solid?: boolean }) {
         </Link>
 
         <nav className="flex items-center gap-4 text-sm text-fg-muted sm:gap-6">
-          <Link to="/weekend" className="font-medium text-fg hover:text-primary">
+          <Link to="/weekend" search={{ place: "vidalia" }} className="font-medium text-fg hover:text-primary">
             This weekend
+          </Link>
+          <Link to="/near" className="hidden hover:text-fg sm:inline">
+            Find a town
           </Link>
           <Link to="/c/$slug" params={{ slug: "vidalia" }} className="hidden hover:text-fg sm:inline">
             Vidalia board
