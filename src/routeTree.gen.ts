@@ -23,6 +23,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WeekendRouteImport } from './routes/weekend'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as ApiIcsRouteImport } from './routes/api/ics'
+import { Route as ApiWeekendRouteImport } from './routes/api/weekend'
 import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as AppCommunitiesRouteImport } from './routes/app/communities'
 import { Route as AppEventsRouteImport } from './routes/app/events'
@@ -107,6 +108,11 @@ const ApiIcsRoute = ApiIcsRouteImport.update({
   path: '/api/ics',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiWeekendRoute = ApiWeekendRouteImport.update({
+  id: '/api/weekend',
+  path: '/api/weekend',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -188,6 +194,7 @@ export interface FileRoutesByFullPath {
   '/weekend': typeof WeekendRoute
   '/api/health': typeof ApiHealthRoute
   '/api/ics': typeof ApiIcsRoute
+  '/api/weekend': typeof ApiWeekendRoute
   '/app/communities': typeof AppCommunitiesRoute
   '/app/events': typeof AppEventsRoute
   '/app/invite': typeof AppInviteRoute
@@ -216,6 +223,7 @@ export interface FileRoutesByTo {
   '/weekend': typeof WeekendRoute
   '/api/health': typeof ApiHealthRoute
   '/api/ics': typeof ApiIcsRoute
+  '/api/weekend': typeof ApiWeekendRoute
   '/app/communities': typeof AppCommunitiesRoute
   '/app/events': typeof AppEventsRoute
   '/app/invite': typeof AppInviteRoute
@@ -246,6 +254,7 @@ export interface FileRoutesById {
   '/weekend': typeof WeekendRoute
   '/api/health': typeof ApiHealthRoute
   '/api/ics': typeof ApiIcsRoute
+  '/api/weekend': typeof ApiWeekendRoute
   '/app/communities': typeof AppCommunitiesRoute
   '/app/events': typeof AppEventsRoute
   '/app/invite': typeof AppInviteRoute
@@ -277,6 +286,7 @@ export interface FileRouteTypes {
     | '/weekend'
     | '/api/health'
     | '/api/ics'
+    | '/api/weekend'
     | '/app/communities'
     | '/app/events'
     | '/app/invite'
@@ -305,6 +315,7 @@ export interface FileRouteTypes {
     | '/weekend'
     | '/api/health'
     | '/api/ics'
+    | '/api/weekend'
     | '/app/communities'
     | '/app/events'
     | '/app/invite'
@@ -334,6 +345,7 @@ export interface FileRouteTypes {
     | '/weekend'
     | '/api/health'
     | '/api/ics'
+    | '/api/weekend'
     | '/app/communities'
     | '/app/events'
     | '/app/invite'
@@ -364,6 +376,7 @@ export interface RootRouteChildren {
   WeekendRoute: typeof WeekendRoute
   ApiHealthRoute: typeof ApiHealthRoute
   ApiIcsRoute: typeof ApiIcsRoute
+  ApiWeekendRoute: typeof ApiWeekendRoute
   CSlugRoute: typeof CSlugRoute
   JoinCodeRoute: typeof JoinCodeRoute
   ApiAdminStatsRoute: typeof ApiAdminStatsRoute
@@ -468,6 +481,13 @@ declare module '@tanstack/react-router' {
       path: '/api/ics'
       fullPath: '/api/ics'
       preLoaderRoute: typeof ApiIcsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/weekend': {
+      id: '/api/weekend'
+      path: '/api/weekend'
+      fullPath: '/api/weekend'
+      preLoaderRoute: typeof ApiWeekendRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app/': {
@@ -605,6 +625,7 @@ const rootRouteChildren: RootRouteChildren = {
   WeekendRoute: WeekendRoute,
   ApiHealthRoute: ApiHealthRoute,
   ApiIcsRoute: ApiIcsRoute,
+  ApiWeekendRoute: ApiWeekendRoute,
   CSlugRoute: CSlugRoute,
   JoinCodeRoute: JoinCodeRoute,
   ApiAdminStatsRoute: ApiAdminStatsRoute,

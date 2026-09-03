@@ -35,6 +35,12 @@ export function recommendNextSteps(profile: Partial<Profile>): NextStep[] {
   const lonely = /lonely|alone|isolated|belong/.test(hope);
 
   steps.push({
+    kind: "app",
+    title: "This weekend in Vidalia",
+    why: "Weather, Pal Theatre, parks, and a calendar file — with your daughter or on your own.",
+    href: "/weekend",
+  });
+  steps.push({
     kind: "community",
     title: "Vidalia neighbor board",
     why: "Your home base: events, needs, and people who actually live here. The board is a doorway — the win is sitting with someone.",
