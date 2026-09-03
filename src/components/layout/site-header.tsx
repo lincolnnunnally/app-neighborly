@@ -28,18 +28,18 @@ export function SiteHeader({ solid = false }: { solid?: boolean }) {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-6 text-sm text-fg-muted md:flex">
-          <Link to="/communities" className="hover:text-fg">
-            Communities
+        <nav className="flex items-center gap-4 text-sm text-fg-muted sm:gap-6">
+          <Link to="/weekend" className="font-medium text-fg hover:text-primary">
+            This weekend
           </Link>
-          <Link to="/how-it-works" className="hover:text-fg">
-            How it works
-          </Link>
-          <Link to="/c/$slug" params={{ slug: "vidalia" }} className="hover:text-fg">
+          <Link to="/c/$slug" params={{ slug: "vidalia" }} className="hidden hover:text-fg sm:inline">
             Vidalia board
           </Link>
-          <Link to="/weekend" className="hover:text-fg">
-            This weekend
+          <Link to="/communities" className="hidden hover:text-fg md:inline">
+            Communities
+          </Link>
+          <Link to="/how-it-works" className="hidden hover:text-fg md:inline">
+            How it works
           </Link>
         </nav>
 

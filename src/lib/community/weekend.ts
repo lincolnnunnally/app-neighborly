@@ -31,6 +31,7 @@ export type WeekendSlot = {
 export type WeekendPlan = {
   weather: WeatherDay[];
   weatherNote: string;
+  arrivingNote: string;
   withChild: WeekendSlot[];
   alone: WeekendSlot[];
   sources: { name: string; url: string; note: string }[];
@@ -110,6 +111,31 @@ function saturdayOn(days: WeatherDay[]): WeatherDay | undefined {
     const [y, m, dd] = d.date.split("-").map(Number);
     return new Date(Date.UTC(y, m - 1, dd, 16, 0, 0)).getUTCDay() === 6;
   });
+}
+
+function formatWeatherDay(d: WeatherDay): string {
+  const label = new Date(`${d.date}T12:00:00`).toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "short",
+    day: "numeric",
+  });
+  const rain = d.rainChance >= 40 ? `, ${d.rainChance}% rain` : "";
+  return `${label}: ${d.summary.toLowerCase()}, high ${d.maxF}°${rain}`;
+}
+
+function buildArrivingNote(days: WeatherDay[], withChild: WeekendSlot[]): string {
+  const today = days[0];
+  const tomorrow = days[1];
+  if (!today) return "Check the heat before you linger outside. Confirm listings before you go.";
+  const paw = withChild.find((s) => /paw patrol/i.test(s.title) && /watch party|10:00/i.test(`${s.title} ${s.starts_at}`));
+  const parts = [
+    `If you are arriving now — ${formatWeatherDay(today)}${tomorrow ? `. Next day: ${formatWeatherDay(tomorrow)}` : ""}. Indoor and morning first.`,
+  ];
+  if (paw) {
+    parts.push(`Saturday with a child: ${paw.title} at the Pal Theatre (122 Church St) — air-conditioned.`);
+  }
+  parts.push("Parks after the heat breaks, not at noon. We will not invent a crowd.");
+  return parts.join(" ");
 }
 
 export async function buildWeekendPlan(): Promise<WeekendPlan> {
@@ -222,11 +248,15 @@ export async function buildWeekendPlan(): Promise<WeekendPlan> {
       ? "South Georgia September: do indoor or morning first. Save parks for evening."
       : "Outdoor is reasonable. Still pack water.";
 
+  const withChildSorted = withChild.sort((a, b) => a.starts_at.localeCompare(b.starts_at));
+  const aloneSorted = alone.sort((a, b) => a.starts_at.localeCompare(b.starts_at));
+
   const plan: WeekendPlan = {
     weather: days.slice(0, 5),
     weatherNote,
-    withChild: withChild.sort((a, b) => a.starts_at.localeCompare(b.starts_at)),
-    alone: alone.sort((a, b) => a.starts_at.localeCompare(b.starts_at)),
+    arrivingNote: buildArrivingNote(days, withChildSorted),
+    withChild: withChildSorted,
+    alone: aloneSorted,
     sources: [
       { name: "Visit Vidalia", url: "https://visitvidaliaga.com/things-to-do/events/", note: "City tourism calendar" },
       { name: "The Pal Theatre", url: "https://thepaltheatre.com/", note: "Movies and live shows" },

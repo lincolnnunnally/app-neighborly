@@ -9,12 +9,12 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       {
-        title: "Neighborly — Community connections for Milstead & beyond",
+        title: "Neighborly — Vidalia neighbors, this weekend, a real next step",
       },
       {
         name: "description",
         content:
-          "Neighbors helping neighbors. Post a need, offer a skill, join events, and welcome new residents — starting with Milstead as the first test market.",
+          "What's happening in Vidalia this week: weather, the Pal Theatre, parks, pickleball, and a board for real needs. No invented neighbors. Account optional until you RSVP or ask for a hand.",
       },
     ],
     links: [{ rel: "stylesheet", href: appCss }],

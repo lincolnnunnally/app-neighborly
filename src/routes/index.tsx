@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getCommunityFeed, listCommunities } from "@/lib/community/server";
 import type { Community, CommunityEvent, Need, Service } from "@/lib/community/types";
+import type { WeekendPlan } from "@/lib/community/weekend";
 import { KIND_LABELS } from "@/lib/community/types";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { formatEventWhen } from "@/lib/utils";
@@ -34,6 +35,7 @@ function LandingPage() {
   const [events, setEvents] = useState<CommunityEvent[]>([]);
   const [feedStatus, setFeedStatus] = useState<"loading" | "ready" | "error">("loading");
   const [communitiesError, setCommunitiesError] = useState(false);
+  const [weekend, setWeekend] = useState<WeekendPlan | null>(null);
 
   useEffect(() => {
     listCommunities()
@@ -47,12 +49,25 @@ function LandingPage() {
       });
     getCommunityFeed({ data: { slug: "vidalia" } })
       .then((f) => {
+        const cutoff = Date.now() - 6 * 3600 * 1000;
+        const upcoming = f.events.filter((e) => {
+          const t = Date.parse(String(e.starts_at));
+          return Number.isFinite(t) && t >= cutoff;
+        });
         setNeeds(f.needs.slice(0, 3));
         setServices(f.services.slice(0, 2));
-        setEvents(f.events.slice(0, 2));
+        setEvents((upcoming.length ? upcoming : f.events).slice(0, 2));
         setFeedStatus("ready");
       })
       .catch(() => setFeedStatus("error"));
+    fetch("/api/weekend")
+      .then(async (res) => {
+        const d = (await res.json()) as { ok?: boolean; plan?: WeekendPlan };
+        if (res.ok && d.ok && d.plan) setWeekend(d.plan);
+      })
+      .catch(() => {
+        /* weekend page still works if this card is empty */
+      });
   }, []);
 
   const vidalia = communities.find((c) => c.slug === "vidalia");
@@ -80,42 +95,40 @@ function LandingPage() {
         />
         <div className="page-shell relative grid gap-10 py-14 sm:py-20 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
           <div className="space-y-6">
-            <Badge className="w-fit">Now live in Vidalia, Georgia</Badge>
+            <Badge className="w-fit">Live in Vidalia, Georgia</Badge>
             <h1 className="font-display text-balance text-4xl font-semibold tracking-tight text-fg sm:text-5xl lg:text-[3.25rem] lg:leading-[1.1]">
-              Neighbors helping neighbors — from a lightbulb to a block party
+              Just landed? Start with this weekend.
             </h1>
             <p className="max-w-xl text-lg text-fg-muted">
-              Neighborly is a working community board for Vidalia: pickleball, downtown, church,
-              dads looking out for their kids, and the quiet ways people still meet in a small
-              town. Create a profile, say what season of life you're in, and we'll point you
-              at groups that fit — friendship before dating, more than one circle allowed.
-              Post a real need, offer a real skill, RSVP to a gathering. We will not invent
-              neighbors for you.
+              Neighborly is the local board for Vidalia: weather, the Pal Theatre, parks,
+              pickleball, church listings, and a place to ask for a real hand. No account
+              needed to see what is happening. When you are ready, join — friendship before
+              dating, more than one circle allowed. We will not invent neighbors for you.
             </p>
+            {weekend?.arrivingNote ? (
+              <p className="max-w-xl rounded-[var(--radius-lg)] border border-primary/25 bg-primary-soft/40 p-4 text-sm text-fg">
+                {weekend.arrivingNote}
+              </p>
+            ) : null}
             <div className="flex flex-wrap gap-3">
-              <Button size="lg" onClick={() => void tryNow()}>
-                {user ? "Open my hub" : "Try Neighborly now"}
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-              <Button asChild size="lg" variant="secondary">
+              <Button asChild size="lg">
                 <Link to="/weekend">
-                  Plan this weekend
+                  This weekend in Vidalia
+                  <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
               <Button asChild size="lg" variant="secondary">
                 <Link to="/c/$slug" params={{ slug: "vidalia" }}>
-                  Browse Vidalia live
+                  Vidalia board
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link to="/join/$code" params={{ code: "VIDALIA-QR" }}>
-                  Invite / QR path
-                </Link>
+              <Button size="lg" variant="outline" onClick={() => void tryNow()}>
+                {user ? "Open my hub" : "Join Vidalia"}
               </Button>
             </div>
             <p className="text-sm text-fg-subtle">
-              “Try now” creates a real neighbor session in one click so help, RSVP, and
-              booking work immediately.
+              Join is a real email account and profile. Browse and the weekend plan work
+              without signing up.
             </p>
           </div>
 
@@ -133,6 +146,40 @@ function LandingPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
+              {events[0] && (
+                <Link
+                  to="/c/$slug"
+                  params={{ slug: "vidalia" }}
+                  className="flex items-start gap-3 rounded-[var(--radius-lg)] border border-border bg-bg px-3 py-3 no-underline transition-colors hover:border-border-strong"
+                >
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[var(--radius-sm)] bg-primary-soft text-primary">
+                    <CalendarDays className="h-4 w-4" />
+                  </span>
+                  <span>
+                    <span className="block text-sm font-medium text-fg">{events[0].title}</span>
+                    <span className="text-xs text-fg-muted">
+                      {formatEventWhen(events[0].starts_at)} · {events[0].rsvp_count} going
+                    </span>
+                  </span>
+                </Link>
+              )}
+              {events[1] && (
+                <Link
+                  to="/c/$slug"
+                  params={{ slug: "vidalia" }}
+                  className="flex items-start gap-3 rounded-[var(--radius-lg)] border border-border bg-bg px-3 py-3 no-underline transition-colors hover:border-border-strong"
+                >
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[var(--radius-sm)] bg-primary-soft text-primary">
+                    <CalendarDays className="h-4 w-4" />
+                  </span>
+                  <span>
+                    <span className="block text-sm font-medium text-fg">{events[1].title}</span>
+                    <span className="text-xs text-fg-muted">
+                      {formatEventWhen(events[1].starts_at)} · {events[1].rsvp_count} going
+                    </span>
+                  </span>
+                </Link>
+              )}
               {needs[0] && (
                 <Link
                   to="/c/$slug"
@@ -163,23 +210,6 @@ function LandingPage() {
                     <span className="block text-sm font-medium text-fg">{services[0].title}</span>
                     <span className="text-xs text-fg-muted">
                       {services[0].provider_name} · {services[0].pricing}
-                    </span>
-                  </span>
-                </Link>
-              )}
-              {events[0] && (
-                <Link
-                  to="/c/$slug"
-                  params={{ slug: "vidalia" }}
-                  className="flex items-start gap-3 rounded-[var(--radius-lg)] border border-border bg-bg px-3 py-3 no-underline transition-colors hover:border-border-strong"
-                >
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[var(--radius-sm)] bg-primary-soft text-primary">
-                    <CalendarDays className="h-4 w-4" />
-                  </span>
-                  <span>
-                    <span className="block text-sm font-medium text-fg">{events[0].title}</span>
-                    <span className="text-xs text-fg-muted">
-                      {formatEventWhen(events[0].starts_at)} · {events[0].rsvp_count} going
                     </span>
                   </span>
                 </Link>
@@ -342,7 +372,7 @@ function LandingPage() {
               How people actually join
             </h2>
             <p className="mt-2 text-fg-muted">
-              Website pick, invite link, mailbox QR, or one-click try.
+              Website, invite link, or a QR flyer — then a real account. We do not invent a neighbor for you.
             </p>
           </div>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -379,16 +409,14 @@ function LandingPage() {
             ))}
           </div>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button onClick={() => void tryNow()}>
-              Try now
-            </Button>
+            <Button onClick={() => void tryNow()}>{user ? "Open my hub" : "Join Vidalia"}</Button>
             <Button asChild variant="outline">
-              <Link to="/join/$code" params={{ code: "MILSTEAD-QR" }}>
-                Preview mailbox QR flow
+              <Link to="/join/$code" params={{ code: "VIDALIA-QR" }}>
+                Vidalia invite / QR
               </Link>
             </Button>
             <Button asChild variant="secondary">
-              <Link to="/signup" search={{ community: "milstead", code: "MILSTEAD-WELCOME" }}>
+              <Link to="/signup" search={{ community: "vidalia", code: "VIDALIA-WELCOME" }}>
                 Full signup form
               </Link>
             </Button>
@@ -403,7 +431,7 @@ function LandingPage() {
               Communities ready to explore
             </h2>
             <p className="mt-2 text-fg-muted">
-              Milstead is featured. You can belong to more than one.
+              Vidalia is the live market. You can belong to more than one — Milstead stays available.
             </p>
           </div>
           <Button asChild variant="secondary">
@@ -412,7 +440,7 @@ function LandingPage() {
         </div>
         {communitiesError ? (
           <p className="text-sm text-fg-muted" role="alert">
-            Could not load communities. Refresh the page, or open Milstead directly.
+            Could not load communities. Refresh the page, or open the Vidalia board.
           </p>
         ) : null}
         <div className="grid gap-4 sm:grid-cols-2">
@@ -434,6 +462,65 @@ function LandingPage() {
               </p>
             </Link>
           ))}
+        </div>
+      </section>
+
+      <section className="border-t border-border bg-bg-elevated py-16">
+        <div className="page-shell">
+          <div className="mb-8 max-w-2xl">
+            <h2 className="font-display text-3xl font-semibold tracking-tight">
+              Other doors when you are ready
+            </h2>
+            <p className="mt-2 text-fg-muted">
+              Neighborly does not open those accounts for you. Same email later is enough.
+              Friendship before dating. The win is a real table, not another feed.
+            </p>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              {
+                title: "You Are Awesome coin",
+                body: "If you find a LOOK UP coin, that door is Presence — a dusk prompt, not a leaderboard.",
+                href: "https://presence.unitedundergod.org/t/LOOKUP",
+              },
+              {
+                title: "Presence — coffee, a walk, a meal",
+                body: "One yes with a real person. Hosts are real; empty stays empty.",
+                href: "https://presence.unitedundergod.org/",
+              },
+              {
+                title: "Kindred — friendship first",
+                body: "Belonging before romance. We will not create this for you.",
+                href: "https://kindred.unitedundergod.org/",
+              },
+              {
+                title: "ChurchConnect",
+                body: "If a church here is on the platform, serving and groups get handled there.",
+                href: "https://churchconnect.unitedundergod.org/",
+              },
+              {
+                title: "Kids Need Dads",
+                body: "For dads who still matter to their kids — including after divorce.",
+                href: "https://dads.unitedundergod.org/",
+              },
+              {
+                title: "Live On Mission",
+                body: "A small way to serve once you have a little room to give.",
+                href: "https://liveonmission.unitedundergod.org/",
+              },
+            ].map((item) => (
+              <a
+                key={item.title}
+                href={item.href}
+                className="surface-card block p-5 no-underline transition-colors hover:border-border-strong"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <h3 className="font-display text-lg font-semibold text-fg">{item.title}</h3>
+                <p className="mt-1 text-sm text-fg-muted">{item.body}</p>
+              </a>
+            ))}
+          </div>
         </div>
       </section>
 

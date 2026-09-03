@@ -98,7 +98,9 @@ function SignupPage() {
           </Link>
           <CardTitle>Create your neighbor profile</CardTitle>
           <CardDescription>
-            Step 1 of 3 — account. Then you'll set skills and pick communities.
+            {search.community === "vidalia" || search.code === "VIDALIA-WELCOME" || !search.community
+              ? "Join Vidalia. Then pick skills and circles. We will not invent neighbors for you."
+              : "Step 1 of 3 — account. Then you'll set skills and pick communities."}
           </CardDescription>
           {inviteCommunity && (
             <p className="rounded-[var(--radius-md)] bg-primary-soft px-3 py-2 text-sm text-primary">
