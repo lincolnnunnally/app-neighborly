@@ -86,6 +86,11 @@ function WeekendPage() {
             pulls the public ones here so you can plan a Saturday with your daughter — or a week of
             meeting people when she is with her other home. We will not invent a crowd.
           </p>
+          {plan?.arrivingNote && (
+            <p className="rounded-[var(--radius-lg)] border border-primary/25 bg-primary-soft/40 p-4 text-sm text-fg">
+              {plan.arrivingNote}
+            </p>
+          )}
         </div>
 
         {error && <p className="text-sm text-danger">{error}</p>}
@@ -173,7 +178,7 @@ function WeekendPage() {
               <Link className="block underline" to="/c/$slug" params={{ slug: "vidalia" }}>
                 Vidalia board — needs, services, events
               </Link>
-              <a className="block underline" href="https://churchconnect.cloud/">
+              <a className="block underline" href="https://churchconnect.unitedundergod.org/">
                 Find a church
               </a>
               <a className="block underline" href="https://liveonmission.unitedundergod.org/">

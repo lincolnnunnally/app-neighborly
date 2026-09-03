@@ -61,7 +61,7 @@ function CommunityPublicPage() {
   const [neighbors, setNeighbors] = useState<Neighbor[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
-  const [tab, setTab] = useState("needs");
+  const [tab, setTab] = useState(() => (slug.startsWith("vidalia") ? "events" : "needs"));
 
   const [activeNeed, setActiveNeed] = useState<Need | null>(null);
   const [needOffers, setNeedOffers] = useState<HelpOffer[]>([]);
@@ -102,6 +102,7 @@ function CommunityPublicPage() {
   }
 
   useEffect(() => {
+    setTab(slug.startsWith("vidalia") ? "events" : "needs");
     setLoading(true);
     setLoadError(false);
     reload()
@@ -186,6 +187,9 @@ function CommunityPublicPage() {
             {user ? "Open my hub" : demoBusy ? "Joining…" : "Join & start helping"}
           </Button>
           <Button asChild variant="secondary">
+            <Link to="/weekend">This weekend</Link>
+          </Button>
+          <Button asChild variant="secondary">
             <Link to="/join/$code" params={{ code: community.invite_code }}>
               Invite link & QR
             </Link>
@@ -197,13 +201,8 @@ function CommunityPublicPage() {
 
         <p className="max-w-3xl text-fg-muted">{community.description}</p>
         <p className="text-sm text-fg-subtle">
-          Tap any card to open it. Actions (help, RSVP, book) work for real — if
-          you're not signed in yet, we start a neighbor session for you.
-        </p>
-        <p className="mt-3">
-          <Link to="/weekend" className="text-sm font-medium text-primary underline">
-            Plan this weekend with weather and a calendar file
-          </Link>
+          Browse freely. To RSVP, offer help, or book a place, create a real
+          account — we will not invent a neighbor for you.
         </p>
 
         <Tabs value={tab} onValueChange={setTab}>
