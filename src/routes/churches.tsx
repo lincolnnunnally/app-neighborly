@@ -155,7 +155,9 @@ function ChurchesPage() {
       setCity(nextCity);
       setState(nextState);
     }
-    persistFilters({ zip: nextZip, city: nextCity, state: nextState });
+    if (!search.zip) {
+      persistFilters({ zip: nextZip, city: nextCity, state: nextState });
+    }
     const params = new URLSearchParams();
     if (nextZip.trim()) params.set("zip", nextZip.trim());
     if (nextCity.trim()) params.set("city", nextCity.trim());
