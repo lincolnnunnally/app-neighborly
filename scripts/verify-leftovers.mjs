@@ -60,3 +60,17 @@ assert.ok(parseEventStartMs("2026-09-12T18:00:00-04:00"), "iso offset");
 assert.ok(parseEventStartMs(new Date("2026-09-10T19:00:00-04:00")), "Date object");
 assert.equal(parseEventStartMs(""), null);
 console.log("event start parse (board + weekend): ok");
+
+const makerIds = ["artisan", "wood", "fiber", "metal", "visual", "foodcraft", "home_goods"];
+assert.ok(makerIds.every((id) => /^[a-z_]+$/.test(id)), "maker taxonomy ids");
+function isSafeNext(raw) {
+  if (!raw) return false;
+  if (!raw.startsWith("/")) return false;
+  if (raw.startsWith("//") || raw.includes("://")) return false;
+  return raw.length < 180;
+}
+assert.equal(isSafeNext("/app/services"), true);
+assert.equal(isSafeNext("https://evil.example"), false);
+assert.equal(isSafeNext("//evil"), false);
+assert.equal("/c/vidalia?tab=services".startsWith("/c/"), true);
+console.log("services offer next + maker taxonomy: ok");

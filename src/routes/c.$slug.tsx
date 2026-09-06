@@ -3,6 +3,7 @@ import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
   CalendarDays,
   HandHeart,
+  Link2,
   MapPin,
   Users,
   Wrench,
@@ -33,12 +34,15 @@ import {
   getInterestDemand,
   listOffersForNeed,
   offerHelp,
+  inquireService,
   requestFacility,
   rsvpEvent,
   type HelpOffer,
 } from "@/lib/community/server";
 import {
   EVENT_KINDS,
+  SERVICE_CATEGORIES,
+  serviceCategoryLabel,
   type Community,
   type CommunityEvent,
   type Facility,
@@ -46,10 +50,17 @@ import {
   type Neighbor,
   type Service,
 } from "@/lib/community/types";
+import { OFFER_SERVICE_PATH } from "@/lib/community/offer-path";
 import { formatEventWhen } from "@/lib/utils";
 import { ActivityFilters, matchesDateWindow, type DateWindow } from "@/components/community/activity-filters";
 
+type BoardSearch = { tab?: string; cat?: string };
+
 export const Route = createFileRoute("/c/$slug")({
+  validateSearch: (s: Record<string, unknown>): BoardSearch => ({
+    tab: typeof s.tab === "string" ? s.tab : undefined,
+    cat: typeof s.cat === "string" ? s.cat : undefined,
+  }),
   loader: async ({ params }) => {
     try {
       return await getCommunityFeed({ data: { slug: params.slug } });
@@ -86,6 +97,7 @@ export const Route = createFileRoute("/c/$slug")({
 
 function CommunityPublicPage() {
   const { slug } = Route.useParams();
+  const search = Route.useSearch();
   const loaded = Route.useLoaderData();
   const { user, ensureReady } = useRequireNeighbor();
   const navigate = useNavigate();
@@ -98,7 +110,9 @@ function CommunityPublicPage() {
   const [demand, setDemand] = useState<{ interest: string; n: number }[]>([]);
   const [loading, setLoading] = useState(!loaded.community);
   const [loadError, setLoadError] = useState(false);
-  const [tab, setTab] = useState(() => (slug.startsWith("vidalia") ? "events" : "needs"));
+  const [tab, setTab] = useState(
+    () => search.tab || (slug.startsWith("vidalia") ? "events" : "needs"),
+  );
   const [eventDate, setEventDate] = useState<DateWindow>("week");
   const [eventKind, setEventKind] = useState("all");
 
@@ -108,6 +122,7 @@ function CommunityPublicPage() {
   const [helpMessage, setHelpMessage] = useState("I can help — when works for you?");
   const [activeEvent, setActiveEvent] = useState<CommunityEvent | null>(null);
   const [activeService, setActiveService] = useState<Service | null>(null);
+  const [serviceMessage, setServiceMessage] = useState("Hi — I'd like to ask about this.");
   const [activeFacility, setActiveFacility] = useState<Facility | null>(null);
   const [bookPurpose, setBookPurpose] = useState("");
   const [bookDate, setBookDate] = useState("");
@@ -147,7 +162,7 @@ function CommunityPublicPage() {
   }
 
   useEffect(() => {
-    setTab(slug.startsWith("vidalia") ? "events" : "needs");
+    setTab(search.tab || (slug.startsWith("vidalia") ? "events" : "needs"));
     setLoading(true);
     setLoadError(false);
     reload()
@@ -161,7 +176,7 @@ function CommunityPublicPage() {
       .then((d) => setDemand(d.counts.filter((c) => c.n > 0)))
       .catch(() => setDemand([]));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slug, user?.id]);
+  }, [slug, user?.id, search.tab]);
 
   async function openNeed(n: Need) {
     setActiveNeed(n);
@@ -286,7 +301,21 @@ function CommunityPublicPage() {
           </aside>
         )}
 
-        <Tabs value={tab} onValueChange={setTab}>
+        <Tabs
+          value={tab}
+          onValueChange={(next) => {
+            setTab(next);
+            void navigate({
+              to: "/c/$slug",
+              params: { slug },
+              search: {
+                tab: next,
+                cat: next === "services" ? search.cat : undefined,
+              },
+              replace: true,
+            });
+          }}
+        >
           <TabsList className="grid grid-cols-3 sm:grid-cols-5">
             <TabsTrigger value="needs">Needs</TabsTrigger>
             <TabsTrigger value="services">Services</TabsTrigger>
@@ -335,30 +364,140 @@ function CommunityPublicPage() {
           </TabsContent>
 
           <TabsContent value="services" className="space-y-3">
-            {services.map((s) => (
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <Button
+                data-testid="offer-service"
+                onClick={async () => {
+                  if (user) {
+                    await navigate({ to: OFFER_SERVICE_PATH });
+                    return;
+                  }
+                  const ok = await ensureReady({
+                    code: community.invite_code,
+                    community: community.slug,
+                    next: OFFER_SERVICE_PATH,
+                  });
+                  if (ok) await navigate({ to: OFFER_SERVICE_PATH });
+                }}
+              >
+                Offer a service
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={async () => {
+                  const url = `${window.location.origin}/c/${slug}?tab=services${search.cat ? `&cat=${search.cat}` : ""}`;
+                  try {
+                    await navigator.clipboard.writeText(url);
+                    toast.success("Services link copied");
+                  } catch {
+                    toast.message(url);
+                  }
+                }}
+              >
+                <Link2 className="h-4 w-4" />
+                Share services
+              </Button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() =>
+                  void navigate({
+                    to: "/c/$slug",
+                    params: { slug },
+                    search: { tab: "services", cat: undefined },
+                    replace: true,
+                  })
+                }
+                className={
+                  !search.cat
+                    ? "rounded-full border border-primary bg-primary px-3 py-1.5 text-sm text-primary-fg"
+                    : "rounded-full border border-border bg-bg-elevated px-3 py-1.5 text-sm text-fg-muted"
+                }
+              >
+                All
+              </button>
+              {SERVICE_CATEGORIES.map((c) => (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() =>
+                    void navigate({
+                      to: "/c/$slug",
+                      params: { slug },
+                      search: { tab: "services", cat: c.id },
+                      replace: true,
+                    })
+                  }
+                  className={
+                    search.cat === c.id
+                      ? "rounded-full border border-primary bg-primary px-3 py-1.5 text-sm text-primary-fg"
+                      : "rounded-full border border-border bg-bg-elevated px-3 py-1.5 text-sm text-fg-muted"
+                  }
+                >
+                  {c.label}
+                </button>
+              ))}
+            </div>
+            {services
+              .filter((s) => !search.cat || s.category === search.cat)
+              .map((s) => (
               <button
                 key={s.id}
                 type="button"
-                onClick={() => setActiveService(s)}
+                onClick={() => {
+                  setActiveService(s);
+                  setServiceMessage("Hi — I'd like to ask about this.");
+                }}
                 className="surface-card w-full p-4 text-left transition-colors hover:border-border-strong"
               >
+                {s.photo_url ? (
+                  <img
+                    src={s.photo_url}
+                    alt=""
+                    className="mb-3 h-36 w-full rounded-[var(--radius-md)] object-cover"
+                  />
+                ) : null}
                 <div className="mb-2 flex flex-wrap gap-2">
                   {s.is_business && <Badge>Business</Badge>}
                   {s.is_youth && <Badge variant="accent">Youth</Badge>}
                   <Badge variant="outline">{s.pricing}</Badge>
+                  <Badge variant="secondary">{serviceCategoryLabel(s.category)}</Badge>
                 </div>
                 <h3 className="font-medium">{s.title}</h3>
                 <p className="line-clamp-2 text-sm text-fg-muted">{s.description}</p>
                 <p className="mt-2 text-xs text-fg-subtle">
                   {s.provider_name}
-                  {s.price_note ? ` · ${s.price_note}` : ""} · tap for contact
+                  {s.price_note ? ` · ${s.price_note}` : ""} · tap to message
                 </p>
               </button>
             ))}
-            {services.length === 0 && (
-              <p className="text-sm text-fg-muted">
-                No services listed yet. Offer a skill when you join.
-              </p>
+            {services.filter((s) => !search.cat || s.category === search.cat).length === 0 && (
+              <div className="space-y-3">
+                <p className="text-sm text-fg-muted">
+                  {services.length
+                    ? "Nothing in this category yet. Show all, or be the first maker listed."
+                    : "No services listed yet. Offer a skill — signup and community join first if you need them, then register."}
+                </p>
+                <Button
+                  data-testid="offer-service-empty"
+                  onClick={async () => {
+                    if (user) {
+                      await navigate({ to: OFFER_SERVICE_PATH });
+                      return;
+                    }
+                    const ok = await ensureReady({
+                      code: community.invite_code,
+                      community: community.slug,
+                      next: OFFER_SERVICE_PATH,
+                    });
+                    if (ok) await navigate({ to: OFFER_SERVICE_PATH });
+                  }}
+                >
+                  Offer a service
+                </Button>
+              </div>
             )}
           </TabsContent>
 
@@ -635,29 +774,84 @@ function CommunityPublicPage() {
                   {activeService.provider_name}
                   {activeService.is_youth ? " · youth offering" : ""}
                   {activeService.is_business ? " · local business" : ""}
+                  {` · ${serviceCategoryLabel(activeService.category)}`}
                 </DialogDescription>
               </DialogHeader>
+              {activeService.photo_url ? (
+                <img
+                  src={activeService.photo_url}
+                  alt=""
+                  className="h-40 w-full rounded-[var(--radius-md)] object-cover"
+                />
+              ) : null}
               <p className="text-sm text-fg">{activeService.description}</p>
+              {activeService.maker_bio ? (
+                <p className="text-sm text-fg-muted">{activeService.maker_bio}</p>
+              ) : null}
               <p className="text-sm text-fg-muted">
                 {activeService.pricing}
                 {activeService.price_note ? ` · ${activeService.price_note}` : ""}
               </p>
-              <p className="rounded-[var(--radius-md)] bg-primary-soft px-3 py-2 text-sm text-primary">
-                Contact: {activeService.contact_hint || "Message via Neighborly after you join"}
-              </p>
+              {activeService.portfolio_url ? (
+                <a
+                  href={activeService.portfolio_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-sm text-primary underline-offset-4 hover:underline"
+                >
+                  Portfolio / shop
+                </a>
+              ) : null}
+              {activeService.contact_hint ? (
+                <p className="rounded-[var(--radius-md)] bg-primary-soft px-3 py-2 text-sm text-primary">
+                  Also: {activeService.contact_hint}
+                </p>
+              ) : null}
+              <div className="space-y-1.5">
+                <Label>Message via Neighborly</Label>
+                <Textarea
+                  value={serviceMessage}
+                  onChange={(e) => setServiceMessage(e.target.value)}
+                  placeholder="What do you need, and when?"
+                />
+                <p className="text-xs text-fg-subtle">
+                  Join first if you have not. We save the message for the provider — no
+                  payments here.
+                </p>
+              </div>
               <DialogFooter>
                 <Button variant="secondary" onClick={() => setActiveService(null)}>
                   Close
                 </Button>
                 <Button
-                  onClick={() => {
-                    toast.message(
-                      `We do not save interest yet. Use the contact above to reach ${activeService.title}.`,
-                    );
+                  disabled={busy || activeService.user_id === user?.id}
+                  onClick={async () => {
+                    setBusy(true);
+                    try {
+                      const ok = await ensureReady({
+                        code: community.invite_code,
+                        community: community.slug,
+                        next: `/c/${community.slug}?tab=services`,
+                      });
+                      if (!ok) return;
+                      const res = await inquireService({
+                        data: { serviceId: activeService.id, message: serviceMessage },
+                      });
+                      toast.success(
+                        res.already
+                          ? "You already messaged them about this listing"
+                          : "Message sent — they will see it in their hub",
+                      );
+                      setActiveService(null);
+                    } catch (e) {
+                      toast.error(e instanceof Error ? e.message : "Could not send message");
+                    } finally {
+                      setBusy(false);
+                    }
                   }}
                 >
                   <Wrench className="h-4 w-4" />
-                  How do I reach them?
+                  {busy ? "Sending…" : "Message via Neighborly"}
                 </Button>
               </DialogFooter>
             </>

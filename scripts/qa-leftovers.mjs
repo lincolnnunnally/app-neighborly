@@ -80,6 +80,38 @@ try {
   await page.getByRole("button", { name: /Find churches/i }).click();
   await page.waitForTimeout(1200);
   await shot("churches-morning-filter");
+
+  await page.goto(`${BASE}/c/vidalia?tab=services`, { waitUntil: "networkidle", timeout: 30000 });
+  await page.waitForTimeout(800);
+  const servicesText = await page.locator("main").innerText();
+  notes.push(
+    /Offer a service/i.test(servicesText)
+      ? "OK services tab has Offer CTA"
+      : "FAIL services tab missing Offer CTA",
+  );
+  notes.push(
+    /Maker \/ artisan|Woodworking|Fiber, textile/i.test(servicesText)
+      ? "OK maker categories visible"
+      : "WARN maker categories not in first paint (filters after listings)",
+  );
+  notes.push(
+    /tab=services/.test(page.url())
+      ? "OK shareable services URL kept tab=services"
+      : `FAIL services URL dropped tab (${page.url()})`,
+  );
+  await shot("board-services");
+
+  await page.goto(`${BASE}/`, { waitUntil: "networkidle", timeout: 30000 });
+  const homeOffer = page.getByRole("link", { name: /Offer skills & services/i });
+  notes.push((await homeOffer.count()) > 0 ? "OK home Offer skills card" : "FAIL home Offer card missing");
+  await homeOffer.first().click();
+  await page.waitForTimeout(800);
+  notes.push(
+    /signup|app\/services|login/i.test(page.url())
+      ? `OK Offer deep-link landed ${page.url().replace(/^https?:\/\/[^/]+/, "")}`
+      : `FAIL Offer deep-link landed ${page.url()}`,
+  );
+  await shot("home-offer-deeplink");
 } finally {
   await browser.close();
 }

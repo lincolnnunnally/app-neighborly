@@ -328,9 +328,9 @@ function LandingPage() {
             },
             {
               title: "Offer skills & services",
-              body: "Businesses, side hustles, and kids earning money.",
+              body: "Businesses, side hustles, makers, and kids earning money.",
               icon: Wrench,
-              to: "/c/vidalia" as const,
+              to: "offer" as const,
             },
             {
               title: "Gather together",
@@ -356,20 +356,45 @@ function LandingPage() {
               icon: Share2,
               to: "/communities" as const,
             },
-          ].map((f) => (
-            <Link
-              key={f.title}
-              to={f.to === "/communities" ? "/communities" : "/c/$slug"}
-              params={f.to === "/communities" ? undefined : { slug: "vidalia" }}
-              className="surface-card block p-5 no-underline transition-colors hover:border-border-strong"
-            >
-              <span className="mb-3 grid h-10 w-10 place-items-center rounded-[var(--radius-md)] bg-primary-soft text-primary">
-                <f.icon className="h-5 w-5" />
-              </span>
-              <h3 className="font-display text-lg font-semibold text-fg">{f.title}</h3>
-              <p className="mt-1 text-sm text-fg-muted">{f.body}</p>
-            </Link>
-          ))}
+          ].map((f) => {
+            const offerSearch = {
+              community: "vidalia" as const,
+              code: "VIDALIA-WELCOME" as const,
+              next: "/app/services",
+            };
+            const className =
+              "surface-card block p-5 no-underline transition-colors hover:border-border-strong";
+            const inner = (
+              <>
+                <span className="mb-3 grid h-10 w-10 place-items-center rounded-[var(--radius-md)] bg-primary-soft text-primary">
+                  <f.icon className="h-5 w-5" />
+                </span>
+                <h3 className="font-display text-lg font-semibold text-fg">{f.title}</h3>
+                <p className="mt-1 text-sm text-fg-muted">{f.body}</p>
+              </>
+            );
+            if (f.to === "offer") {
+              return user ? (
+                <Link key={f.title} to="/app/services" className={className}>
+                  {inner}
+                </Link>
+              ) : (
+                <Link key={f.title} to="/signup" search={offerSearch} className={className}>
+                  {inner}
+                </Link>
+              );
+            }
+            return (
+              <Link
+                key={f.title}
+                to={f.to === "/communities" ? "/communities" : "/c/$slug"}
+                params={f.to === "/communities" ? undefined : { slug: "vidalia" }}
+                className={className}
+              >
+                {inner}
+              </Link>
+            );
+          })}
         </div>
       </section>
 

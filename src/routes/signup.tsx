@@ -15,12 +15,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { resolveInvite } from "@/lib/community/server";
 import type { Community } from "@/lib/community/types";
 
-type SignupSearch = { community?: string; code?: string };
+type SignupSearch = { community?: string; code?: string; next?: string };
 
 export const Route = createFileRoute("/signup")({
   validateSearch: (s: Record<string, unknown>): SignupSearch => ({
     community: typeof s.community === "string" ? s.community : undefined,
     code: typeof s.code === "string" ? s.code : undefined,
+    next: typeof s.next === "string" ? s.next : undefined,
   }),
   component: SignupPage,
 });
@@ -51,14 +52,16 @@ function SignupPage() {
         search: {
           community: search.community,
           code: search.code,
+          next: search.next,
         },
       });
     }
-  }, [user, isPending, navigate, search.community, search.code]);
+  }, [user, isPending, navigate, search.community, search.code, search.next]);
 
   const onboardingQs = new URLSearchParams();
   if (search.community) onboardingQs.set("community", search.community);
   if (search.code) onboardingQs.set("code", search.code);
+  if (search.next) onboardingQs.set("next", search.next);
   const callbackURL = `/onboarding${onboardingQs.toString() ? `?${onboardingQs}` : ""}`;
 
   async function onEmailSignUp(e: React.FormEvent) {
@@ -77,7 +80,7 @@ function SignupPage() {
       }
       await navigate({
         to: "/onboarding",
-        search: { community: search.community, code: search.code },
+        search: { community: search.community, code: search.code, next: search.next },
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not create account");
@@ -195,7 +198,7 @@ function SignupPage() {
             Already have an account?{" "}
             <Link
               to="/login"
-              search={{ redirect: "/app" }}
+              search={{ redirect: search.next || "/app" }}
               className="font-medium text-primary underline-offset-4 hover:underline"
             >
               Sign in
