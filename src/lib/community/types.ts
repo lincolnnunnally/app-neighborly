@@ -275,6 +275,87 @@ export function serviceCategoryLabel(id: string): string {
   return SERVICE_CATEGORIES.find((c) => c.id === id)?.label ?? id;
 }
 
+/** Physical inventory — not labor (that's Services) and not kids toys (Sandlot). */
+export const TOOL_CATEGORIES = [
+  { id: "lawn", label: "Lawn (mower, weed eater, trimmer, washer)" },
+  { id: "power", label: "Power (electric / gas)" },
+  { id: "automotive", label: "Automotive" },
+  { id: "home_repair", label: "Home repair" },
+  { id: "trailers", label: "Trailers" },
+  { id: "outdoor", label: "Outdoor / garden" },
+  { id: "other", label: "Other" },
+];
+
+export const TOOL_CONDITIONS = [
+  { id: "excellent", label: "Excellent" },
+  { id: "good", label: "Good" },
+  { id: "fair", label: "Fair" },
+  { id: "needs_work", label: "Needs work" },
+];
+
+export function toolCategoryLabel(id: string): string {
+  return TOOL_CATEGORIES.find((c) => c.id === id)?.label ?? id;
+}
+
+export function toolConditionLabel(id: string): string {
+  return TOOL_CONDITIONS.find((c) => c.id === id)?.label ?? id;
+}
+
+export type Tool = {
+  id: string;
+  community_id: string;
+  user_id: string;
+  owner_name: string;
+  title: string;
+  description: string;
+  category: string;
+  condition: string;
+  photo_urls: string[];
+  daily_rate_cents: number;
+  replacement_value_cents: number;
+  runs_ready: boolean;
+  status: string;
+  street_hint: string;
+  created_at: string;
+};
+
+export type ToolBooking = {
+  id: string;
+  tool_id: string;
+  community_id: string;
+  owner_user_id: string;
+  borrower_user_id: string;
+  borrower_name: string;
+  start_date: string;
+  end_date: string;
+  days: number;
+  meetup_note: string;
+  rental_cents: number;
+  platform_fee_cents: number;
+  owner_payout_cents: number;
+  deposit_cents: number;
+  status: string;
+  payment_status: string;
+  stripe_rental_intent_id: string;
+  stripe_deposit_intent_id: string;
+  owner_confirmed_return: boolean;
+  borrower_confirmed_return: boolean;
+  damage_note: string;
+  admin_note: string;
+  created_at: string;
+  tool_title?: string;
+  owner_name?: string;
+};
+
+export type ToolMessage = {
+  id: string;
+  booking_id: string;
+  user_id: string;
+  author_name: string;
+  message: string;
+  created_at: string;
+};
+
 export const EVENT_KINDS = [
   { id: "invite", label: "Who's interested? I'll host if people come" },
   { id: "quiet", label: "Quiet / seated (book club, crafts)" },

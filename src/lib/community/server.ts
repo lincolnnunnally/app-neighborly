@@ -5,6 +5,7 @@ import { parseJsonArray, uid } from "@/lib/utils";
 import { eventStartIso } from "./board-events";
 import { ensureSeeded } from "./seed";
 import { blockedUserIds } from "./safety";
+import { mapTool } from "./tools-server";
 import type {
   Community,
   CommunityEvent,
@@ -15,6 +16,7 @@ import type {
   Profile,
   Service,
   ServiceInquiry,
+  Tool,
 } from "./types";
 
 export type HelpOffer = {
@@ -44,7 +46,7 @@ export type FacilityBooking = {
 
 export type ActivityItem = {
   id: string;
-  kind: "offer" | "event" | "booking" | "need" | "inquiry";
+  kind: "offer" | "event" | "booking" | "need" | "inquiry" | "tool";
   title: string;
   detail: string;
   created_at: string;
@@ -296,6 +298,7 @@ export const getCommunityFeed = createServerFn({ method: "GET" })
         community: null as Community | null,
         needs: [] as Need[],
         services: [] as Service[],
+        tools: [] as Tool[],
         events: [] as CommunityEvent[],
         facilities: [] as Facility[],
         neighbors: [] as Neighbor[],
@@ -317,6 +320,17 @@ export const getCommunityFeed = createServerFn({ method: "GET" })
       where community_id = ${community.id}
       order by is_youth asc, is_business desc, created_at desc
     `;
+
+    let toolRows: Record<string, unknown>[] = [];
+    try {
+      toolRows = await sql<Record<string, unknown>>`
+        select * from tools
+        where community_id = ${community.id} and status = 'listed' and runs_ready = true
+        order by created_at desc
+      `;
+    } catch {
+      toolRows = [];
+    }
 
     const eventRows = await sql<Record<string, unknown>>`
       select e.*,
@@ -370,6 +384,7 @@ export const getCommunityFeed = createServerFn({ method: "GET" })
       community,
       needs: visible(needsRows.map(mapNeed)),
       services: visible(serviceRows.map(mapService)),
+      tools: visible(toolRows.map(mapTool)),
       events: visible(eventRows.map(mapEvent)),
       facilities: facilityRows.map(mapFacility),
       neighbors,
@@ -1288,6 +1303,29 @@ export const getMyActivity = createServerFn({ method: "GET" })
         detail: `${r.title}${r.message ? ` — ${r.message}` : ""}`,
         created_at: String(r.created_at),
         href: "/app/services",
+      });
+    }
+
+    let toolBooks: Record<string, unknown>[] = [];
+    try {
+      toolBooks = await sql<Record<string, unknown>>`
+        select b.id, b.created_at, b.status, b.start_date, b.end_date, b.borrower_name, t.title
+        from tool_bookings b
+        join tools t on t.id = b.tool_id
+        where b.owner_user_id = ${context.userId} or b.borrower_user_id = ${context.userId}
+        order by b.created_at desc limit 8
+      `;
+    } catch {
+      toolBooks = [];
+    }
+    for (const r of toolBooks) {
+      items.push({
+        id: `tool_${r.id}`,
+        kind: "tool",
+        title: `Tool borrow: ${r.title}`,
+        detail: `${r.borrower_name} · ${r.start_date}–${r.end_date} · ${r.status}`,
+        created_at: String(r.created_at),
+        href: "/app/tools",
       });
     }
 

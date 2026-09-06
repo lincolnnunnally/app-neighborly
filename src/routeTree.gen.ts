@@ -39,6 +39,7 @@ import { Route as AppNeighborsRouteImport } from './routes/app/neighbors'
 import { Route as AppPlacesRouteImport } from './routes/app/places'
 import { Route as AppServicesRouteImport } from './routes/app/services'
 import { Route as AppSettingsRouteImport } from './routes/app/settings'
+import { Route as AppToolsRouteImport } from './routes/app/tools'
 import { Route as CSlugRouteImport } from './routes/c.$slug'
 import { Route as JoinCodeRouteImport } from './routes/join.$code'
 import { Route as ApiAdminStatsRouteImport } from './routes/api/admin/stats'
@@ -189,6 +190,11 @@ const AppServicesRoute = AppServicesRouteImport.update({
   path: '/services',
   getParentRoute: () => AppRoute,
 } as any)
+const AppToolsRoute = AppToolsRouteImport.update({
+  id: '/tools',
+  path: '/tools',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSettingsRoute = AppSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -244,6 +250,7 @@ export interface FileRoutesByFullPath {
   '/app/neighbors': typeof AppNeighborsRoute
   '/app/places': typeof AppPlacesRoute
   '/app/services': typeof AppServicesRoute
+  '/app/tools': typeof AppToolsRoute
   '/app/settings': typeof AppSettingsRoute
   '/c/$slug': typeof CSlugRoute
   '/join/$code': typeof JoinCodeRoute
@@ -279,6 +286,7 @@ export interface FileRoutesByTo {
   '/app/neighbors': typeof AppNeighborsRoute
   '/app/places': typeof AppPlacesRoute
   '/app/services': typeof AppServicesRoute
+  '/app/tools': typeof AppToolsRoute
   '/app/settings': typeof AppSettingsRoute
   '/c/$slug': typeof CSlugRoute
   '/join/$code': typeof JoinCodeRoute
@@ -316,6 +324,7 @@ export interface FileRoutesById {
   '/app/neighbors': typeof AppNeighborsRoute
   '/app/places': typeof AppPlacesRoute
   '/app/services': typeof AppServicesRoute
+  '/app/tools': typeof AppToolsRoute
   '/app/settings': typeof AppSettingsRoute
   '/c/$slug': typeof CSlugRoute
   '/join/$code': typeof JoinCodeRoute
@@ -354,6 +363,7 @@ export interface FileRouteTypes {
     | '/app/neighbors'
     | '/app/places'
     | '/app/services'
+    | '/app/tools'
     | '/app/settings'
     | '/c/$slug'
     | '/join/$code'
@@ -389,6 +399,7 @@ export interface FileRouteTypes {
     | '/app/neighbors'
     | '/app/places'
     | '/app/services'
+    | '/app/tools'
     | '/app/settings'
     | '/c/$slug'
     | '/join/$code'
@@ -425,6 +436,7 @@ export interface FileRouteTypes {
     | '/app/neighbors'
     | '/app/places'
     | '/app/services'
+    | '/app/tools'
     | '/app/settings'
     | '/c/$slug'
     | '/join/$code'
@@ -666,6 +678,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppServicesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/tools': {
+      id: '/app/tools'
+      path: '/tools'
+      fullPath: '/app/tools'
+      preLoaderRoute: typeof AppToolsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/settings': {
       id: '/app/settings'
       path: '/settings'
@@ -712,6 +731,7 @@ interface AppRouteChildren {
   AppNeighborsRoute: typeof AppNeighborsRoute
   AppPlacesRoute: typeof AppPlacesRoute
   AppServicesRoute: typeof AppServicesRoute
+  AppToolsRoute: typeof AppToolsRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppIndexRoute: typeof AppIndexRoute
 }
@@ -724,6 +744,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppNeighborsRoute: AppNeighborsRoute,
   AppPlacesRoute: AppPlacesRoute,
   AppServicesRoute: AppServicesRoute,
+  AppToolsRoute: AppToolsRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppIndexRoute: AppIndexRoute,
 }

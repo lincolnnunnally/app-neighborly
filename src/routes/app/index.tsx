@@ -4,6 +4,7 @@ import {
   ArrowRight,
   Building2,
   CalendarDays,
+  Hammer,
   HandHeart,
   QrCode,
   Sparkles,
@@ -24,7 +25,8 @@ import {
   type ActivityItem,
   type HelpOffer,
 } from "@/lib/community/server";
-import type { ServiceInquiry } from "@/lib/community/types";
+import { listMyToolBookings } from "@/lib/community/tools-server";
+import type { ServiceInquiry, ToolBooking } from "@/lib/community/types";
 import { recommendNextSteps } from "@/lib/community/recommendations";
 import type {
   CommunityEvent,
@@ -49,23 +51,26 @@ function AppHome() {
   const [activity, setActivity] = useState<ActivityItem[]>([]);
   const [incoming, setIncoming] = useState<HelpOffer[]>([]);
   const [serviceNotes, setServiceNotes] = useState<ServiceInquiry[]>([]);
+  const [toolBooks, setToolBooks] = useState<ToolBooking[]>([]);
   const [primaryName, setPrimaryName] = useState("your community");
   const [primarySlug, setPrimarySlug] = useState("vidalia");
 
   useEffect(() => {
     async function load() {
-      const [p, m, act, inc, inq] = await Promise.all([
+      const [p, m, act, inc, inq, books] = await Promise.all([
         getMyProfile(),
         getMyMemberships(),
         getMyActivity(),
         listMyIncomingOffers(),
         listMyIncomingInquiries(),
+        listMyToolBookings().catch(() => [] as ToolBooking[]),
       ]);
       setProfile(p);
       setMemberships(m);
       setActivity(act);
       setIncoming(inc.filter((o) => o.status === "offered"));
       setServiceNotes(inq);
+      setToolBooks(books.filter((b) => b.status !== "returned" && b.status !== "cancelled"));
       const primary = m.find((x) => x.is_primary) ?? m[0];
       if (primary?.community) {
         setPrimaryName(primary.community.name);
@@ -117,6 +122,11 @@ function AppHome() {
           </Button>
           <Button asChild size="sm" variant="secondary">
             <Link to="/app/services">Register a service</Link>
+          </Button>
+          <Button asChild size="sm" variant="secondary">
+            <Link to="/app/tools" search={{ register: "1" }}>
+              List a tool
+            </Link>
           </Button>
         </div>
       </div>
@@ -189,6 +199,32 @@ function AppHome() {
             ))}
             <Button asChild size="sm" variant="secondary">
               <Link to="/app/services">Open services</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {toolBooks.length > 0 && (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg">Tool borrows</CardTitle>
+            <CardDescription>
+              Pickup and return notes live on the Tools door. Payments coming soon — booking reserved.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {toolBooks.slice(0, 4).map((b) => (
+              <div key={b.id} className="rounded-[var(--radius-lg)] border border-border p-3">
+                <p className="text-sm font-medium">
+                  {b.borrower_name} · “{b.tool_title}”
+                </p>
+                <p className="text-xs text-fg-muted">
+                  {b.start_date} → {b.end_date} · {b.status}
+                </p>
+              </div>
+            ))}
+            <Button asChild size="sm" variant="secondary">
+              <Link to="/app/tools">Open tools</Link>
             </Button>
           </CardContent>
         </Card>
@@ -280,6 +316,12 @@ function AppHome() {
             title: "Services",
             body: "Offer a skill",
             icon: Wrench,
+          },
+          {
+            to: "/app/tools" as const,
+            title: "Tools",
+            body: "Lend or borrow",
+            icon: Hammer,
           },
           {
             to: "/app/places" as const,
