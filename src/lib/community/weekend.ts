@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getSql } from "@/lib/db";
 import { ensureSeeded } from "./seed";
-import { findOrCreatePlace } from "./place";
+import { findOrCreatePlace, lookupPlace } from "./place";
 import { scoreFit, splitByFit, type FitPrefs } from "./fit";
 import type { Community } from "./types";
 
@@ -30,6 +30,7 @@ export type WeekendSlot = {
   source: string;
   sourceUrl: string;
   eventId: string | null;
+  kind: string;
   fitLabel?: "good" | "ok" | "stretch";
   fitWhy?: string;
 };
@@ -38,6 +39,7 @@ export type WeekendPlan = {
   weather: WeatherDay[];
   weatherNote: string;
   arrivingNote: string;
+  all: WeekendSlot[];
   withChild: WeekendSlot[];
   alone: WeekendSlot[];
   other: WeekendSlot[];
@@ -175,11 +177,39 @@ export async function buildWeekendPlan(opts?: {
   slug?: string;
   query?: string;
   prefs?: FitPrefs | null;
+  create?: boolean;
 }): Promise<WeekendPlan> {
   const sql = await getSql();
   await ensureSeeded(sql);
   const q = (opts?.query || opts?.slug || "vidalia").trim() || "vidalia";
-  const looked = await findOrCreatePlace(sql, q);
+  const looked = opts?.create
+    ? await findOrCreatePlace(sql, q, { create: true })
+    : await lookupPlace(sql, q);
+  if (!looked.community) {
+    const geo = looked.geo;
+    const emptyName = geo?.city || q;
+    return {
+      weather: [],
+      weatherNote: looked.refresh.note,
+      arrivingNote: looked.refresh.note,
+      all: [],
+      withChild: [],
+      alone: [],
+      other: [],
+      sources: [],
+      weatherError: null,
+      place: {
+        slug: geo ? `${geo.city}-${geo.state}`.toLowerCase().replace(/\s+/g, "-") : q,
+        name: emptyName,
+        city: geo?.city || "",
+        state: geo?.state || "",
+        zip: geo?.zip || "",
+        created: false,
+      },
+      refresh: looked.refresh,
+      fitApplied: false,
+    };
+  }
   const community: Community = looked.community;
   const tz = DEFAULT_TZ;
   const lat = community.lat ?? looked.geo?.lat ?? VIDALIA_COORDS.lat;
@@ -200,8 +230,13 @@ export async function buildWeekendPlan(opts?: {
     select e.id, e.title, e.description, e.kind, e.location, e.starts_at::text as starts_at, e.community_id
     from events e
     join communities c on c.id = e.community_id
-    where lower(c.city) = ${city.toLowerCase()}
-      and lower(c.state) = ${state.toLowerCase()}
+    where e.community_id = ${community.id}
+       or c.slug = ${community.slug}
+       or (
+         lower(c.city) = ${city.toLowerCase()}
+         and lower(c.state) = ${state.toLowerCase()}
+         and c.kind in ('neighborhood', 'interest', 'church')
+       )
     order by e.starts_at asc
     limit 80
   `;
@@ -210,6 +245,7 @@ export async function buildWeekendPlan(opts?: {
     return Number.isFinite(t) && t >= cutoffMs;
   });
 
+  const all: WeekendSlot[] = [];
   const withChild: WeekendSlot[] = [];
   const alone: WeekendSlot[] = [];
 
@@ -251,7 +287,9 @@ export async function buildWeekendPlan(opts?: {
             ? "https://fbcvidalia.com/events"
             : `https://neighborly.unitedundergod.org/c/${community.slug}`,
       eventId: row.id,
+      kind: row.kind || "social",
     };
+    all.push(slot);
     if (slot.withChild) withChild.push(slot);
     if (slot.alone) alone.push(slot);
   }
@@ -273,6 +311,7 @@ export async function buildWeekendPlan(opts?: {
       source: "Vidalia Parks & Rec",
       sourceUrl: "https://vidaliaga.gov/departments/parks-and-recreation/",
       eventId: null,
+      kind: "kids",
     });
     withChild.push({
       id: "place_fountain",
@@ -286,7 +325,13 @@ export async function buildWeekendPlan(opts?: {
       source: "Visit Vidalia",
       sourceUrl: "https://visitvidaliaga.com/things-to-do/attractions/",
       eventId: null,
+      kind: "kids",
     });
+  }
+
+  const standing = withChild.filter((s) => !s.eventId);
+  for (const slot of standing) {
+    if (!all.some((a) => a.id === slot.id)) all.push(slot);
   }
 
   const weatherNote = error
@@ -296,6 +341,7 @@ export async function buildWeekendPlan(opts?: {
       : "Outdoor is reasonable. Still pack water.";
 
   const prefs = opts?.prefs ?? null;
+  const allSorted = splitByFit(applyFit(all, prefs), prefs).primary;
   const withChildSorted = applyFit(withChild, prefs);
   const aloneSorted = applyFit(alone, prefs);
   const childSplit = splitByFit(withChildSorted, prefs);
@@ -313,6 +359,7 @@ export async function buildWeekendPlan(opts?: {
     weather: days.slice(0, 5),
     weatherNote,
     arrivingNote: buildArrivingNote(days, childSplit.primary, community.name),
+    all: allSorted,
     withChild: childSplit.primary,
     alone: aloneSplit.primary,
     other,

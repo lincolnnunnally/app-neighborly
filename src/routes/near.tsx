@@ -10,7 +10,7 @@ export const Route = createFileRoute("/near")({
       {
         name: "description",
         content:
-          "Type a ZIP or city to see public gatherings on Neighborly. We cache a town for a day. We will not invent events or neighbors.",
+          "Type a ZIP or city to see public gatherings on Neighborly. A lookup does not auto-create an empty town. We will not invent events or neighbors.",
       },
     ],
   }),
@@ -28,12 +28,18 @@ function NearPage() {
             What&apos;s going on around you?
           </h1>
           <p className="text-lg text-fg-muted">
-            Type a ZIP or City, ST. If we already have that town, you get the cached board.
-            If you are the first person to ask, we open an honest empty board and save it so
-            the next neighbor is not starting from zero.
+            Type a ZIP or City, ST — or use the browser location if you want. Looking up a
+            town does <strong className="text-fg">not</strong> invent an empty board. If
+            nobody has opened that place yet, you confirm first.
           </p>
         </div>
         <PlaceSearch size="lg" />
+        <p className="text-sm">
+          <Link to="/churches" search={{ zip: "30474" }} className="underline">
+            Churches near a ZIP
+          </Link>
+          {" — same ChurchConnect public records, not a second database."}
+        </p>
         <Card>
           <CardHeader>
             <CardTitle>Cost, refresh, and what we will not do</CardTitle>

@@ -25,7 +25,7 @@ function HowItWorksPage() {
         {[
           {
             title: "1. See this weekend first",
-            body: "Type a ZIP or City, ST. Weather, public calendars, pickleball, and church listings — no account required. Add a slot with a .ics file. Confirm on their sites before you go. A new town stays empty until someone adds a real listing — we will not invent a festival.",
+            body: "Type a ZIP or City, ST, save a home place, or optionally share browser location. Weather, public calendars, pickleball, and the Churches door (ChurchConnect records, not a second list). Confirm on their sites before you go. Looking up a town does not auto-create an empty board.",
           },
           {
             title: "2. Sign up the practical way",
@@ -68,6 +68,11 @@ function HowItWorksPage() {
           </Button>
           <Button asChild variant="outline">
             <Link to="/near">Find a town</Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link to="/churches" search={{ zip: "30474" }}>
+              Churches
+            </Link>
           </Button>
           <Button asChild variant="secondary">
             <Link to="/c/$slug" params={{ slug: "vidalia" }}>

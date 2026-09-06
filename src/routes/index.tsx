@@ -121,6 +121,11 @@ function LandingPage() {
                 </Link>
               </Button>
               <Button asChild size="lg" variant="secondary">
+                <Link to="/churches" search={{ zip: "30474" }}>
+                  Churches in Vidalia
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="secondary">
                 <Link to="/c/$slug" params={{ slug: "vidalia" }}>
                   Vidalia board
                 </Link>
@@ -497,9 +502,9 @@ function LandingPage() {
                 href: "https://kindred.unitedundergod.org/",
               },
               {
-                title: "ChurchConnect",
-                body: "If a church here is on the platform, serving and groups get handled there.",
-                href: "https://churchconnect.unitedundergod.org/",
+                title: "Neighborly Churches",
+                body: "Nearby congregations from ChurchConnect public records — times and style when CC has them.",
+                href: "/churches",
               },
               {
                 title: "Kids Need Dads",
@@ -516,8 +521,7 @@ function LandingPage() {
                 key={item.title}
                 href={item.href}
                 className="surface-card block p-5 no-underline transition-colors hover:border-border-strong"
-                target="_blank"
-                rel="noreferrer"
+                {...(item.href.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}
               >
                 <h3 className="font-display text-lg font-semibold text-fg">{item.title}</h3>
                 <p className="mt-1 text-sm text-fg-muted">{item.body}</p>

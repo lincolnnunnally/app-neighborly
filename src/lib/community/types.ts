@@ -42,6 +42,11 @@ export type Profile = {
   mobility: string;
   digest_opt_in: boolean;
   digest_cadence: string;
+  home_zip: string;
+  home_city: string;
+  home_state: string;
+  home_lat: number | null;
+  home_lon: number | null;
 };
 
 export type Membership = {
