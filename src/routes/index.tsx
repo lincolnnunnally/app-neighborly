@@ -8,6 +8,7 @@ import {
   Link2,
   Mail,
   MapPin,
+  Hammer,
   QrCode,
   Share2,
   Users,
@@ -333,6 +334,12 @@ function LandingPage() {
               to: "offer" as const,
             },
             {
+              title: "Borrow tools",
+              body: "Mowers, trailers, welders — book dates and meet up.",
+              icon: Hammer,
+              to: "tools" as const,
+            },
+            {
               title: "Gather together",
               body: "Block parties, cleanups, BBQs — RSVP sticks.",
               icon: CalendarDays,
@@ -360,7 +367,7 @@ function LandingPage() {
             const offerSearch = {
               community: "vidalia" as const,
               code: "VIDALIA-WELCOME" as const,
-              next: "/app/services",
+              next: f.to === "tools" ? "/app/tools" : "/app/services",
             };
             const className =
               "surface-card block p-5 no-underline transition-colors hover:border-border-strong";
@@ -373,12 +380,19 @@ function LandingPage() {
                 <p className="mt-1 text-sm text-fg-muted">{f.body}</p>
               </>
             );
-            if (f.to === "offer") {
-              return user ? (
-                <Link key={f.title} to="/app/services" className={className}>
-                  {inner}
-                </Link>
-              ) : (
+            if (f.to === "offer" || f.to === "tools") {
+              if (user) {
+                return f.to === "tools" ? (
+                  <Link key={f.title} to="/app/tools" className={className}>
+                    {inner}
+                  </Link>
+                ) : (
+                  <Link key={f.title} to="/app/services" className={className}>
+                    {inner}
+                  </Link>
+                );
+              }
+              return (
                 <Link key={f.title} to="/signup" search={offerSearch} className={className}>
                   {inner}
                 </Link>

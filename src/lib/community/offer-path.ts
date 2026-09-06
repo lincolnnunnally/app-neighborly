@@ -1,5 +1,6 @@
 /** Deep-link after signup / onboarding so Offer lands on the existing register form. */
 export const OFFER_SERVICE_PATH = "/app/services" as const;
+export const OFFER_TOOL_PATH = "/app/tools" as const;
 
 export function isSafeNext(raw?: string | null): raw is string {
   if (!raw) return false;
@@ -10,6 +11,10 @@ export function isSafeNext(raw?: string | null): raw is string {
 
 export function isOfferServiceNext(raw?: string | null): boolean {
   return !!raw && raw.split("?")[0] === OFFER_SERVICE_PATH;
+}
+
+export function isOfferToolNext(raw?: string | null): boolean {
+  return !!raw && raw.split("?")[0] === OFFER_TOOL_PATH;
 }
 
 export function offerSignupSearch(opts?: {
@@ -26,11 +31,13 @@ export function offerSignupSearch(opts?: {
 
 export type JoinDestination =
   | { to: "/app/services" }
+  | { to: "/app/tools" }
   | { to: "/app" }
   | { to: "/c/$slug"; params: { slug: string }; search: { tab?: string; cat?: string } };
 
 export function destinationAfterJoin(next?: string | null): JoinDestination {
   if (isOfferServiceNext(next)) return { to: "/app/services" };
+  if (isOfferToolNext(next)) return { to: "/app/tools" };
   if (isSafeNext(next) && next.startsWith("/c/")) {
     const [path, qs] = next.split("?");
     const slug = path.replace(/^\/c\//, "").split("/")[0];

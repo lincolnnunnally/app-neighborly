@@ -4,6 +4,7 @@ Community connections for neighbors — live test market **Vidalia, Georgia** (M
 
 - Post and answer needs
 - Local services (including youth offerings)
+- Borrow / list physical tools (Stripe payments parked)
 - Events & RSVPs
 - Facility reservations
 - Multi-community membership

@@ -70,7 +70,37 @@ function isSafeNext(raw) {
   return raw.length < 180;
 }
 assert.equal(isSafeNext("/app/services"), true);
+assert.equal(isSafeNext("/app/tools"), true);
 assert.equal(isSafeNext("https://evil.example"), false);
 assert.equal(isSafeNext("//evil"), false);
 assert.equal("/c/vidalia?tab=services".startsWith("/c/"), true);
+assert.equal("/c/vidalia?tab=tools".startsWith("/c/"), true);
 console.log("services offer next + maker taxonomy: ok");
+
+function rentalDays(startDate, endDate) {
+  const start = Date.parse(`${startDate}T00:00:00Z`);
+  const end = Date.parse(`${endDate}T00:00:00Z`);
+  if (!Number.isFinite(start) || !Number.isFinite(end) || end < start) {
+    throw new Error("Pick a valid date range");
+  }
+  return Math.max(1, Math.round((end - start) / 86_400_000) + 1);
+}
+function quoteToolRental({ daily_rate_cents, days, replacement_value_cents }) {
+  const d = Math.max(1, Math.floor(days));
+  const rental_cents = Math.max(0, Math.floor(daily_rate_cents)) * d;
+  const platform_fee_cents = Math.round(rental_cents * 0.15);
+  return {
+    days: d,
+    rental_cents,
+    platform_fee_cents,
+    owner_payout_cents: rental_cents - platform_fee_cents,
+    deposit_cents: Math.max(0, Math.floor(replacement_value_cents)),
+  };
+}
+assert.equal(rentalDays("2026-09-06", "2026-09-08"), 3);
+const q = quoteToolRental({ daily_rate_cents: 2500, days: 2, replacement_value_cents: 20000 });
+assert.equal(q.rental_cents, 5000);
+assert.equal(q.platform_fee_cents, 750);
+assert.equal(q.owner_payout_cents, 4250);
+assert.equal(q.deposit_cents, 20000);
+console.log("tools rental quote + 15% fee: ok");
