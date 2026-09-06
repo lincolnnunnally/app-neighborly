@@ -57,7 +57,9 @@ import {
   type Service,
   type Tool,
 } from "@/lib/community/types";
-import { OFFER_SERVICE_PATH, OFFER_TOOL_PATH } from "@/lib/community/offer-path";
+import { OFFER_PANTRY_PATH, OFFER_SERVICE_PATH, OFFER_TOOL_PATH } from "@/lib/community/offer-path";
+import { CC_GET_HELP, isPantry } from "@/lib/community/pantry";
+import { PantryDetails } from "@/components/community/pantry-details";
 import { formatEventWhen } from "@/lib/utils";
 import { ActivityFilters, matchesDateWindow, type DateWindow } from "@/components/community/activity-filters";
 
@@ -324,7 +326,7 @@ function CommunityPublicPage() {
               params: { slug },
               search: {
                 tab: next,
-                cat: next === "services" || next === "tools" ? search.cat : undefined,
+                cat: undefined,
               },
               replace: true,
             });
@@ -709,34 +711,159 @@ function CommunityPublicPage() {
           </TabsContent>
 
           <TabsContent value="places" className="space-y-3">
-            {facilities.map((f) => (
-              <button
-                key={f.id}
-                type="button"
-                onClick={() => {
-                  setActiveFacility(f);
-                  setBookPurpose("");
-                  setBookDate("");
-                  setBookTime("");
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <Button
+                data-testid="add-pantry"
+                onClick={async () => {
+                  if (user) {
+                    await navigate({ to: OFFER_PANTRY_PATH, search: { register: "1" } });
+                    return;
+                  }
+                  const ok = await ensureReady({
+                    code: community.invite_code,
+                    community: community.slug,
+                    next: OFFER_PANTRY_PATH,
+                  });
+                  if (ok) await navigate({ to: OFFER_PANTRY_PATH, search: { register: "1" } });
                 }}
-                className="surface-card w-full p-4 text-left transition-colors hover:border-border-strong"
               >
-                <h3 className="font-medium">{f.name}</h3>
-                <p className="text-sm text-fg-muted">{f.description}</p>
-                <p className="mt-2 text-xs text-fg-subtle">
-                  Capacity {f.capacity ?? "—"} · {f.rate_note} · tap to request
+                Add a pantry listing
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={async () => {
+                  const url = `${window.location.origin}/c/${slug}?tab=places${search.cat ? `&cat=${search.cat}` : ""}`;
+                  try {
+                    await navigator.clipboard.writeText(url);
+                    toast.success("Places link copied");
+                  } catch {
+                    toast.message(url);
+                  }
+                }}
+              >
+                <Link2 className="h-4 w-4" />
+                Share places
+              </Button>
+            </div>
+            <p className="text-sm text-fg-muted">
+              Food pantries are listings — hours, ZIP limits, and what to bring. Pavilions
+              and rooms stay reservable. We will not invent pantry hours.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { id: undefined, label: "All" },
+                { id: "pantry", label: "Food pantries" },
+                { id: "reserve", label: "Reservable" },
+              ].map((chip) => (
+                <button
+                  key={chip.label}
+                  type="button"
+                  data-testid={chip.id ? `places-filter-${chip.id}` : "places-filter-all"}
+                  onClick={() =>
+                    void navigate({
+                      to: "/c/$slug",
+                      params: { slug },
+                      search: { tab: "places", cat: chip.id },
+                      replace: true,
+                    })
+                  }
+                  className={
+                    search.cat === chip.id || (!search.cat && !chip.id)
+                      ? "rounded-full border border-primary bg-primary px-3 py-1.5 text-sm text-primary-fg"
+                      : "rounded-full border border-border bg-bg-elevated px-3 py-1.5 text-sm text-fg-muted"
+                  }
+                >
+                  {chip.label}
+                </button>
+              ))}
+            </div>
+            {(!search.cat || search.cat === "pantry") && (
+              <section className="space-y-3" data-testid="pantry-section">
+                <h3 className="font-display text-base font-semibold">Food pantries</h3>
+                {facilities.filter(isPantry).map((f) => (
+                  <button
+                    key={f.id}
+                    type="button"
+                    data-testid={`pantry-${f.id}`}
+                    onClick={() => setActiveFacility(f)}
+                    className="surface-card w-full p-4 text-left transition-colors hover:border-border-strong"
+                  >
+                    <PantryDetails pantry={f} compact />
+                    <p className="mt-2 text-xs text-fg-subtle">Tap for requirements</p>
+                  </button>
+                ))}
+                {facilities.filter(isPantry).length === 0 && (
+                  <div className="space-y-3">
+                    <p className="text-sm text-fg-muted">
+                      No pantry listings yet for this board. We will not invent addresses
+                      or hours. Add or claim a real Toombs / Vidalia pantry if you can
+                      speak for it.
+                    </p>
+                    <Button
+                      data-testid="add-pantry-empty"
+                      onClick={async () => {
+                        if (user) {
+                          await navigate({ to: OFFER_PANTRY_PATH, search: { register: "1" } });
+                          return;
+                        }
+                        const ok = await ensureReady({
+                          code: community.invite_code,
+                          community: community.slug,
+                          next: OFFER_PANTRY_PATH,
+                        });
+                        if (ok) await navigate({ to: OFFER_PANTRY_PATH, search: { register: "1" } });
+                      }}
+                    >
+                      Add a pantry listing
+                    </Button>
+                  </div>
+                )}
+                <p className="text-sm text-fg-muted">
+                  Church food assistance is also on{" "}
+                  <a className="text-primary underline" href={CC_GET_HELP} target="_blank" rel="noreferrer">
+                    ChurchConnect Get Help
+                  </a>
+                  . Neighborly does not copy that directory.
                 </p>
-                <div className="mt-2 flex flex-wrap gap-1">
-                  {f.amenities.map((a) => (
-                    <Badge key={a} variant="outline">
-                      {a}
-                    </Badge>
+              </section>
+            )}
+            {(!search.cat || search.cat === "reserve") && (
+              <section className="space-y-3" data-testid="reserve-section">
+                <h3 className="font-display text-base font-semibold">Reservable places</h3>
+                {facilities
+                  .filter((f) => !isPantry(f))
+                  .map((f) => (
+                    <button
+                      key={f.id}
+                      type="button"
+                      onClick={() => {
+                        setActiveFacility(f);
+                        setBookPurpose("");
+                        setBookDate("");
+                        setBookTime("");
+                      }}
+                      className="surface-card w-full p-4 text-left transition-colors hover:border-border-strong"
+                    >
+                      <Badge variant="outline">Reservable</Badge>
+                      <h3 className="mt-2 font-medium">{f.name}</h3>
+                      <p className="text-sm text-fg-muted">{f.description}</p>
+                      <p className="mt-2 text-xs text-fg-subtle">
+                        Capacity {f.capacity ?? "—"} · {f.rate_note} · tap to request
+                      </p>
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        {f.amenities.map((a) => (
+                          <Badge key={a} variant="outline">
+                            {a}
+                          </Badge>
+                        ))}
+                      </div>
+                    </button>
                   ))}
-                </div>
-              </button>
-            ))}
-            {facilities.length === 0 && (
-              <p className="text-sm text-fg-muted">No facilities listed yet.</p>
+                {facilities.filter((f) => !isPantry(f)).length === 0 && (
+                  <p className="text-sm text-fg-muted">No reservable rooms listed yet.</p>
+                )}
+              </section>
             )}
           </TabsContent>
 
@@ -1138,7 +1265,26 @@ function CommunityPublicPage() {
 
       <Dialog open={!!activeFacility} onOpenChange={(o) => !o && setActiveFacility(null)}>
         <DialogContent>
-          {activeFacility && (
+          {activeFacility && isPantry(activeFacility) && (
+            <>
+              <DialogHeader>
+                <DialogTitle>{activeFacility.name}</DialogTitle>
+                <DialogDescription>
+                  Food pantry listing — not a reservable room. Confirm hours before you go.
+                </DialogDescription>
+              </DialogHeader>
+              <PantryDetails pantry={activeFacility} />
+              {activeFacility.listed_by_name ? (
+                <p className="text-xs text-fg-subtle">Listed by {activeFacility.listed_by_name}</p>
+              ) : null}
+              <DialogFooter>
+                <Button variant="secondary" onClick={() => setActiveFacility(null)}>
+                  Close
+                </Button>
+              </DialogFooter>
+            </>
+          )}
+          {activeFacility && !isPantry(activeFacility) && (
             <>
               <DialogHeader>
                 <DialogTitle>{activeFacility.name}</DialogTitle>

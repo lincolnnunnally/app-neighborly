@@ -37,7 +37,7 @@ function HowItWorksPage() {
           },
           {
             title: "4. Ask, offer, or gather",
-            body: "Post needs (lightbulbs to home projects). Register a service — including maker and artisan work. List a physical tool neighbors can borrow for a few days. Neighbors message you through Neighborly. Host block parties, cleanups, and BBQs. Request the pavilion for a birthday.",
+            body: "Post needs (lightbulbs to home projects). Register a service — including maker and artisan work. List a physical tool neighbors can borrow for a few days. Neighbors message you through Neighborly. Host block parties, cleanups, and BBQs. Request the pavilion for a birthday. Add or claim a food pantry listing on Places — we will not invent hours.",
           },
           {
             title: "5. Match helpers to needs",

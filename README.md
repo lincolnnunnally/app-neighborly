@@ -7,6 +7,7 @@ Community connections for neighbors — live test market **Vidalia, Georgia** (M
 - Borrow / list physical tools (Stripe payments parked)
 - Events & RSVPs
 - Facility reservations
+- Food pantry listings on Places (Toombs / Vidalia; neighbors add/claim — no invented hours)
 - Multi-community membership
 - Invite links & QR codes
 

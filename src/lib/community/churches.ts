@@ -6,6 +6,7 @@
 
 export const CC_PUBLIC_ORIGIN = "https://churchconnect.unitedundergod.org";
 export const CC_CLOUD_ORIGIN = "https://www.churchconnect.cloud";
+export const CC_GET_HELP = `${CC_PUBLIC_ORIGIN}/get-help`;
 
 export type CcChurch = {
   id: string;

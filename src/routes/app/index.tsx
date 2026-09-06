@@ -326,7 +326,7 @@ function AppHome() {
           {
             to: "/app/places" as const,
             title: "Places",
-            body: "Book a room",
+            body: "Book a room or list a pantry",
             icon: Building2,
           },
           {

@@ -101,6 +101,26 @@ try {
   );
   await shot("board-services");
 
+  await page.goto(`${BASE}/c/vidalia?tab=places&cat=pantry`, { waitUntil: "networkidle", timeout: 30000 });
+  await page.waitForTimeout(800);
+  const placesText = await page.locator("main").innerText();
+  notes.push(
+    /Add a pantry listing/i.test(placesText)
+      ? "OK places pantry CTA"
+      : "FAIL places pantry CTA missing",
+  );
+  notes.push(
+    /will not invent/i.test(placesText)
+      ? "OK pantry empty is honest"
+      : "FAIL pantry empty invented or missing",
+  );
+  notes.push(
+    /tab=places/.test(page.url()) && /cat=pantry/.test(page.url())
+      ? "OK shareable pantry URL kept tab=places&cat=pantry"
+      : `FAIL pantry URL dropped filter (${page.url()})`,
+  );
+  await shot("board-places-pantry");
+
   await page.goto(`${BASE}/`, { waitUntil: "networkidle", timeout: 30000 });
   const homeOffer = page.getByRole("link", { name: /Offer skills & services/i });
   notes.push((await homeOffer.count()) > 0 ? "OK home Offer skills card" : "FAIL home Offer card missing");

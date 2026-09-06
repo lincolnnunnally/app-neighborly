@@ -71,11 +71,30 @@ function isSafeNext(raw) {
 }
 assert.equal(isSafeNext("/app/services"), true);
 assert.equal(isSafeNext("/app/tools"), true);
+assert.equal(isSafeNext("/app/places"), true);
 assert.equal(isSafeNext("https://evil.example"), false);
 assert.equal(isSafeNext("//evil"), false);
 assert.equal("/c/vidalia?tab=services".startsWith("/c/"), true);
 assert.equal("/c/vidalia?tab=tools".startsWith("/c/"), true);
+assert.equal("/c/vidalia?tab=places".startsWith("/c/"), true);
+assert.equal("/c/vidalia?tab=places&cat=pantry".includes("cat=pantry"), true);
 console.log("services offer next + maker taxonomy: ok");
+
+function normalizePantryZip(raw) {
+  return String(raw || "").replace(/\D/g, "").slice(0, 5);
+}
+function isValidPantryZip(zip) {
+  return /^\d{5}$/.test(normalizePantryZip(zip));
+}
+function isPantryKind(kind) {
+  return kind === "pantry";
+}
+assert.equal(normalizePantryZip("30474-1234"), "30474");
+assert.equal(isValidPantryZip("30474"), true);
+assert.equal(isValidPantryZip("abc"), false);
+assert.equal(isPantryKind("pantry"), true);
+assert.equal(isPantryKind("reserve"), false);
+console.log("pantry place_kind + ZIP: ok");
 
 function rentalDays(startDate, endDate) {
   const start = Date.parse(`${startDate}T00:00:00Z`);

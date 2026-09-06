@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { CC_PUBLIC_ORIGIN, type CcChurch } from "@/lib/community/churches";
+import { CC_GET_HELP, CC_PUBLIC_ORIGIN, type CcChurch } from "@/lib/community/churches";
 import { readSavedPlace, writeSavedPlace } from "@/lib/community/saved-place";
 import { saveHomePlace } from "@/lib/community/server";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
@@ -211,7 +211,12 @@ function ChurchesPage() {
             </a>
             . Same IDs. Neighborly does not copy churches into a second database.
             Service times, worship style, and denomination show when ChurchConnect
-            has published them.
+            has published them. For church food assistance, use{" "}
+            <a className="underline" href={CC_GET_HELP} target="_blank" rel="noreferrer">
+              ChurchConnect Get Help
+            </a>
+            — Neighborly lists Toombs / Vidalia pantries on the Places tab and does
+            not copy that directory.
           </p>
         </div>
 
