@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { CalendarPlus, CloudSun, MapPin, Sun, Thermometer, Umbrella } from "lucide-react";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Badge } from "@/components/ui/badge";
@@ -7,9 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlaceSearch } from "@/components/community/place-search";
 import { JsonLd } from "@/components/community/json-ld";
+import { ActivityFilters, matchesDateWindow, type DateWindow } from "@/components/community/activity-filters";
 import { getMyProfile } from "@/lib/community/server";
+import { readSavedPlace } from "@/lib/community/saved-place";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
-import type { WeekendPlan, WeekendSlot } from "@/lib/community/weekend";
+import { loadWeekendPlan, type WeekendPlan, type WeekendSlot } from "@/lib/community/weekend";
+import { EVENT_KINDS } from "@/lib/community/types";
 import { formatEventWhen } from "@/lib/utils";
 
 type WeekendSearch = { place?: string; q?: string };
@@ -19,6 +22,17 @@ export const Route = createFileRoute("/weekend")({
     place: typeof s.place === "string" ? s.place : undefined,
     q: typeof s.q === "string" ? s.q : undefined,
   }),
+  loaderDeps: ({ search }) => ({ place: search.place, q: search.q }),
+  loader: async ({ deps }) => {
+    const place = deps.place || undefined;
+    const query = deps.q || deps.place || "vidalia";
+    try {
+      const plan = await loadWeekendPlan({ data: { place, query } });
+      return { plan };
+    } catch {
+      return { plan: null as WeekendPlan | null };
+    }
+  },
   head: ({ match }) => {
     const search = (match.search ?? {}) as WeekendSearch;
     const place = search.place || "vidalia";
@@ -52,6 +66,7 @@ function SlotCard({ slot }: { slot: WeekendSlot }) {
     <article className="surface-card space-y-3 p-4">
       <div className="flex flex-wrap items-center gap-2">
         <Badge variant={slot.indoor ? "secondary" : "accent"}>{slot.indoor ? "Indoor" : "Outside"}</Badge>
+        {slot.kind && <Badge variant="outline">{slot.kind}</Badge>}
         {slot.fitLabel === "good" && <Badge variant="sky">Closer to you</Badge>}
         {slot.fitLabel === "stretch" && <Badge variant="outline">A stretch</Badge>}
         <span className="text-sm text-fg-muted">{formatEventWhen(slot.starts_at)}</span>
@@ -81,43 +96,61 @@ function SlotCard({ slot }: { slot: WeekendSlot }) {
 
 function WeekendPage() {
   const search = Route.useSearch();
+  const loaded = Route.useLoaderData();
+  const navigate = useNavigate({ from: "/weekend" });
   const { user } = useCurrentUserState();
-  const [plan, setPlan] = useState<WeekendPlan | null>(null);
+  const [plan, setPlan] = useState<WeekendPlan | null>(loaded.plan);
   const [error, setError] = useState("");
-  const [mode, setMode] = useState<"child" | "alone">("child");
+  const [loading, setLoading] = useState(!loaded.plan);
+  const [mode, setMode] = useState<"all" | "child" | "alone">("all");
+  const [dateWindow, setDateWindow] = useState<DateWindow>("week");
+  const [kind, setKind] = useState("all");
 
   useEffect(() => {
-    const params = new URLSearchParams();
-    if (search.place) params.set("place", search.place);
-    else if (search.q) params.set("q", search.q);
-    else params.set("place", "vidalia");
+    setPlan(loaded.plan);
+    setLoading(!loaded.plan);
+    setError("");
+  }, [loaded.plan]);
 
+  useEffect(() => {
+    if (!search.place && !search.q) {
+      const saved = readSavedPlace();
+      const place = saved?.slug || loaded.plan?.place.slug || "vidalia";
+      void navigate({ search: { place }, replace: true });
+    }
+  }, [search.place, search.q, loaded.plan?.place.slug, navigate]);
+
+  useEffect(() => {
+    if (!user) return;
     void (async () => {
-      if (user) {
-        try {
-          const profile = await getMyProfile();
-          if (profile?.interests?.length) params.set("interests", profile.interests.join(","));
-          if (profile?.setting_pref) params.set("setting", profile.setting_pref);
-          if (profile?.mobility) params.set("mobility", profile.mobility);
-        } catch {
-          /* guest plan is fine */
-        }
-      }
       try {
-        const res = await fetch(`/api/weekend?${params.toString()}`);
-        const d = (await res.json()) as { ok?: boolean; plan?: WeekendPlan; error?: string };
-        if (!res.ok || !d.ok || !d.plan) {
-          setError(d.error || "Could not load this week's plan. Try another city or ZIP.");
-          return;
-        }
-        setPlan(d.plan);
+        const profile = await getMyProfile();
+        if (!profile?.interests?.length && !profile?.setting_pref && !profile?.mobility) return;
+        const next = await loadWeekendPlan({
+          data: {
+            place: search.place,
+            query: search.q || search.place || "vidalia",
+            interests: profile.interests?.join(","),
+            setting: profile.setting_pref || undefined,
+            mobility: profile.mobility || undefined,
+          },
+        });
+        setPlan(next);
       } catch {
-        setError("Could not load this week's plan. Try another city or ZIP.");
+        /* keep the board-path loader plan */
       }
     })();
   }, [search.place, search.q, user]);
 
-  const slots = mode === "child" ? plan?.withChild ?? [] : plan?.alone ?? [];
+  const slots = useMemo(() => {
+    const base =
+      mode === "child" ? plan?.withChild ?? [] : mode === "alone" ? plan?.alone ?? [] : plan?.all ?? [];
+    return base.filter((slot) => {
+      if (!matchesDateWindow(slot.starts_at, dateWindow)) return false;
+      if (kind !== "all" && (slot.kind || "social") !== kind) return false;
+      return true;
+    });
+  }, [plan, mode, dateWindow, kind]);
 
   return (
     <div className="min-h-dvh bg-bg">
@@ -135,7 +168,24 @@ function WeekendPage() {
             Saturday with a child — or a quiet week when you don&apos;t. We will not invent a crowd.
             A new town stays empty until someone adds a real listing.
           </p>
-          <PlaceSearch defaultValue={plan?.place?.zip || plan?.place?.name || ""} />
+          <PlaceSearch defaultValue={plan?.place?.zip || plan?.place?.city || plan?.place?.name || ""} />
+          <p className="text-sm">
+            <Link
+              to="/churches"
+              search={{
+                zip: plan?.place?.zip || undefined,
+                city: plan?.place?.city || undefined,
+                state: plan?.place?.state || undefined,
+              }}
+              className="underline"
+            >
+              Churches near {plan?.place?.name || "this town"}
+            </Link>
+            {" · "}
+            <Link to="/c/$slug" params={{ slug: plan?.place?.slug || "vidalia" }} className="underline">
+              Open the board
+            </Link>
+          </p>
           {plan?.refresh?.note && (
             <p className="text-xs text-fg-subtle">{plan.refresh.note}</p>
           )}
@@ -186,22 +236,36 @@ function WeekendPage() {
 
         {plan && <p className="text-sm text-fg-muted">{plan.weatherNote}</p>}
 
-        <div className="flex flex-wrap gap-2">
-          <Button variant={mode === "child" ? "default" : "secondary"} onClick={() => setMode("child")}>
-            Weekend with her
-          </Button>
-          <Button variant={mode === "alone" ? "default" : "secondary"} onClick={() => setMode("alone")}>
-            When I don't have her
-          </Button>
+        <div className="space-y-3">
+          <div className="flex flex-wrap gap-2">
+            <Button variant={mode === "all" ? "default" : "secondary"} onClick={() => setMode("all")}>
+              This week&apos;s board
+            </Button>
+            <Button variant={mode === "child" ? "default" : "secondary"} onClick={() => setMode("child")}>
+              Weekend with her
+            </Button>
+            <Button variant={mode === "alone" ? "default" : "secondary"} onClick={() => setMode("alone")}>
+              When I don&apos;t have her
+            </Button>
+          </div>
+          <ActivityFilters
+            dateWindow={dateWindow}
+            onDateWindow={setDateWindow}
+            kind={kind}
+            onKind={setKind}
+            kinds={[{ id: "all", label: "All kinds" }, ...EVENT_KINDS]}
+          />
         </div>
 
         <div className="grid gap-4 lg:grid-cols-2">
-          {slots.length === 0 && !error && (
+          {slots.length === 0 && !error && !loading && (
             <p className="text-sm text-fg-muted">
-              No dated listings in this window yet. Host one — a book club, tennis, trivia —
-              or use the Pal, Visit Vidalia, and Parks & Rec links below. We will not invent a crowd.
+              {plan?.all?.length
+                ? "Nothing in this filter. Clear the date or kind to see the rest of the board."
+                : "No dated listings in this window yet. Host one — a book club, tennis, trivia — or use the Pal, Visit Vidalia, and Parks & Rec links below. We will not invent a crowd."}
             </p>
           )}
+          {loading && !plan && <p className="text-sm text-fg-muted">Loading this week&apos;s board…</p>}
           {slots.map((slot) => (
             <SlotCard key={slot.id} slot={slot} />
           ))}
@@ -256,8 +320,11 @@ function WeekendPage() {
               >
                 {plan?.place?.name || "Vidalia"} board — host, needs, services, events
               </Link>
-              <a className="block underline" href="https://churchconnect.unitedundergod.org/">
-                Find a church
+              <Link className="block underline" to="/churches" search={{ zip: plan?.place?.zip || "30474" }}>
+                Neighborly Churches — same ChurchConnect records
+              </Link>
+              <a className="block underline" href="https://churchconnect.unitedundergod.org/find-church">
+                ChurchConnect finder
               </a>
               <a className="block underline" href="https://liveonmission.unitedundergod.org/">
                 Live On Mission — a small way to serve
@@ -291,7 +358,9 @@ function WeekendPage() {
             "@context": "https://schema.org",
             "@type": "ItemList",
             name: `What's going on in ${plan.place.name} this week`,
-            itemListElement: [...plan.withChild, ...plan.alone].slice(0, 20).map((slot, i) => ({
+            itemListElement: (plan.all?.length ? plan.all : [...plan.withChild, ...plan.alone])
+              .slice(0, 20)
+              .map((slot, i) => ({
               "@type": "ListItem",
               position: i + 1,
               item: {

@@ -77,6 +77,11 @@ function SettingsPage() {
                 mobility: profile.mobility,
                 digest_opt_in: profile.digest_opt_in,
                 digest_cadence: profile.digest_cadence,
+                home_zip: profile.home_zip,
+                home_city: profile.home_city,
+                home_state: profile.home_state,
+                home_lat: profile.home_lat,
+                home_lon: profile.home_lon,
               },
             });
             setProfile(next);
@@ -100,7 +105,42 @@ function SettingsPage() {
           <Input
             value={profile.street_hint}
             onChange={(e) => setProfile({ ...profile, street_hint: e.target.value })}
+            placeholder="Oak Lane near the park"
           />
+        </div>
+        <div className="space-y-2 rounded-[var(--radius-xl)] border border-border bg-bg-elevated p-4">
+          <p className="text-sm font-medium">Home place (for this weekend / churches)</p>
+          <p className="text-xs text-fg-muted">
+            ZIP or city is enough. Browser location is optional. We use this when you
+            are researching a town — not to invent a second church list.
+          </p>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="space-y-1.5">
+              <Label>ZIP</Label>
+              <Input
+                value={profile.home_zip}
+                onChange={(e) => setProfile({ ...profile, home_zip: e.target.value })}
+                inputMode="numeric"
+                placeholder="30474"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label>City</Label>
+              <Input
+                value={profile.home_city}
+                onChange={(e) => setProfile({ ...profile, home_city: e.target.value })}
+                placeholder="Vidalia"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label>State</Label>
+              <Input
+                value={profile.home_state}
+                onChange={(e) => setProfile({ ...profile, home_state: e.target.value })}
+                placeholder="GA"
+              />
+            </div>
+          </div>
         </div>
         <div className="space-y-1.5">
           <Label>Bio</Label>

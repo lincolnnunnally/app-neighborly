@@ -112,13 +112,25 @@ function createPostgresSql(): Promise<Sql> {
       connectionString: connectionStringForPg(databaseUrl!),
       ssl: { rejectUnauthorized: false },
       max: 4,
-    });
-    pool.on("connect", (client) => {
-      void client.query("set search_path to neighborly, public");
+      // Startup option so search_path is set before the first query.
+      // A fire-and-forget `pool.on("connect")` raced pool.query() on leftover-preview
+      // (pg deprecation: query while the client is already executing) and could
+      // hit `public` instead of `neighborly` — empty weekend, full /c/vidalia.
+      options: "-c search_path=neighborly,public",
     });
     return toSql(async <T>(text: string, params: unknown[]) => {
-      const res = await pool.query(text, params);
-      return res.rows as T[];
+      const client = await pool.connect();
+      try {
+        const tagged = client as typeof client & { __neighborlySearchPath?: boolean };
+        if (!tagged.__neighborlySearchPath) {
+          await client.query("set search_path to neighborly, public");
+          tagged.__neighborlySearchPath = true;
+        }
+        const res = await client.query(text, params);
+        return res.rows as T[];
+      } finally {
+        client.release();
+      }
     });
   })().catch((err) => {
     globalRef.__pgSqlPromise__ = undefined;

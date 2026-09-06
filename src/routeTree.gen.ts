@@ -12,17 +12,23 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AppRouteImport } from './routes/app'
+import { Route as ChurchesRouteImport } from './routes/churches'
 import { Route as CommunitiesRouteImport } from './routes/communities'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as NearRouteImport } from './routes/near'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WeekendRouteImport } from './routes/weekend'
+import { Route as ApiChurchesRouteImport } from './routes/api/churches'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as ApiIcsRouteImport } from './routes/api/ics'
+import { Route as ApiNearRouteImport } from './routes/api/near'
 import { Route as ApiWeekendRouteImport } from './routes/api/weekend'
 import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as AppCommunitiesRouteImport } from './routes/app/communities'
@@ -53,6 +59,11 @@ const AppRoute = AppRouteImport.update({
   path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChurchesRoute = ChurchesRouteImport.update({
+  id: '/churches',
+  path: '/churches',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CommunitiesRoute = CommunitiesRouteImport.update({
   id: '/communities',
   path: '/communities',
@@ -66,6 +77,11 @@ const HowItWorksRoute = HowItWorksRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NearRoute = NearRouteImport.update({
+  id: '/near',
+  path: '/near',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -83,9 +99,19 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TermsRoute = TermsRouteImport.update({
@@ -98,6 +124,11 @@ const WeekendRoute = WeekendRouteImport.update({
   path: '/weekend',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiChurchesRoute = ApiChurchesRouteImport.update({
+  id: '/api/churches',
+  path: '/api/churches',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiHealthRoute = ApiHealthRouteImport.update({
   id: '/api/health',
   path: '/api/health',
@@ -106,6 +137,11 @@ const ApiHealthRoute = ApiHealthRouteImport.update({
 const ApiIcsRoute = ApiIcsRouteImport.update({
   id: '/api/ics',
   path: '/api/ics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiNearRoute = ApiNearRouteImport.update({
+  id: '/api/near',
+  path: '/api/near',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiWeekendRoute = ApiWeekendRouteImport.update({
@@ -183,17 +219,23 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/app': typeof AppRouteWithChildren
+  '/churches': typeof ChurchesRoute
   '/communities': typeof CommunitiesRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
+  '/near': typeof NearRoute
   '/onboarding': typeof OnboardingRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/signup': typeof SignupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/weekend': typeof WeekendRoute
+  '/api/churches': typeof ApiChurchesRoute
   '/api/health': typeof ApiHealthRoute
   '/api/ics': typeof ApiIcsRoute
+  '/api/near': typeof ApiNearRoute
   '/api/weekend': typeof ApiWeekendRoute
   '/app/communities': typeof AppCommunitiesRoute
   '/app/events': typeof AppEventsRoute
@@ -212,17 +254,23 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/churches': typeof ChurchesRoute
   '/communities': typeof CommunitiesRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
+  '/near': typeof NearRoute
   '/onboarding': typeof OnboardingRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/signup': typeof SignupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/weekend': typeof WeekendRoute
+  '/api/churches': typeof ApiChurchesRoute
   '/api/health': typeof ApiHealthRoute
   '/api/ics': typeof ApiIcsRoute
+  '/api/near': typeof ApiNearRoute
   '/api/weekend': typeof ApiWeekendRoute
   '/app/communities': typeof AppCommunitiesRoute
   '/app/events': typeof AppEventsRoute
@@ -243,17 +291,23 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/app': typeof AppRouteWithChildren
+  '/churches': typeof ChurchesRoute
   '/communities': typeof CommunitiesRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
+  '/near': typeof NearRoute
   '/onboarding': typeof OnboardingRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/signup': typeof SignupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/weekend': typeof WeekendRoute
+  '/api/churches': typeof ApiChurchesRoute
   '/api/health': typeof ApiHealthRoute
   '/api/ics': typeof ApiIcsRoute
+  '/api/near': typeof ApiNearRoute
   '/api/weekend': typeof ApiWeekendRoute
   '/app/communities': typeof AppCommunitiesRoute
   '/app/events': typeof AppEventsRoute
@@ -275,17 +329,23 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/app'
+    | '/churches'
     | '/communities'
     | '/how-it-works'
     | '/login'
+    | '/near'
     | '/onboarding'
     | '/privacy'
     | '/reset-password'
+    | '/robots.txt'
     | '/signup'
+    | '/sitemap.xml'
     | '/terms'
     | '/weekend'
+    | '/api/churches'
     | '/api/health'
     | '/api/ics'
+    | '/api/near'
     | '/api/weekend'
     | '/app/communities'
     | '/app/events'
@@ -304,17 +364,23 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
+    | '/churches'
     | '/communities'
     | '/how-it-works'
     | '/login'
+    | '/near'
     | '/onboarding'
     | '/privacy'
     | '/reset-password'
+    | '/robots.txt'
     | '/signup'
+    | '/sitemap.xml'
     | '/terms'
     | '/weekend'
+    | '/api/churches'
     | '/api/health'
     | '/api/ics'
+    | '/api/near'
     | '/api/weekend'
     | '/app/communities'
     | '/app/events'
@@ -334,17 +400,23 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/app'
+    | '/churches'
     | '/communities'
     | '/how-it-works'
     | '/login'
+    | '/near'
     | '/onboarding'
     | '/privacy'
     | '/reset-password'
+    | '/robots.txt'
     | '/signup'
+    | '/sitemap.xml'
     | '/terms'
     | '/weekend'
+    | '/api/churches'
     | '/api/health'
     | '/api/ics'
+    | '/api/near'
     | '/api/weekend'
     | '/app/communities'
     | '/app/events'
@@ -365,17 +437,23 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   AppRoute: typeof AppRouteWithChildren
+  ChurchesRoute: typeof ChurchesRoute
   CommunitiesRoute: typeof CommunitiesRoute
   HowItWorksRoute: typeof HowItWorksRoute
   LoginRoute: typeof LoginRoute
+  NearRoute: typeof NearRoute
   OnboardingRoute: typeof OnboardingRoute
   PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   SignupRoute: typeof SignupRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
   WeekendRoute: typeof WeekendRoute
+  ApiChurchesRoute: typeof ApiChurchesRoute
   ApiHealthRoute: typeof ApiHealthRoute
   ApiIcsRoute: typeof ApiIcsRoute
+  ApiNearRoute: typeof ApiNearRoute
   ApiWeekendRoute: typeof ApiWeekendRoute
   CSlugRoute: typeof CSlugRoute
   JoinCodeRoute: typeof JoinCodeRoute
@@ -406,6 +484,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/churches': {
+      id: '/churches'
+      path: '/churches'
+      fullPath: '/churches'
+      preLoaderRoute: typeof ChurchesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/communities': {
       id: '/communities'
       path: '/communities'
@@ -425,6 +510,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/near': {
+      id: '/near'
+      path: '/near'
+      fullPath: '/near'
+      preLoaderRoute: typeof NearRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -448,11 +540,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/signup': {
       id: '/signup'
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/terms': {
@@ -469,6 +575,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WeekendRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/churches': {
+      id: '/api/churches'
+      path: '/api/churches'
+      fullPath: '/api/churches'
+      preLoaderRoute: typeof ApiChurchesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/health': {
       id: '/api/health'
       path: '/api/health'
@@ -481,6 +594,13 @@ declare module '@tanstack/react-router' {
       path: '/api/ics'
       fullPath: '/api/ics'
       preLoaderRoute: typeof ApiIcsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/near': {
+      id: '/api/near'
+      path: '/api/near'
+      fullPath: '/api/near'
+      preLoaderRoute: typeof ApiNearRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/weekend': {
@@ -614,17 +734,23 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   AppRoute: AppRouteWithChildren,
+  ChurchesRoute: ChurchesRoute,
   CommunitiesRoute: CommunitiesRoute,
   HowItWorksRoute: HowItWorksRoute,
   LoginRoute: LoginRoute,
+  NearRoute: NearRoute,
   OnboardingRoute: OnboardingRoute,
   PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   SignupRoute: SignupRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
   WeekendRoute: WeekendRoute,
+  ApiChurchesRoute: ApiChurchesRoute,
   ApiHealthRoute: ApiHealthRoute,
   ApiIcsRoute: ApiIcsRoute,
+  ApiNearRoute: ApiNearRoute,
   ApiWeekendRoute: ApiWeekendRoute,
   CSlugRoute: CSlugRoute,
   JoinCodeRoute: JoinCodeRoute,
@@ -634,3 +760,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}

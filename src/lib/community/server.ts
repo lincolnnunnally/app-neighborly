@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { getSql } from "@/lib/db";
 import { authMiddleware } from "@/lib/auth/middleware";
 import { parseJsonArray, uid } from "@/lib/utils";
+import { eventStartIso } from "./board-events";
 import { ensureSeeded } from "./seed";
 import { blockedUserIds } from "./safety";
 import type {
@@ -80,6 +81,11 @@ function mapProfile(row: Record<string, unknown>): Profile {
     mobility: String(row.mobility ?? ""),
     digest_opt_in: Boolean(row.digest_opt_in),
     digest_cadence: String(row.digest_cadence ?? "off"),
+    home_zip: String(row.home_zip ?? ""),
+    home_city: String(row.home_city ?? ""),
+    home_state: String(row.home_state ?? ""),
+    home_lat: row.home_lat == null || row.home_lat === "" ? null : Number(row.home_lat),
+    home_lon: row.home_lon == null || row.home_lon === "" ? null : Number(row.home_lon),
   };
 }
 
@@ -148,8 +154,8 @@ function mapEvent(r: Record<string, unknown>): CommunityEvent {
     description: String(r.description ?? ""),
     kind: String(r.kind),
     location: String(r.location ?? ""),
-    starts_at: String(r.starts_at),
-    ends_at: String(r.ends_at ?? ""),
+    starts_at: eventStartIso(r.starts_at),
+    ends_at: r.ends_at == null || r.ends_at === "" ? "" : eventStartIso(r.ends_at),
     capacity: r.capacity == null ? null : Number(r.capacity),
     rsvp_count: Number(r.rsvp_count ?? 0),
     created_at: String(r.created_at),
@@ -384,6 +390,44 @@ export const getMyProfile = createServerFn({ method: "GET" })
     return rows[0] ? mapProfile(rows[0]) : null;
   });
 
+export const saveHomePlace = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator(
+    (input: {
+      home_zip?: string;
+      home_city?: string;
+      home_state?: string;
+      home_lat?: number | null;
+      home_lon?: number | null;
+      street_hint?: string;
+    }) => input,
+  )
+  .handler(async ({ context, data }) => {
+    const sql = await db();
+    const existing = await sql`select user_id from profiles where user_id = ${context.userId}`;
+    if (existing.length === 0) {
+      throw new Error("Save a display name on your profile first.");
+    }
+    const homeZip = (data.home_zip ?? "").replace(/\D/g, "").slice(0, 5);
+    const homeCity = (data.home_city ?? "").trim();
+    const homeState = (data.home_state ?? "").trim().toUpperCase().slice(0, 2);
+    await sql`
+      update profiles set
+        home_zip = ${homeZip},
+        home_city = ${homeCity},
+        home_state = ${homeState},
+        home_lat = ${data.home_lat ?? null},
+        home_lon = ${data.home_lon ?? null},
+        street_hint = coalesce(nullif(${data.street_hint ?? ""}, ''), street_hint),
+        updated_at = now()
+      where user_id = ${context.userId}
+    `;
+    const rows = await sql<Record<string, unknown>>`
+      select * from profiles where user_id = ${context.userId} limit 1
+    `;
+    return mapProfile(rows[0]!);
+  });
+
 export const upsertProfile = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .validator(
@@ -410,6 +454,11 @@ export const upsertProfile = createServerFn({ method: "POST" })
       mobility?: string;
       digest_opt_in?: boolean;
       digest_cadence?: string;
+      home_zip?: string;
+      home_city?: string;
+      home_state?: string;
+      home_lat?: number | null;
+      home_lon?: number | null;
     }) => input,
   )
   .handler(async ({ context, data }) => {
@@ -429,6 +478,10 @@ export const upsertProfile = createServerFn({ method: "POST" })
     const mobility = data.mobility ?? "";
     const digestOptIn = Boolean(data.digest_opt_in);
     const digestCadence = data.digest_cadence ?? (digestOptIn ? "weekly" : "off");
+    const touchHome = data.home_zip != null || data.home_city != null || data.home_state != null;
+    const homeZip = touchHome ? (data.home_zip ?? "").replace(/\D/g, "").slice(0, 5) : null;
+    const homeCity = touchHome ? (data.home_city ?? "").trim() : null;
+    const homeState = touchHome ? (data.home_state ?? "").trim().toUpperCase().slice(0, 2) : null;
 
     if (existing.length === 0) {
       await sql`
@@ -437,7 +490,8 @@ export const upsertProfile = createServerFn({ method: "POST" })
           interests, life_season, faith_posture, hoping_for, availability,
           is_new_resident, is_youth, notify_events, notify_needs,
           notify_services, notify_facilities, welcome_seen,
-          setting_pref, mobility, digest_opt_in, digest_cadence
+          setting_pref, mobility, digest_opt_in, digest_cadence,
+          home_zip, home_city, home_state, home_lat, home_lon
         ) values (
           ${context.userId},
           ${name},
@@ -461,7 +515,12 @@ export const upsertProfile = createServerFn({ method: "POST" })
           ${settingPref},
           ${mobility},
           ${digestOptIn},
-          ${digestCadence}
+          ${digestCadence},
+          ${homeZip ?? ""},
+          ${homeCity ?? ""},
+          ${homeState ?? ""},
+          ${data.home_lat ?? null},
+          ${data.home_lon ?? null}
         )
       `;
     } else {
@@ -489,6 +548,11 @@ export const upsertProfile = createServerFn({ method: "POST" })
           mobility = ${mobility},
           digest_opt_in = ${digestOptIn},
           digest_cadence = ${digestCadence},
+          home_zip = coalesce(${homeZip}, home_zip),
+          home_city = coalesce(${homeCity}, home_city),
+          home_state = coalesce(${homeState}, home_state),
+          home_lat = coalesce(${data.home_lat ?? null}, home_lat),
+          home_lon = coalesce(${data.home_lon ?? null}, home_lon),
           updated_at = now()
         where user_id = ${context.userId}
       `;

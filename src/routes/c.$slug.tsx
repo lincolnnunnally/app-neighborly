@@ -47,6 +47,7 @@ import {
   type Service,
 } from "@/lib/community/types";
 import { formatEventWhen } from "@/lib/utils";
+import { ActivityFilters, matchesDateWindow, type DateWindow } from "@/components/community/activity-filters";
 
 export const Route = createFileRoute("/c/$slug")({
   loader: async ({ params }) => {
@@ -98,6 +99,8 @@ function CommunityPublicPage() {
   const [loading, setLoading] = useState(!loaded.community);
   const [loadError, setLoadError] = useState(false);
   const [tab, setTab] = useState(() => (slug.startsWith("vidalia") ? "events" : "needs"));
+  const [eventDate, setEventDate] = useState<DateWindow>("week");
+  const [eventKind, setEventKind] = useState("all");
 
   const [activeNeed, setActiveNeed] = useState<Need | null>(null);
   const [needOffers, setNeedOffers] = useState<HelpOffer[]>([]);
@@ -235,6 +238,18 @@ function CommunityPublicPage() {
             <Link to="/weekend" search={{ place: slug }}>This weekend</Link>
           </Button>
           <Button asChild variant="secondary">
+            <Link
+              to="/churches"
+              search={{
+                zip: community.zip || undefined,
+                city: community.city || undefined,
+                state: community.state || undefined,
+              }}
+            >
+              Churches
+            </Link>
+          </Button>
+          <Button asChild variant="secondary">
             <Link to="/join/$code" params={{ code: community.invite_code }}>
               Invite link & QR
             </Link>
@@ -348,7 +363,16 @@ function CommunityPublicPage() {
           </TabsContent>
 
           <TabsContent value="events" className="space-y-3">
-            {events.map((e) => (
+            <ActivityFilters
+              dateWindow={eventDate}
+              onDateWindow={setEventDate}
+              kind={eventKind}
+              onKind={setEventKind}
+              kinds={[{ id: "all", label: "All kinds" }, ...EVENT_KINDS]}
+            />
+            {events
+              .filter((e) => matchesDateWindow(e.starts_at, eventDate) && (eventKind === "all" || e.kind === eventKind))
+              .map((e) => (
               <button
                 key={e.id}
                 type="button"
@@ -371,11 +395,12 @@ function CommunityPublicPage() {
                 </p>
               </button>
             ))}
-            {events.length === 0 && (
+            {events.filter((e) => matchesDateWindow(e.starts_at, eventDate) && (eventKind === "all" || e.kind === eventKind)).length === 0 && (
               <div className="space-y-2">
                 <p className="text-sm text-fg-muted">
-                  Nothing dated yet. If the town is quiet, host the first table — a book club,
-                  crochet, spoon carving, trivia at a restaurant, tennis. We will not invent a crowd.
+                  {events.length
+                    ? "Nothing in this date or kind filter. Choose This week or All dates to see the rest of the board."
+                    : "Nothing dated yet. If the town is quiet, host the first table — a book club, crochet, spoon carving, trivia at a restaurant, tennis. We will not invent a crowd."}
                 </p>
                 <Button size="sm" onClick={() => setShowHost(true)}>
                   Ask who&apos;s interested

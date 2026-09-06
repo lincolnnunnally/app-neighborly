@@ -7,7 +7,7 @@ export const Route = createFileRoute("/sitemap.xml")({
     handlers: {
       GET: async () => {
         const origin = "https://neighborly.unitedundergod.org";
-        const staticPaths = ["/", "/weekend", "/communities", "/how-it-works", "/near", "/privacy", "/terms"];
+        const staticPaths = ["/", "/weekend", "/communities", "/how-it-works", "/near", "/churches", "/privacy", "/terms"];
         let communityPaths: string[] = ["/c/vidalia", "/c/milstead"];
         try {
           const sql = await getSql();

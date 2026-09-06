@@ -119,12 +119,12 @@ export function recommendNextSteps(profile: Partial<Profile>): NextStep[] {
     });
   }
 
-  if (["rooted", "attending"].includes(faith)) {
+  if (["rooted", "attending", "searching", "questioning"].includes(faith)) {
     steps.push({
       kind: "app",
-      title: "ChurchConnect",
-      why: "If a church here is on the platform, that is where serving and groups get handled.",
-      href: "https://churchconnect.unitedundergod.org",
+      title: "Neighborly Churches",
+      why: "Nearby congregations from ChurchConnect public records — times and style when they have published them.",
+      href: "/churches",
     });
   }
 

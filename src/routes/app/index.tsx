@@ -95,6 +95,18 @@ function AppHome() {
             <Link to="/weekend" search={{ place: primarySlug }}>This weekend</Link>
           </Button>
           <Button asChild size="sm" variant="secondary">
+            <Link
+              to="/churches"
+              search={{
+                zip: profile?.home_zip || undefined,
+                city: profile?.home_city || undefined,
+                state: profile?.home_state || undefined,
+              }}
+            >
+              Churches
+            </Link>
+          </Button>
+          <Button asChild size="sm" variant="secondary">
             <Link to="/app/needs">Post or answer a need</Link>
           </Button>
         </div>
