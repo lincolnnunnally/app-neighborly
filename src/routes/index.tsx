@@ -346,8 +346,8 @@ function LandingPage() {
               to: "/c/vidalia" as const,
             },
             {
-              title: "Reserve places",
-              body: "Request the pavilion or community room.",
+              title: "Places",
+              body: "Reserve a pavilion, or find a Toombs / Vidalia food pantry.",
               icon: MapPin,
               to: "/c/vidalia" as const,
             },
@@ -403,6 +403,7 @@ function LandingPage() {
                 key={f.title}
                 to={f.to === "/communities" ? "/communities" : "/c/$slug"}
                 params={f.to === "/communities" ? undefined : { slug: "vidalia" }}
+                search={f.title === "Places" ? { tab: "places" } : undefined}
                 className={className}
               >
                 {inner}

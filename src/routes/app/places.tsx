@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { toast } from "sonner";
+import { PantryDetails } from "@/components/community/pantry-details";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -21,30 +23,62 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useCurrentUser } from "@/lib/auth/use-current-user";
+import { CC_GET_HELP, isPantry } from "@/lib/community/pantry";
 import {
+  createPantryListing,
   getCommunityFeed,
   getMyMemberships,
   listMyBookings,
+  listMyPantryListings,
   requestFacility,
+  updatePantryListing,
   type FacilityBooking,
 } from "@/lib/community/server";
 import type { Facility, Membership } from "@/lib/community/types";
 
+type PlacesSearch = { register?: string };
+
 export const Route = createFileRoute("/app/places")({
+  validateSearch: (s: Record<string, unknown>): PlacesSearch => ({
+    register: typeof s.register === "string" ? s.register : undefined,
+  }),
   component: PlacesPage,
 });
 
+const emptyForm = {
+  name: "",
+  address: "",
+  city: "Vidalia",
+  zip: "30474",
+  serve_days: "",
+  serve_times: "",
+  residency_note: "",
+  visit_frequency: "",
+  id_docs: "",
+  other_notes: "",
+  phone: "",
+  website: "",
+  description: "",
+};
+
 function PlacesPage() {
   const user = useCurrentUser();
+  const search = Route.useSearch();
   const [memberships, setMemberships] = useState<Membership[]>([]);
   const [communityId, setCommunityId] = useState("");
   const [facilities, setFacilities] = useState<Facility[]>([]);
+  const [myPantries, setMyPantries] = useState<Facility[]>([]);
   const [bookings, setBookings] = useState<FacilityBooking[]>([]);
   const [active, setActive] = useState<Facility | null>(null);
   const [purpose, setPurpose] = useState("");
   const [dateOn, setDateOn] = useState("");
   const [timeNote, setTimeNote] = useState("");
   const [busy, setBusy] = useState(false);
+  const [showForm, setShowForm] = useState(search.register === "1");
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [form, setForm] = useState(emptyForm);
+
+  const reservable = facilities.filter((f) => !isPantry(f));
 
   async function reload(mid?: string) {
     const m = await getMyMemberships();
@@ -57,7 +91,9 @@ function PlacesPage() {
       const feed = await getCommunityFeed({ data: { slug, userId: user?.id } });
       setFacilities(feed.facilities);
     }
-    setBookings(await listMyBookings());
+    const [books, mine] = await Promise.all([listMyBookings(), listMyPantryListings()]);
+    setBookings(books);
+    setMyPantries(mine);
   }
 
   useEffect(() => {
@@ -65,13 +101,56 @@ function PlacesPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
+  useEffect(() => {
+    if (search.register === "1") setShowForm(true);
+  }, [search.register]);
+
+  function patch<K extends keyof typeof emptyForm>(key: K, value: string) {
+    setForm((prev) => ({ ...prev, [key]: value }));
+  }
+
+  function startEdit(p: Facility) {
+    setEditingId(p.id);
+    setShowForm(true);
+    setForm({
+      name: p.name,
+      address: p.address,
+      city: p.city,
+      zip: p.zip,
+      serve_days: p.serve_days,
+      serve_times: p.serve_times,
+      residency_note: p.residency_note,
+      visit_frequency: p.visit_frequency,
+      id_docs: p.id_docs,
+      other_notes: p.other_notes,
+      phone: p.phone,
+      website: p.website,
+      description: p.description,
+    });
+  }
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-display text-2xl font-semibold">Places & facilities</h1>
-        <p className="text-sm text-fg-muted">
-          Request the pavilion or multipurpose room for birthdays and gatherings.
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="font-display text-2xl font-semibold">Places & pantries</h1>
+          <p className="text-sm text-fg-muted">
+            Request a pavilion or room — or add a Toombs / Vidalia food pantry listing
+            neighbors can find. Pantries are not reservable rooms.
+          </p>
+        </div>
+        <Button
+          data-testid="add-pantry"
+          onClick={() => {
+            setShowForm((v) => !v);
+            if (showForm) {
+              setEditingId(null);
+              setForm(emptyForm);
+            }
+          }}
+        >
+          {showForm ? "Close" : "Add a pantry listing"}
+        </Button>
       </div>
 
       {memberships.length > 1 && (
@@ -95,43 +174,222 @@ function PlacesPage() {
         </Select>
       )}
 
-      <div className="grid gap-3 sm:grid-cols-2">
-        {facilities.map((f) => (
-          <button
-            key={f.id}
-            type="button"
-            onClick={() => {
-              setActive(f);
-              setPurpose("");
-              setDateOn("");
-              setTimeNote("");
-            }}
-            className="surface-card p-4 text-left transition-colors hover:border-border-strong"
-          >
-            <h2 className="font-medium">{f.name}</h2>
-            <p className="mt-1 text-sm text-fg-muted">{f.description}</p>
-            <p className="mt-2 text-xs text-fg-subtle">
-              Capacity {f.capacity ?? "—"} · {f.rate_note}
-            </p>
-            <div className="mt-2 flex flex-wrap gap-1">
-              {f.amenities.map((a) => (
-                <Badge key={a} variant="outline">
-                  {a}
-                </Badge>
-              ))}
+      {showForm && (
+        <form
+          className="surface-card space-y-3 p-4"
+          data-testid="pantry-register-form"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            if (!communityId) {
+              toast.error("Join a community first");
+              return;
+            }
+            try {
+              if (editingId) {
+                await updatePantryListing({ data: { id: editingId, communityId, ...form } });
+                toast.success("Pantry listing updated");
+              } else {
+                await createPantryListing({ data: { communityId, ...form } });
+                toast.success("Pantry listed");
+              }
+              setShowForm(false);
+              setEditingId(null);
+              setForm(emptyForm);
+              await reload(communityId);
+            } catch (err) {
+              toast.error(err instanceof Error ? err.message : "Failed");
+            }
+          }}
+        >
+          <p className="text-sm text-fg-muted">
+            Only add a pantry you can speak for. Hours and address must be real. We
+            will not invent listings.
+          </p>
+          <div className="space-y-1.5">
+            <Label>Pantry name</Label>
+            <Input
+              value={form.name}
+              onChange={(e) => patch("name", e.target.value)}
+              placeholder="Church or agency pantry name"
+              required
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label>Street address</Label>
+            <Input
+              value={form.address}
+              onChange={(e) => patch("address", e.target.value)}
+              placeholder="123 Main St"
+              required
+            />
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="space-y-1.5">
+              <Label>City</Label>
+              <Input value={form.city} onChange={(e) => patch("city", e.target.value)} required />
             </div>
+            <div className="space-y-1.5">
+              <Label>ZIP</Label>
+              <Input
+                value={form.zip}
+                onChange={(e) => patch("zip", e.target.value)}
+                inputMode="numeric"
+                placeholder="30474"
+                required
+              />
+            </div>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="space-y-1.5">
+              <Label>Serve days</Label>
+              <Input
+                value={form.serve_days}
+                onChange={(e) => patch("serve_days", e.target.value)}
+                placeholder="2nd & 3rd Wednesday"
+                required
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Serve times</Label>
+              <Input
+                value={form.serve_times}
+                onChange={(e) => patch("serve_times", e.target.value)}
+                placeholder="9:00am–3:00pm"
+                required
+              />
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <Label>Residency / ZIP limits</Label>
+            <Input
+              value={form.residency_note}
+              onChange={(e) => patch("residency_note", e.target.value)}
+              placeholder="Toombs County residents, or none listed"
+            />
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="space-y-1.5">
+              <Label>Visit frequency</Label>
+              <Input
+                value={form.visit_frequency}
+                onChange={(e) => patch("visit_frequency", e.target.value)}
+                placeholder="Once a month"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label>ID / documents</Label>
+              <Input
+                value={form.id_docs}
+                onChange={(e) => patch("id_docs", e.target.value)}
+                placeholder="Photo ID and proof of address"
+              />
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <Label>Other notes</Label>
+            <Textarea
+              value={form.other_notes}
+              onChange={(e) => patch("other_notes", e.target.value)}
+              placeholder="Call ahead, bring bags, interpreter available…"
+            />
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="space-y-1.5">
+              <Label>Phone (optional)</Label>
+              <Input
+                value={form.phone}
+                onChange={(e) => patch("phone", e.target.value)}
+                placeholder="912-555-0100"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Website (optional)</Label>
+              <Input
+                value={form.website}
+                onChange={(e) => patch("website", e.target.value)}
+                placeholder="https://"
+              />
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <Label>Short description (optional)</Label>
+            <Textarea
+              value={form.description}
+              onChange={(e) => patch("description", e.target.value)}
+              placeholder="What neighbors should know before they go"
+            />
+          </div>
+          <Button type="submit">{editingId ? "Save pantry" : "Publish pantry listing"}</Button>
+        </form>
+      )}
+
+      <section className="space-y-3">
+        <h2 className="font-display text-lg font-semibold">Your pantry listings</h2>
+        {myPantries.length === 0 && (
+          <p className="text-sm text-fg-muted">
+            None yet. Add or claim a real pantry — we did not seed invented hours.
+          </p>
+        )}
+        {myPantries.map((p) => (
+          <button
+            key={p.id}
+            type="button"
+            onClick={() => startEdit(p)}
+            className="surface-card w-full p-4 text-left transition-colors hover:border-border-strong"
+          >
+            <PantryDetails pantry={p} compact />
+            <p className="mt-2 text-xs text-fg-subtle">Tap to update</p>
           </button>
         ))}
-      </div>
+        <p className="text-sm text-fg-muted">
+          Church food assistance also lives on{" "}
+          <a className="text-primary underline" href={CC_GET_HELP} target="_blank" rel="noreferrer">
+            ChurchConnect Get Help
+          </a>
+          . Neighborly does not copy that directory.
+        </p>
+      </section>
 
-      {facilities.length === 0 && (
-        <p className="text-sm text-fg-muted">No facilities in this community yet.</p>
-      )}
+      <section className="space-y-3">
+        <h2 className="font-display text-lg font-semibold">Reservable places</h2>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {reservable.map((f) => (
+            <button
+              key={f.id}
+              type="button"
+              onClick={() => {
+                setActive(f);
+                setPurpose("");
+                setDateOn("");
+                setTimeNote("");
+              }}
+              className="surface-card p-4 text-left transition-colors hover:border-border-strong"
+            >
+              <Badge variant="outline">Reservable</Badge>
+              <h2 className="mt-2 font-medium">{f.name}</h2>
+              <p className="mt-1 text-sm text-fg-muted">{f.description}</p>
+              <p className="mt-2 text-xs text-fg-subtle">
+                Capacity {f.capacity ?? "—"} · {f.rate_note}
+              </p>
+              <div className="mt-2 flex flex-wrap gap-1">
+                {f.amenities.map((a) => (
+                  <Badge key={a} variant="outline">
+                    {a}
+                  </Badge>
+                ))}
+              </div>
+            </button>
+          ))}
+        </div>
+        {reservable.length === 0 && (
+          <p className="text-sm text-fg-muted">No reservable rooms in this community yet.</p>
+        )}
+      </section>
 
       <section className="space-y-3">
         <h2 className="font-display text-lg font-semibold">Your requests</h2>
         {bookings.length === 0 && (
-          <p className="text-sm text-fg-muted">No facility requests yet — tap a place above.</p>
+          <p className="text-sm text-fg-muted">No facility requests yet — tap a reservable place above.</p>
         )}
         {bookings.map((b) => (
           <div key={b.id} className="surface-card p-4">

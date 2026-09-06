@@ -3,6 +3,12 @@ import { getSql } from "@/lib/db";
 import { authMiddleware } from "@/lib/auth/middleware";
 import { parseJsonArray, uid } from "@/lib/utils";
 import { eventStartIso } from "./board-events";
+import {
+  isSafeWebsite,
+  isValidPantryZip,
+  normalizePantryZip,
+  normalizeWebsite,
+} from "./pantry";
 import { ensureSeeded } from "./seed";
 import { blockedUserIds } from "./safety";
 import { mapTool } from "./tools-server";
@@ -184,6 +190,7 @@ function mapEvent(r: Record<string, unknown>): CommunityEvent {
 }
 
 function mapFacility(r: Record<string, unknown>): Facility {
+  const kind = String(r.place_kind ?? "reserve");
   return {
     id: String(r.id),
     community_id: String(r.community_id),
@@ -193,6 +200,20 @@ function mapFacility(r: Record<string, unknown>): Facility {
     amenities: parseJsonArray(String(r.amenities ?? "[]")),
     rate_note: String(r.rate_note ?? ""),
     contact_name: String(r.contact_name ?? ""),
+    place_kind: kind === "pantry" ? "pantry" : "reserve",
+    address: String(r.address ?? ""),
+    city: String(r.city ?? ""),
+    zip: String(r.zip ?? ""),
+    serve_days: String(r.serve_days ?? ""),
+    serve_times: String(r.serve_times ?? ""),
+    residency_note: String(r.residency_note ?? ""),
+    visit_frequency: String(r.visit_frequency ?? ""),
+    id_docs: String(r.id_docs ?? ""),
+    other_notes: String(r.other_notes ?? ""),
+    phone: String(r.phone ?? ""),
+    website: String(r.website ?? ""),
+    listed_by: String(r.listed_by ?? ""),
+    listed_by_name: String(r.listed_by_name ?? ""),
   };
 }
 
@@ -1136,6 +1157,14 @@ export const requestFacility = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     const sql = await db();
     await ensureMember(sql, context.userId, data.communityId);
+    const kindRows = await sql<{ place_kind: string }>`
+      select coalesce(place_kind, 'reserve') as place_kind
+      from facilities where id = ${data.facilityId} limit 1
+    `;
+    if (!kindRows[0]) throw new Error("Place not found");
+    if (kindRows[0].place_kind === "pantry") {
+      throw new Error("Food pantries are listings, not reservable rooms.");
+    }
     if (!data.purpose.trim() || !data.date_on) throw new Error("Purpose and date required");
     const profile = await sql<{ display_name: string }>`
       select display_name from profiles where user_id = ${context.userId} limit 1
@@ -1187,6 +1216,159 @@ export const listMyBookings = createServerFn({ method: "GET" })
         facility_name: String(r.facility_name ?? ""),
       }),
     );
+  });
+
+type PantryInput = {
+  communityId: string;
+  name: string;
+  address: string;
+  city: string;
+  zip: string;
+  serve_days: string;
+  serve_times: string;
+  residency_note?: string;
+  visit_frequency?: string;
+  id_docs?: string;
+  other_notes?: string;
+  phone?: string;
+  website?: string;
+  description?: string;
+};
+
+function readPantryInput(data: PantryInput) {
+  const name = data.name.trim();
+  const address = data.address.trim();
+  const city = data.city.trim();
+  const zip = normalizePantryZip(data.zip);
+  const serve_days = data.serve_days.trim();
+  const serve_times = data.serve_times.trim();
+  if (!name) throw new Error("Pantry name required");
+  if (!address) throw new Error("Street address required");
+  if (!city) throw new Error("City required");
+  if (!isValidPantryZip(zip)) throw new Error("Use a 5-digit ZIP");
+  if (!serve_days) throw new Error("Serve days required — we will not invent hours");
+  if (!serve_times) throw new Error("Serve times required — we will not invent hours");
+  const website = data.website?.trim() ? normalizeWebsite(data.website) : "";
+  if (website && !isSafeWebsite(website)) throw new Error("Website must be an http(s) link");
+  return {
+    name,
+    address,
+    city,
+    zip,
+    serve_days,
+    serve_times,
+    residency_note: data.residency_note?.trim() ?? "",
+    visit_frequency: data.visit_frequency?.trim() ?? "",
+    id_docs: data.id_docs?.trim() ?? "",
+    other_notes: data.other_notes?.trim() ?? "",
+    phone: data.phone?.trim() ?? "",
+    website,
+    description: data.description?.trim() ?? "",
+  };
+}
+
+export const createPantryListing = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((input: PantryInput) => input)
+  .handler(async ({ context, data }) => {
+    const sql = await db();
+    await ensureMember(sql, context.userId, data.communityId);
+    const pantry = readPantryInput(data);
+    const dup = await sql<{ id: string }>`
+      select id from facilities
+      where community_id = ${data.communityId}
+        and place_kind = 'pantry'
+        and lower(name) = ${pantry.name.toLowerCase()}
+        and lower(address) = ${pantry.address.toLowerCase()}
+      limit 1
+    `;
+    if (dup[0]) {
+      throw new Error("That pantry is already listed. Ask the neighbor who added it to update hours.");
+    }
+    const profile = await sql<{ display_name: string }>`
+      select display_name from profiles where user_id = ${context.userId} limit 1
+    `;
+    const listedByName = profile[0]?.display_name ?? "Neighbor";
+    const id = uid("pantry");
+    await sql`
+      insert into facilities (
+        id, community_id, name, description, capacity, amenities, rate_note, contact_name,
+        place_kind, address, city, zip, serve_days, serve_times,
+        residency_note, visit_frequency, id_docs, other_notes, phone, website,
+        listed_by, listed_by_name
+      ) values (
+        ${id},
+        ${data.communityId},
+        ${pantry.name},
+        ${pantry.description},
+        null,
+        ${JSON.stringify(["Food pantry"])},
+        'Food pantry listing — not a reservable room',
+        ${listedByName},
+        'pantry',
+        ${pantry.address},
+        ${pantry.city},
+        ${pantry.zip},
+        ${pantry.serve_days},
+        ${pantry.serve_times},
+        ${pantry.residency_note},
+        ${pantry.visit_frequency},
+        ${pantry.id_docs},
+        ${pantry.other_notes},
+        ${pantry.phone},
+        ${pantry.website},
+        ${context.userId},
+        ${listedByName}
+      )
+    `;
+    return { id };
+  });
+
+export const updatePantryListing = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((input: PantryInput & { id: string }) => input)
+  .handler(async ({ context, data }) => {
+    const sql = await db();
+    const existing = await sql<{ id: string; community_id: string; listed_by: string }>`
+      select id, community_id, listed_by from facilities
+      where id = ${data.id} and place_kind = 'pantry' limit 1
+    `;
+    if (!existing[0]) throw new Error("Pantry listing not found");
+    if (existing[0].listed_by !== context.userId) {
+      throw new Error("Only the neighbor who added this pantry can update it");
+    }
+    await ensureMember(sql, context.userId, existing[0].community_id);
+    const pantry = readPantryInput({ ...data, communityId: existing[0].community_id });
+    await sql`
+      update facilities set
+        name = ${pantry.name},
+        description = ${pantry.description},
+        address = ${pantry.address},
+        city = ${pantry.city},
+        zip = ${pantry.zip},
+        serve_days = ${pantry.serve_days},
+        serve_times = ${pantry.serve_times},
+        residency_note = ${pantry.residency_note},
+        visit_frequency = ${pantry.visit_frequency},
+        id_docs = ${pantry.id_docs},
+        other_notes = ${pantry.other_notes},
+        phone = ${pantry.phone},
+        website = ${pantry.website}
+      where id = ${data.id} and listed_by = ${context.userId}
+    `;
+    return { id: data.id };
+  });
+
+export const listMyPantryListings = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    const sql = await db();
+    const rows = await sql<Record<string, unknown>>`
+      select * from facilities
+      where place_kind = 'pantry' and listed_by = ${context.userId}
+      order by name
+    `;
+    return rows.map(mapFacility);
   });
 
 export const createPersonalInvite = createServerFn({ method: "POST" })

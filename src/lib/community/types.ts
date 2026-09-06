@@ -123,6 +123,8 @@ export type CommunityEvent = {
   has_rsvp?: boolean;
 };
 
+export type PlaceKind = "reserve" | "pantry";
+
 export type Facility = {
   id: string;
   community_id: string;
@@ -132,6 +134,20 @@ export type Facility = {
   amenities: string[];
   rate_note: string;
   contact_name: string;
+  place_kind: PlaceKind;
+  address: string;
+  city: string;
+  zip: string;
+  serve_days: string;
+  serve_times: string;
+  residency_note: string;
+  visit_frequency: string;
+  id_docs: string;
+  other_notes: string;
+  phone: string;
+  website: string;
+  listed_by: string;
+  listed_by_name: string;
 };
 
 export type Neighbor = {

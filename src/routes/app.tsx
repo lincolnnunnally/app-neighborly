@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { AppShell } from "@/components/layout/app-shell";
 import { getMyMemberships, getMyProfile } from "@/lib/community/server";
-import { OFFER_SERVICE_PATH, OFFER_TOOL_PATH } from "@/lib/community/offer-path";
+import { OFFER_PANTRY_PATH, OFFER_SERVICE_PATH, OFFER_TOOL_PATH } from "@/lib/community/offer-path";
 
 export const Route = createFileRoute("/app")({
   component: AppLayout,
@@ -19,7 +19,9 @@ function AppLayout() {
       ? OFFER_SERVICE_PATH
       : location.pathname === OFFER_TOOL_PATH || location.pathname.startsWith(`${OFFER_TOOL_PATH}/`)
         ? OFFER_TOOL_PATH
-        : undefined;
+        : location.pathname === OFFER_PANTRY_PATH || location.pathname.startsWith(`${OFFER_PANTRY_PATH}/`)
+          ? OFFER_PANTRY_PATH
+          : undefined;
 
   useEffect(() => {
     if (isPending || !user) return;
