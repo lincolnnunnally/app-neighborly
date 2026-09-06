@@ -1,7 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getSql } from "@/lib/db";
+import { listBoardEvents, listSisterCityEvents, parseEventStartMs, type BoardEventRow } from "./board-events";
 import { ensureSeeded } from "./seed";
-import { findOrCreatePlace, lookupPlace } from "./place";
+import { findOrCreatePlace, resolveCommunityForPlace } from "./place";
 import { scoreFit, splitByFit, type FitPrefs } from "./fit";
 import type { Community } from "./types";
 
@@ -184,7 +185,7 @@ export async function buildWeekendPlan(opts?: {
   const q = (opts?.query || opts?.slug || "vidalia").trim() || "vidalia";
   const looked = opts?.create
     ? await findOrCreatePlace(sql, q, { create: true })
-    : await lookupPlace(sql, q);
+    : await resolveCommunityForPlace(sql, q);
   if (!looked.community) {
     const geo = looked.geo;
     const emptyName = geo?.city || q;
@@ -215,43 +216,29 @@ export async function buildWeekendPlan(opts?: {
   const lat = community.lat ?? looked.geo?.lat ?? VIDALIA_COORDS.lat;
   const lon = community.lon ?? looked.geo?.lon ?? VIDALIA_COORDS.lon;
   const { days, error } = await fetchWeather(lat, lon, tz);
-  const cutoffMs = Date.now() - 6 * 3600 * 1000;
-  const city = community.city || "Vidalia";
-  const state = community.state || "GA";
-  const rawRows = await sql<{
-    id: string;
-    title: string;
-    description: string;
-    kind: string;
-    location: string;
-    starts_at: string;
-    community_id: string;
-  }>`
-    select e.id, e.title, e.description, e.kind, e.location, e.starts_at::text as starts_at, e.community_id
-    from events e
-    join communities c on c.id = e.community_id
-    where e.community_id = ${community.id}
-       or c.slug = ${community.slug}
-       or (
-         lower(c.city) = ${city.toLowerCase()}
-         and lower(c.state) = ${state.toLowerCase()}
-         and c.kind in ('neighborhood', 'interest', 'church')
-       )
-    order by e.starts_at asc
-    limit 80
-  `;
-  const rows = rawRows.filter((row) => {
-    const t = Date.parse(String(row.starts_at));
-    return Number.isFinite(t) && t >= cutoffMs;
+  const boardRows = await listBoardEvents(sql, community.id);
+  const sisterRows = await listSisterCityEvents(sql, {
+    id: community.id,
+    city: community.city || "Vidalia",
+    state: community.state || "GA",
   });
+  const seen = new Set<string>();
+  const rows: BoardEventRow[] = [];
+  for (const row of [...boardRows, ...sisterRows]) {
+    if (seen.has(row.id)) continue;
+    seen.add(row.id);
+    rows.push(row);
+  }
 
   const all: WeekendSlot[] = [];
   const withChild: WeekendSlot[] = [];
   const alone: WeekendSlot[] = [];
 
   for (const row of rows) {
-    const wx = weatherFor(days, row.starts_at, tz);
-    const hour = hourInTz(row.starts_at, tz);
+    const startIso = row.starts_at;
+    const startMs = parseEventStartMs(startIso);
+    const wx = startMs != null ? weatherFor(days, startIso, tz) : null;
+    const hour = startMs != null ? hourInTz(startIso, tz) : 12;
     const indoor = /theatre|theater|gym|museum|library|church|indoor/i.test(`${row.title} ${row.location} ${row.description}`);
     const family = row.kind === "family" || /paw patrol|watch party|splash|kids|child|fun run/i.test(`${row.title} ${row.description}`);
     const adultOnly = /wine|girls night|21\+|not a kid|tribute|skynyrd|freebird/i.test(`${row.title} ${row.description}`);
@@ -393,3 +380,21 @@ export async function buildWeekendPlan(opts?: {
 export const getWeekendPlan = createServerFn({ method: "GET" }).handler(async () => {
   return buildWeekendPlan();
 });
+
+export const loadWeekendPlan = createServerFn({ method: "GET" })
+  .validator((input: { place?: string; query?: string; interests?: string; setting?: string; mobility?: string }) => input)
+  .handler(async ({ data }) => {
+    const interests = (data.interests || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const prefs: FitPrefs | null =
+      interests.length || data.setting || data.mobility
+        ? { interests, setting_pref: data.setting || "", mobility: data.mobility || "" }
+        : null;
+    return buildWeekendPlan({
+      slug: data.place,
+      query: data.query || data.place,
+      prefs,
+    });
+  });

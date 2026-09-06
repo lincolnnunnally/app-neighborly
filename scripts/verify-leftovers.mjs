@@ -35,3 +35,28 @@ console.log("zippopotam city-shape parse: ok");
 const times = "Sunday 9:00 AM, 10:45 AM, Wednesday 6:30 PM";
 assert.match(times, /Sunday 9:00 AM/);
 console.log("service_times sample kept as-is: ok");
+
+function parseEventStartMs(raw) {
+  if (raw instanceof Date) {
+    const t = raw.getTime();
+    return Number.isFinite(t) ? t : null;
+  }
+  const s = String(raw ?? "").trim();
+  if (!s) return null;
+  const isoish = s.includes("T") ? s : s.replace(" ", "T");
+  const withColonTz = isoish
+    .replace(/([+-]\d{2})(\d{2})$/, "$1:$2")
+    .replace(/([+-]\d{2})$/, "$1:00");
+  for (const candidate of [withColonTz, isoish, s]) {
+    const t = Date.parse(candidate);
+    if (Number.isFinite(t)) return t;
+  }
+  return null;
+}
+
+assert.ok(parseEventStartMs("2026-09-10 19:00:00-04"), "postgres tz without colon");
+assert.ok(parseEventStartMs("2026-09-10 19:00:00-04:00"), "postgres tz with colon");
+assert.ok(parseEventStartMs("2026-09-12T18:00:00-04:00"), "iso offset");
+assert.ok(parseEventStartMs(new Date("2026-09-10T19:00:00-04:00")), "Date object");
+assert.equal(parseEventStartMs(""), null);
+console.log("event start parse (board + weekend): ok");

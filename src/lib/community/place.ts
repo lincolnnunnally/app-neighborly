@@ -214,6 +214,14 @@ async function findExisting(
   geo: GeoPlace | null,
   q: string,
 ): Promise<Record<string, unknown> | null> {
+  // Slug first — same as `/c/$slug`. Do not let a ZIP collision steal Vidalia.
+  const slugFromQuery = slugify(q.replace(ZIP_RE, "").trim());
+  if (slugFromQuery) {
+    const byExactSlug = await sql<Record<string, unknown>>`
+      select * from communities where slug = ${slugFromQuery} limit 1
+    `;
+    if (byExactSlug[0]) return byExactSlug[0];
+  }
   if (geo?.zip && ZIP_RE.test(geo.zip)) {
     const byZip = await sql<Record<string, unknown>>`
       select * from communities
@@ -360,6 +368,28 @@ function applyGeo(community: Community, geo: GeoPlace | null): Community {
     lat: community.lat ?? geo.lat,
     lon: community.lon ?? geo.lon,
   };
+}
+
+/** Prefer an existing board slug (e.g. `place=vidalia`) before geocode/ZIP. */
+export async function resolveCommunityForPlace(
+  sql: Sql,
+  q: string,
+): Promise<PlaceLookup> {
+  const query = q.trim() || "vidalia";
+  if (!ZIP_RE.test(query)) {
+    const slug = slugify(query);
+    if (slug) {
+      const bySlug = await sql<Record<string, unknown>>`
+        select * from communities where slug = ${slug} limit 1
+      `;
+      if (bySlug[0]) {
+        const community = mapCommunity(bySlug[0]);
+        const refresh = await maybeRefreshListings(sql, community);
+        return { community, created: false, geo: null, refresh, wouldCreate: false };
+      }
+    }
+  }
+  return lookupPlace(sql, query);
 }
 
 export async function lookupPlace(

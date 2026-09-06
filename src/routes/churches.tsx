@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Church, Clock, ExternalLink, LocateFixed, MapPin, Music } from "lucide-react";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Badge } from "@/components/ui/badge";
@@ -18,16 +18,26 @@ type ChurchSearch = {
   q?: string;
   denomination?: string;
   style?: string;
+  today?: string;
+  morning?: string;
 };
+
+function asSearchString(v: unknown): string | undefined {
+  if (typeof v === "string" && v.trim()) return v.trim();
+  if (typeof v === "number" && Number.isFinite(v)) return String(v);
+  return undefined;
+}
 
 export const Route = createFileRoute("/churches")({
   validateSearch: (s: Record<string, unknown>): ChurchSearch => ({
-    zip: typeof s.zip === "string" ? s.zip : undefined,
-    city: typeof s.city === "string" ? s.city : undefined,
-    state: typeof s.state === "string" ? s.state : undefined,
-    q: typeof s.q === "string" ? s.q : undefined,
-    denomination: typeof s.denomination === "string" ? s.denomination : undefined,
-    style: typeof s.style === "string" ? s.style : undefined,
+    zip: asSearchString(s.zip),
+    city: asSearchString(s.city),
+    state: asSearchString(s.state),
+    q: asSearchString(s.q),
+    denomination: asSearchString(s.denomination),
+    style: asSearchString(s.style),
+    today: asSearchString(s.today),
+    morning: asSearchString(s.morning),
   }),
   head: () => ({
     meta: [
@@ -44,14 +54,15 @@ export const Route = createFileRoute("/churches")({
 
 function ChurchesPage() {
   const search = Route.useSearch();
+  const navigate = useNavigate({ from: "/churches" });
   const { user } = useCurrentUserState();
   const [zip, setZip] = useState(search.zip || "30474");
   const [city, setCity] = useState(search.city || "Vidalia");
   const [state, setState] = useState(search.state || "GA");
   const [denomination, setDenomination] = useState(search.denomination || "");
   const [style, setStyle] = useState(search.style || "any");
-  const [todayOnly, setTodayOnly] = useState(false);
-  const [morningOnly, setMorningOnly] = useState(false);
+  const [todayOnly, setTodayOnly] = useState(search.today === "1");
+  const [morningOnly, setMorningOnly] = useState(search.morning === "1");
   const [rows, setRows] = useState<CcChurch[]>([]);
   const [note, setNote] = useState("");
   const [today, setToday] = useState("");
@@ -100,14 +111,60 @@ function ChurchesPage() {
     return params;
   }
 
+  function churchSearch(next?: {
+    zip?: string;
+    city?: string;
+    state?: string;
+    denomination?: string;
+    style?: string;
+    todayOnly?: boolean;
+    morningOnly?: boolean;
+  }): ChurchSearch {
+    const z = (next?.zip ?? zip).trim();
+    const c = (next?.city ?? city).trim();
+    const st = (next?.state ?? state).trim();
+    const den = (next?.denomination ?? denomination).trim();
+    const sty = next?.style ?? style;
+    const today = next?.todayOnly ?? todayOnly;
+    const morning = next?.morningOnly ?? morningOnly;
+    return {
+      zip: z || undefined,
+      city: c || undefined,
+      state: st || undefined,
+      denomination: den || undefined,
+      style: sty && sty !== "any" ? sty : undefined,
+      today: today ? "1" : undefined,
+      morning: morning ? "1" : undefined,
+    };
+  }
+
+  function persistFilters(next?: Parameters<typeof churchSearch>[0]) {
+    void navigate({ to: "/churches", search: churchSearch(next), replace: true });
+  }
+
   useEffect(() => {
+    let nextZip = search.zip || zip;
+    let nextCity = search.city || city;
+    let nextState = search.state || state;
     if (!search.zip && !search.city) {
       const saved = readSavedPlace();
-      if (saved?.zip) setZip(saved.zip);
-      if (saved?.city) setCity(saved.city);
-      if (saved?.state) setState(saved.state);
+      if (saved?.zip) nextZip = saved.zip;
+      if (saved?.city) nextCity = saved.city;
+      if (saved?.state) nextState = saved.state;
+      setZip(nextZip);
+      setCity(nextCity);
+      setState(nextState);
     }
-    void load(queryParams());
+    persistFilters({ zip: nextZip, city: nextCity, state: nextState });
+    const params = new URLSearchParams();
+    if (nextZip.trim()) params.set("zip", nextZip.trim());
+    if (nextCity.trim()) params.set("city", nextCity.trim());
+    if (nextState.trim()) params.set("state", nextState.trim());
+    if (denomination.trim()) params.set("denomination", denomination.trim());
+    if (style && style !== "any") params.set("worship_style", style);
+    if (todayOnly) params.set("today", "1");
+    if (morningOnly) params.set("morning", "1");
+    void load(params);
     // initial only — later searches are explicit
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -160,6 +217,7 @@ function ChurchesPage() {
           className="surface-card space-y-4 p-5"
           onSubmit={(e) => {
             e.preventDefault();
+            persistFilters();
             void persistFromForm();
             void load(queryParams());
           }}

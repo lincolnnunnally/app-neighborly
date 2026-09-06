@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { CalendarPlus, CloudSun, MapPin, Sun, Thermometer, Umbrella } from "lucide-react";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Badge } from "@/components/ui/badge";
@@ -11,7 +11,7 @@ import { ActivityFilters, matchesDateWindow, type DateWindow } from "@/component
 import { getMyProfile } from "@/lib/community/server";
 import { readSavedPlace } from "@/lib/community/saved-place";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
-import type { WeekendPlan, WeekendSlot } from "@/lib/community/weekend";
+import { loadWeekendPlan, type WeekendPlan, type WeekendSlot } from "@/lib/community/weekend";
 import { EVENT_KINDS } from "@/lib/community/types";
 import { formatEventWhen } from "@/lib/utils";
 
@@ -22,6 +22,17 @@ export const Route = createFileRoute("/weekend")({
     place: typeof s.place === "string" ? s.place : undefined,
     q: typeof s.q === "string" ? s.q : undefined,
   }),
+  loaderDeps: ({ search }) => ({ place: search.place, q: search.q }),
+  loader: async ({ deps }) => {
+    const place = deps.place || undefined;
+    const query = deps.q || deps.place || "vidalia";
+    try {
+      const plan = await loadWeekendPlan({ data: { place, query } });
+      return { plan };
+    } catch {
+      return { plan: null as WeekendPlan | null };
+    }
+  },
   head: ({ match }) => {
     const search = (match.search ?? {}) as WeekendSearch;
     const place = search.place || "vidalia";
@@ -85,50 +96,48 @@ function SlotCard({ slot }: { slot: WeekendSlot }) {
 
 function WeekendPage() {
   const search = Route.useSearch();
+  const loaded = Route.useLoaderData();
+  const navigate = useNavigate({ from: "/weekend" });
   const { user } = useCurrentUserState();
-  const [plan, setPlan] = useState<WeekendPlan | null>(null);
+  const [plan, setPlan] = useState<WeekendPlan | null>(loaded.plan);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(!loaded.plan);
   const [mode, setMode] = useState<"all" | "child" | "alone">("all");
   const [dateWindow, setDateWindow] = useState<DateWindow>("week");
   const [kind, setKind] = useState("all");
 
   useEffect(() => {
-    const params = new URLSearchParams();
-    if (search.place) params.set("place", search.place);
-    else if (search.q) params.set("q", search.q);
-    else {
-      const saved = readSavedPlace();
-      if (saved?.slug) params.set("place", saved.slug);
-      else if (saved?.zip) params.set("q", saved.zip);
-      else if (saved?.city && saved.state) params.set("q", `${saved.city}, ${saved.state}`);
-      else params.set("place", "vidalia");
-    }
+    setPlan(loaded.plan);
+    setLoading(!loaded.plan);
+    setError("");
+  }, [loaded.plan]);
 
+  useEffect(() => {
+    if (!search.place && !search.q) {
+      const saved = readSavedPlace();
+      const place = saved?.slug || loaded.plan?.place.slug || "vidalia";
+      void navigate({ search: { place }, replace: true });
+    }
+  }, [search.place, search.q, loaded.plan?.place.slug, navigate]);
+
+  useEffect(() => {
+    if (!user) return;
     void (async () => {
-      if (user) {
-        try {
-          const profile = await getMyProfile();
-          if (profile?.interests?.length) params.set("interests", profile.interests.join(","));
-          if (profile?.setting_pref) params.set("setting", profile.setting_pref);
-          if (profile?.mobility) params.set("mobility", profile.mobility);
-          if (!search.place && !search.q && (profile?.home_zip || profile?.home_city)) {
-            params.set("q", profile.home_zip || `${profile.home_city}, ${profile.home_state}`);
-            params.delete("place");
-          }
-        } catch {
-          /* guest plan is fine */
-        }
-      }
       try {
-        const res = await fetch(`/api/weekend?${params.toString()}`);
-        const d = (await res.json()) as { ok?: boolean; plan?: WeekendPlan; error?: string };
-        if (!res.ok || !d.ok || !d.plan) {
-          setError(d.error || "Could not load this week's plan. Try another city or ZIP.");
-          return;
-        }
-        setPlan(d.plan);
+        const profile = await getMyProfile();
+        if (!profile?.interests?.length && !profile?.setting_pref && !profile?.mobility) return;
+        const next = await loadWeekendPlan({
+          data: {
+            place: search.place,
+            query: search.q || search.place || "vidalia",
+            interests: profile.interests?.join(","),
+            setting: profile.setting_pref || undefined,
+            mobility: profile.mobility || undefined,
+          },
+        });
+        setPlan(next);
       } catch {
-        setError("Could not load this week's plan. Try another city or ZIP.");
+        /* keep the board-path loader plan */
       }
     })();
   }, [search.place, search.q, user]);
@@ -249,13 +258,14 @@ function WeekendPage() {
         </div>
 
         <div className="grid gap-4 lg:grid-cols-2">
-          {slots.length === 0 && !error && (
+          {slots.length === 0 && !error && !loading && (
             <p className="text-sm text-fg-muted">
               {plan?.all?.length
                 ? "Nothing in this filter. Clear the date or kind to see the rest of the board."
                 : "No dated listings in this window yet. Host one — a book club, tennis, trivia — or use the Pal, Visit Vidalia, and Parks & Rec links below. We will not invent a crowd."}
             </p>
           )}
+          {loading && !plan && <p className="text-sm text-fg-muted">Loading this week&apos;s board…</p>}
           {slots.map((slot) => (
             <SlotCard key={slot.id} slot={slot} />
           ))}

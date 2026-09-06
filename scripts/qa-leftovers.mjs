@@ -20,8 +20,10 @@ try {
   await page.goto(`${BASE}/weekend?place=vidalia`, { waitUntil: "networkidle", timeout: 30000 });
   await page.waitForTimeout(800);
   const weekendText = await page.locator("main").innerText();
-  if (/No dated listings in this window yet/.test(weekendText) && !/pickleball|Celebrate Recovery|Lip Sync/i.test(weekendText)) {
+  if (/No dated listings in this window yet/.test(weekendText) && !/pickleball|Celebrate Recovery|Lip Sync|Girls Night Out|Downtown Vidalia/i.test(weekendText)) {
     notes.push("FAIL weekend empty of board listings");
+  } else if (!/Lip Sync|Celebrate Recovery|Girls Night Out|Downtown Vidalia/i.test(weekendText)) {
+    notes.push("FAIL weekend missing dated Vidalia board events (Sep 10–12 range)");
   } else {
     notes.push("OK weekend shows dated listings");
   }
@@ -60,6 +62,11 @@ try {
 
   await page.goto(`${BASE}/churches?zip=30474`, { waitUntil: "networkidle", timeout: 30000 });
   await page.waitForTimeout(1500);
+  notes.push(
+    /[?&]zip=30474/.test(page.url())
+      ? "OK churches URL kept zip=30474"
+      : `FAIL churches dropped zip (${page.url()})`,
+  );
   const churchText = await page.locator("main").innerText();
   notes.push(
     /FIRST BAPTIST CHURCH VIDALIA/i.test(churchText)

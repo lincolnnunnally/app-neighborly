@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { getSql } from "@/lib/db";
 import { authMiddleware } from "@/lib/auth/middleware";
 import { parseJsonArray, uid } from "@/lib/utils";
+import { eventStartIso } from "./board-events";
 import { ensureSeeded } from "./seed";
 import { blockedUserIds } from "./safety";
 import type {
@@ -153,8 +154,8 @@ function mapEvent(r: Record<string, unknown>): CommunityEvent {
     description: String(r.description ?? ""),
     kind: String(r.kind),
     location: String(r.location ?? ""),
-    starts_at: String(r.starts_at),
-    ends_at: String(r.ends_at ?? ""),
+    starts_at: eventStartIso(r.starts_at),
+    ends_at: r.ends_at == null || r.ends_at === "" ? "" : eventStartIso(r.ends_at),
     capacity: r.capacity == null ? null : Number(r.capacity),
     rsvp_count: Number(r.rsvp_count ?? 0),
     created_at: String(r.created_at),
