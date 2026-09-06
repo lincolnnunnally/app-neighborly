@@ -88,7 +88,22 @@ export type Service = {
   is_business: boolean;
   is_youth: boolean;
   contact_hint: string;
+  photo_url: string;
+  portfolio_url: string;
+  maker_bio: string;
   created_at: string;
+};
+
+export type ServiceInquiry = {
+  id: string;
+  service_id: string;
+  user_id: string;
+  inquirer_name: string;
+  message: string;
+  status: string;
+  created_at: string;
+  service_title?: string;
+  provider_name?: string;
 };
 
 export type CommunityEvent = {
@@ -246,8 +261,19 @@ export const SERVICE_CATEGORIES = [
   { id: "professional", label: "Professional" },
   { id: "care", label: "Care" },
   { id: "recreation", label: "Recreation" },
+  { id: "artisan", label: "Maker / artisan" },
+  { id: "wood", label: "Woodworking / carving" },
+  { id: "fiber", label: "Fiber, textile & sewing" },
+  { id: "metal", label: "Jewelry, metal & smithing" },
+  { id: "visual", label: "Art, photo & print" },
+  { id: "foodcraft", label: "Baked goods & food craft" },
+  { id: "home_goods", label: "Handmade home goods" },
   { id: "other", label: "Other" },
 ];
+
+export function serviceCategoryLabel(id: string): string {
+  return SERVICE_CATEGORIES.find((c) => c.id === id)?.label ?? id;
+}
 
 export const EVENT_KINDS = [
   { id: "invite", label: "Who's interested? I'll host if people come" },

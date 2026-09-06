@@ -33,14 +33,16 @@ import {
   type Community,
 } from "@/lib/community/types";
 import { recommendNextSteps, suggestedCommunitySlugs } from "@/lib/community/recommendations";
+import { destinationAfterJoin } from "@/lib/community/offer-path";
 import { cn } from "@/lib/utils";
 
-type OnboardingSearch = { community?: string; code?: string };
+type OnboardingSearch = { community?: string; code?: string; next?: string };
 
 export const Route = createFileRoute("/onboarding")({
   validateSearch: (s: Record<string, unknown>): OnboardingSearch => ({
     community: typeof s.community === "string" ? s.community : undefined,
     code: typeof s.code === "string" ? s.code : undefined,
+    next: typeof s.next === "string" ? s.next : undefined,
   }),
   component: OnboardingPage,
 });
@@ -259,7 +261,7 @@ function OnboardingPage() {
         },
       });
       toast.success("You're in — welcome to the neighborhood");
-      await navigate({ to: "/app" });
+      await navigate(destinationAfterJoin(search.next));
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Could not join communities");
     } finally {

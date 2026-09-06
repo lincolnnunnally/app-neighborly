@@ -14,6 +14,7 @@ import type {
   Neighbor,
   Profile,
   Service,
+  ServiceInquiry,
 } from "./types";
 
 export type HelpOffer = {
@@ -43,7 +44,7 @@ export type FacilityBooking = {
 
 export type ActivityItem = {
   id: string;
-  kind: "offer" | "event" | "booking" | "need";
+  kind: "offer" | "event" | "booking" | "need" | "inquiry";
   title: string;
   detail: string;
   created_at: string;
@@ -140,7 +141,24 @@ function mapService(r: Record<string, unknown>): Service {
     is_business: Boolean(r.is_business),
     is_youth: Boolean(r.is_youth),
     contact_hint: String(r.contact_hint ?? ""),
+    photo_url: String(r.photo_url ?? ""),
+    portfolio_url: String(r.portfolio_url ?? ""),
+    maker_bio: String(r.maker_bio ?? ""),
     created_at: String(r.created_at),
+  };
+}
+
+function mapInquiry(r: Record<string, unknown>): ServiceInquiry {
+  return {
+    id: String(r.id),
+    service_id: String(r.service_id),
+    user_id: String(r.user_id),
+    inquirer_name: String(r.inquirer_name),
+    message: String(r.message ?? ""),
+    status: String(r.status),
+    created_at: String(r.created_at),
+    service_title: r.service_title == null ? undefined : String(r.service_title),
+    provider_name: r.provider_name == null ? undefined : String(r.provider_name),
   };
 }
 
@@ -879,6 +897,9 @@ export const createService = createServerFn({ method: "POST" })
       is_business?: boolean;
       is_youth?: boolean;
       contact_hint?: string;
+      photo_url?: string;
+      portfolio_url?: string;
+      maker_bio?: string;
     }) => input,
   )
   .handler(async ({ context, data }) => {
@@ -894,7 +915,8 @@ export const createService = createServerFn({ method: "POST" })
     await sql`
       insert into services (
         id, community_id, user_id, provider_name, title, description,
-        category, pricing, price_note, is_business, is_youth, contact_hint
+        category, pricing, price_note, is_business, is_youth, contact_hint,
+        photo_url, portfolio_url, maker_bio
       ) values (
         ${id},
         ${data.communityId},
@@ -907,10 +929,87 @@ export const createService = createServerFn({ method: "POST" })
         ${data.price_note ?? ""},
         ${Boolean(data.is_business)},
         ${Boolean(data.is_youth)},
-        ${data.contact_hint ?? ""}
+        ${data.contact_hint ?? ""},
+        ${data.photo_url?.trim() ?? ""},
+        ${data.portfolio_url?.trim() ?? ""},
+        ${data.maker_bio?.trim() ?? ""}
       )
     `;
     return { id };
+  });
+
+export const inquireService = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((input: { serviceId: string; message?: string }) => input)
+  .handler(async ({ context, data }) => {
+    const sql = await db();
+    const service = await sql<{
+      id: string;
+      community_id: string;
+      user_id: string;
+      title: string;
+    }>`
+      select id, community_id, user_id, title from services where id = ${data.serviceId} limit 1
+    `;
+    if (!service[0]) throw new Error("Service not found");
+    if (service[0].user_id === context.userId) {
+      throw new Error("That's your own listing");
+    }
+    await ensureMember(sql, context.userId, service[0].community_id);
+
+    const already = await sql`
+      select id from service_inquiries
+      where service_id = ${data.serviceId} and user_id = ${context.userId}
+      limit 1
+    `;
+    if (already.length > 0) return { ok: true as const, already: true };
+
+    const profile = await sql<{ display_name: string }>`
+      select display_name from profiles where user_id = ${context.userId} limit 1
+    `;
+    const name = profile[0]?.display_name ?? "Neighbor";
+    await sql`
+      insert into service_inquiries (id, service_id, user_id, inquirer_name, message, status)
+      values (
+        ${uid("inq")},
+        ${data.serviceId},
+        ${context.userId},
+        ${name},
+        ${data.message?.trim() || "I'd like to ask about this service."},
+        'sent'
+      )
+    `;
+    return { ok: true as const, already: false };
+  });
+
+export const listMyIncomingInquiries = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    const sql = await db();
+    const rows = await sql<Record<string, unknown>>`
+      select i.*, s.title as service_title, s.provider_name
+      from service_inquiries i
+      join services s on s.id = i.service_id
+      where s.user_id = ${context.userId}
+      order by i.created_at desc
+      limit 40
+    `;
+    return rows.map(mapInquiry);
+  });
+
+export const listMyOutgoingInquiries = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    const sql = await db();
+    const rows = await sql<Record<string, unknown>>`
+      select i.*, s.title as service_title, s.provider_name
+      from service_inquiries i
+      join services s on s.id = i.service_id
+      where i.user_id = ${context.userId}
+      order by i.created_at desc
+      limit 40
+    `;
+    return rows.map(mapInquiry);
   });
 
 // ── Events ──────────────────────────────────────────────────────────────────
@@ -1171,6 +1270,24 @@ export const getMyActivity = createServerFn({ method: "GET" })
         detail: `${r.date_on} · ${r.status}`,
         created_at: String(r.created_at),
         href: "/app/places",
+      });
+    }
+
+    const inquiriesIn = await sql<Record<string, unknown>>`
+      select i.id, i.inquirer_name, i.message, i.created_at, s.title
+      from service_inquiries i
+      join services s on s.id = i.service_id
+      where s.user_id = ${context.userId}
+      order by i.created_at desc limit 8
+    `;
+    for (const r of inquiriesIn) {
+      items.push({
+        id: `inq_in_${r.id}`,
+        kind: "inquiry",
+        title: `${r.inquirer_name} asked about your service`,
+        detail: `${r.title}${r.message ? ` — ${r.message}` : ""}`,
+        created_at: String(r.created_at),
+        href: "/app/services",
       });
     }
 

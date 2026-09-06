@@ -7,6 +7,7 @@ import {
   HandHeart,
   QrCode,
   Sparkles,
+  Wrench,
 } from "lucide-react";
 import { useCurrentUser } from "@/lib/auth/use-current-user";
 import { Badge } from "@/components/ui/badge";
@@ -18,10 +19,12 @@ import {
   getMyActivity,
   getMyMemberships,
   getMyProfile,
+  listMyIncomingInquiries,
   listMyIncomingOffers,
   type ActivityItem,
   type HelpOffer,
 } from "@/lib/community/server";
+import type { ServiceInquiry } from "@/lib/community/types";
 import { recommendNextSteps } from "@/lib/community/recommendations";
 import type {
   CommunityEvent,
@@ -45,21 +48,24 @@ function AppHome() {
   const [events, setEvents] = useState<CommunityEvent[]>([]);
   const [activity, setActivity] = useState<ActivityItem[]>([]);
   const [incoming, setIncoming] = useState<HelpOffer[]>([]);
+  const [serviceNotes, setServiceNotes] = useState<ServiceInquiry[]>([]);
   const [primaryName, setPrimaryName] = useState("your community");
   const [primarySlug, setPrimarySlug] = useState("vidalia");
 
   useEffect(() => {
     async function load() {
-      const [p, m, act, inc] = await Promise.all([
+      const [p, m, act, inc, inq] = await Promise.all([
         getMyProfile(),
         getMyMemberships(),
         getMyActivity(),
         listMyIncomingOffers(),
+        listMyIncomingInquiries(),
       ]);
       setProfile(p);
       setMemberships(m);
       setActivity(act);
       setIncoming(inc.filter((o) => o.status === "offered"));
+      setServiceNotes(inq);
       const primary = m.find((x) => x.is_primary) ?? m[0];
       if (primary?.community) {
         setPrimaryName(primary.community.name);
@@ -109,6 +115,9 @@ function AppHome() {
           <Button asChild size="sm" variant="secondary">
             <Link to="/app/needs">Post or answer a need</Link>
           </Button>
+          <Button asChild size="sm" variant="secondary">
+            <Link to="/app/services">Register a service</Link>
+          </Button>
         </div>
       </div>
 
@@ -157,6 +166,30 @@ function AppHome() {
                 </a>
               ),
             )}
+          </CardContent>
+        </Card>
+      )}
+
+      {serviceNotes.length > 0 && (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg">Messages about your services</CardTitle>
+            <CardDescription>
+              Neighbors wrote you through Neighborly. Reply in person — no payments here.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {serviceNotes.slice(0, 4).map((i) => (
+              <div key={i.id} className="rounded-[var(--radius-lg)] border border-border p-3">
+                <p className="text-sm font-medium">
+                  {i.inquirer_name} on “{i.service_title}”
+                </p>
+                <p className="text-xs text-fg-muted">{i.message}</p>
+              </div>
+            ))}
+            <Button asChild size="sm" variant="secondary">
+              <Link to="/app/services">Open services</Link>
+            </Button>
           </CardContent>
         </Card>
       )}
@@ -241,6 +274,12 @@ function AppHome() {
             title: "Events",
             body: "RSVP & host",
             icon: CalendarDays,
+          },
+          {
+            to: "/app/services" as const,
+            title: "Services",
+            body: "Offer a skill",
+            icon: Wrench,
           },
           {
             to: "/app/places" as const,
