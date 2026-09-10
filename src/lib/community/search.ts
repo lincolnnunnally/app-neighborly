@@ -34,8 +34,15 @@ export type SearchHit = {
   href: string;
   community_slug: string;
   community_name: string;
-  /** Higher is better. Computed by scoreHit. */
+  /** Higher is better. Computed by scoreFields. */
   score: number;
+  /**
+   * True when only a SYNONYM matched, never a word the neighbor typed. A search
+   * for "bible study" on a board with no Bible study still turns up churches
+   * via expansion; those are worth offering, but never as if they were what was
+   * asked for.
+   */
+  loose: boolean;
   /** ISO date used only to break ties between equally relevant hits. */
   created_at?: string;
 };
@@ -266,6 +273,12 @@ export function parseQuery(raw: string): ParsedQuery {
   };
 }
 
+/**
+ * Ceiling that scoreFields() puts on a synonym-only match. Anything at or below
+ * it matched no typed word, so callers present it as "loosely related".
+ */
+export const LOOSE_MATCH_MAX = 5;
+
 export type ScoredField = {
   /** Raw text from a real row. */
   text: string;
@@ -334,7 +347,7 @@ export function scoreFields(parsed: ParsedQuery, fields: ScoredField[]): number 
         if (f.text && f.text.split(" ").some((w) => fold(w) === token)) score += f.weight;
       }
     }
-    return score > 0 ? Math.min(score, 5) : 0;
+    return score > 0 ? Math.min(score, LOOSE_MATCH_MAX) : 0;
   }
 
   return score;
@@ -343,12 +356,18 @@ export function scoreFields(parsed: ParsedQuery, fields: ScoredField[]): number 
 /** Sort by score, then by recency, then alphabetically — stable and explainable. */
 export function rankHits(hits: SearchHit[]): SearchHit[] {
   return [...hits].sort((a, b) => {
+    // Every direct match outranks every loose one, whatever the raw scores.
+    if (a.loose !== b.loose) return a.loose ? 1 : -1;
     if (b.score !== a.score) return b.score - a.score;
     const at = a.created_at ? Date.parse(a.created_at) : 0;
     const bt = b.created_at ? Date.parse(b.created_at) : 0;
     if (Number.isFinite(bt) && Number.isFinite(at) && bt !== at) return bt - at;
     return a.title.localeCompare(b.title);
   });
+}
+
+export function isLoose(score: number): boolean {
+  return score > 0 && score <= LOOSE_MATCH_MAX;
 }
 
 export function countByKind(hits: SearchHit[]): Record<SearchKind, number> {
@@ -412,7 +431,13 @@ export function suggestDoors(parsed: ParsedQuery, opts: { slug?: string } = {}):
     });
   }
 
-  if (has("church", "bible", "study", "ministry", "worship", "prayer", "faith", "fellowship")) {
+  if (has("church", "bible", "study", "ministry", "worship", "prayer", "faith", "fellowship", "group")) {
+    doors.push({
+      id: "ministry",
+      title: "Bible studies, ministry & ways to serve",
+      why: "Gatherings and volunteer openings neighbors have actually posted, plus how to start one.",
+      href: `/ministry?place=${slug}`,
+    });
     doors.push({
       id: "churches",
       title: "Churches near you",

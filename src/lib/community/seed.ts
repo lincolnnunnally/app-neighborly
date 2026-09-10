@@ -1,4 +1,5 @@
 import type { Sql } from "@/lib/db";
+import { TOOMBS_PANTRY_LISTINGS } from "./toombs-pantries";
 
 /**
  * Seed first-market structure once per DB lifetime.
@@ -16,6 +17,97 @@ export async function ensureSeeded(sql: Sql): Promise<void> {
   await ensureVidaliaV3(sql);
   await ensurePlaceCoords(sql);
   await refreshVidaliaPublicEvents(sql);
+  await refreshToombsPantries(sql);
+}
+
+/**
+ * Publish the sourced Toombs County pantry listings.
+ *
+ * Not seed_meta-gated: like refreshVidaliaPublicEvents, this re-runs so a
+ * correction in toombs-pantries.ts reaches an existing database. It only ever
+ * touches rows still owned by 'system' — the moment a neighbor claims a listing
+ * (updatePantryListing sets listed_by to them), their version is final and this
+ * function leaves it alone. That is the whole point of claiming.
+ *
+ * These rows are public-source transcriptions, not verified listings, so
+ * verified_on is deliberately left empty and the card renders "Unconfirmed".
+ */
+export async function refreshToombsPantries(sql: Sql): Promise<void> {
+  for (const p of TOOMBS_PANTRY_LISTINGS) {
+    const community = await sql<{ id: string }>`
+      select id from communities where id = ${p.communityId}
+    `;
+    if (community.length === 0) continue;
+
+    try {
+      const existing = await sql<{ id: string; listed_by: string }>`
+        select id, listed_by from facilities where id = ${p.id}
+      `;
+
+      if (existing.length > 0) {
+        if (existing[0].listed_by !== "system") continue; // a neighbor owns it now
+        await sql`
+          update facilities set
+            name = ${p.name},
+            description = ${p.description},
+            address = ${p.address},
+            city = ${p.city},
+            zip = ${p.zip},
+            serve_days = ${p.serve_days},
+            serve_times = ${p.serve_times},
+            residency_note = ${p.residency_note},
+            visit_frequency = ${p.visit_frequency},
+            id_docs = ${p.id_docs},
+            other_notes = ${p.other_notes},
+            phone = ${p.phone},
+            website = ${p.website},
+            source_name = ${p.source_name},
+            source_url = ${p.source_url}
+          where id = ${p.id} and listed_by = 'system'
+        `;
+        continue;
+      }
+
+      await sql`
+        insert into facilities (
+          id, community_id, name, description, capacity, amenities, rate_note, contact_name,
+          place_kind, address, city, zip, serve_days, serve_times,
+          residency_note, visit_frequency, id_docs, other_notes, phone, website,
+          listed_by, listed_by_name, source_name, source_url, verified_on
+        ) values (
+          ${p.id},
+          ${p.communityId},
+          ${p.name},
+          ${p.description},
+          null,
+          ${JSON.stringify(["Food pantry"])},
+          'Food pantry listing — not a reservable room',
+          ${p.name},
+          'pantry',
+          ${p.address},
+          ${p.city},
+          ${p.zip},
+          ${p.serve_days},
+          ${p.serve_times},
+          ${p.residency_note},
+          ${p.visit_frequency},
+          ${p.id_docs},
+          ${p.other_notes},
+          ${p.phone},
+          ${p.website},
+          'system',
+          'Public listing',
+          ${p.source_name},
+          ${p.source_url},
+          ''
+        )
+      `;
+    } catch {
+      // Columns arrive with migration 0012; a database mid-migration must not
+      // take the whole board down.
+      return;
+    }
+  }
 }
 
 async function ensurePlaceCoords(sql: Sql): Promise<void> {

@@ -132,6 +132,9 @@ function SearchPage() {
 
   const hits = result?.hits ?? [];
   const counts = result?.counts;
+  // Split so a synonym-only pile never masquerades as "17 results".
+  const direct = hits.filter((h) => !h.loose);
+  const loose = hits.filter((h) => h.loose);
 
   return (
     <div className="min-h-dvh bg-bg">
@@ -169,7 +172,7 @@ function SearchPage() {
         {q.trim() ? (
           <div className="flex flex-wrap gap-2" data-testid="search-scopes">
             {SEARCH_SCOPES.map((s) => {
-              const n = s.id === "all" ? hits.length : (counts?.[s.id] ?? 0);
+              const n = s.id === "all" ? direct.length : (counts?.[s.id] ?? 0);
               // Hide empty scopes so the row stays honest about what was found.
               if (s.id !== "all" && s.id !== scope && n === 0) return null;
               return (
@@ -210,12 +213,27 @@ function SearchPage() {
         {status === "ready" && (
           <section className="space-y-3" data-testid="search-results">
             <p className="text-sm text-fg-muted">
-              {hits.length === 0
+              {direct.length === 0
                 ? `Nothing on the boards matches “${q}” yet.`
-                : `${hits.length} ${hits.length === 1 ? "result" : "results"} for “${q}”`}
+                : `${direct.length} ${direct.length === 1 ? "result" : "results"} for “${q}”`}
             </p>
-            {hits.map((hit) => (
+            {direct.map((hit) => (
               <ResultCard key={`${hit.kind}-${hit.id}`} hit={hit} query={q} />
+            ))}
+          </section>
+        )}
+
+        {status === "ready" && loose.length > 0 && (
+          <section className="space-y-3" data-testid="search-loose">
+            <h2 className="font-display text-lg font-semibold">
+              {direct.length === 0 ? "Closest things on the board" : "Related"}
+            </h2>
+            <p className="text-sm text-fg-muted">
+              These do not contain the words you typed — they came up because they are
+              about something similar. Nothing here is a match we are dressing up.
+            </p>
+            {loose.slice(0, 12).map((hit) => (
+              <ResultCard key={`loose-${hit.kind}-${hit.id}`} hit={hit} query={q} />
             ))}
           </section>
         )}
@@ -223,7 +241,7 @@ function SearchPage() {
         {status === "ready" && (result?.doors.length ?? 0) > 0 && (
           <section className="space-y-3" data-testid="search-doors">
             <h2 className="font-display text-lg font-semibold">
-              {hits.length === 0 ? "Try these instead" : "Related places to look"}
+              {direct.length === 0 ? "Try these instead" : "Related places to look"}
             </h2>
             {result?.doors.map((door) =>
               door.external ? (
@@ -254,7 +272,7 @@ function SearchPage() {
           </section>
         )}
 
-        {status === "ready" && hits.length === 0 && (
+        {status === "ready" && direct.length === 0 && (
           <div className="surface-card space-y-3 p-4">
             <p className="text-sm text-fg-muted">
               An empty result is the honest answer — nobody has posted this yet. You can be

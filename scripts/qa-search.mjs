@@ -53,6 +53,33 @@ try {
   );
   await page.screenshot({ path: `${SHOTS}/search-food-pantry.png`, fullPage: true });
 
+  // 2b. Pantries must be findable AND must never look verified.
+  const pantryHitCount = await page.getByTestId("search-hit-pantry").count();
+  ok(pantryHitCount > 0, `"food pantry" returns pantry listings (${pantryHitCount})`,
+    'searching "food pantry" returned no pantry listings');
+  await page.goto(`${BASE}/c/vidalia?tab=places&cat=pantry`, { waitUntil: "networkidle", timeout: 45000 });
+  await page.waitForTimeout(1200);
+  const boardPantries = await page.locator('[data-testid^="pantry-pantry_pub"]').count();
+  const unconfirmed = await page.getByTestId("pantry-unconfirmed").count();
+  ok(boardPantries > 0, `board lists published pantries (${boardPantries})`, "board lists no pantries");
+  ok(
+    unconfirmed === boardPantries,
+    "every published pantry is labelled Unconfirmed",
+    `${boardPantries - unconfirmed} published pantries are not labelled Unconfirmed`,
+  );
+  const pantryText = await page.getByTestId("pantry-section").innerText();
+  ok(
+    /confirm before you go|call before you go|call ahead/i.test(pantryText),
+    "pantry cards tell you to confirm before going",
+    "pantry cards omit the call-ahead warning",
+  );
+  ok(
+    /Toombs County Community Resource Guide|directory/i.test(pantryText),
+    "pantry cards cite where their facts came from",
+    "pantry cards cite no source",
+  );
+  await page.screenshot({ path: `${SHOTS}/search-pantry-board.png`, fullPage: true });
+
   // 3. Free text that is NOT a preset chip — the actual complaint.
   await page.goto(`${BASE}/search?q=bible+study`, { waitUntil: "networkidle", timeout: 45000 });
   await page.waitForTimeout(1200);
@@ -67,7 +94,58 @@ try {
     "bible study offers the Churches door",
     "bible study offered no Churches door",
   );
+  ok(
+    /Bible studies, ministry & ways to serve/i.test(bibleText),
+    "bible study offers the Ministry door",
+    "bible study offered no Ministry door",
+  );
+  // Synonym-only hits must never be presented as if they were asked for.
+  const directBible = await page
+    .locator('[data-testid="search-results"] [data-testid^="search-hit-"]')
+    .count();
+  const looseBible = await page
+    .locator('[data-testid="search-loose"] [data-testid^="search-hit-"]')
+    .count();
+  ok(
+    directBible === 0 ? looseBible >= 0 : true,
+    `bible study: ${directBible} direct, ${looseBible} loose`,
+    "unexpected bible study result split",
+  );
+  if (directBible === 0) {
+    ok(
+      /Nothing on the boards matches/i.test(bibleText),
+      "no direct bible-study match is stated plainly",
+      "a synonym-only result set was passed off as matches",
+    );
+  }
   await page.screenshot({ path: `${SHOTS}/search-bible-study.png`, fullPage: true });
+
+  // 3b. The ministry door itself.
+  await page.goto(`${BASE}/ministry?place=vidalia`, { waitUntil: "networkidle", timeout: 45000 });
+  await page.waitForTimeout(1200);
+  ok((await page.getByTestId("ministry-studies").count()) > 0, "ministry lists studies section", "ministry studies section missing");
+  ok((await page.getByTestId("ministry-serve").count()) > 0, "ministry lists ways to serve", "ministry serve section missing");
+  ok(
+    (await page.getByTestId("ministry-get-involved").count()) > 0,
+    "ministry offers a way to get involved",
+    "ministry offers no way to get involved",
+  );
+  const ministryText = await page.locator("main").innerText();
+  ok(
+    /we will not invent a group/i.test(ministryText),
+    "ministry empty state stays honest",
+    "ministry page lost its honest empty state",
+  );
+  await page.screenshot({ path: `${SHOTS}/ministry.png`, fullPage: true });
+
+  // 3c. Signing in must return you where you were headed.
+  await page.goto(`${BASE}/app/events`, { waitUntil: "networkidle", timeout: 45000 });
+  await page.waitForTimeout(800);
+  ok(
+    /redirect=%2Fapp%2Fevents/.test(page.url()),
+    "signed-out app route keeps its redirect target",
+    `login redirect lost the destination: ${page.url()}`,
+  );
 
   // 4. Scope chips narrow without hiding the free text.
   await page.goto(`${BASE}/search?q=vidalia`, { waitUntil: "networkidle", timeout: 45000 });

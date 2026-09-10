@@ -63,7 +63,7 @@ import { CC_GET_HELP, isPantry } from "@/lib/community/pantry";
 import { PantryDetails } from "@/components/community/pantry-details";
 import { formatEventWhen } from "@/lib/utils";
 import { ActivityFilters, matchesDateWindow, type DateWindow } from "@/components/community/activity-filters";
-import { parseQuery, scoreFields, type ScoredField } from "@/lib/community/search";
+import { LOOSE_MATCH_MAX, parseQuery, scoreFields, type ScoredField } from "@/lib/community/search";
 
 type BoardSearch = { tab?: string; cat?: string; q?: string };
 
@@ -186,11 +186,14 @@ function CommunityPublicPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryDraft]);
 
+  // Board filtering keeps only DIRECT matches — a row containing a word actually
+  // typed. Synonym-only hits are useful on /search, where they get their own
+  // labelled section, but here they would silently reshuffle every tab.
   function keep<T>(rows: T[], fields: (row: T) => ScoredField[]): T[] {
     if (boardQuery.isEmpty) return rows;
     return rows
       .map((row) => ({ row, score: scoreFields(boardQuery, fields(row)) }))
-      .filter((scored) => scored.score > 0)
+      .filter((scored) => scored.score > LOOSE_MATCH_MAX)
       .sort((a, b) => b.score - a.score)
       .map((scored) => scored.row);
   }
@@ -426,8 +429,9 @@ function CommunityPublicPage() {
             {queryDraft.trim() ? (
               <>
                 <span data-testid="board-filter-count">
-                  {filteredCount} of {totalCount} listings match “{queryDraft.trim()}” — open each
-                  tab to see them.
+                  {filteredCount === 0
+                    ? `Nothing on this board contains “${queryDraft.trim()}”.`
+                    : `${filteredCount} of ${totalCount} listings match “${queryDraft.trim()}” — open each tab to see them.`}
                 </span>
                 <button
                   type="button"

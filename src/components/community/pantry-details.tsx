@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import {
   fieldOrUnlisted,
   isPublicListing,
+  isUnconfirmedListing,
   pantryAddressLine,
   pantryCallAheadNote,
   pantryServeLine,
@@ -24,6 +25,11 @@ export function PantryDetails({
         {pantry.city ? <Badge variant="outline">{pantry.city}</Badge> : null}
         {pantry.zip ? <Badge variant="secondary">{pantry.zip}</Badge> : null}
         {isPublicListing(pantry) ? <Badge variant="outline">Public listing</Badge> : null}
+        {isUnconfirmedListing(pantry) ? (
+          <Badge variant="secondary" data-testid="pantry-unconfirmed">
+            Unconfirmed
+          </Badge>
+        ) : null}
       </div>
       <h3 className="font-medium text-fg">{pantry.name}</h3>
       <p className="flex items-start gap-1.5 text-sm text-fg-muted">
@@ -59,7 +65,9 @@ export function PantryDetails({
           needs to know where these facts came from and how old they are. */}
       <p className="flex items-start gap-1.5 text-xs text-fg-subtle">
         <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-        {pantryCallAheadNote(pantry)}
+        {isUnconfirmedListing(pantry)
+          ? `Copied from a public directory and not confirmed by anyone local. ${pantryCallAheadNote(pantry)}`
+          : pantryCallAheadNote(pantry)}
       </p>
       {pantrySourceLine(pantry) ? (
         <p className="flex items-start gap-1.5 text-xs text-fg-subtle">

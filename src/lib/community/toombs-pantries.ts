@@ -1,0 +1,324 @@
+/**
+ * Toombs County, Georgia food pantry listings.
+ *
+ * WHY THESE ARE HERE AT ALL
+ * A neighbor searching "food pantry" on the Vidalia board found nothing, because
+ * the directory only ever held pantries a neighbor had personally added. These
+ * rows publish what real, citable public sources say exists in Toombs County
+ * (Vidalia, Lyons) so the search has something honest to return.
+ *
+ * WHAT THESE ARE NOT
+ * They are NOT verified by us. Every row below is transcribed from a public
+ * source that we could read but could not independently confirm, so each ships
+ * as a `Public listing` with `verified_on` empty — the UI renders that as
+ * "Unconfirmed" with a call-ahead line and a link to the source. Any member can
+ * claim a row and correct it (see updatePantryListing), which is the intended
+ * path from "a directory says this" to "a neighbor stands behind this".
+ *
+ * THE RULES THIS FILE FOLLOWS (DC-1, applied to third-party data)
+ * 1. No field is written unless a named source states it. Unknown stays empty —
+ *    the UI already prints "Not listed" and "confirm before you go".
+ * 2. `serve_days` / `serve_times` are populated ONLY when two independent
+ *    sources agree. Hours are the field that sends someone on a wasted trip.
+ *    A single-source or conflicting hour goes in `other_notes` as a REPORTED
+ *    hour, never in the hours field.
+ * 3. When sources disagree on an ADDRESS, no address is published at all —
+ *    only the phone, plus both candidate addresses in the notes. Driving a
+ *    hungry family to the wrong building is the worst thing this file could do.
+ * 4. Organizations outside Toombs County are excluded no matter how often they
+ *    surface under a "Vidalia GA" search (Mount Vernon / Ailey are Montgomery
+ *    County; Glennville and Reidsville are Tattnall; Soperton is Treutlen).
+ * 5. Programs with no fixed address (Second Harvest's Toombs mobile pantry,
+ *    Bread of Heaven's rotating drive-through) are deliberately NOT listed as
+ *    places. A place row implies "go here", which is false for those. They
+ *    belong on the events board when a date and site are known.
+ *
+ * PRIMARY SOURCE
+ * Southeast Health District (Georgia Department of Public Health) —
+ * "Toombs County Community Resource Guide", dated 17 Sep 2025, section
+ * "Food Banks". A county-scoped, dated, government-published list.
+ */
+
+export type PublicPantryListing = {
+  /** Stable row id — changing it would orphan a neighbor's claim. */
+  id: string;
+  /** Board this belongs to. Toombs County listings live on the Vidalia board. */
+  communityId: string;
+  name: string;
+  /** Empty when sources disagree — see rule 3. */
+  address: string;
+  city: string;
+  zip: string;
+  serve_days: string;
+  serve_times: string;
+  residency_note: string;
+  visit_frequency: string;
+  id_docs: string;
+  other_notes: string;
+  phone: string;
+  /** The organization's own site, when it has one. Not the source. */
+  website: string;
+  description: string;
+  /** Where these facts were read. Shown, and linked, on the card. */
+  source_name: string;
+  source_url: string;
+};
+
+const SEHD_GUIDE_NAME =
+  "Toombs County Community Resource Guide (Southeast Health District, 17 Sep 2025)";
+const SEHD_GUIDE_URL =
+  "https://www.sehdph.org/wp-content/uploads/2025/09/Toombs-County-Community-Resource-09-17-25.pdf";
+
+const CONFIRM = "Unconfirmed listing — nobody local has claimed it yet.";
+
+export const TOOMBS_PANTRY_LISTINGS: PublicPantryListing[] = [
+  // ── Vidalia ───────────────────────────────────────────────────────────────
+  {
+    id: "pantry_pub_concerted_services",
+    communityId: "comm_vidalia",
+    name: "Concerted Services — Toombs County Service Center",
+    address: "107 Old Airport Rd",
+    city: "Vidalia",
+    zip: "30474",
+    // Two aggregators report Mon–Fri 8:00am–4:30pm, but that reads as the
+    // service center's OFFICE hours, not a pantry window. Rule 2: notes, not hours.
+    serve_days: "",
+    serve_times: "",
+    residency_note: "",
+    visit_frequency: "",
+    id_docs: "",
+    other_notes:
+      "Community action agency service center (also listed as Action Pact) offering emergency and energy assistance alongside food. Directories report office hours of Monday–Friday 8:00am–4:30pm and advise calling before you go — that is the office, not a confirmed pantry window. A second phone number, 912-285-6083, appears in food directories. " +
+      CONFIRM,
+    phone: "912-537-0453",
+    website: "",
+    description:
+      "Listed under Food Banks for Toombs County in the county's public health resource guide.",
+    source_name: SEHD_GUIDE_NAME,
+    source_url: SEHD_GUIDE_URL,
+  },
+  {
+    id: "pantry_pub_gods_storehouse",
+    communityId: "comm_vidalia",
+    // Rule 3: The county guide still prints 300 McIntosh St-A, but the local
+    // paper reported in 2022 that the ministry moved. Publishing either address
+    // could send someone to an empty building, so we publish neither.
+    name: "God's Store House",
+    address: "",
+    city: "Vidalia",
+    zip: "30474",
+    serve_days: "",
+    serve_times: "",
+    residency_note:
+      "Reported to serve Toombs, Montgomery, Wheeler and surrounding counties — confirm by phone.",
+    visit_frequency: "",
+    id_docs: "",
+    other_notes:
+      "ADDRESS IS IN DISPUTE — call before you drive. The county resource guide lists 300 McIntosh St-A, Vidalia, but The Advance News reported in 2022 that God's Storehouse was moving, with a new location given as 2200 Center Drive. We will not print an address we cannot settle. Food directories also report hours of the 2nd and 3rd Wednesday, 9:00am–3:00pm, tied to the old address — treat those as unconfirmed too. " +
+      CONFIRM,
+    phone: "912-538-1730",
+    website: "",
+    description: "Food and clothing ministry listed under Food Banks for Toombs County.",
+    source_name: SEHD_GUIDE_NAME,
+    source_url: SEHD_GUIDE_URL,
+  },
+  {
+    id: "pantry_pub_solomon_tabernacle",
+    communityId: "comm_vidalia",
+    name: "Solomon Tabernacle Baptist Church",
+    address: "902 Thompson St",
+    city: "Vidalia",
+    zip: "30474",
+    serve_days: "",
+    serve_times: "",
+    residency_note: "",
+    visit_frequency: "",
+    id_docs: "",
+    other_notes:
+      "Church food ministry. No days or hours are published anywhere we can cite — call the church office first. " +
+      CONFIRM,
+    phone: "912-537-1350",
+    website: "",
+    description:
+      "Listed under Food Banks for Toombs County in the county's public health resource guide.",
+    source_name: SEHD_GUIDE_NAME,
+    source_url: SEHD_GUIDE_URL,
+  },
+  {
+    id: "pantry_pub_vidalia_church_of_god",
+    communityId: "comm_vidalia",
+    name: "Vidalia Church of God",
+    address: "401 Adams St",
+    city: "Vidalia",
+    zip: "30474",
+    serve_days: "",
+    serve_times: "",
+    residency_note: "",
+    visit_frequency: "",
+    id_docs: "",
+    other_notes:
+      "Food directories list this congregation as a free food pantry that accepts walk-ins, but none of them publish a distribution day or time — call the church office before you go. " +
+      CONFIRM,
+    phone: "912-537-4361",
+    website: "https://vidaliachurch.org/",
+    description: "Church food pantry listed in public food-assistance directories.",
+    source_name: "Feed America food pantry directory + the church's own site",
+    source_url: "https://feedam.org/resource/187328",
+  },
+  {
+    id: "pantry_pub_boys_girls_club",
+    communityId: "comm_vidalia",
+    name: "Boys & Girls Club of Toombs County",
+    address: "800 3rd St",
+    city: "Vidalia",
+    zip: "30474",
+    serve_days: "",
+    serve_times: "",
+    residency_note:
+      "Serves club youth and their families — this is not a general household pantry. Call to ask who is eligible.",
+    visit_frequency: "",
+    id_docs: "",
+    other_notes:
+      "Appears under Food Banks in the county resource guide, but the organization's main work is youth programming, so food help here is likely tied to the children it serves. " +
+      CONFIRM,
+    phone: "912-538-8899",
+    website: "",
+    description: "Youth organization listed under Food Banks for Toombs County.",
+    source_name: SEHD_GUIDE_NAME,
+    source_url: SEHD_GUIDE_URL,
+  },
+
+  // ── Lyons ─────────────────────────────────────────────────────────────────
+  {
+    id: "pantry_pub_his_works",
+    communityId: "comm_vidalia",
+    name: "His Works Ministry Outreach & Food Bank",
+    address: "120 East Liberty Ave",
+    city: "Lyons",
+    zip: "30436",
+    // Rule 2 satisfied: the same hours appear in the food directory, the
+    // Greater Vidalia Chamber member listing, and the ministry's own page.
+    serve_days: "Monday, Tuesday and Wednesday",
+    serve_times: "10:00am – 1:00pm",
+    residency_note: "",
+    visit_frequency: "",
+    id_docs: "",
+    other_notes:
+      "These hours are the best-corroborated of any pantry on this board — a food directory, the Greater Vidalia Chamber listing, and the ministry's own page all give the same window. A second phone number, 912-388-8043, appears in food directories. " +
+      CONFIRM,
+    phone: "912-245-6485",
+    website: "",
+    description:
+      "Independent food bank ministry in Lyons, registered as a nonprofit since 2018.",
+    source_name: "Greater Vidalia Chamber member directory + food pantry directories",
+    source_url: "https://members.greatervidaliachamber.com/Food-Bank/His-Works-Ministry-2255",
+  },
+  {
+    id: "pantry_pub_segcp",
+    communityId: "comm_vidalia",
+    name: "Southeast Georgia Communities Project",
+    address: "300 S State St",
+    city: "Lyons",
+    zip: "30436",
+    serve_days: "Monday to Wednesday (Thursday and Friday by appointment)",
+    serve_times: "9:00am – 12:00pm",
+    residency_note:
+      "Works primarily with farmworker and immigrant families in the area, but ask — do not rule yourself out.",
+    visit_frequency: "",
+    id_docs: "",
+    other_notes:
+      "The food pantry is one of several support services this nonprofit runs. Spanish is spoken. Hours as reported by the county resource guide and a food directory. " +
+      CONFIRM,
+    phone: "912-526-5451",
+    website: "",
+    description:
+      "Nonprofit serving farmworker and immigrant families, listed under Food Banks for Toombs County.",
+    source_name: SEHD_GUIDE_NAME,
+    source_url: SEHD_GUIDE_URL,
+  },
+  {
+    id: "pantry_pub_oasis_church_of_god",
+    communityId: "comm_vidalia",
+    name: "Oasis Church of God — food distribution",
+    address: "1163 US Highway 1 South",
+    city: "Lyons",
+    zip: "30436",
+    serve_days: "Monday and Tuesday; Friday",
+    serve_times: "Mon & Tue 3:00pm – 5:00pm · Fri 8:00am – 2:00pm",
+    residency_note: "",
+    visit_frequency: "",
+    id_docs: "",
+    other_notes:
+      "Hours come from two food directories that agree with each other, not from the church itself — call to confirm before you drive out. " +
+      CONFIRM,
+    phone: "912-526-5060",
+    website: "",
+    description: "Church food distribution listed in public food-assistance directories.",
+    source_name: "Food pantry directories (Lemontree / FreeFood.org)",
+    source_url: "https://www.freefood.org/l/oasis-church-of-god",
+  },
+  {
+    id: "pantry_pub_lyons_free_will_baptist",
+    communityId: "comm_vidalia",
+    name: "Lyons Free Will Baptist Church food pantry",
+    address: "803 Reidsville Highway",
+    city: "Lyons",
+    zip: "30436",
+    // Rule 2: one directory says 2nd & 4th Friday 1:30–3:30pm, another says
+    // Monday 10:00am–12:00pm. Flat contradiction, so no hours are published.
+    serve_days: "",
+    serve_times: "",
+    residency_note: "",
+    visit_frequency: "",
+    id_docs: "",
+    other_notes:
+      "HOURS CONFLICT between directories — one lists the 2nd and 4th Friday, 1:30pm–3:30pm; another lists Monday 10:00am–12:00pm. Call the church before you go rather than trusting either. " +
+      CONFIRM,
+    phone: "",
+    website: "",
+    description: "Church food pantry listed in public food-assistance directories.",
+    source_name: "Food pantry directories (Lemontree / FreeFood.org)",
+    source_url: "https://www.freefood.org/l/lyons-free-will-baptist-church",
+  },
+  {
+    id: "pantry_pub_toombs_farmers_market",
+    communityId: "comm_vidalia",
+    name: "Farmer's Market — Toombs County Schools",
+    address: "117 E Wesley Ave",
+    city: "Lyons",
+    zip: "30436",
+    serve_days: "",
+    serve_times: "",
+    residency_note: "",
+    visit_frequency: "",
+    id_docs: "",
+    other_notes:
+      "The weakest listing on this board: its only basis is a line under Food Banks in the county resource guide, with nothing else describing how or when it distributes food. Call the school district number before making a trip. " +
+      CONFIRM,
+    phone: "912-526-3161",
+    website: "",
+    description: "Listed under Food Banks for Toombs County in the county resource guide.",
+    source_name: SEHD_GUIDE_NAME,
+    source_url: SEHD_GUIDE_URL,
+  },
+];
+
+/**
+ * Sourced programs deliberately NOT published as pantry rows, kept here so the
+ * next person does not have to re-derive why they are missing:
+ *
+ * - Second Harvest of Coastal Georgia "Mobile Food Pantry — Toombs County":
+ *   real and recurring, but the event pages that surfaced are from 2024 and no
+ *   current date or host site could be established. A mobile pantry has no
+ *   address to send anyone to; it belongs on the events board when scheduled.
+ * - Bread of Heaven Outreach (Vidalia): a rotating drive-through distribution.
+ *   Same reason — any fixed address would be wrong.
+ * - The Salvation Army, Vidalia: a service center exists, but no source states
+ *   it runs a food pantry.
+ * - Toombs County schools' Summer Food Service Program: seasonal, and the 2026
+ *   season ended in July. Listing it now would read as open.
+ * - Toombs County DFCS, United Way of Toombs/Montgomery/Wheeler, Toombs County
+ *   Family Connection, Vidalia Housing Authority: referral or funding bodies,
+ *   not places to get food.
+ * - Community food distribution at Mount Vernon: Montgomery County, not Toombs.
+ */

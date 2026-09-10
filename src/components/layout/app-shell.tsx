@@ -1,6 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   Bell,
+  BookOpen,
   Building2,
   CalendarDays,
   Hammer,
@@ -28,6 +29,7 @@ const nav: {
   { to: "/app/services", label: "Services", icon: Wrench },
   { to: "/app/tools", label: "Tools", icon: Hammer },
   { to: "/app/events", label: "Events", icon: CalendarDays },
+  { to: "/ministry", label: "Ministry", icon: BookOpen },
   { to: "/app/places", label: "Places", icon: Building2 },
   { to: "/app/neighbors", label: "People", icon: Users },
   { to: "/app/communities", label: "Communities", icon: MapPin },
@@ -40,7 +42,9 @@ const nav: {
  * purpose — it lives in the header on every screen size, so adding it never
  * pushed Places (where the food pantries are) off the bar.
  */
-const bottomNav = nav.filter((item) => item.to !== "/search").slice(0, 5);
+const bottomNav = nav
+  .filter((item) => item.to !== "/search" && item.to !== "/ministry")
+  .slice(0, 5);
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });

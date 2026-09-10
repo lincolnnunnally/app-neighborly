@@ -37,19 +37,28 @@ import {
 import { formatEventWhen } from "@/lib/utils";
 import { ReportBlockControls } from "@/components/safety/report-block";
 
+type EventsSearch = { kind?: string };
+
 export const Route = createFileRoute("/app/events")({
+  // ?kind= lets another page (the ministry door) hand someone straight into the
+  // host form with the right type already chosen.
+  validateSearch: (s: Record<string, unknown>): EventsSearch => ({
+    kind: typeof s.kind === "string" ? s.kind : undefined,
+  }),
   component: EventsPage,
 });
 
 function EventsPage() {
   const user = useCurrentUser();
+  const search = Route.useSearch();
   const [memberships, setMemberships] = useState<Membership[]>([]);
   const [communityId, setCommunityId] = useState("");
   const [events, setEvents] = useState<CommunityEvent[]>([]);
-  const [showForm, setShowForm] = useState(false);
+  const presetKind = EVENT_KINDS.some((k) => k.id === search.kind) ? search.kind! : "";
+  const [showForm, setShowForm] = useState(Boolean(presetKind));
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [kind, setKind] = useState("social");
+  const [kind, setKind] = useState(presetKind || "social");
   const [location, setLocation] = useState("");
   const [startsAt, setStartsAt] = useState("");
   const [active, setActive] = useState<CommunityEvent | null>(null);

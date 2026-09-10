@@ -82,6 +82,16 @@ export function isPublicListing(
 }
 
 /**
+ * A public listing nobody local has claimed or checked yet. Transcribed from a
+ * directory, so it may be out of date — the card says so out loud.
+ */
+export function isUnconfirmedListing(
+  place: Pick<Facility, "listed_by" | "listed_by_name" | "verified_on">,
+): boolean {
+  return isPublicListing(place) && !place.verified_on.trim();
+}
+
+/**
  * One line a neighbor can act on: who published this and when it was last read
  * off that source. Never claims a pantry was verified by us today.
  */

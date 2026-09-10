@@ -42,7 +42,10 @@ export function SiteHeader({ solid = false }: { solid?: boolean }) {
           <Link to="/c/$slug" params={{ slug: "vidalia" }} className="hidden hover:text-fg sm:inline">
             Vidalia board
           </Link>
-          <Link to="/churches" search={{ zip: "30474" }} className="hidden hover:text-fg sm:inline">
+          <Link to="/ministry" search={{ place: "vidalia" }} className="hidden hover:text-fg sm:inline">
+            Ministry
+          </Link>
+          <Link to="/churches" search={{ zip: "30474" }} className="hidden hover:text-fg md:inline">
             Churches
           </Link>
           <Link to="/communities" className="hidden hover:text-fg md:inline">

@@ -16,6 +16,7 @@ import { Route as ChurchesRouteImport } from './routes/churches'
 import { Route as CommunitiesRouteImport } from './routes/communities'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as MinistryRouteImport } from './routes/ministry'
 import { Route as NearRouteImport } from './routes/near'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as PrivacyRouteImport } from './routes/privacy'
@@ -79,6 +80,11 @@ const HowItWorksRoute = HowItWorksRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MinistryRoute = MinistryRouteImport.update({
+  id: '/ministry',
+  path: '/ministry',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NearRoute = NearRouteImport.update({
@@ -235,6 +241,7 @@ export interface FileRoutesByFullPath {
   '/communities': typeof CommunitiesRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
+  '/ministry': typeof MinistryRoute
   '/near': typeof NearRoute
   '/onboarding': typeof OnboardingRoute
   '/privacy': typeof PrivacyRoute
@@ -272,6 +279,7 @@ export interface FileRoutesByTo {
   '/communities': typeof CommunitiesRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
+  '/ministry': typeof MinistryRoute
   '/near': typeof NearRoute
   '/onboarding': typeof OnboardingRoute
   '/privacy': typeof PrivacyRoute
@@ -311,6 +319,7 @@ export interface FileRoutesById {
   '/communities': typeof CommunitiesRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
+  '/ministry': typeof MinistryRoute
   '/near': typeof NearRoute
   '/onboarding': typeof OnboardingRoute
   '/privacy': typeof PrivacyRoute
@@ -351,6 +360,7 @@ export interface FileRouteTypes {
     | '/communities'
     | '/how-it-works'
     | '/login'
+    | '/ministry'
     | '/near'
     | '/onboarding'
     | '/privacy'
@@ -388,6 +398,7 @@ export interface FileRouteTypes {
     | '/communities'
     | '/how-it-works'
     | '/login'
+    | '/ministry'
     | '/near'
     | '/onboarding'
     | '/privacy'
@@ -426,6 +437,7 @@ export interface FileRouteTypes {
     | '/communities'
     | '/how-it-works'
     | '/login'
+    | '/ministry'
     | '/near'
     | '/onboarding'
     | '/privacy'
@@ -465,6 +477,7 @@ export interface RootRouteChildren {
   CommunitiesRoute: typeof CommunitiesRoute
   HowItWorksRoute: typeof HowItWorksRoute
   LoginRoute: typeof LoginRoute
+  MinistryRoute: typeof MinistryRoute
   NearRoute: typeof NearRoute
   OnboardingRoute: typeof OnboardingRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -535,6 +548,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ministry': {
+      id: '/ministry'
+      path: '/ministry'
+      fullPath: '/ministry'
+      preLoaderRoute: typeof MinistryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/near': {
@@ -779,6 +799,7 @@ const rootRouteChildren: RootRouteChildren = {
   CommunitiesRoute: CommunitiesRoute,
   HowItWorksRoute: HowItWorksRoute,
   LoginRoute: LoginRoute,
+  MinistryRoute: MinistryRoute,
   NearRoute: NearRoute,
   OnboardingRoute: OnboardingRoute,
   PrivacyRoute: PrivacyRoute,

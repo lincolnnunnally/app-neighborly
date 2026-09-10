@@ -7,6 +7,7 @@ import { blockedUserIds } from "./safety";
 import { ensureSeeded } from "./seed";
 import {
   countByKind,
+  isLoose,
   parseQuery,
   rankHits,
   scoreFields,
@@ -65,6 +66,8 @@ export type SearchResponse = {
   query: string;
   hits: SearchHit[];
   counts: Record<SearchKind, number>;
+  /** Hits that matched a word actually typed, as opposed to a synonym. */
+  directCount: number;
   doors: ReturnType<typeof suggestDoors>;
   /** True when the query was blank — the UI shows examples instead of "no results". */
   empty: boolean;
@@ -86,6 +89,7 @@ export const searchNeighborly = createServerFn({ method: "GET" })
         query: parsed.raw,
         hits: [],
         counts: countByKind([]),
+        directCount: 0,
         doors: [],
         empty: true,
         scope,
@@ -129,9 +133,12 @@ export const searchNeighborly = createServerFn({ method: "GET" })
     }
 
     const hits: SearchHit[] = [];
-    const push = (hit: Omit<SearchHit, "score">, fields: Parameters<typeof scoreFields>[1]) => {
+    const push = (
+      hit: Omit<SearchHit, "score" | "loose">,
+      fields: Parameters<typeof scoreFields>[1],
+    ) => {
       const score = scoreFields(parsed, fields);
-      if (score > 0) hits.push({ ...hit, score });
+      if (score > 0) hits.push({ ...hit, score, loose: isLoose(score) });
     };
 
     // ── Needs ────────────────────────────────────────────────────────────────
@@ -454,7 +461,8 @@ export const searchNeighborly = createServerFn({ method: "GET" })
     return {
       query: parsed.raw,
       hits: ranked,
-      counts: countByKind(ranked),
+      counts: countByKind(ranked.filter((h) => !h.loose)),
+      directCount: ranked.filter((h) => !h.loose).length,
       doors: suggestDoors(parsed, { slug: slug || undefined }),
       empty: false,
       scope,
