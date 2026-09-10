@@ -292,27 +292,23 @@ export const TOOMBS_PANTRY_LISTINGS: PublicPantryListing[] = [
     id: "pantry_pub_lyons_free_will_baptist",
     communityId: "comm_vidalia",
     name: "Lyons Free Will Baptist Church food pantry",
-    address: "803 Reidsville Highway",
+    address: "455 Reidsville Highway",
     city: "Lyons",
     zip: "30436",
-    // Rule 2 still applies: one directory says 2nd & 4th Friday 1:30–3:30pm,
-    // another says Monday 10:00am–12:00pm. Monday is now the more commonly
-    // reported of the two, but "more common" is not agreement, so the hours
-    // field stays empty and both windows go in the notes.
-    serve_days: "",
-    serve_times: "",
+    serve_days: "Second and fourth Friday of the month",
+    serve_times: "About 2:00 p.m. – 5:00 p.m.",
     residency_note: "",
-    visit_frequency: "Reported as one visit per month.",
-    id_docs: "Reported: bring a valid ID and proof of address on a first visit.",
+    visit_frequency: "",
+    id_docs: "",
     other_notes:
-      "HOURS CONFLICT between directories — most list Monday 10:00am–12:00pm, but one lists the 2nd and 4th Friday, 1:30pm–3:30pm. Call the church before you go rather than trusting either. Limited delivery is reported for seniors and people with medical needs — worth asking about. " +
-      CONFIRM,
+      "Visited in person 10 Sep 2026. They distribute the second and fourth Friday, about 2:00 till 5:00. Directories listed 803 Reidsville Highway — that address does not open in Maps. Searching the church name drops you at a pin that is not the building; the church is around the corner at 455 Reidsville Highway (Reidsville Highway and South 10th). Directories also reported Monday 10–12 and ID on a first visit — not confirmed on this visit.",
     phone: "912-526-4320",
     website: "",
     facebook_url: "https://www.facebook.com/100070046301620/",
-    description: "Church food pantry listed in public food-assistance directories.",
-    source_name: "Food pantry directories (Lemontree / FreeFood.org)",
-    source_url: "https://www.freefood.org/l/lyons-free-will-baptist-church",
+    description: "Church food pantry. Second and fourth Friday, about 2:00–5:00 p.m.",
+    source_name: "Visited in person 10 Sep 2026",
+    source_url: "https://plenty.unitedundergod.org/around",
+    verified_on: "2026-09-10",
   },
   {
     id: "pantry_pub_toombs_farmers_market",

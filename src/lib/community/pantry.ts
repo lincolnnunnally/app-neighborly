@@ -43,6 +43,7 @@ export const TOOMBS_PANTRY_COORDS: Record<string, { lat: number; lon: number }> 
   pantry_pub_vidalia_church_of_god: { lat: 32.216416, lon: -82.417518 },
   pantry_pub_gods_storehouse: { lat: 32.187831, lon: -82.408712 },
   pantry_pub_his_works: { lat: 32.203209, lon: -82.31975 },
+  pantry_pub_lyons_free_will_baptist: { lat: 32.196469, lon: -82.311428 },
   pantry_pub_concerted_services: { lat: 32.203286, lon: -82.373271 },
   pantry_pub_segcp: { lat: 32.198511, lon: -82.320815 },
   pantry_pub_solomon_tabernacle: { lat: 32.227602, lon: -82.409263 },
