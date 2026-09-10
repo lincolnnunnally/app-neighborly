@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { BookOpen, HandHeart, HeartHandshake, Users } from "lucide-react";
 import { SiteHeader } from "@/components/layout/site-header";
@@ -30,10 +29,31 @@ const FAITH_KINDS = new Set(["faith"]);
 /** Kinds that are a chance to serve. */
 const SERVE_KINDS = new Set(["serve", "cleanup"]);
 
+const EMPTY_FEED = {
+  community: null,
+  needs: [] as Need[],
+  services: [],
+  tools: [],
+  events: [] as CommunityEvent[],
+  facilities: [],
+  neighbors: [],
+};
+
 export const Route = createFileRoute("/ministry")({
   validateSearch: (s: Record<string, unknown>): MinistrySearch => ({
     place: typeof s.place === "string" ? s.place : undefined,
   }),
+  loaderDeps: ({ search }) => ({ place: search.place || "vidalia" }),
+  // Server-rendered, like the community board: without this the first paint
+  // showed the raw slug ("vidalia") and empty sections until the client fetch
+  // landed.
+  loader: async ({ deps }) => {
+    try {
+      return await getCommunityFeed({ data: { slug: deps.place } });
+    } catch {
+      return EMPTY_FEED;
+    }
+  },
   head: () => ({
     meta: [
       { title: "Bible studies, ministry & ways to serve — Neighborly" },
@@ -77,33 +97,13 @@ function EventRow({ event, slug }: { event: CommunityEvent; slug: string }) {
 
 function MinistryPage() {
   const search = Route.useSearch();
+  const feed = Route.useLoaderData();
   const slug = search.place || "vidalia";
-  const [events, setEvents] = useState<CommunityEvent[]>([]);
-  const [needs, setNeeds] = useState<Need[]>([]);
-  const [communityName, setCommunityName] = useState(slug);
-  const [zip, setZip] = useState("");
-  const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
-
-  useEffect(() => {
-    let cancelled = false;
-    setStatus("loading");
-    getCommunityFeed({ data: { slug } })
-      .then((feed) => {
-        if (cancelled) return;
-        setEvents(feed.events);
-        setNeeds(feed.needs);
-        setCommunityName(feed.community?.name ?? slug);
-        setZip(feed.community?.zip ?? "");
-        setStatus("ready");
-      })
-      .catch(() => {
-        if (cancelled) return;
-        setStatus("error");
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [slug]);
+  const events = feed.events;
+  const needs = feed.needs;
+  const communityName = feed.community?.name ?? slug;
+  const zip = feed.community?.zip ?? "";
+  const loaded = Boolean(feed.community);
 
   const studies = upcoming(events).filter((e) => FAITH_KINDS.has(e.kind));
   // An interest-check ("who wants to start a study?") is not a gathering yet,
@@ -143,9 +143,9 @@ function MinistryPage() {
           showExamples={false}
         />
 
-        {status === "error" && (
+        {!loaded && (
           <p className="text-sm text-danger">
-            Could not load this board just now. Try again in a moment.
+            Could not load the {slug} board just now. Try again in a moment.
           </p>
         )}
 
@@ -157,7 +157,7 @@ function MinistryPage() {
           {studies.map((e) => (
             <EventRow key={e.id} event={e} slug={slug} />
           ))}
-          {status === "ready" && studies.length === 0 && (
+          {loaded && studies.length === 0 && (
             <p className="text-sm text-fg-muted">
               No study or small group is posted here yet. If you host one — or would go to
               one — say so below and neighbors can find it.
@@ -207,7 +207,7 @@ function MinistryPage() {
               </p>
             </a>
           ))}
-          {status === "ready" && serveEvents.length === 0 && serveNeeds.length === 0 && (
+          {loaded && serveEvents.length === 0 && serveNeeds.length === 0 && (
             <p className="text-sm text-fg-muted">
               Nothing posted right now. A neighbor asking for a hand is the most common way
               to serve here — those show up on the needs board as they come in.
