@@ -2,6 +2,7 @@ import { Clock, ExternalLink, Facebook, Info, MapPin, Phone, ShieldCheck } from 
 import { Badge } from "@/components/ui/badge";
 import {
   fieldOrUnlisted,
+  isClosedListing,
   isPublicListing,
   isUnconfirmedListing,
   pantryAddressLine,
@@ -25,7 +26,12 @@ export function PantryDetails({
         {pantry.city ? <Badge variant="outline">{pantry.city}</Badge> : null}
         {pantry.zip ? <Badge variant="secondary">{pantry.zip}</Badge> : null}
         {isPublicListing(pantry) ? <Badge variant="outline">Public listing</Badge> : null}
-        {isUnconfirmedListing(pantry) ? (
+        {isClosedListing(pantry) ? (
+          <Badge variant="secondary" data-testid="pantry-closed">
+            Closed or moved
+          </Badge>
+        ) : null}
+        {isUnconfirmedListing(pantry) && !isClosedListing(pantry) ? (
           <Badge variant="secondary" data-testid="pantry-unconfirmed">
             Unconfirmed
           </Badge>

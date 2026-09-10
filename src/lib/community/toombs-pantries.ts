@@ -71,6 +71,10 @@ export type PublicPantryListing = {
   /** Where these facts were read. Shown, and linked, on the card. */
   source_name: string;
   source_url: string;
+  /** YYYY-MM-DD a local person last checked. Empty = unconfirmed directory row. */
+  verified_on?: string;
+  /** True when a visit found the pantry gone. Still listed so search does not send people there. */
+  closed?: boolean;
 };
 
 const SEHD_GUIDE_NAME =
@@ -119,22 +123,22 @@ export const TOOMBS_PANTRY_LISTINGS: PublicPantryListing[] = [
     address: "2200 Center Drive",
     city: "Vidalia",
     zip: "30474",
-    serve_days: "",
+    serve_days: "Not operating at this address",
     serve_times: "",
-    residency_note:
-      "Reported to serve Toombs, Montgomery, Wheeler and surrounding counties — confirm by phone.",
+    residency_note: "",
     visit_frequency: "",
     id_docs: "",
     other_notes:
-      "MOVED IN 2022 — some directories, including the county resource guide, still print the old address at 300 McIntosh St. The ministry's own accounts say the McIntosh lease ended 31 Aug 2022 and it reopened at 2200 Center Drive, on the property next to New Life Church, on 1 Sep 2022. Food directories report hours of the 2nd and 3rd Wednesday, 9:00am–3:00pm, but those are attached to the old address, so treat them as unconfirmed and call first. " +
-      CONFIRM,
+      "CLOSED — visited in person 10 Sep 2026. The building at 2200 Center Drive is empty and for sale. Either out of business or moved. Do not go here expecting food. Directories still print a 2022 move from 300 McIntosh St; that address is also stale.",
     phone: "912-538-1730",
     website: "",
     facebook_url: "https://www.facebook.com/Gods-Storehouse-The-Jesus-Inn-678439662239874/",
     description:
-      "Food and clothing ministry serving Toombs, Montgomery and Wheeler counties, listed under Food Banks for Toombs County. Also known as God's Storehouse & The Jesus Inn.",
-    source_name: "The Advance News (2022) + the ministry's own filed accounts",
-    source_url: "https://www.theadvancenews.com/2022/08/31/gods-storehouse-to-reopen/",
+      "Was a food and clothing ministry. As of 10 Sep 2026 the building is empty and for sale.",
+    source_name: "Visited in person 10 Sep 2026",
+    source_url: "https://plenty.unitedundergod.org/around",
+    verified_on: "2026-09-10",
+    closed: true,
   },
   {
     id: "pantry_pub_solomon_tabernacle",
@@ -166,20 +170,20 @@ export const TOOMBS_PANTRY_LISTINGS: PublicPantryListing[] = [
     address: "401 Adams St",
     city: "Vidalia",
     zip: "30474",
-    serve_days: "",
-    serve_times: "",
+    serve_days: "Third Wednesday of the month",
+    serve_times: "Starts serving about 4:00 p.m.",
     residency_note: "",
     visit_frequency: "",
     id_docs: "",
     other_notes:
-      "Food directories list this congregation as a free food pantry that accepts walk-ins, but none of them publish a distribution day or time — call the church office before you go. " +
-      CONFIRM,
+      "Hours confirmed in person 10 Sep 2026: one Wednesday a month — the third Wednesday — they start serving about 4 o'clock. Address and phone from the church listing; hours from the visit.",
     phone: "912-537-4361",
     website: "https://vidaliachurch.org/",
     facebook_url: "https://www.facebook.com/vidaliachurch.org/",
-    description: "Church food pantry listed in public food-assistance directories.",
-    source_name: "Feed America food pantry directory + the church's own site",
-    source_url: "https://feedam.org/resource/187328",
+    description: "Church food pantry. Third Wednesday of the month, starting about 4:00 p.m.",
+    source_name: "Visited in person 10 Sep 2026",
+    source_url: "https://plenty.unitedundergod.org/around",
+    verified_on: "2026-09-10",
   },
   {
     id: "pantry_pub_boys_girls_club",

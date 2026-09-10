@@ -320,9 +320,14 @@ export const searchNeighborly = createServerFn({ method: "GET" })
           city: String(r.city ?? ""),
           zip: String(r.zip ?? ""),
         });
+        const closed = parseJsonArray(String(r.amenities ?? "[]")).some(
+          (a) => a.toLowerCase() === "closed",
+        ) || /^\s*closed\b/i.test(String(r.other_notes ?? ""));
         const serve = pantryServeLine({
           serve_days: String(r.serve_days ?? ""),
           serve_times: String(r.serve_times ?? ""),
+          amenities: parseJsonArray(String(r.amenities ?? "[]")),
+          other_notes: String(r.other_notes ?? ""),
         });
         push(
           {
@@ -334,7 +339,7 @@ export const searchNeighborly = createServerFn({ method: "GET" })
               ? [address, serve].filter(Boolean).join(" · ")
               : [String(r.rate_note ?? ""), String(r.contact_name ?? "")].filter(Boolean).join(" · "),
             badges: pantry
-              ? ["Food pantry", String(r.city ?? "")].filter(Boolean)
+              ? [closed ? "Closed or moved" : "Food pantry", String(r.city ?? "")].filter(Boolean)
               : ["Reservable", ...parseJsonArray(String(r.amenities ?? "[]")).slice(0, 2)],
             href: `/c/${String(r.community_slug)}?tab=places&cat=${pantry ? "pantry" : "reserve"}`,
             community_slug: String(r.community_slug),

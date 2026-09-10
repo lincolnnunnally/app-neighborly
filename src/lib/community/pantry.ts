@@ -28,8 +28,10 @@ export function pantryAddressLine(
 }
 
 export function pantryServeLine(
-  place: Pick<Facility, "serve_days" | "serve_times">,
+  place: Pick<Facility, "serve_days" | "serve_times"> &
+    Partial<Pick<Facility, "amenities" | "other_notes">>,
 ): string {
+  if (isClosedListing(place)) return "Do not go — closed or moved.";
   const days = place.serve_days.trim();
   const times = place.serve_times.trim();
   if (days && times) return `${days} · ${times}`;
@@ -91,6 +93,13 @@ export function isUnconfirmedListing(
   return isPublicListing(place) && !place.verified_on.trim();
 }
 
+export function isClosedListing(
+  place: Partial<Pick<Facility, "amenities" | "other_notes">>,
+): boolean {
+  if ((place.amenities || []).some((a) => a.toLowerCase() === "closed")) return true;
+  return /^\s*closed\b/i.test(place.other_notes || "");
+}
+
 /**
  * One line a neighbor can act on: who published this and when it was last read
  * off that source. Never claims a pantry was verified by us today.
@@ -110,8 +119,12 @@ export function pantrySourceLine(
  * of gas. Every pantry card says this — the strength depends on what we know.
  */
 export function pantryCallAheadNote(
-  place: Pick<Facility, "serve_days" | "serve_times" | "phone">,
+  place: Pick<Facility, "serve_days" | "serve_times" | "phone"> &
+    Partial<Pick<Facility, "amenities" | "other_notes">>,
 ): string {
+  if (isClosedListing(place)) {
+    return "A local visit found this pantry gone. Do not drive here expecting food.";
+  }
   const hasHours = Boolean(place.serve_days.trim() || place.serve_times.trim());
   if (!hasHours) {
     return place.phone.trim()

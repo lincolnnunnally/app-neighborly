@@ -29,8 +29,9 @@ export async function ensureSeeded(sql: Sql): Promise<void> {
  * (updatePantryListing sets listed_by to them), their version is final and this
  * function leaves it alone. That is the whole point of claiming.
  *
- * These rows are public-source transcriptions, not verified listings, so
- * verified_on is deliberately left empty and the card renders "Unconfirmed".
+ * These rows start as public-source transcriptions. A local visit fills
+ * verified_on; the card then drops "Unconfirmed". Closed visits stay listed
+ * so a search does not send a hungry neighbor to an empty building.
  */
 export async function refreshToombsPantries(sql: Sql): Promise<void> {
   for (const p of TOOMBS_PANTRY_LISTINGS) {
@@ -46,6 +47,8 @@ export async function refreshToombsPantries(sql: Sql): Promise<void> {
 
       if (existing.length > 0) {
         if (existing[0].listed_by !== "system") continue; // a neighbor owns it now
+        const amenities = JSON.stringify(p.closed ? ["Food pantry", "Closed"] : ["Food pantry"]);
+        const verifiedOn = p.verified_on || "";
         await sql`
           update facilities set
             name = ${p.name},
@@ -63,12 +66,16 @@ export async function refreshToombsPantries(sql: Sql): Promise<void> {
             website = ${p.website},
             facebook_url = ${p.facebook_url},
             source_name = ${p.source_name},
-            source_url = ${p.source_url}
+            source_url = ${p.source_url},
+            verified_on = ${verifiedOn},
+            amenities = ${amenities}
           where id = ${p.id} and listed_by = 'system'
         `;
         continue;
       }
 
+      const amenities = JSON.stringify(p.closed ? ["Food pantry", "Closed"] : ["Food pantry"]);
+      const verifiedOn = p.verified_on || "";
       await sql`
         insert into facilities (
           id, community_id, name, description, capacity, amenities, rate_note, contact_name,
@@ -81,7 +88,7 @@ export async function refreshToombsPantries(sql: Sql): Promise<void> {
           ${p.name},
           ${p.description},
           null,
-          ${JSON.stringify(["Food pantry"])},
+          ${amenities},
           'Food pantry listing — not a reservable room',
           ${p.name},
           'pantry',
@@ -101,7 +108,7 @@ export async function refreshToombsPantries(sql: Sql): Promise<void> {
           'Public listing',
           ${p.source_name},
           ${p.source_url},
-          ''
+          ${verifiedOn}
         )
       `;
     } catch {
