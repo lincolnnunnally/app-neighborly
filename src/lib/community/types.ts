@@ -146,6 +146,8 @@ export type Facility = {
   other_notes: string;
   phone: string;
   website: string;
+  /** Often the only place a small pantry announces a change of hours. */
+  facebook_url: string;
   listed_by: string;
   listed_by_name: string;
   /** Where a public listing's facts came from — empty for neighbor-added rows. */

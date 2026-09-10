@@ -78,6 +78,20 @@ try {
     "pantry cards cite where their facts came from",
     "pantry cards cite no source",
   );
+  // A pantry whose hours we could not confirm must at least hand over a way to
+  // ask: a phone, a site, or the Facebook page where changes get posted.
+  const contactable = await page.evaluate(() =>
+    Array.from(document.querySelectorAll('[data-testid^="pantry-pantry_pub"]')).filter((card) =>
+      card.querySelector('a[href^="tel:"], a[href*="facebook.com"], a[href^="http"]'),
+    ).length,
+  );
+  ok(
+    contactable === boardPantries,
+    `every published pantry offers a phone or a link (${contactable}/${boardPantries})`,
+    `${boardPantries - contactable} published pantries have no way to make contact`,
+  );
+  const fbLinks = await page.locator('[data-testid="pantry-section"] a[href*="facebook.com"]').count();
+  notes.push(`INFO pantry Facebook pages listed: ${fbLinks}`);
   await page.screenshot({ path: `${SHOTS}/search-pantry-board.png`, fullPage: true });
 
   // 3. Free text that is NOT a preset chip — the actual complaint.

@@ -59,6 +59,7 @@ const emptyForm = {
   other_notes: "",
   phone: "",
   website: "",
+  facebook_url: "",
   description: "",
 };
 
@@ -156,6 +157,7 @@ function PlacesPage() {
       other_notes: p.other_notes,
       phone: p.phone,
       website: p.website,
+      facebook_url: p.facebook_url,
       description: p.description,
     });
   }
@@ -341,6 +343,18 @@ function PlacesPage() {
                 placeholder="https://"
               />
             </div>
+          </div>
+          <div className="space-y-1.5">
+            <Label>Facebook page (optional)</Label>
+            <Input
+              value={form.facebook_url}
+              onChange={(e) => patch("facebook_url", e.target.value)}
+              placeholder="facebook.com/yourpantry"
+            />
+            <p className="text-xs text-fg-subtle">
+              Worth adding even if there is no website — it is usually where a closure or a
+              changed day gets announced first.
+            </p>
           </div>
           <div className="space-y-1.5">
             <Label>Short description (optional)</Label>

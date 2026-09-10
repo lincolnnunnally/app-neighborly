@@ -61,6 +61,7 @@ export async function refreshToombsPantries(sql: Sql): Promise<void> {
             other_notes = ${p.other_notes},
             phone = ${p.phone},
             website = ${p.website},
+            facebook_url = ${p.facebook_url},
             source_name = ${p.source_name},
             source_url = ${p.source_url}
           where id = ${p.id} and listed_by = 'system'
@@ -72,7 +73,7 @@ export async function refreshToombsPantries(sql: Sql): Promise<void> {
         insert into facilities (
           id, community_id, name, description, capacity, amenities, rate_note, contact_name,
           place_kind, address, city, zip, serve_days, serve_times,
-          residency_note, visit_frequency, id_docs, other_notes, phone, website,
+          residency_note, visit_frequency, id_docs, other_notes, phone, website, facebook_url,
           listed_by, listed_by_name, source_name, source_url, verified_on
         ) values (
           ${p.id},
@@ -95,6 +96,7 @@ export async function refreshToombsPantries(sql: Sql): Promise<void> {
           ${p.other_notes},
           ${p.phone},
           ${p.website},
+          ${p.facebook_url},
           'system',
           'Public listing',
           ${p.source_name},
