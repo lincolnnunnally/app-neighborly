@@ -130,9 +130,9 @@ export const TOOMBS_PANTRY_LISTINGS: PublicPantryListing[] = [
       CONFIRM,
     phone: "912-538-1730",
     website: "",
-    facebook_url: "",
+    facebook_url: "https://www.facebook.com/Gods-Storehouse-The-Jesus-Inn-678439662239874/",
     description:
-      "Food and clothing ministry serving Toombs, Montgomery and Wheeler counties, listed under Food Banks for Toombs County.",
+      "Food and clothing ministry serving Toombs, Montgomery and Wheeler counties, listed under Food Banks for Toombs County. Also known as God's Storehouse & The Jesus Inn.",
     source_name: "The Advance News (2022) + the ministry's own filed accounts",
     source_url: "https://www.theadvancenews.com/2022/08/31/gods-storehouse-to-reopen/",
   },
@@ -195,13 +195,15 @@ export const TOOMBS_PANTRY_LISTINGS: PublicPantryListing[] = [
     visit_frequency: "",
     id_docs: "",
     other_notes:
-      "Appears under Food Banks in the county resource guide, but the organization's main work is youth programming, so food help here is likely tied to the children it serves. " +
+      "Appears under Food Banks in the county resource guide, but the organization's main work is youth programming, so food help here is likely tied to the children it serves. There are clubs in both Vidalia and Lyons. A second Facebook page, \"BGC of Toombs County\", also exists and may be the newer one. " +
       CONFIRM,
     phone: "912-538-8899",
-    // Two different Facebook pages surface for this club and nothing settles
-    // which is current, so neither is published. The phone is unambiguous.
+    // Two Facebook pages surface for this club. This is the one whose name
+    // matches the Toombs County club exactly; a second page, "BGC of Toombs
+    // County", also exists and may be the newer one — the note says so, since
+    // a possibly-stale Facebook link is a far smaller risk than a wrong address.
     website: "",
-    facebook_url: "",
+    facebook_url: "https://www.facebook.com/bgctc3260/",
     description:
       "Youth organization with clubs in Vidalia and Lyons, listed under Food Banks for Toombs County.",
     source_name: SEHD_GUIDE_NAME,
