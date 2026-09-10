@@ -17,7 +17,10 @@ export const Route = createRootRoute({
           "What's going on around you this week. Type a ZIP or city. Weather, public gatherings, and a neighbor board. No invented people. Account optional until you RSVP or ask for a hand.",
       },
     ],
-    links: [{ rel: "stylesheet", href: appCss }],
+    links: [
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      { rel: "stylesheet", href: appCss },
+    ],
   }),
   component: RootComponent,
 });
