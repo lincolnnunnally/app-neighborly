@@ -272,21 +272,19 @@ export const TOOMBS_PANTRY_LISTINGS: PublicPantryListing[] = [
     city: "Lyons",
     zip: "30436",
     serve_days: "Monday and Tuesday; Friday",
-    serve_times: "Mon & Tue 3:00pm – 5:00pm · Fri 8:00am – 2:00pm",
+    serve_times: "Mon & Tue 3:30–5:00 p.m. · Fri 8:00 a.m.–12:00 p.m.",
     residency_note: "",
     visit_frequency: "",
     id_docs: "",
     other_notes:
-      "Hours come from two food directories that agree with each other, not from the church itself — call to confirm before you drive out. " +
-      CONFIRM,
+      "Visited in person 10 Sep 2026. Sign on site: Monday and Tuesday 3:30 to 5, Friday 8 a.m. to 12 p.m. The food pantry is in the back — five buildings. Directories had 3:00–5:00 and Friday until 2:00; trust the door.",
     phone: "912-526-5060",
-    // churchofgod.cc turns up in directories for this entry, but that is the
-    // denomination's national site, not this congregation's. Not published.
     website: "",
     facebook_url: "https://www.facebook.com/oasiscog/",
-    description: "Church food distribution listed in public food-assistance directories.",
-    source_name: "Food pantry directories (Lemontree / FreeFood.org)",
-    source_url: "https://www.freefood.org/l/oasis-church-of-god",
+    description: "Church food pantry in the back of the property. Monday and Tuesday 3:30–5:00 p.m., Friday 8:00 a.m.–12:00 p.m.",
+    source_name: "Visited in person 10 Sep 2026 — hours from the sign",
+    source_url: "https://plenty.unitedundergod.org/around",
+    verified_on: "2026-09-10",
   },
   {
     id: "pantry_pub_lyons_free_will_baptist",
