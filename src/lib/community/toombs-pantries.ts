@@ -85,6 +85,28 @@ const SEHD_GUIDE_URL =
 const CONFIRM = "Unconfirmed listing — nobody local has claimed it yet.";
 
 export const TOOMBS_PANTRY_LISTINGS: PublicPantryListing[] = [
+  {
+    id: "pantry_pub_vidalia_plenty",
+    communityId: "comm_vidalia",
+    name: "Vidalia Plenty",
+    address: "",
+    city: "Vidalia",
+    zip: "30474",
+    serve_days: "",
+    serve_times: "",
+    residency_note: "This food is for everyone. There is no income test.",
+    visit_frequency: "",
+    id_docs: "",
+    other_notes:
+      "Plenty's own pantry. Register at plenty.unitedundergod.org/need-food. Hours and address stay empty until they are real — we will not invent a Saturday. Walk-ins and deliveries both welcome once a line is posted.",
+    phone: "",
+    website: "https://plenty.unitedundergod.org/need-food",
+    facebook_url: "",
+    description: "Vidalia food pantry run on Plenty. Free groceries. No income test. Hours posted when there is a line.",
+    source_name: "Plenty (plenty.unitedundergod.org)",
+    source_url: "https://plenty.unitedundergod.org/around",
+    verified_on: "",
+  },
   // ── Vidalia ───────────────────────────────────────────────────────────────
   {
     id: "pantry_pub_concerted_services",
