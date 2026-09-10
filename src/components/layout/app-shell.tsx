@@ -8,10 +8,12 @@ import {
   Home,
   MapPin,
   QrCode,
+  Search,
   Users,
   Wrench,
 } from "lucide-react";
 import { UserButton } from "@/lib/auth/gates";
+import { SearchBox } from "@/components/community/search-box";
 import { cn } from "@/lib/utils";
 
 const nav: {
@@ -21,6 +23,7 @@ const nav: {
   exact?: boolean;
 }[] = [
   { to: "/app", label: "Home", icon: Home, exact: true },
+  { to: "/search", label: "Search", icon: Search },
   { to: "/app/needs", label: "Needs", icon: HandHeart },
   { to: "/app/services", label: "Services", icon: Wrench },
   { to: "/app/tools", label: "Tools", icon: Hammer },
@@ -31,6 +34,13 @@ const nav: {
   { to: "/app/invite", label: "Invite", icon: QrCode },
   { to: "/app/settings", label: "Alerts", icon: Bell },
 ];
+
+/**
+ * Phone bar keeps the five doors that need a tap target. Search is not here on
+ * purpose — it lives in the header on every screen size, so adding it never
+ * pushed Places (where the food pantries are) off the bar.
+ */
+const bottomNav = nav.filter((item) => item.to !== "/search").slice(0, 5);
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -43,8 +53,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <span className="grid h-8 w-8 place-items-center rounded-[var(--radius-sm)] bg-primary text-primary-fg">
               <HandHeart className="h-4 w-4" />
             </span>
-            <span className="font-display font-semibold">Neighborly</span>
+            <span className="hidden font-display font-semibold sm:inline">Neighborly</span>
           </Link>
+          {/* Free-text search on every signed-in page — the chips below only
+              ever offered pre-named categories. Kept visible on phones too,
+              where the bottom bar has no room for it. */}
+          <div className="min-w-0 max-w-md flex-1">
+            <SearchBox showExamples={false} placeholder="Search anything — food pantry, bible study…" />
+          </div>
           <UserButton />
         </div>
       </header>
@@ -81,7 +97,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-bg-elevated/95 backdrop-blur md:hidden">
         <div className="mx-auto grid max-w-lg grid-cols-5 gap-1 px-2 py-2">
-          {nav.slice(0, 5).map((item) => {
+          {bottomNav.map((item) => {
             const active = item.exact
               ? pathname === item.to
               : pathname === item.to || pathname.startsWith(item.to + "/");

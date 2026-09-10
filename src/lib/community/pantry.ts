@@ -71,3 +71,44 @@ export function isSafeWebsite(raw: string): boolean {
     return false;
   }
 }
+
+/** A row published from a public source rather than added by a neighbor. */
+export const PUBLIC_LISTING_NAME = "Public listing";
+
+export function isPublicListing(
+  place: Pick<Facility, "listed_by" | "listed_by_name">,
+): boolean {
+  return place.listed_by === "system" || place.listed_by_name === PUBLIC_LISTING_NAME;
+}
+
+/**
+ * One line a neighbor can act on: who published this and when it was last read
+ * off that source. Never claims a pantry was verified by us today.
+ */
+export function pantrySourceLine(
+  place: Pick<Facility, "source_name" | "verified_on" | "listed_by_name">,
+): string {
+  const parts: string[] = [];
+  if (place.source_name.trim()) parts.push(`From ${place.source_name.trim()}`);
+  else if (place.listed_by_name.trim()) parts.push(`Listed by ${place.listed_by_name.trim()}`);
+  if (place.verified_on.trim()) parts.push(`last checked ${place.verified_on.trim()}`);
+  return parts.join(" · ");
+}
+
+/**
+ * Hours change without notice and a wasted trip costs a hungry neighbor a tank
+ * of gas. Every pantry card says this — the strength depends on what we know.
+ */
+export function pantryCallAheadNote(
+  place: Pick<Facility, "serve_days" | "serve_times" | "phone">,
+): string {
+  const hasHours = Boolean(place.serve_days.trim() || place.serve_times.trim());
+  if (!hasHours) {
+    return place.phone.trim()
+      ? "Hours are not published anywhere we can cite — call before you go."
+      : "Hours are not published anywhere we can cite. Check with the pantry before you go.";
+  }
+  return place.phone.trim()
+    ? "Hours change without notice — call ahead to confirm."
+    : "Hours change without notice — confirm before you go.";
+}

@@ -37,6 +37,7 @@ import type {
 import { formatEventWhen } from "@/lib/utils";
 import { toast } from "sonner";
 import { PresenceNudge } from "@/components/community/presence-nudge";
+import { SearchBox } from "@/components/community/search-box";
 
 export const Route = createFileRoute("/app/")({
   component: AppHome,
@@ -96,6 +97,9 @@ function AppHome() {
           Primary community: <strong className="text-fg">{primaryName}</strong>
           {memberships.length > 1 ? ` · +${memberships.length - 1} more` : ""}
         </p>
+        <div className="mt-4 max-w-xl">
+          <SearchBox slug={primarySlug} />
+        </div>
         <div className="mt-3 flex flex-wrap gap-2">
           <Button asChild size="sm">
             <Link to="/c/$slug" params={{ slug: primarySlug }}>

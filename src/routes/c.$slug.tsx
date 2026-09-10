@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
   CalendarDays,
@@ -6,6 +6,7 @@ import {
   HandHeart,
   Link2,
   MapPin,
+  Search,
   Users,
   Wrench,
 } from "lucide-react";
@@ -62,13 +63,17 @@ import { CC_GET_HELP, isPantry } from "@/lib/community/pantry";
 import { PantryDetails } from "@/components/community/pantry-details";
 import { formatEventWhen } from "@/lib/utils";
 import { ActivityFilters, matchesDateWindow, type DateWindow } from "@/components/community/activity-filters";
+import { parseQuery, scoreFields, type ScoredField } from "@/lib/community/search";
 
-type BoardSearch = { tab?: string; cat?: string };
+type BoardSearch = { tab?: string; cat?: string; q?: string };
 
 export const Route = createFileRoute("/c/$slug")({
   validateSearch: (s: Record<string, unknown>): BoardSearch => ({
     tab: typeof s.tab === "string" ? s.tab : undefined,
     cat: typeof s.cat === "string" ? s.cat : undefined,
+    // Free text lives in the URL like the category chips do, so a filtered
+    // board stays shareable ("here's the pantry list, filtered to Lyons").
+    q: typeof s.q === "string" ? s.q : undefined,
   }),
   loader: async ({ params }) => {
     try {
@@ -112,12 +117,12 @@ function CommunityPublicPage() {
   const { user, ensureReady } = useRequireNeighbor();
   const navigate = useNavigate();
   const [community, setCommunity] = useState<Community | null>(loaded.community);
-  const [needs, setNeeds] = useState<Need[]>(loaded.needs);
-  const [services, setServices] = useState<Service[]>(loaded.services);
-  const [tools, setTools] = useState<Tool[]>(loaded.tools ?? []);
-  const [events, setEvents] = useState<CommunityEvent[]>(loaded.events);
-  const [facilities, setFacilities] = useState<Facility[]>(loaded.facilities);
-  const [neighbors, setNeighbors] = useState<Neighbor[]>(loaded.neighbors);
+  const [allNeeds, setAllNeeds] = useState<Need[]>(loaded.needs);
+  const [allServices, setAllServices] = useState<Service[]>(loaded.services);
+  const [allTools, setAllTools] = useState<Tool[]>(loaded.tools ?? []);
+  const [allEvents, setAllEvents] = useState<CommunityEvent[]>(loaded.events);
+  const [allFacilities, setAllFacilities] = useState<Facility[]>(loaded.facilities);
+  const [allNeighbors, setAllNeighbors] = useState<Neighbor[]>(loaded.neighbors);
   const [demand, setDemand] = useState<{ interest: string; n: number }[]>([]);
   const [loading, setLoading] = useState(!loaded.community);
   const [loadError, setLoadError] = useState(false);
@@ -154,17 +159,105 @@ function CommunityPublicPage() {
   const [busy, setBusy] = useState(false);
   const [demoBusy, setDemoBusy] = useState(false);
 
+  // ── Free-text board filter ────────────────────────────────────────────────
+  // Every filter on this board used to be a pre-named chip. This narrows the
+  // loaded board by whatever the neighbor actually typed, scoring rows with the
+  // same helper the /search page uses server-side so both agree.
+  const [queryDraft, setQueryDraft] = useState(search.q ?? "");
+  const boardQuery = useMemo(() => parseQuery(queryDraft), [queryDraft]);
+
+  useEffect(() => {
+    setQueryDraft(search.q ?? "");
+  }, [search.q]);
+
+  // Mirror the typed text into the URL (debounced) so a filtered board stays
+  // shareable and the back button works, without a navigation per keystroke.
+  useEffect(() => {
+    if ((search.q ?? "") === queryDraft) return;
+    const timer = setTimeout(() => {
+      void navigate({
+        to: "/c/$slug",
+        params: { slug },
+        search: { ...search, q: queryDraft.trim() || undefined },
+        replace: true,
+      });
+    }, 400);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryDraft]);
+
+  function keep<T>(rows: T[], fields: (row: T) => ScoredField[]): T[] {
+    if (boardQuery.isEmpty) return rows;
+    return rows
+      .map((row) => ({ row, score: scoreFields(boardQuery, fields(row)) }))
+      .filter((scored) => scored.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .map((scored) => scored.row);
+  }
+
+  const needs = keep(allNeeds, (n) => [
+    { text: n.title, weight: 3 },
+    { text: n.category, weight: 2 },
+    { text: n.description, weight: 1 },
+    { text: n.author_name, weight: 1 },
+  ]);
+  const services = keep(allServices, (s2) => [
+    { text: s2.title, weight: 3 },
+    { text: serviceCategoryLabel(s2.category), weight: 2 },
+    { text: s2.description, weight: 1 },
+    { text: s2.maker_bio, weight: 1 },
+    { text: s2.provider_name, weight: 1 },
+  ]);
+  const tools = keep(allTools, (t) => [
+    { text: t.title, weight: 3 },
+    { text: toolCategoryLabel(t.category), weight: 2 },
+    { text: t.description, weight: 1 },
+    { text: t.owner_name, weight: 1 },
+  ]);
+  const events = keep(allEvents, (e) => [
+    { text: e.title, weight: 3 },
+    { text: e.kind, weight: 2 },
+    { text: e.location, weight: 2 },
+    { text: e.description, weight: 1 },
+    { text: e.host_name, weight: 1 },
+  ]);
+  const facilities = keep(allFacilities, (f) => [
+    { text: f.name, weight: 3 },
+    // "food pantry" has to find a pantry whose real name is a church closet.
+    { text: isPantry(f) ? "food pantry groceries" : "reservable room facility", weight: 2 },
+    { text: f.city, weight: 2 },
+    { text: f.description, weight: 1 },
+    { text: [f.address, f.zip, f.serve_days, f.serve_times].join(" "), weight: 1 },
+    { text: [f.residency_note, f.other_notes, f.amenities.join(" ")].join(" "), weight: 1 },
+  ]);
+  const neighbors = keep(allNeighbors, (p) => [
+    { text: p.display_name, weight: 3 },
+    { text: p.skills.join(" "), weight: 2 },
+    { text: p.help_offerings.join(" "), weight: 2 },
+    { text: p.bio, weight: 1 },
+  ]);
+
+  const filteredCount =
+    needs.length + services.length + tools.length + events.length + facilities.length + neighbors.length;
+  const totalCount =
+    allNeeds.length +
+    allServices.length +
+    allTools.length +
+    allEvents.length +
+    allFacilities.length +
+    allNeighbors.length;
+
   async function reload() {
     const feed = await getCommunityFeed({
       data: { slug, userId: user?.id },
     });
     setCommunity(feed.community);
-    setNeeds(feed.needs);
-    setServices(feed.services);
-    setTools(feed.tools);
-    setEvents(feed.events);
-    setFacilities(feed.facilities);
-    setNeighbors(feed.neighbors);
+    setAllNeeds(feed.needs);
+    setAllServices(feed.services);
+    setAllTools(feed.tools);
+    setAllEvents(feed.events);
+    setAllFacilities(feed.facilities);
+    setAllNeighbors(feed.neighbors);
     if (activeNeed) {
       const updated = feed.needs.find((n) => n.id === activeNeed.id) ?? null;
       setActiveNeed(updated);
@@ -316,6 +409,49 @@ function CommunityPublicPage() {
             </ul>
           </aside>
         )}
+
+        <div className="space-y-2" data-testid="board-filter">
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-fg-subtle" />
+            <Input
+              value={queryDraft}
+              onChange={(e) => setQueryDraft(e.target.value)}
+              data-testid="board-filter-input"
+              aria-label={`Search the ${community.name} board`}
+              placeholder="Search this board — food pantry, bible study, mower, someone to change a lightbulb…"
+              className="pl-9"
+            />
+          </div>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-fg-muted">
+            {queryDraft.trim() ? (
+              <>
+                <span data-testid="board-filter-count">
+                  {filteredCount} of {totalCount} listings match “{queryDraft.trim()}” — open each
+                  tab to see them.
+                </span>
+                <button
+                  type="button"
+                  className="text-primary underline"
+                  onClick={() => setQueryDraft("")}
+                >
+                  Clear
+                </button>
+                <a
+                  className="text-primary underline"
+                  href={`/search?q=${encodeURIComponent(queryDraft.trim())}`}
+                  data-testid="board-filter-everywhere"
+                >
+                  Search every community
+                </a>
+              </>
+            ) : (
+              <span>
+                Type anything — this narrows every tab below. The chips are still there when
+                you would rather browse.
+              </span>
+            )}
+          </div>
+        </div>
 
         <Tabs
           value={tab}

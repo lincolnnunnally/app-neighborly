@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { HandHeart } from "lucide-react";
+import { HandHeart, Search } from "lucide-react";
 import { SignedIn, SignedOut, UserButton } from "@/lib/auth/gates";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { Button } from "@/components/ui/button";
@@ -29,6 +29,10 @@ export function SiteHeader({ solid = false }: { solid?: boolean }) {
         </Link>
 
         <nav className="flex items-center gap-4 text-sm text-fg-muted sm:gap-6">
+          <Link to="/search" className="flex items-center gap-1 font-medium text-fg hover:text-primary">
+            <Search className="h-4 w-4" />
+            Search
+          </Link>
           <Link to="/weekend" search={{ place: "vidalia" }} className="font-medium text-fg hover:text-primary">
             This weekend
           </Link>
