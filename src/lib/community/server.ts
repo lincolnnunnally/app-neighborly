@@ -212,6 +212,7 @@ function mapFacility(r: Record<string, unknown>): Facility {
     other_notes: String(r.other_notes ?? ""),
     phone: String(r.phone ?? ""),
     website: String(r.website ?? ""),
+    facebook_url: String(r.facebook_url ?? ""),
     listed_by: String(r.listed_by ?? ""),
     listed_by_name: String(r.listed_by_name ?? ""),
     source_url: String(r.source_url ?? ""),
@@ -1235,6 +1236,7 @@ type PantryInput = {
   other_notes?: string;
   phone?: string;
   website?: string;
+  facebook_url?: string;
   description?: string;
 };
 
@@ -1253,6 +1255,10 @@ function readPantryInput(data: PantryInput) {
   if (!serve_times) throw new Error("Serve times required — we will not invent hours");
   const website = data.website?.trim() ? normalizeWebsite(data.website) : "";
   if (website && !isSafeWebsite(website)) throw new Error("Website must be an http(s) link");
+  const facebook_url = data.facebook_url?.trim() ? normalizeWebsite(data.facebook_url) : "";
+  if (facebook_url && !isSafeWebsite(facebook_url)) {
+    throw new Error("Facebook page must be an http(s) link");
+  }
   return {
     name,
     address,
@@ -1266,6 +1272,7 @@ function readPantryInput(data: PantryInput) {
     other_notes: data.other_notes?.trim() ?? "",
     phone: data.phone?.trim() ?? "",
     website,
+    facebook_url,
     description: data.description?.trim() ?? "",
   };
 }
@@ -1297,7 +1304,7 @@ export const createPantryListing = createServerFn({ method: "POST" })
       insert into facilities (
         id, community_id, name, description, capacity, amenities, rate_note, contact_name,
         place_kind, address, city, zip, serve_days, serve_times,
-        residency_note, visit_frequency, id_docs, other_notes, phone, website,
+        residency_note, visit_frequency, id_docs, other_notes, phone, website, facebook_url,
         listed_by, listed_by_name
       ) values (
         ${id},
@@ -1320,6 +1327,7 @@ export const createPantryListing = createServerFn({ method: "POST" })
         ${pantry.other_notes},
         ${pantry.phone},
         ${pantry.website},
+        ${pantry.facebook_url},
         ${context.userId},
         ${listedByName}
       )
@@ -1367,7 +1375,8 @@ export const updatePantryListing = createServerFn({ method: "POST" })
         id_docs = ${pantry.id_docs},
         other_notes = ${pantry.other_notes},
         phone = ${pantry.phone},
-        website = ${pantry.website}
+        website = ${pantry.website},
+        facebook_url = ${pantry.facebook_url}
       where id = ${data.id}
         and (listed_by = ${context.userId} or listed_by = 'system')
     `;

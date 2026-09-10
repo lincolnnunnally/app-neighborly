@@ -1,4 +1,4 @@
-import { Clock, ExternalLink, Info, MapPin, Phone, ShieldCheck } from "lucide-react";
+import { Clock, ExternalLink, Facebook, Info, MapPin, Phone, ShieldCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   fieldOrUnlisted,
@@ -86,7 +86,7 @@ export function PantryDetails({
           )}
         </p>
       ) : null}
-      {(pantry.phone || pantry.website) && (
+      {(pantry.phone || pantry.website || pantry.facebook_url) && (
         <div className="flex flex-wrap gap-3 text-sm">
           {pantry.phone ? (
             <a className="inline-flex items-center gap-1 text-primary" href={`tel:${pantry.phone}`}>
@@ -103,6 +103,19 @@ export function PantryDetails({
             >
               <ExternalLink className="h-3.5 w-3.5" />
               Website
+            </a>
+          ) : null}
+          {/* Usually the liveliest source: a small pantry posts a closure or a
+              changed day here long before any directory catches up. */}
+          {pantry.facebook_url ? (
+            <a
+              className="inline-flex items-center gap-1 text-primary"
+              href={pantry.facebook_url}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Facebook className="h-3.5 w-3.5" />
+              Facebook — often the latest hours
             </a>
           ) : null}
         </div>

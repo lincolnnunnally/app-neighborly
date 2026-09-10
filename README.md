@@ -53,7 +53,12 @@ transcribed from public sources — chiefly the Southeast Health District's date
 `verified_on` empty, which the UI renders as **Unconfirmed** with a call-ahead
 line and a link to the source. Hours are published only where two independent
 sources agree; where sources disagree on an address, no address is published at
-all. Any member can claim a public listing and correct it, which makes them its
+all — unless a newer first-party source settles it (God's Store House moved in
+2022, which its own filed accounts and the local paper both record, so the
+current address is published with a note about the stale directory line).
+Listings carry `facebook_url` (migration 0013) alongside `website`: for a small
+church pantry, the Facebook page is usually where a closure or a changed day is
+announced first, so it is the most useful link when hours are unconfirmed. Any member can claim a public listing and correct it, which makes them its
 owner and stops the seed from touching it again. See the rules at the top of
 `toombs-pantries.ts` before adding rows.
 
