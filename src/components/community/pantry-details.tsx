@@ -1,12 +1,14 @@
-import { Clock, ExternalLink, Facebook, Info, MapPin, Phone, ShieldCheck } from "lucide-react";
+import { Clock, ExternalLink, Facebook, Info, MapPin, Navigation, Phone, ShieldCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
+  coordsForPantry,
   fieldOrUnlisted,
   isClosedListing,
   isPublicListing,
   isUnconfirmedListing,
   pantryAddressLine,
   pantryCallAheadNote,
+  pantryMapsDirUrl,
   pantryServeLine,
   pantrySourceLine,
 } from "@/lib/community/pantry";
@@ -19,6 +21,10 @@ export function PantryDetails({
   pantry: Facility;
   compact?: boolean;
 }) {
+  const coords = coordsForPantry(pantry.id);
+  const drive = pantryMapsDirUrl({ ...pantry, lat: coords?.lat, lon: coords?.lon });
+  const line = pantryAddressLine(pantry);
+
   return (
     <div className="space-y-2">
       <div className="flex flex-wrap items-center gap-2">
@@ -40,8 +46,32 @@ export function PantryDetails({
       <h3 className="font-medium text-fg">{pantry.name}</h3>
       <p className="flex items-start gap-1.5 text-sm text-fg-muted">
         <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-        {pantryAddressLine(pantry) || "Address not listed"}
+        {drive && line ? (
+          <a
+            className="text-primary underline"
+            href={drive}
+            target="_blank"
+            rel="noreferrer"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {line}
+          </a>
+        ) : (
+          line || "Address not listed"
+        )}
       </p>
+      {drive ? (
+        <a
+          className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-fg"
+          href={drive}
+          target="_blank"
+          rel="noreferrer"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Navigation className="h-3.5 w-3.5" />
+          Drive
+        </a>
+      ) : null}
       <p className="flex items-start gap-1.5 text-sm text-fg-muted">
         <Clock className="mt-0.5 h-3.5 w-3.5 shrink-0" />
         {pantryServeLine(pantry)}
@@ -49,6 +79,7 @@ export function PantryDetails({
       {!compact && pantry.description ? (
         <p className="text-sm text-fg-muted">{pantry.description}</p>
       ) : null}
+      {!compact ? (
       <dl className="grid gap-1.5 text-sm">
         <div>
           <dt className="text-xs text-fg-subtle">Residency / ZIP limits</dt>
@@ -67,6 +98,7 @@ export function PantryDetails({
           <dd className="text-fg">{fieldOrUnlisted(pantry.other_notes)}</dd>
         </div>
       </dl>
+      ) : null}
       {/* Provenance before contact: a neighbor deciding whether to drive over
           needs to know where these facts came from and how old they are. */}
       <p className="flex items-start gap-1.5 text-xs text-fg-subtle">

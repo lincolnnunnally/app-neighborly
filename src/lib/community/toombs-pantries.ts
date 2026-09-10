@@ -225,20 +225,20 @@ export const TOOMBS_PANTRY_LISTINGS: PublicPantryListing[] = [
     // Rule 2 satisfied: the same hours appear in the food directory, the
     // Greater Vidalia Chamber member listing, and the ministry's own page.
     serve_days: "Monday, Tuesday and Wednesday",
-    serve_times: "10:00am – 1:00pm",
+    serve_times: "10:00 a.m. – 2:00 p.m.",
     residency_note: "",
     visit_frequency: "",
     id_docs: "",
     other_notes:
-      "These hours are the best-corroborated of any pantry on this board — a food directory, the Greater Vidalia Chamber listing, and the ministry's own page all give the same window. A second number, 912-388-8043, appears in food directories and on the ministry's own Facebook page — try that one if the first does not answer. " +
-      CONFIRM,
-    phone: "912-245-6485",
+      "Visited in person 10 Sep 2026. Sign on the door: Monday, Tuesday, Wednesday 10 AM to 2 PM. Still in operation. They are in the back of some old warehouse. Directories had been listing 10–1.",
+    phone: "912-388-8043",
     website: "",
     facebook_url: "https://www.facebook.com/Hisworks30436/",
     description:
-      "Independent food bank ministry in Lyons, registered as a nonprofit since 2018. Food, clothing and other essentials.",
-    source_name: "Greater Vidalia Chamber member directory + food pantry directories",
-    source_url: "https://members.greatervidaliachamber.com/Food-Bank/His-Works-Ministry-2255",
+      "Independent food bank ministry in Lyons. In the back of an old warehouse at 120 East Liberty Ave.",
+    source_name: "Visited in person 10 Sep 2026 — hours from the sign on the door",
+    source_url: "https://plenty.unitedundergod.org/around",
+    verified_on: "2026-09-10",
   },
   {
     id: "pantry_pub_segcp",

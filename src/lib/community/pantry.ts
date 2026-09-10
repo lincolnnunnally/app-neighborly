@@ -27,6 +27,33 @@ export function pantryAddressLine(
   return [place.address, cityZip].filter(Boolean).join(", ");
 }
 
+/** Turn-by-turn directions. iPhone will offer Apple Maps. */
+export function pantryMapsDirUrl(
+  place: Pick<Facility, "address" | "city" | "zip"> & { lat?: number | null; lon?: number | null },
+): string {
+  if (place.lat != null && place.lon != null && Number.isFinite(place.lat) && Number.isFinite(place.lon)) {
+    return `https://www.google.com/maps/dir/?api=1&destination=${place.lat},${place.lon}`;
+  }
+  const q = pantryAddressLine(place);
+  if (!q) return "";
+  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(q)}`;
+}
+
+export const TOOMBS_PANTRY_COORDS: Record<string, { lat: number; lon: number }> = {
+  pantry_pub_vidalia_church_of_god: { lat: 32.216416, lon: -82.417518 },
+  pantry_pub_gods_storehouse: { lat: 32.187831, lon: -82.408712 },
+  pantry_pub_his_works: { lat: 32.203209, lon: -82.31975 },
+  pantry_pub_concerted_services: { lat: 32.203286, lon: -82.373271 },
+  pantry_pub_segcp: { lat: 32.198511, lon: -82.320815 },
+  pantry_pub_solomon_tabernacle: { lat: 32.227602, lon: -82.409263 },
+  pantry_pub_boys_girls_club: { lat: 32.211105, lon: -82.404859 },
+  pantry_pub_toombs_farmers_market: { lat: 32.205552, lon: -82.328209 },
+};
+
+export function coordsForPantry(id: string) {
+  return TOOMBS_PANTRY_COORDS[id] || null;
+}
+
 export function pantryServeLine(
   place: Pick<Facility, "serve_days" | "serve_times"> &
     Partial<Pick<Facility, "amenities" | "other_notes">>,

@@ -61,6 +61,7 @@ import {
 import { OFFER_PANTRY_PATH, OFFER_SERVICE_PATH, OFFER_TOOL_PATH } from "@/lib/community/offer-path";
 import { CC_GET_HELP, isPantry } from "@/lib/community/pantry";
 import { PantryDetails } from "@/components/community/pantry-details";
+import { PantryMap } from "@/components/community/pantry-map";
 import { formatEventWhen } from "@/lib/utils";
 import { ActivityFilters, matchesDateWindow, type DateWindow } from "@/components/community/activity-filters";
 import { LOOSE_MATCH_MAX, parseQuery, scoreFields, type ScoredField } from "@/lib/community/search";
@@ -921,17 +922,22 @@ function CommunityPublicPage() {
             {(!search.cat || search.cat === "pantry") && (
               <section className="space-y-3" data-testid="pantry-section">
                 <h3 className="font-display text-base font-semibold">Food pantries</h3>
+                <PantryMap pantries={facilities.filter(isPantry)} />
                 {facilities.filter(isPantry).map((f) => (
-                  <button
+                  <article
                     key={f.id}
-                    type="button"
                     data-testid={`pantry-${f.id}`}
-                    onClick={() => setActiveFacility(f)}
-                    className="surface-card w-full p-4 text-left transition-colors hover:border-border-strong"
+                    className="surface-card w-full p-4 text-left"
                   >
                     <PantryDetails pantry={f} compact />
-                    <p className="mt-2 text-xs text-fg-subtle">Tap for requirements</p>
-                  </button>
+                    <button
+                      type="button"
+                      className="mt-2 text-xs text-fg-subtle underline"
+                      onClick={() => setActiveFacility(f)}
+                    >
+                      Hours & notes
+                    </button>
+                  </article>
                 ))}
                 {facilities.filter(isPantry).length === 0 && (
                   <div className="space-y-3">
@@ -1421,6 +1427,28 @@ function CommunityPublicPage() {
                 <Button variant="secondary" onClick={() => setActiveFacility(null)}>
                   Close
                 </Button>
+                {user ? (
+                  <Button
+                    onClick={async () => {
+                      await navigate({ to: OFFER_PANTRY_PATH });
+                    }}
+                  >
+                    Claim & correct hours
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={async () => {
+                      const ok = await ensureReady({
+                        code: community.invite_code,
+                        community: community.slug,
+                        next: OFFER_PANTRY_PATH,
+                      });
+                      if (ok) await navigate({ to: OFFER_PANTRY_PATH });
+                    }}
+                  >
+                    Sign in to claim
+                  </Button>
+                )}
               </DialogFooter>
             </>
           )}

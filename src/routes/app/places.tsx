@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { PantryDetails } from "@/components/community/pantry-details";
+import { PantryMap } from "@/components/community/pantry-map";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -371,9 +372,9 @@ function PlacesPage() {
       <section className="space-y-3" data-testid="pantry-directory">
         <h2 className="font-display text-lg font-semibold">Food pantries in this community</h2>
         <p className="text-sm text-fg-muted">
-          Everything neighbors and public sources have listed here — not only your own.
-          Hours and requirements come from whoever listed them; call ahead before you drive.
+          Tap Drive to open Maps. Claim a listing to correct hours if you speak for that pantry.
         </p>
+        <PantryMap pantries={communityPantries} />
         <Input
           value={pantryFilter}
           onChange={(e) => setPantryFilter(e.target.value)}
