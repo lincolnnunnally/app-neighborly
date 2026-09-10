@@ -2,7 +2,11 @@ import type { Sql } from "@/lib/db";
 import { TOOMBS_PANTRY_LISTINGS, type PublicPantryListing } from "./toombs-pantries";
 
 function nameKey(value: string) {
-  return value.toLowerCase().replace(/[^a-z0-9]+/g, "");
+  return value
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/food pantry|pantry|food bank|food distribution|outreach/g, "")
+    .replace(/[^a-z0-9]+/g, "");
 }
 
 type PlentyPlace = { name: string; hours?: string; closed?: boolean; address?: string; city?: string; phone?: string };
