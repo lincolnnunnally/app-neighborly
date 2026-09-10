@@ -16,11 +16,13 @@ import { Route as ChurchesRouteImport } from './routes/churches'
 import { Route as CommunitiesRouteImport } from './routes/communities'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as MinistryRouteImport } from './routes/ministry'
 import { Route as NearRouteImport } from './routes/near'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsRouteImport } from './routes/terms'
@@ -80,6 +82,11 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MinistryRoute = MinistryRouteImport.update({
+  id: '/ministry',
+  path: '/ministry',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NearRoute = NearRouteImport.update({
   id: '/near',
   path: '/near',
@@ -103,6 +110,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
   id: '/robots.txt',
   path: '/robots.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SignupRoute = SignupRouteImport.update({
@@ -229,11 +241,13 @@ export interface FileRoutesByFullPath {
   '/communities': typeof CommunitiesRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
+  '/ministry': typeof MinistryRoute
   '/near': typeof NearRoute
   '/onboarding': typeof OnboardingRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/search': typeof SearchRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
@@ -265,11 +279,13 @@ export interface FileRoutesByTo {
   '/communities': typeof CommunitiesRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
+  '/ministry': typeof MinistryRoute
   '/near': typeof NearRoute
   '/onboarding': typeof OnboardingRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/search': typeof SearchRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
@@ -303,11 +319,13 @@ export interface FileRoutesById {
   '/communities': typeof CommunitiesRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
+  '/ministry': typeof MinistryRoute
   '/near': typeof NearRoute
   '/onboarding': typeof OnboardingRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/search': typeof SearchRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
@@ -342,11 +360,13 @@ export interface FileRouteTypes {
     | '/communities'
     | '/how-it-works'
     | '/login'
+    | '/ministry'
     | '/near'
     | '/onboarding'
     | '/privacy'
     | '/reset-password'
     | '/robots.txt'
+    | '/search'
     | '/signup'
     | '/sitemap.xml'
     | '/terms'
@@ -378,11 +398,13 @@ export interface FileRouteTypes {
     | '/communities'
     | '/how-it-works'
     | '/login'
+    | '/ministry'
     | '/near'
     | '/onboarding'
     | '/privacy'
     | '/reset-password'
     | '/robots.txt'
+    | '/search'
     | '/signup'
     | '/sitemap.xml'
     | '/terms'
@@ -415,11 +437,13 @@ export interface FileRouteTypes {
     | '/communities'
     | '/how-it-works'
     | '/login'
+    | '/ministry'
     | '/near'
     | '/onboarding'
     | '/privacy'
     | '/reset-password'
     | '/robots.txt'
+    | '/search'
     | '/signup'
     | '/sitemap.xml'
     | '/terms'
@@ -453,11 +477,13 @@ export interface RootRouteChildren {
   CommunitiesRoute: typeof CommunitiesRoute
   HowItWorksRoute: typeof HowItWorksRoute
   LoginRoute: typeof LoginRoute
+  MinistryRoute: typeof MinistryRoute
   NearRoute: typeof NearRoute
   OnboardingRoute: typeof OnboardingRoute
   PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
+  SearchRoute: typeof SearchRoute
   SignupRoute: typeof SignupRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
@@ -524,6 +550,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ministry': {
+      id: '/ministry'
+      path: '/ministry'
+      fullPath: '/ministry'
+      preLoaderRoute: typeof MinistryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/near': {
       id: '/near'
       path: '/near'
@@ -557,6 +590,13 @@ declare module '@tanstack/react-router' {
       path: '/robots.txt'
       fullPath: '/robots.txt'
       preLoaderRoute: typeof RobotsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/signup': {
@@ -759,11 +799,13 @@ const rootRouteChildren: RootRouteChildren = {
   CommunitiesRoute: CommunitiesRoute,
   HowItWorksRoute: HowItWorksRoute,
   LoginRoute: LoginRoute,
+  MinistryRoute: MinistryRoute,
   NearRoute: NearRoute,
   OnboardingRoute: OnboardingRoute,
   PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
+  SearchRoute: SearchRoute,
   SignupRoute: SignupRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,

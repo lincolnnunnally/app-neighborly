@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlaceSearch } from "@/components/community/place-search";
+import { SearchBox } from "@/components/community/search-box";
 import { JsonLd } from "@/components/community/json-ld";
 import { getCommunityFeed, listCommunities } from "@/lib/community/server";
 import type { Community, CommunityEvent, Need, Service } from "@/lib/community/types";
@@ -109,6 +110,15 @@ function LandingPage() {
               We will not invent neighbors or events for you.
             </p>
             <PlaceSearch size="lg" defaultValue="30474" />
+            {/* Two different questions, side by side: PlaceSearch answers
+                "which town?", SearchBox answers "what am I looking for?". */}
+            <div className="max-w-xl border-t border-border pt-4">
+              <p className="mb-2 text-sm text-fg-muted">
+                Looking for something in particular — a food pantry, a Bible study, a hand
+                with the yard? Search it in plain words.
+              </p>
+              <SearchBox />
+            </div>
             {weekend?.arrivingNote ? (
               <p className="max-w-xl rounded-[var(--radius-lg)] border border-primary/25 bg-primary-soft/40 p-4 text-sm text-fg">
                 {weekend.arrivingNote}

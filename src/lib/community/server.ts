@@ -214,6 +214,9 @@ function mapFacility(r: Record<string, unknown>): Facility {
     website: String(r.website ?? ""),
     listed_by: String(r.listed_by ?? ""),
     listed_by_name: String(r.listed_by_name ?? ""),
+    source_url: String(r.source_url ?? ""),
+    source_name: String(r.source_name ?? ""),
+    verified_on: String(r.verified_on ?? ""),
   };
 }
 
@@ -1334,13 +1337,24 @@ export const updatePantryListing = createServerFn({ method: "POST" })
       where id = ${data.id} and place_kind = 'pantry' limit 1
     `;
     if (!existing[0]) throw new Error("Pantry listing not found");
-    if (existing[0].listed_by !== context.userId) {
+    // A public listing (listed_by 'system') carries facts read off a source, so
+    // its hours go stale. Any active member may claim and correct one — that is
+    // the whole point of publishing it — and doing so makes them the neighbor
+    // who now speaks for it. Neighbor-added rows stay locked to their author.
+    const isSystemRow = existing[0].listed_by === "system";
+    if (!isSystemRow && existing[0].listed_by !== context.userId) {
       throw new Error("Only the neighbor who added this pantry can update it");
     }
     await ensureMember(sql, context.userId, existing[0].community_id);
+    const claimer = await sql<{ display_name: string }>`
+      select display_name from profiles where user_id = ${context.userId} limit 1
+    `;
+    const claimerName = claimer[0]?.display_name ?? "Neighbor";
     const pantry = readPantryInput({ ...data, communityId: existing[0].community_id });
     await sql`
       update facilities set
+        listed_by = ${context.userId},
+        listed_by_name = ${claimerName},
         name = ${pantry.name},
         description = ${pantry.description},
         address = ${pantry.address},
@@ -1354,9 +1368,10 @@ export const updatePantryListing = createServerFn({ method: "POST" })
         other_notes = ${pantry.other_notes},
         phone = ${pantry.phone},
         website = ${pantry.website}
-      where id = ${data.id} and listed_by = ${context.userId}
+      where id = ${data.id}
+        and (listed_by = ${context.userId} or listed_by = 'system')
     `;
-    return { id: data.id };
+    return { id: data.id, claimed: isSystemRow };
   });
 
 export const listMyPantryListings = createServerFn({ method: "GET" })

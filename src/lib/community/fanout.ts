@@ -66,7 +66,7 @@ function splitWhen(startsAt: string): { date: string; time: string; iso: string 
 
 function kindredType(kind?: string): string {
   if (kind === "cleanup" || kind === "serve") return "volunteer";
-  if (kind === "meeting") return "church";
+  if (kind === "meeting" || kind === "faith") return "church";
   return "social";
 }
 

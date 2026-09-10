@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { PantryDetails } from "@/components/community/pantry-details";
@@ -23,7 +23,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useCurrentUser } from "@/lib/auth/use-current-user";
-import { CC_GET_HELP, isPantry } from "@/lib/community/pantry";
+import { CC_GET_HELP, isPantry, isPublicListing } from "@/lib/community/pantry";
+import { parseQuery, scoreFields } from "@/lib/community/search";
 import {
   createPantryListing,
   getCommunityFeed,
@@ -78,7 +79,37 @@ function PlacesPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
 
+  const [pantryFilter, setPantryFilter] = useState("");
+
   const reservable = facilities.filter((f) => !isPantry(f));
+
+  // Every pantry on this board, not just the ones you added — this page is the
+  // directory a neighbor opens when they need food this week.
+  const pantryQuery = useMemo(() => parseQuery(pantryFilter), [pantryFilter]);
+  const communityPantries = useMemo(() => {
+    const rows = facilities.filter(isPantry);
+    if (pantryQuery.isEmpty) return rows;
+    return rows
+      .map((p) => ({
+        p,
+        score: scoreFields(pantryQuery, [
+          { text: p.name, weight: 3 },
+          { text: "food pantry groceries", weight: 2 },
+          { text: p.city, weight: 2 },
+          { text: [p.address, p.zip].join(" "), weight: 2 },
+          { text: [p.serve_days, p.serve_times].join(" "), weight: 1 },
+          { text: [p.description, p.other_notes, p.residency_note].join(" "), weight: 1 },
+        ]),
+      }))
+      .filter((r) => r.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .map((r) => r.p);
+  }, [facilities, pantryQuery]);
+
+  // Your listings on OTHER boards still deserve a place to be corrected.
+  const pantriesElsewhere = myPantries.filter(
+    (p) => !facilities.some((f) => f.id === p.id),
+  );
 
   async function reload(mid?: string) {
     const m = await getMyMemberships();
@@ -323,24 +354,51 @@ function PlacesPage() {
         </form>
       )}
 
-      <section className="space-y-3">
-        <h2 className="font-display text-lg font-semibold">Your pantry listings</h2>
-        {myPantries.length === 0 && (
+      <section className="space-y-3" data-testid="pantry-directory">
+        <h2 className="font-display text-lg font-semibold">Food pantries in this community</h2>
+        <p className="text-sm text-fg-muted">
+          Everything neighbors and public sources have listed here — not only your own.
+          Hours and requirements come from whoever listed them; call ahead before you drive.
+        </p>
+        <Input
+          value={pantryFilter}
+          onChange={(e) => setPantryFilter(e.target.value)}
+          data-testid="pantry-filter-input"
+          aria-label="Search pantries"
+          placeholder="Search pantries — Lyons, Wednesday, no ID needed…"
+        />
+        {communityPantries.length === 0 && (
           <p className="text-sm text-fg-muted">
-            None yet. Add or claim a real pantry — we did not seed invented hours.
+            {facilities.filter(isPantry).length === 0
+              ? "No pantry listings on this board yet. We did not seed invented hours — add or claim a real one."
+              : `No pantry matches “${pantryFilter}”. Clear the box to see all of them.`}
           </p>
         )}
-        {myPantries.map((p) => (
-          <button
-            key={p.id}
-            type="button"
-            onClick={() => startEdit(p)}
-            className="surface-card w-full p-4 text-left transition-colors hover:border-border-strong"
-          >
-            <PantryDetails pantry={p} compact />
-            <p className="mt-2 text-xs text-fg-subtle">Tap to update</p>
-          </button>
-        ))}
+        {communityPantries.map((p) => {
+          const mine = p.listed_by === user?.id;
+          const publicRow = isPublicListing(p);
+          return (
+            <div key={p.id} className="surface-card p-4" data-testid={`pantry-card-${p.id}`}>
+              <PantryDetails pantry={p} />
+              {mine || publicRow ? (
+                <Button
+                  className="mt-3"
+                  size="sm"
+                  variant={mine ? "default" : "secondary"}
+                  data-testid={mine ? `pantry-edit-${p.id}` : `pantry-claim-${p.id}`}
+                  onClick={() => startEdit(p)}
+                >
+                  {mine ? "Update this listing" : "Claim & correct these hours"}
+                </Button>
+              ) : (
+                <p className="mt-3 text-xs text-fg-subtle">
+                  Listed by {p.listed_by_name || "a neighbor"} — ask them to update it if
+                  something here is wrong.
+                </p>
+              )}
+            </div>
+          );
+        })}
         <p className="text-sm text-fg-muted">
           Church food assistance also lives on{" "}
           <a className="text-primary underline" href={CC_GET_HELP} target="_blank" rel="noreferrer">
@@ -349,6 +407,23 @@ function PlacesPage() {
           . Neighborly does not copy that directory.
         </p>
       </section>
+
+      {pantriesElsewhere.length > 0 && (
+        <section className="space-y-3">
+          <h2 className="font-display text-lg font-semibold">Your pantry listings elsewhere</h2>
+          {pantriesElsewhere.map((p) => (
+            <button
+              key={p.id}
+              type="button"
+              onClick={() => startEdit(p)}
+              className="surface-card w-full p-4 text-left transition-colors hover:border-border-strong"
+            >
+              <PantryDetails pantry={p} compact />
+              <p className="mt-2 text-xs text-fg-subtle">Tap to update</p>
+            </button>
+          ))}
+        </section>
+      )}
 
       <section className="space-y-3">
         <h2 className="font-display text-lg font-semibold">Reservable places</h2>

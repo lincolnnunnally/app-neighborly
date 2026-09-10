@@ -148,6 +148,11 @@ export type Facility = {
   website: string;
   listed_by: string;
   listed_by_name: string;
+  /** Where a public listing's facts came from — empty for neighbor-added rows. */
+  source_url: string;
+  source_name: string;
+  /** YYYY-MM-DD the source was last read. Empty when never checked. */
+  verified_on: string;
 };
 
 export type Neighbor = {
@@ -375,6 +380,10 @@ export type ToolMessage = {
 export const EVENT_KINDS = [
   { id: "invite", label: "Who's interested? I'll host if people come" },
   { id: "quiet", label: "Quiet / seated (book club, crafts)" },
+  // Faith gatherings are a first-class kind, not "other": Bible studies, small
+  // groups, prayer and ministry nights are a main reason neighbors here look
+  // for something to join.
+  { id: "faith", label: "Bible study / small group / ministry" },
   { id: "active", label: "Active / outdoors" },
   { id: "restaurant", label: "Restaurant night (trivia, karaoke, special)" },
   { id: "social", label: "Social" },
