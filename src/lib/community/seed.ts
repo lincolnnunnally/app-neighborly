@@ -1,5 +1,43 @@
 import type { Sql } from "@/lib/db";
-import { TOOMBS_PANTRY_LISTINGS } from "./toombs-pantries";
+import { TOOMBS_PANTRY_LISTINGS, type PublicPantryListing } from "./toombs-pantries";
+
+function nameKey(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, "");
+}
+
+type PlentyPlace = { name: string; hours?: string; closed?: boolean; address?: string; city?: string; phone?: string };
+
+async function plentyHours(): Promise<PlentyPlace[]> {
+  const res = await fetch("https://plenty.unitedundergod.org/api/around", {
+    signal: AbortSignal.timeout(8000)
+  });
+  if (!res.ok) return [];
+  const json = (await res.json()) as { places?: PlentyPlace[] };
+  return json.places || [];
+}
+
+function overlayListing(row: PublicPantryListing, live: PlentyPlace[]): PublicPantryListing {
+  const key = nameKey(row.name);
+  const hit = live.find((p) => {
+    const k = nameKey(p.name);
+    return k.includes(key) || key.includes(k);
+  });
+  if (!hit?.hours && !hit?.closed) return row;
+  return {
+    ...row,
+    address: hit.address || row.address,
+    city: hit.city || row.city,
+    phone: hit.phone || row.phone,
+    serve_times: hit.hours || row.serve_times,
+    other_notes: hit.closed
+      ? "Visited in person — building empty / closed. Do not send people here."
+      : `Hours from a Plenty walk-in. ${row.other_notes || ""}`.trim(),
+    source_name: "Plenty field visit (plenty.unitedundergod.org/around)",
+    source_url: "https://plenty.unitedundergod.org/around",
+    verified_on: hit.hours || hit.closed ? new Date().toISOString().slice(0, 10) : row.verified_on,
+    closed: Boolean(hit.closed) || row.closed
+  };
+}
 
 /**
  * Seed first-market structure once per DB lifetime.
@@ -34,7 +72,9 @@ export async function ensureSeeded(sql: Sql): Promise<void> {
  * so a search does not send a hungry neighbor to an empty building.
  */
 export async function refreshToombsPantries(sql: Sql): Promise<void> {
-  for (const p of TOOMBS_PANTRY_LISTINGS) {
+  const live = await plentyHours().catch(() => []);
+  for (const raw of TOOMBS_PANTRY_LISTINGS) {
+    const p = overlayListing(raw, live);
     const community = await sql<{ id: string }>`
       select id from communities where id = ${p.communityId}
     `;
