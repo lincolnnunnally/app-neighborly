@@ -22,9 +22,16 @@
  *    sources agree. Hours are the field that sends someone on a wasted trip.
  *    A single-source or conflicting hour goes in `other_notes` as a REPORTED
  *    hour, never in the hours field.
- * 3. When sources disagree on an ADDRESS, no address is published at all —
- *    only the phone, plus both candidate addresses in the notes. Driving a
- *    hungry family to the wrong building is the worst thing this file could do.
+ * 3. When sources disagree on an ADDRESS, publish no address at all — only the
+ *    phone, plus both candidates in the notes. Driving a hungry family to the
+ *    wrong building is the worst thing this file could do.
+ *    The ONE exception is a conflict that a newer, first-party, dated source
+ *    actually settles — the organization's own filing or announcement, with
+ *    corroboration. Then publish the current address and use the notes to
+ *    explain the stale one, so a neighbor who checked an old directory is not
+ *    left wondering which of the two to believe. God's Store House is the
+ *    worked example: its own accounts date the move, and the local paper
+ *    reported it, against a directory line nobody refreshed.
  * 4. Organizations outside Toombs County are excluded no matter how often they
  *    surface under a "Vidalia GA" search (Mount Vernon / Ailey are Montgomery
  *    County; Glennville and Reidsville are Tattnall; Soperton is Treutlen).
