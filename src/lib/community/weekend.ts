@@ -263,16 +263,20 @@ export async function buildWeekendPlan(opts?: {
         ? "The Pal Theatre"
         : row.description.includes("Visit Vidalia")
           ? "Visit Vidalia"
-          : row.description.includes("fbcvidalia.org") || row.description.includes("Vidalia, Georgia")
+          : row.description.includes("fbcvidalia.org")
             ? "First Baptist Vidalia, Georgia"
-            : "Neighborly public listing",
+            : row.description.includes("Recreation Complex") || row.description.includes("Stockyard")
+              ? "Vidalia Parks & Rec"
+              : "Neighborly public listing",
       sourceUrl: row.description.includes("Pal Theatre")
         ? "https://thepaltheatre.com/"
         : row.description.includes("Visit Vidalia")
           ? "https://visitvidaliaga.com/things-to-do/events/"
           : row.description.includes("fbcvidalia.org")
             ? "https://www.fbcvidalia.org"
-            : `https://neighborly.unitedundergod.org/c/${community.slug}`,
+            : row.description.includes("Recreation Complex") || row.description.includes("Stockyard")
+              ? "https://vidaliaga.gov/departments/parks-and-recreation/"
+              : `https://neighborly.unitedundergod.org/c/${community.slug}`,
       eventId: row.id,
       kind: row.kind || "social",
     };
