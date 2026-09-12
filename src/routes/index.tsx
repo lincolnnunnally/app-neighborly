@@ -269,7 +269,7 @@ function LandingPage() {
           {[
             {
               title: "Pickleball",
-              body: "Outdoor courts at the Rec Complex (102 Stockyard Rd) and indoor play at First Baptist gym. Beginners welcome.",
+              body: "Outdoor courts at the Rec Complex, 102 Stockyard Rd, Vidalia, Georgia. Free public play. Beginners welcome.",
               href: "/c/vidalia-pickleball",
             },
             {
@@ -283,8 +283,8 @@ function LandingPage() {
               href: "/c/vidalia-dads",
             },
             {
-              title: "Church & recovery",
-              body: "Celebrate Recovery Thursday 6pm at First Baptist. GriefShare and pickleball are also on their public calendar.",
+              title: "First Baptist Vidalia, Georgia",
+              body: "107 E Second St. Sunday worship 10:30am. GriefShare as posted at fbcvidalia.org — not the Louisiana church of the same name.",
               href: "/c/vidalia",
             },
             {

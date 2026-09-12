@@ -132,7 +132,7 @@ export function recommendNextSteps(profile: Partial<Profile>): NextStep[] {
     steps.push({
       kind: "community",
       title: "Vidalia pickleball",
-      why: "Play first, talk second. Rec Complex and First Baptist gym.",
+      why: "Play first, talk second. Rec Complex, 102 Stockyard Rd, Vidalia, Georgia.",
       href: "/c/vidalia-pickleball",
     });
   }

@@ -95,10 +95,17 @@ async function findVidaliaChurch(
   const q = `select id::text as id, name, coalesce(city,'') as city, coalesce(state,'') as state,
                     coalesce(subdomain,'') as subdomain
                from churches
-              where city ilike '%Vidalia%'
+              where (
+                    (city ilike '%Vidalia%' and (state ilike 'GA' or state ilike 'Georgia'))
+                 or (name ilike '%First Baptist%Vidalia%' and (state ilike 'GA' or state ilike 'Georgia'))
                  or name ilike '%United Under God%'
-                 or name ilike '%First Baptist%Vidalia%'
-              order by case when city ilike '%Vidalia%' then 0 else 1 end
+              )
+                and coalesce(state, '') not ilike 'LA'
+                and coalesce(state, '') not ilike 'Louisiana'
+              order by case
+                when city ilike '%Vidalia%' and (state ilike 'GA' or state ilike 'Georgia') then 0
+                else 1
+              end
               limit 1`;
   try {
     const rows = await sql.query<{
@@ -123,7 +130,10 @@ async function findVidaliaChurch(
       `select id::text as id, name, coalesce(city,'') as city, coalesce(state,'') as state,
               coalesce(subdomain,'') as subdomain
          from church_organizations
-        where city ilike '%Vidalia%' or name ilike '%United Under God%'
+        where (city ilike '%Vidalia%' or name ilike '%United Under God%')
+          and (state ilike 'GA' or state ilike 'Georgia' or state = '' or state is null)
+          and coalesce(state, '') not ilike 'LA'
+          and coalesce(state, '') not ilike 'Louisiana'
         limit 1`,
     );
     return rows[0] ?? null;

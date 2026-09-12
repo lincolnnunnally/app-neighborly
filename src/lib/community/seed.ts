@@ -50,14 +50,33 @@ function overlayListing(row: PublicPantryListing, live: PlentyPlace[]): PublicPa
  * as real people. Communities and facilities are real places/structures;
  * open boards start empty so the first real posts are honest.
  *
- * Public gatherings (pickleball, Celebrate Recovery) are listed as system
- * rows with host_name "Public listing" — not as if a neighbor posted them.
+ * Public gatherings are listed as system rows with host_name "Public listing"
+ * — not as if a neighbor posted them.
+ *
+ * Vidalia here is always Vidalia, Georgia (30474). fbcvidalia.com is
+ * First Baptist in Vidalia, Louisiana — never use it as a source.
  */
+export const FBC_VIDALIA_GA = {
+  name: "First Baptist Church of Vidalia, Georgia",
+  url: "https://www.fbcvidalia.org",
+  griefshareUrl: "https://www.fbcvidalia.org/griefshare",
+  address: "107 E Second St, Vidalia, GA 30474",
+  phone: "912-537-4196",
+};
+
+const LOUISIANA_FBC_EVENT_IDS = [
+  "evt_vidalia_fbc_pb_sun",
+  "evt_vidalia_fbc_pb_beginner",
+  "evt_vidalia_fbc_pb_tue",
+  "evt_vidalia_celebrate_recovery",
+];
+
 export async function ensureSeeded(sql: Sql): Promise<void> {
   await ensureMilsteadV1(sql);
   await ensureVidaliaV2(sql);
   await ensureVidaliaV3(sql);
   await ensurePlaceCoords(sql);
+  await ensureVidaliaGeorgiaNotLouisiana(sql);
   await refreshVidaliaPublicEvents(sql);
   await refreshToombsPantries(sql);
 }
@@ -322,7 +341,7 @@ async function ensureVidaliaV2(sql: Sql): Promise<void> {
       'vidalia-pickleball',
       'Vidalia pickleball',
       'Play together, then talk',
-      'Public play at the Recreation Complex (102 Stockyard Rd) and indoor play at First Baptist Vidalia gym. Beginners welcome. A simple way to meet people without forcing a conversation first.',
+      'Public play at the Recreation Complex, 102 Stockyard Rd, Vidalia, Georgia. Free outdoor courts. Beginners welcome. We do not list gym hours from Vidalia, Louisiana.',
       'Vidalia',
       'GA',
       'interest',
@@ -384,10 +403,10 @@ async function ensureVidaliaV2(sql: Sql): Promise<void> {
       'Public streets', 'Downtown Vidalia Association'
     ),
     (
-      'fac_vid_fbc_gym', 'comm_vidalia_pickleball', 'First Baptist Vidalia gym',
-      'Indoor pickleball listed on the church calendar: Sunday 2:30pm, Tuesday 6:30pm, beginner class Monday 4:30pm. Open to the community as posted — confirm on fbcvidalia.com/events.',
-      24, ${JSON.stringify(["Indoor courts", "Beginner class"])},
-      'Community pickleball as posted by the church', 'First Baptist Vidalia'
+      'fac_vid_fbc_gym', 'comm_vidalia', 'First Baptist Church of Vidalia, Georgia',
+      '107 E Second St, Vidalia, GA 30474. Sunday worship 10:30am. GriefShare and other ministries as posted at fbcvidalia.org. This is not fbcvidalia.com (Vidalia, Louisiana). Phone 912-537-4196.',
+      200, ${JSON.stringify(["Worship", "GriefShare", "Downtown"])},
+      'Public church — confirm ministries on fbcvidalia.org', 'First Baptist Church of Vidalia, Georgia'
     ),
     (
       'fac_vid_rec_courts', 'comm_vidalia_pickleball', 'Rec Complex pickleball courts',
@@ -399,6 +418,40 @@ async function ensureVidaliaV2(sql: Sql): Promise<void> {
 
   await sql`
     insert into seed_meta (key, value) values ('community_v2_vidalia', '1')
+  `;
+}
+
+/** Always-run correction: never treat Vidalia, Louisiana as this town. */
+async function ensureVidaliaGeorgiaNotLouisiana(sql: Sql): Promise<void> {
+  await sql`
+    update communities
+    set city = 'Vidalia',
+        state = 'GA',
+        zip = coalesce(nullif(zip, ''), '30474'),
+        description = 'Public play at the Recreation Complex, 102 Stockyard Rd, Vidalia, Georgia. Free outdoor courts. Beginners welcome. We do not list gym hours from Vidalia, Louisiana.'
+    where id = 'comm_vidalia_pickleball'
+  `;
+  await sql`
+    update communities
+    set city = 'Vidalia', state = 'GA', zip = coalesce(nullif(zip, ''), '30474')
+    where id in ('comm_vidalia', 'comm_vidalia_dads', 'comm_vidalia_pickleball')
+  `;
+  await sql`
+    update facilities
+    set community_id = 'comm_vidalia',
+        name = ${FBC_VIDALIA_GA.name},
+        description = ${`${FBC_VIDALIA_GA.address}. Sunday worship 10:30am. GriefShare and other ministries as posted at fbcvidalia.org. This is not fbcvidalia.com (Vidalia, Louisiana). Phone ${FBC_VIDALIA_GA.phone}.`},
+        amenities = ${JSON.stringify(["Worship", "GriefShare", "Downtown"])},
+        rate_note = 'Public church — confirm ministries on fbcvidalia.org',
+        contact_name = ${FBC_VIDALIA_GA.name}
+    where id = 'fac_vid_fbc_gym'
+  `;
+  for (const id of LOUISIANA_FBC_EVENT_IDS) {
+    await sql`delete from events where id = ${id}`;
+  }
+  await sql`
+    delete from events
+    where description ilike '%fbcvidalia.com%'
   `;
 }
 
@@ -575,56 +628,28 @@ export async function refreshVidaliaPublicEvents(sql: Sql): Promise<void> {
   `;
   if (communities.length === 0) return;
 
+  await ensureVidaliaGeorgiaNotLouisiana(sql);
+
   const listings = [
-    {
-      id: "evt_vidalia_fbc_pb_sun",
-      community_id: "comm_vidalia_pickleball",
-      title: "Indoor pickleball — First Baptist gym",
-      description:
-        "Public listing (not a neighbor-hosted event): Sunday pickleball in the First Baptist Vidalia gym at 2:30pm, as posted on fbcvidalia.com/events. RSVP here if you want company walking in. Confirm on the church calendar before you go.",
-      kind: "social",
-      location: "First Baptist Vidalia gym",
-      starts_at: nextEasternISO(0, 14, 30),
-    },
-    {
-      id: "evt_vidalia_fbc_pb_beginner",
-      community_id: "comm_vidalia_pickleball",
-      title: "Beginner pickleball class — First Baptist gym",
-      description:
-        "Public listing: Monday 4:30pm beginner pickleball class at First Baptist Vidalia gym. New players welcome. Confirm on fbcvidalia.com/events.",
-      kind: "social",
-      location: "First Baptist Vidalia gym",
-      starts_at: nextEasternISO(1, 16, 30),
-    },
-    {
-      id: "evt_vidalia_fbc_pb_tue",
-      community_id: "comm_vidalia_pickleball",
-      title: "Tuesday pickleball — First Baptist gym",
-      description:
-        "Public listing: Tuesday 6:30pm pickleball at First Baptist Vidalia gym. Confirm on the church calendar.",
-      kind: "social",
-      location: "First Baptist Vidalia gym",
-      starts_at: nextEasternISO(2, 18, 30),
-    },
     {
       id: "evt_vidalia_rec_pb",
       community_id: "comm_vidalia_pickleball",
       title: "Outdoor pickleball — Rec Complex",
       description:
-        "Public listing: open play at Vidalia Recreation Complex, 102 Stockyard Rd. Courts are public and free. Typical open play has been Sunday 2:00pm and Monday/Thursday 5:30pm — show up, or post a need if you want a hitting partner.",
+        "Public listing: open play at Vidalia Recreation Complex, 102 Stockyard Rd, Vidalia, Georgia. Courts are public and free. Typical open play has been Sunday 2:00pm and Monday/Thursday 5:30pm — show up, or post a need if you want a hitting partner. Confirm with Vidalia Parks & Rec (912-537-7913).",
       kind: "social",
-      location: "102 Stockyard Rd, Vidalia",
+      location: "102 Stockyard Rd, Vidalia, GA",
       starts_at: nextEasternISO(0, 14, 0),
     },
     {
-      id: "evt_vidalia_celebrate_recovery",
+      id: "evt_vidalia_fbc_ga_griefshare",
       community_id: "comm_vidalia",
-      title: "Celebrate Recovery — First Baptist Vidalia",
+      title: "GriefShare — First Baptist Vidalia, Georgia",
       description:
-        "Public listing: Thursday 6:00–8:00pm Christ-centered recovery gathering at First Baptist Vidalia (gym/sanctuary). For anyone walking through hurt, pain, or habit. You do not have to have it together to sit in the room. Confirm at fbcvidalia.com/events.",
+        `Public listing from ${FBC_VIDALIA_GA.name} (${FBC_VIDALIA_GA.address}): a grief support group. The church homepage lists Tuesdays at 5:30pm; confirm the current session and room at ${FBC_VIDALIA_GA.griefshareUrl} before you go. This is not First Baptist in Vidalia, Louisiana.`,
       kind: "meeting",
-      location: "First Baptist Vidalia — gym / sanctuary",
-      starts_at: nextEasternISO(4, 18, 0),
+      location: FBC_VIDALIA_GA.address,
+      starts_at: nextEasternISO(2, 17, 30),
     },
     {
       id: "evt_vidalia_downtown",

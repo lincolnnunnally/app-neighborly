@@ -53,9 +53,9 @@ function NearPage() {
             </p>
             <p>
               Listings refresh <strong className="text-fg">at most once per day per town</strong>,
-              and only when someone actually asks. Vidalia has curated public calendars (Pal,
-              Visit Vidalia, Parks, First Baptist). A new ZIP starts empty until a real person
-              or organizer adds a public listing.
+              and only when someone actually asks. Vidalia, Georgia has curated public calendars
+              (Pal, Visit Vidalia, Parks, First Baptist at fbcvidalia.org). A new ZIP starts empty
+              until a real person or organizer adds a public listing.
             </p>
             <p>
               Empty towns fill when a neighbor hosts: “who wants spoon carving?” or a

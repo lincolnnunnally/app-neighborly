@@ -335,7 +335,8 @@ export async function maybeRefreshListings(
         select count(*)::int as c from events where community_id in ('comm_vidalia', 'comm_vidalia_pickleball', 'comm_vidalia_dads')
       `;
       listings = Number(count[0]?.c || 0);
-      note = "Refreshed Vidalia public listings (Pal, Visit Vidalia, FBC, Parks). No Facebook scrape.";
+      note =
+        "Refreshed Vidalia, Georgia public listings (Pal, Visit Vidalia, Parks, FBC Georgia). Not Vidalia, Louisiana. No Facebook scrape.";
     } else {
       note =
         "No curated calendar for this town yet. The board stays empty until a neighbor or organizer adds a real public listing. We will not invent events with AI.";

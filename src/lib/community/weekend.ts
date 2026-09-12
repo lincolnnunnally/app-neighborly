@@ -263,15 +263,15 @@ export async function buildWeekendPlan(opts?: {
         ? "The Pal Theatre"
         : row.description.includes("Visit Vidalia")
           ? "Visit Vidalia"
-          : row.description.includes("First Baptist")
-            ? "First Baptist Vidalia"
+          : row.description.includes("fbcvidalia.org") || row.description.includes("Vidalia, Georgia")
+            ? "First Baptist Vidalia, Georgia"
             : "Neighborly public listing",
       sourceUrl: row.description.includes("Pal Theatre")
         ? "https://thepaltheatre.com/"
         : row.description.includes("Visit Vidalia")
           ? "https://visitvidaliaga.com/things-to-do/events/"
-          : row.description.includes("fbcvidalia")
-            ? "https://fbcvidalia.com/events"
+          : row.description.includes("fbcvidalia.org")
+            ? "https://www.fbcvidalia.org"
             : `https://neighborly.unitedundergod.org/c/${community.slug}`,
       eventId: row.id,
       kind: row.kind || "social",
@@ -339,7 +339,11 @@ export async function buildWeekendPlan(opts?: {
     { name: "Visit Vidalia", url: "https://visitvidaliaga.com/things-to-do/events/", note: "City tourism calendar" },
     { name: "The Pal Theatre", url: "https://thepaltheatre.com/", note: "Movies and live shows" },
     { name: "Vidalia Parks & Rec", url: "https://vidaliaga.gov/departments/parks-and-recreation/", note: "Parks and fields" },
-    { name: "First Baptist Vidalia", url: "https://fbcvidalia.com/events", note: "Pickleball, recovery, grief groups" },
+    {
+      name: "First Baptist Vidalia, Georgia",
+      url: "https://www.fbcvidalia.org",
+      note: "107 E Second St — GriefShare and worship. Not the Louisiana church.",
+    },
   ];
 
   const plan: WeekendPlan = {

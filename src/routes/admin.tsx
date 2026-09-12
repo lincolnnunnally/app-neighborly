@@ -41,9 +41,9 @@ const CALENDARS = [
     note: "City tourism calendar — onion festival, parades, downtown.",
   },
   {
-    name: "First Baptist Vidalia",
-    url: "https://fbcvidalia.com/events",
-    note: "Pickleball, Celebrate Recovery, GriefShare — confirm before listing.",
+    name: "First Baptist Vidalia, Georgia",
+    url: "https://www.fbcvidalia.org",
+    note: "107 E Second St, Vidalia, GA — GriefShare and worship. Do not use fbcvidalia.com (that is Louisiana).",
   },
   {
     name: "Vidalia Parks & Rec",
@@ -459,7 +459,7 @@ function AdminPage() {
                         required
                         value={serveForm.orgName}
                         onChange={(e) => setServeForm((f) => ({ ...f, orgName: e.target.value }))}
-                        placeholder="First Baptist Vidalia"
+                        placeholder="First Baptist Vidalia, Georgia"
                       />
                     </Field>
                     <Field label="The need">
