@@ -1,3 +1,5 @@
+import { PresenceConnectCard } from "./presence-connect-card";
+
 /**
  * Doorway copy — doctrine 11_GROWTH_PAST_FIRST_DISCOVERY.md §8.
  * Invitation only. Never a score.
@@ -33,6 +35,7 @@ export function PresenceNudge({ compact = false }: { compact?: boolean }) {
         This is not “say yes to everyone.” If something feels harmful, use Report and Block,
         meet in public, and call 988 in a crisis.
       </p>
+      <PresenceConnectCard />
     </aside>
   );
 }
