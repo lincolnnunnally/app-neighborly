@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/layout/site-header";
+import { PagePending } from "@/components/layout/page-pending";
 import { PlaceSearch } from "@/components/community/place-search";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { townPhoto } from "@/components/community/cover";
@@ -35,6 +36,11 @@ export const Route = createFileRoute("/near")({
       },
     ],
   }),
+  // Looking up the town takes a moment: show the loading state right away rather
+  // than leaving the previous page (often home) under the /near URL.
+  pendingMs: 0,
+  pendingMinMs: 200,
+  pendingComponent: PagePending,
   component: NearPage,
 });
 

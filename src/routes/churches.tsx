@@ -10,6 +10,7 @@ import { CC_GET_HELP, CC_PUBLIC_ORIGIN, type CcChurch } from "@/lib/community/ch
 import { readSavedPlace, writeSavedPlace } from "@/lib/community/saved-place";
 import { saveHomePlace } from "@/lib/community/server";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
+import { loadChurchTown } from "@/lib/community/church-town";
 
 type ChurchSearch = {
   zip?: string;
@@ -39,9 +40,12 @@ export const Route = createFileRoute("/churches")({
     today: asSearchString(s.today),
     morning: asSearchString(s.morning),
   }),
-  head: () => ({
+  // The heading names the town: the URL's city or ZIP, else the saved place.
+  loaderDeps: ({ search }) => ({ zip: search.zip, city: search.city, state: search.state }),
+  loader: async ({ deps }) => ({ town: await loadChurchTown(deps).catch(() => null) }),
+  head: ({ loaderData }) => ({
     meta: [
-      { title: "Churches near you — Neighborly" },
+      { title: `Churches near ${loaderData?.town?.city || "you"} — Neighborly` },
       {
         name: "description",
         content:
@@ -54,6 +58,7 @@ export const Route = createFileRoute("/churches")({
 
 function ChurchesPage() {
   const search = Route.useSearch();
+  const { town } = Route.useLoaderData();
   const navigate = useNavigate({ from: "/churches" });
   const { user } = useCurrentUserState();
   // A city link (e.g. ?city=Milstead&state=GA) must not fall back to the Vidalia ZIP.
@@ -184,9 +189,9 @@ function ChurchesPage() {
       setZip(nextZip);
       setCity(nextCity);
       setState(nextState);
-    }
-    if (!search.zip && !search.city) {
-      persistFilters({ zip: nextZip, city: nextCity, state: nextState });
+      // Put a saved town in the URL; with none, keep plain /churches ("Churches near
+      // you") instead of writing the Vidalia default into it.
+      if (saved?.zip || saved?.city) persistFilters({ zip: nextZip, city: nextCity, state: nextState });
     }
     const params = new URLSearchParams();
     if (nextZip.trim()) params.set("zip", nextZip.trim());
@@ -232,7 +237,7 @@ function ChurchesPage() {
         <div className="max-w-2xl space-y-3">
           <p className="text-sm font-semibold uppercase tracking-wide text-primary">Churches</p>
           <h1 className="font-display text-4xl font-semibold tracking-tight">
-            Churches near you
+            Churches near {town?.city || "you"}
           </h1>
           <p className="text-lg text-fg-muted">
             Find a church home nearby — service times, worship style, and denomination

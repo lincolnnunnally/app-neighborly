@@ -318,3 +318,23 @@ test("Place cookie: the server's JSON and the client's encoded value parse the s
   assert.deepEqual(parsePlaceCookie(json), parsePlaceCookie(encodeURIComponent(json)));
   assert.equal(parsePlaceCookie(json).city, "Covington");
 });
+
+test("Churches heading: URL city, then the URL ZIP's town, then the saved place, else 'you'", async () => {
+  const { resolveChurchTown } = await import("../src/lib/community/church-town.ts");
+  const cov = { zip: "30014", city: "Covington", state: "GA" };
+  const lookups = [];
+  const deps = (saved) => ({
+    saved: async () => saved,
+    lookupZip: async (zip) => (lookups.push(zip), zip === "30014" ? { city: "Covington", state: "GA" } : null),
+  });
+  assert.deepEqual(await resolveChurchTown({ zip: "30014" }, deps(null)), { city: "Covington", state: "GA" });
+  assert.deepEqual(lookups, ["30014"]);
+  // Saved place with the same ZIP: no lookup.
+  assert.deepEqual(await resolveChurchTown({ zip: "30014" }, deps(cov)), { city: "Covington", state: "GA" });
+  assert.equal(lookups.length, 1);
+  // The URL wins over a different saved town.
+  assert.equal((await resolveChurchTown({ city: "Milstead", state: "GA" }, deps(cov))).city, "Milstead");
+  assert.equal((await resolveChurchTown({}, deps(cov))).city, "Covington");
+  assert.equal(await resolveChurchTown({}, deps(null)), null);
+  assert.equal(await resolveChurchTown({ zip: "99999" }, deps(null)), null);
+});

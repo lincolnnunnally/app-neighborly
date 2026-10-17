@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { weekendLede } from "@/lib/events/lede";
 import { HandHeart, Soup, Wrench } from "lucide-react";
 import { SiteHeader } from "@/components/layout/site-header";
+import { PagePending } from "@/components/layout/page-pending";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { PlaceSearch } from "@/components/community/place-search";
 import { JsonLd } from "@/components/community/json-ld";
@@ -102,6 +103,10 @@ export const Route = createFileRoute("/")({
       ],
     };
   },
+  // Same for home (the logo, a new town): a loading state, never the old page.
+  pendingMs: 0,
+  pendingMinMs: 200,
+  pendingComponent: PagePending,
   component: LandingPage,
 });
 
