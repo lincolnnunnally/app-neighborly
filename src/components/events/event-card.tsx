@@ -67,12 +67,12 @@ export function ongoingEndMs(e: PublicEvent, nowMs = Date.now()): number | null 
 export function whenLabel(e: PublicEvent, nowMs = Date.now()): string {
   const through = ongoingEndMs(e, nowMs);
   if (through != null)
-    return `Through ${new Intl.DateTimeFormat("en-US", { timeZone: TZ, weekday: "short", month: "short", day: "numeric" }).format(through).replace(",", "")}`;
+    return `Through ${new Intl.DateTimeFormat("en-US", { timeZone: TZ, weekday: "short", month: "short", day: "numeric" }).format(through)}`;
   const day = new Intl.DateTimeFormat("en-US", { timeZone: TZ, weekday: "short" }).format(e.startMs);
   if (e.allDay || e.multiDay) {
     const date = new Intl.DateTimeFormat("en-US", { timeZone: TZ, month: "short", day: "numeric" }).format(e.startMs);
     return e.multiDay && e.endMs
-      ? `${day} ${date} – ${new Intl.DateTimeFormat("en-US", { timeZone: TZ, weekday: "short", month: "short", day: "numeric" }).format(e.endMs - 1)}`
+      ? `${day}, ${date} – ${new Intl.DateTimeFormat("en-US", { timeZone: TZ, weekday: "short", month: "short", day: "numeric" }).format(e.endMs - 1)}`
       : `${day}, ${date} · All day`;
   }
   const time = new Intl.DateTimeFormat("en-US", { timeZone: TZ, hour: "numeric", minute: "2-digit" }).format(e.startMs);
@@ -136,6 +136,7 @@ export function EventCard({ event, compact = false, near }: { event: PublicEvent
   const local = placePhoto(event);
   const photo = event.image && !broken ? { src: event.image, alt: "" } : local;
   const board = event.sourceId === "board";
+  const labels = cardLabels(event);
   const runs = event.multiDay ? null : runsLabel(event.summary, event.startMs);
   const more = event.alsoOn?.length
     ? `Also ${event.alsoOn
@@ -160,9 +161,11 @@ export function EventCard({ event, compact = false, near }: { event: PublicEvent
             <Icon className="h-12 w-12" aria-hidden strokeWidth={1.6} />
           </div>
         )}
-        <span className="absolute left-3 top-3 rounded-full bg-bg-elevated/95 px-3 py-1 text-sm font-semibold text-fg shadow-sm">
-          {cardLabels(event).join(" · ")}
-        </span>
+        {labels.length > 0 && (
+          <span className="absolute left-3 top-3 rounded-full bg-bg-elevated/95 px-3 py-1 text-sm font-semibold text-fg shadow-sm">
+            {labels.join(" · ")}
+          </span>
+        )}
         {event.free && (
           <span className="absolute right-3 top-3 rounded-full bg-primary px-3 py-1 text-sm font-semibold text-primary-fg">
             Free

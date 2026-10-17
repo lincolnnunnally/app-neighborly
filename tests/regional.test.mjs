@@ -190,19 +190,19 @@ test("Category chips: keyword + source rules, sports never under arts chips", ()
   assert.ok(chipsFor(ev({ title: "Sometimes the Rain, Sometimes the Sea", category: "arts", venue: "Center for Art & Theatre" })).includes("performing"));
   assert.ok(!chipsFor(ev({ title: "Fall Used Book Sale", venue: "Oconee Regional Library" })).includes("performing"));
   assert.deepEqual(chipsFor(ev({ title: "Statesboro Main Street Farmers Market", category: "food" })), ["markets"]);
-  assert.deepEqual(chipsFor(ev({ title: "Georgia Southern Baseball vs Winthrop", category: "sports" })), []);
+  assert.deepEqual(chipsFor(ev({ title: "Georgia Southern Baseball vs Winthrop", category: "sports" })), ["sports"]);
   assert.ok(chipsFor(ev({ title: "Downtown Dublin Chili Cook-Off & Fall Festival", category: "festival" })).includes("festivals"));
-  const list = [ev({ title: "Concert", category: "music" }), ev({ title: "Book Sale" })];
+  const list = [ev({ title: "Concert", category: "music" }), ev({ title: "Saturday Farmers Market" })];
   assert.equal(chipCounts(list).music, 1);
   assert.equal(chipCounts(list).markets, 1);
   assert.equal(filterByChip(list, "markets").length, 1);
   assert.equal(filterByChip(list, undefined).length, 2);
-  assert.ok(isChipId("performing") && !isChipId("sports"));
+  assert.ok(isChipId("performing") && isChipId("sports") && !isChipId("arts"));
 });
 
 test("One taxonomy: each chip shows exactly the cards that carry its label (Vidalia, Oct 17 feed)", () => {
-  const list = JSON.parse(fx("vidalia-weekend-20261017.json"));
-  assert.ok(list.length > 30);
+  const list = [...JSON.parse(fx("vidalia-weekend-20261017.json")), ...JSON.parse(fx("atlanta-weekend-20261017.json"))];
+  assert.ok(list.length > 100);
   const chipLabels = new Set(CHIPS.map((c) => c.label));
   for (const c of CHIPS) {
     const byChip = filterByChip(list, c.id).map((e) => e.id).sort();
@@ -215,7 +215,8 @@ test("One taxonomy: each chip shows exactly the cards that carry its label (Vida
     assert.deepEqual(labels, chipsFor(e).map((id) => CHIPS.find((c) => c.id === id).label), e.title);
   }
   const book = list.find((e) => e.title === "Fall Used Book Sale");
-  assert.deepEqual(cardLabels(book), ["Family", "Food & markets"]);
+  // A book sale is not a market, and "kids" as a book topic is not a family event.
+  assert.deepEqual(cardLabels(book), []);
   const farm = list.find((e) => e.title === "Dublin Farm Dinners");
   assert.ok(filterByChip([farm], "markets").length === 1 && cardLabels(farm).includes("Food & markets"));
   const rifle = list.find((e) => /Rifle/.test(e.title));
@@ -240,4 +241,45 @@ test("A day of a longer run says so: card dates agree with the description", asy
   assert.equal(runsLabel("Oct 1 - 15 only", sat, TZ), null);
   assert.equal(runsLabel("A five-course farm dinner", sat, TZ), null);
   assert.equal(runsLabel("Open October 16–18", sat, TZ), "Runs Oct 16 – Oct 18");
+});
+
+test("Classifier: exhibits are art, book sales are not markets, Family only when it says so", () => {
+  const torreah = ev({ title: 'Exhibition: Torreah "Cookie" Washington', category: "food", venue: "Lyndon House Arts Center",
+    summary: "This exhibition runs October 14-27, with a free, public reception. Torreah is a fourth-generation needle worker and the first in her family" });
+  assert.deepEqual(chipsFor(torreah), []);
+  assert.deepEqual(cardLabels(torreah), ["Art & exhibits"]);
+  const bookArt = ev({ title: "The Book As Art v.14: Ghosted", category: "arts", venue: "Decatur Arts Alliance" });
+  assert.deepEqual(cardLabels(bookArt), ["Art & exhibits"]);
+  const placita = ev({ title: "Placita Latina v.6: Puentes", category: "arts", summary: "The 6th annual Placita Latina exhibition in celebration of Hispanic Heritage Month." });
+  assert.deepEqual(cardLabels(placita), ["Art & exhibits"]);
+  const book = ev({ title: "Fall Used Book Sale", category: "family", summary: "Fall Used Book Sale features books on cooking, crafts, kids, and collectibles." });
+  assert.deepEqual(cardLabels(book), []);
+  assert.deepEqual(cardLabels(ev({ title: "Haunted Hayride", category: "family" })), []);
+  assert.ok(chipsFor(ev({ title: "Toddler Fun Sunday", category: "outdoors" })).includes("family"));
+  assert.ok(chipsFor(ev({ title: "Side Quest", category: "family", summary: "During this interactive, family-friendly side quest" })).includes("family"));
+  assert.deepEqual(cardLabels(ev({ title: "Planetarium Presents: Space Aliens", category: "arts", summary: "a full dome show" })), []);
+  assert.deepEqual(cardLabels(ev({ title: "Archery", category: "outdoors" })), ["Outdoors"]);
+  // Never Performing arts for an exhibit, whatever the venue.
+  assert.ok(!chipsFor(ev({ title: "MFA Open Studios", category: "arts", venue: "Center for the Arts" })).includes("performing"));
+});
+
+test("Home intro: Sat/Sun only, local first, two items, through Sun, no genre tags", async () => {
+  const { weekendLede, shortPhrase } = await import("../src/lib/events/lede.ts");
+  const now = Date.parse("2026-10-17T10:30:00Z"); // Sat 6:30 AM ET
+  const mk = (o) => ({ id: o.title, endMs: null, allDay: false, multiDay: false, venue: "", city: "", lat: 0, lon: 0, url: "", image: null, organizer: "", sourceId: "x", category: "community", free: null, summary: "", ...o });
+  const events = [
+    mk({ title: "Headin' Home Fest (bluegrass festival)", startMs: Date.parse("2026-10-14T04:00:00Z"), endMs: Date.parse("2026-10-19T03:59:00Z"), multiDay: true, distanceMi: 27 }),
+    mk({ title: "Statesboro Main Street Farmers Market", startMs: Date.parse("2026-10-17T11:00:00Z"), distanceMi: 40 }),
+    mk({ title: "Vidalia dads — Saturday coffee", startMs: Date.parse("2026-10-17T13:00:00Z"), distanceMi: 0, sourceId: "board" }),
+    mk({ title: "Outdoor pickleball — Rec Complex", startMs: Date.parse("2026-10-18T18:00:00Z"), distanceMi: 0, sourceId: "board" }),
+  ];
+  assert.equal(weekendLede(events, "Vidalia", now), "This weekend: Saturday dads’ coffee and Sunday pickleball at the Rec Complex, plus 2 more nearby.");
+  const far = events.slice(0, 2);
+  const line = weekendLede(far, "Vidalia", now);
+  assert.equal(line, "This weekend: Headin' Home Fest through Sun and Saturday Statesboro Main Street Farmers Market.");
+  assert.ok(!/Wednesday|\(/.test(line));
+  assert.equal(shortPhrase("Brewton-Parker Women's Soccer vs Abraham Baldwin Agricultural College - Senior Day", "Vidalia"), "Brewton-Parker Women's Soccer");
+  // A Friday-night-only event is not a weekend pick.
+  const fri = [mk({ title: "Friday concert", startMs: Date.parse("2026-10-16T23:00:00Z"), distanceMi: 1 })];
+  assert.ok(!/Friday concert/.test(weekendLede(fri, "Vidalia", Date.parse("2026-10-16T20:00:00Z"))));
 });
