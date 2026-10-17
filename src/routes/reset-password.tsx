@@ -6,7 +6,7 @@ import { authClient, authEnabled } from "@/lib/auth/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 
 type ResetSearch = { token?: string; error?: string };
 
@@ -81,7 +81,7 @@ function ResetPasswordPage() {
       <main className="grid place-items-center px-5 py-10 sm:py-16">
       <Card className="w-full max-w-[440px]">
         <CardHeader>
-          <CardTitle>Set a new password</CardTitle>
+          <h1 className="font-display text-2xl font-semibold tracking-tight text-fg">Set a new password</h1>
           <CardDescription>
             Choose a new password for your Neighborly account.
           </CardDescription>

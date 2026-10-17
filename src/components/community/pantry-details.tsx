@@ -44,22 +44,23 @@ export function PantryDetails({
         ) : null}
       </div>
       <h3 className="font-medium text-fg">{pantry.name}</h3>
-      <p className="flex items-start gap-1.5 text-sm text-fg-muted">
-        <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-        {drive && line ? (
-          <a
-            className="text-primary underline"
-            href={drive}
-            target="_blank"
-            rel="noreferrer"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {line}
-          </a>
-        ) : (
-          line || "Address not listed"
-        )}
-      </p>
+      {drive && line ? (
+        <a
+          className="flex min-h-11 items-center gap-1.5 rounded-md py-2 text-sm text-primary underline"
+          href={drive}
+          target="_blank"
+          rel="noreferrer"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <MapPin className="h-3.5 w-3.5 shrink-0" />
+          {line}
+        </a>
+      ) : (
+        <p className="flex items-start gap-1.5 text-sm text-fg-muted">
+          <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+          {line || "Address not listed"}
+        </p>
+      )}
       {drive ? (
         <a
           className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-fg"
@@ -108,21 +109,22 @@ export function PantryDetails({
           : pantryCallAheadNote(pantry)}
       </p>
       {pantrySourceLine(pantry) ? (
-        <p className="flex items-start gap-1.5 text-xs text-fg-subtle">
-          <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-          {pantry.source_url ? (
-            <a
-              className="text-primary underline"
-              href={pantry.source_url}
-              target="_blank"
-              rel="noreferrer"
-            >
-              {pantrySourceLine(pantry)}
-            </a>
-          ) : (
+        pantry.source_url ? (
+          <a
+            className="flex min-h-11 items-center gap-1.5 rounded-md py-2 text-xs text-primary underline"
+            href={pantry.source_url}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <ShieldCheck className="h-3.5 w-3.5 shrink-0" />
+            {pantrySourceLine(pantry)}
+          </a>
+        ) : (
+          <p className="flex items-start gap-1.5 text-xs text-fg-subtle">
+            <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0" />
             <span>{pantrySourceLine(pantry)}</span>
-          )}
-        </p>
+          </p>
+        )
       ) : null}
       {(pantry.phone || pantry.website || pantry.facebook_url) && (
         <div className="flex flex-wrap gap-3 text-sm">
@@ -147,7 +149,7 @@ export function PantryDetails({
               changed day here long before any directory catches up. */}
           {pantry.facebook_url ? (
             <a
-              className="inline-flex items-center gap-1 text-primary"
+              className="inline-flex min-h-11 items-center gap-1 text-primary"
               href={pantry.facebook_url}
               target="_blank"
               rel="noreferrer"

@@ -987,7 +987,7 @@ function CommunityPublicPage() {
                     <PantryDetails pantry={f} compact />
                     <button
                       type="button"
-                      className="mt-2 text-xs text-fg-subtle underline"
+                      className="mt-2 inline-flex min-h-11 items-center rounded-md px-1 text-sm text-fg-muted underline"
                       onClick={() => setActiveFacility(f)}
                     >
                       Hours & notes
