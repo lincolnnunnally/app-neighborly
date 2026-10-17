@@ -61,6 +61,30 @@ export type SidearmOptions = Origin & {
   shortName?: [RegExp, string];
 };
 
+/**
+ * Link to the sport's season schedule ("/sports/womens-soccer/schedule"): it
+ * renders every game with its date on the page itself, unlike the composite
+ * calendar, which fills in by script.
+ */
+export function sidearmScheduleUrl(title: string, o: Pick<SidearmOptions, "publicHost" | "shortName">): string | null {
+  const school = o.shortName?.[1];
+  if (!school || !title.startsWith(school)) return null;
+  const sport = title.slice(school.length).split(/\s+vs\.?\s+/i)[0].trim();
+  if (!sport || sport.length > 40) return null;
+  const slug = sport.toLowerCase().replace(/['’]/g, "").replace(/&/g, " and ").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return slug ? `https://${o.publicHost}/sports/${slug}/schedule` : null;
+}
+
+function gamePageUrl(raw: string, host: string): string {
+  try {
+    const u = new URL(raw);
+    u.host = host;
+    return u.toString();
+  } catch {
+    return `https://${host}/calendar`;
+  }
+}
+
 const TOWN_ONLY = /^(statesboro|mount vernon|mt\.? vernon)$/i;
 
 /**
@@ -85,14 +109,7 @@ export function parseSidearmIcs(text: string, o: SidearmOptions, tz = DEFAULT_TZ
       .map((p) => p.trim())
       .filter((p) => p && !/^(ga|ga\.|georgia|tbd)$/i.test(p) && !TOWN_ONLY.test(p))
       .join(", ");
-    let url = e.url;
-    try {
-      const u = new URL(url);
-      u.host = o.publicHost;
-      url = u.toString();
-    } catch {
-      url = `https://${o.publicHost}/calendar`;
-    }
+    const url = sidearmScheduleUrl(title, o) ?? gamePageUrl(e.url, o.publicHost);
     out.push({
       id: `${o.id}:${e.uid || title}:${s.ms}`,
       title,

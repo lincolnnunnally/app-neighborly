@@ -43,7 +43,7 @@ test("Sidearm: Georgia Southern home games only, public links, short names, no r
   assert.ok(list.length > 50);
   for (const e of list) {
     assert.ok(!/\sat\s/i.test(e.title), `away game kept: ${e.title}`);
-    assert.ok(e.url.startsWith("https://gseagles.com/"), e.url);
+    assert.ok(e.url.startsWith(/\svs\.?\s/.test(e.title) ? "https://gseagles.com/sports/" : "https://gseagles.com/"), e.url);
     assert.ok(!e.url.includes("&amp;"));
     assert.ok(!/^\[/.test(e.title));
     assert.equal(e.category, "sports");
@@ -52,6 +52,11 @@ test("Sidearm: Georgia Southern home games only, public links, short names, no r
   assert.ok(baseball, "Fri baseball vs Winthrop");
   assert.equal(baseball.title, "Georgia Southern Baseball vs Winthrop University");
   assert.equal(baseball.venue, "J.I. Clements Stadium");
+  assert.equal(baseball.url, "https://gseagles.com/sports/baseball/schedule");
+  const swim = list.find((e) => /Swimming and Diving vs SCAD/.test(e.title));
+  assert.equal(swim.url, "https://gseagles.com/sports/swimming-and-diving/schedule");
+  const rifle = list.find((e) => /Women's Rifle/.test(e.title));
+  assert.equal(rifle.url, "https://gseagles.com/sports/womens-rifle/schedule");
   const vb = list.find((e) => /Volleyball vs Arkansas State/.test(e.title));
   assert.equal(vb.venue, "Hanner Fieldhouse");
   // Neutral-site games (SRP Park in North Augusta) are not home games.
@@ -68,6 +73,7 @@ test("Sidearm: Brewton-Parker home events in Mount Vernon", () => {
   const sat = list.filter((e) => iso(e.startMs).startsWith("2026-10-17"));
   assert.ok(sat.some((e) => /Soccer/.test(e.title)), "Sat women's soccer at home");
   assert.ok(list.every((e) => e.url.startsWith("https://bpcuathletics.com/")));
+  assert.equal(sat.find((e) => /Soccer/.test(e.title)).url, "https://bpcuathletics.com/sports/womens-soccer/schedule");
 });
 
 test("Averitt Center: title, date, time and the show's own page", () => {
