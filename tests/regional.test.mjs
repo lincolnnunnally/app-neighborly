@@ -231,3 +231,13 @@ test("Results heading follows the active chip", () => {
   assert.equal(resultsHeading(0, "markets", 15), "No food and market events within 15 miles");
   assert.equal(resultsHeading(1, undefined, 15), "One thing within 15 miles");
 });
+
+test("A day of a longer run says so: card dates agree with the description", async () => {
+  const { runsLabel } = await import("../src/lib/events/time.ts");
+  const sat = Date.parse("2026-10-17T14:00:00Z");
+  const desc = "…the Fall Used Book Sale at the Laurens County Library, September 21st to October 31st. Fall Finds";
+  assert.equal(runsLabel(desc, sat, TZ), "Runs Sep 21 – Oct 31");
+  assert.equal(runsLabel("Oct 1 - 15 only", sat, TZ), null);
+  assert.equal(runsLabel("A five-course farm dinner", sat, TZ), null);
+  assert.equal(runsLabel("Open October 16–18", sat, TZ), "Runs Oct 16 – Oct 18");
+});

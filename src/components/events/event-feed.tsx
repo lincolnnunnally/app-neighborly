@@ -21,6 +21,10 @@ export function filterMode(list: PublicEvent[], mode: FeedMode): PublicEvent[] {
   return list;
 }
 
+function titleKey(title: string): string {
+  return title.toLowerCase().replace(/&amp;|&/g, "and").replace(/\b(the|a|an)\b/g, "").replace(/[^a-z0-9]+/g, "");
+}
+
 function dayHeading(key: string): string {
   return new Intl.DateTimeFormat("en-US", { timeZone: "UTC", weekday: "long", month: "short", day: "numeric" }).format(
     new Date(`${key}T12:00:00Z`),
@@ -237,14 +241,19 @@ export function WeekendFeed({
   clearChipHref?: string;
 }) {
   const events = useMemo(() => filterByChip(filterMode(feed?.events ?? [], mode), chip), [feed, mode, chip]);
-  const nearby = useMemo(() => filterByChip(filterMode(feed?.nearby ?? [], mode), chip), [feed, mode, chip]);
+  // "Worth the drive" is the band past the radius out to ~100 mi. Nothing in it
+  // repeats a card already listed above (same title, any day or venue).
+  const nearby = useMemo(() => {
+    const listed = new Set((feed?.events ?? []).map((e) => titleKey(e.title)));
+    return filterByChip(filterMode(feed?.nearby ?? [], mode), chip).filter((e) => !listed.has(titleKey(e.title)));
+  }, [feed, mode, chip]);
   const next = useMemo(() => filterByChip(filterMode(feed?.nextWeekend ?? [], mode), chip), [feed, mode, chip]);
   const chipLabel = chip ? CHIPS.find((c) => c.id === chip)?.label : undefined;
   const shown = limit ? events.slice(0, limit) : events;
   const groups = groupByDay(shown, feed ? Date.parse(feed.generatedAt) : 0);
   const [allNearby, setAllNearby] = useState(false);
   const [allNext, setAllNext] = useState(false);
-  const nearbyCap = allNearby ? nearby.length : Math.min(nearby.length, limit ? Math.max(2, limit - shown.length) : 9);
+  const nearbyCap = allNearby ? nearby.length : Math.min(nearby.length, limit ? Math.max(2, limit - shown.length) : 6);
   const nextCap = allNext ? next.length : Math.min(next.length, limit ? 4 : 10);
   const near = feed?.place.zip || feed?.place.label || zip || "";
   const wide = feed?.wideRadiusMi ?? 60;
@@ -298,19 +307,20 @@ export function WeekendFeed({
       )}
 
       {nearby.length > 0 && (!limit || shown.length < limit) && (
-        <section className="space-y-4">
+        <section className="space-y-4" aria-labelledby="worth-the-drive">
           <div>
-            <h3 className="font-display text-2xl font-semibold text-fg">
+            <h3 id="worth-the-drive" className="font-display text-2xl font-semibold text-fg">
               Worth the drive this weekend <span className="text-fg-muted">({nearby.length})</span>
             </h3>
             <p className="text-base text-fg-muted">
               {nearbyCap < nearby.length ? `Showing ${nearbyCap} of ${nearby.length}` : nearby.length}{" "}
-              {nearby.length === 1 ? "event" : "events"} {feed?.radiusMi ?? 60}–{wide} miles from {town}, past your distance filter.
+              {nearby.length === 1 ? "event" : "events"} {feed?.radiusMi ?? 60}–{wide} miles from {town}, past your{" "}
+              {feed?.radiusMi ?? 60}-mile filter. Nothing here repeats the list above.
             </p>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-3 md:grid-cols-2">
             {nearby.slice(0, nearbyCap).map((e) => (
-              <EventCard key={e.id} event={e} compact near={near} />
+              <EventRow key={e.id} event={e} near={near} />
             ))}
           </div>
           {!limit && !allNearby && nearby.length > nearbyCap && (

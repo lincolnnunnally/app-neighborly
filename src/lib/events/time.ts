@@ -162,3 +162,33 @@ export function overlapsWindow(e: TimedThing, w: { startMs: number; endMs: numbe
   const from = Math.max(w.startMs, nowMs);
   return e.startMs < w.endMs && end > from;
 }
+
+const MONTH_NAMES = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+const MONTH_RE = "(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)";
+
+/**
+ * A listing that is one day of a longer run ("…at the Laurens County Library,
+ * September 21st to October 31st") says so on the card, so the card's date and
+ * the description agree: "Runs Sep 21 – Oct 31". Null unless the text names a
+ * range that contains the listed day.
+ */
+export function runsLabel(text: string, startMs: number, tz = DEFAULT_TZ): string | null {
+  const re = new RegExp(
+    `\\b${MONTH_RE}\\.?\\s+(\\d{1,2})(?:st|nd|rd|th)?\\s*(?:to|through|thru|until|-|–|—)\\s*(?:${MONTH_RE}\\.?\\s+)?(\\d{1,2})(?:st|nd|rd|th)?\\b`,
+    "i",
+  );
+  const m = String(text || "").match(re);
+  if (!m) return null;
+  const m1 = MONTH_NAMES.indexOf(m[1].slice(0, 3).toLowerCase());
+  const m2 = m[3] ? MONTH_NAMES.indexOf(m[3].slice(0, 3).toLowerCase()) : m1;
+  const d1 = Number(m[2]);
+  const d2 = Number(m[4]);
+  if (m1 < 0 || m2 < 0 || d1 < 1 || d1 > 31 || d2 < 1 || d2 > 31) return null;
+  const p = partsIn(startMs, tz);
+  const day = p.m * 100 + p.d;
+  const from = (m1 + 1) * 100 + d1;
+  const to = (m2 + 1) * 100 + d2;
+  if (to <= from || day < from || day > to) return null;
+  const label = (mo: number, d: number) => `${MONTH_NAMES[mo][0].toUpperCase()}${MONTH_NAMES[mo].slice(1)} ${d}`;
+  return `Runs ${label(m1, d1)} – ${label(m2, d2)}`;
+}

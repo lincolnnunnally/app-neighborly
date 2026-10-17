@@ -6,6 +6,7 @@ import { NotFoundPage } from "@/components/layout/not-found";
 import { RsvpButton } from "@/components/events/rsvp-button";
 import { icsHrefFor, placePhoto } from "@/components/events/event-card";
 import { cardLabels } from "@/lib/events/chips";
+import { runsLabel } from "@/lib/events/time";
 import { getEventDetail } from "@/lib/community/event-detail";
 import type { PublicEvent } from "@/lib/events/types";
 
@@ -79,6 +80,7 @@ function EventPage() {
   const { near, rsvp } = Route.useSearch();
   const place = placeLine(e.venue, e.city);
   const isBoard = e.sourceId === "board";
+  const runs = e.multiDay ? null : runsLabel(`${e.summary} ${description ?? ""}`, e.startMs);
   const organizerSite = !isBoard && e.url.startsWith("http") ? e.url : "";
   const photo = e.image ? null : placePhoto(e);
   const backHref = board
@@ -114,6 +116,7 @@ function EventPage() {
                 <div>
                   <dt className="sr-only">When</dt>
                   <dd className="font-semibold text-fg">{whenFull(e)}</dd>
+                  {runs && <dd className="text-fg-muted">{runs}. Hours vary by day; this listing is for the date above.</dd>}
                 </div>
               </div>
               <div className="flex items-start gap-3">
