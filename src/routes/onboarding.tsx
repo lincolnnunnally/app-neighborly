@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { SiteHeader } from "@/components/layout/site-header";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Check, HandHeart } from "lucide-react";
 import { toast } from "sonner";
@@ -152,9 +153,12 @@ function OnboardingPage() {
 
   if (isPending) {
     return (
-      <main className="grid min-h-dvh place-items-center bg-bg p-6">
+      <div className="min-h-dvh bg-bg">
+      <SiteHeader />
+      <main className="grid place-items-center px-5 py-10 sm:py-16">
         <div className="h-10 w-40 animate-pulse rounded-full bg-bg-subtle" />
       </main>
+    </div>
     );
   }
   if (!user) return <RedirectToSignIn to="/signup" />;
@@ -279,7 +283,9 @@ function OnboardingPage() {
   }
 
   return (
-    <main className="min-h-dvh bg-bg px-4 py-8">
+    <div className="min-h-dvh bg-bg">
+      <SiteHeader />
+      <main className="px-4 py-8">
       <div className="mx-auto max-w-2xl space-y-6">
         <div className="flex items-center gap-2 text-fg">
           <span className="grid h-9 w-9 place-items-center rounded-[var(--radius-md)] bg-primary text-primary-fg">
@@ -399,7 +405,7 @@ function OnboardingPage() {
                       type="button"
                       onClick={() => setLifeSeason(opt.id)}
                       className={cn(
-                        "rounded-full border px-3 py-1.5 text-sm",
+                        "inline-flex min-h-11 items-center rounded-full border px-4 py-2 text-sm",
                         lifeSeason === opt.id
                           ? "border-primary bg-primary text-primary-fg"
                           : "border-border bg-bg-elevated text-fg-muted",
@@ -419,7 +425,7 @@ function OnboardingPage() {
                       type="button"
                       onClick={() => setFaithPosture(opt.id)}
                       className={cn(
-                        "rounded-full border px-3 py-1.5 text-left text-sm",
+                        "inline-flex min-h-11 items-center rounded-full border px-4 py-2 text-left text-sm",
                         faithPosture === opt.id
                           ? "border-primary bg-primary text-primary-fg"
                           : "border-border bg-bg-elevated text-fg-muted",
@@ -455,7 +461,7 @@ function OnboardingPage() {
                       type="button"
                       onClick={() => setSettingPref(opt.id)}
                       className={cn(
-                        "rounded-full border px-3 py-1.5 text-sm",
+                        "inline-flex min-h-11 items-center rounded-full border px-4 py-2 text-sm",
                         settingPref === opt.id
                           ? "border-primary bg-primary text-primary-fg"
                           : "border-border bg-bg-elevated text-fg-muted",
@@ -475,7 +481,7 @@ function OnboardingPage() {
                       type="button"
                       onClick={() => setMobility(opt.id)}
                       className={cn(
-                        "rounded-full border px-3 py-1.5 text-left text-sm",
+                        "inline-flex min-h-11 items-center rounded-full border px-4 py-2 text-left text-sm",
                         mobility === opt.id
                           ? "border-primary bg-primary text-primary-fg"
                           : "border-border bg-bg-elevated text-fg-muted",
@@ -581,7 +587,7 @@ function OnboardingPage() {
                         type="button"
                         onClick={() => setPrimaryId(c.id)}
                         className={cn(
-                          "rounded-full border px-3 py-1.5 text-sm",
+                          "inline-flex min-h-11 items-center rounded-full border px-4 py-2 text-sm",
                           primaryId === c.id
                             ? "border-primary bg-primary text-primary-fg"
                             : "border-border bg-bg-elevated text-fg-muted",
@@ -707,5 +713,6 @@ function OnboardingPage() {
         )}
       </div>
     </main>
+    </div>
   );
 }

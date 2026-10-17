@@ -56,8 +56,9 @@ function ChurchesPage() {
   const search = Route.useSearch();
   const navigate = useNavigate({ from: "/churches" });
   const { user } = useCurrentUserState();
-  const [zip, setZip] = useState(search.zip || "30474");
-  const [city, setCity] = useState(search.city || "Vidalia");
+  // A city link (e.g. ?city=Milstead&state=GA) must not fall back to the Vidalia ZIP.
+  const [zip, setZip] = useState(search.zip || (search.city ? "" : "30474"));
+  const [city, setCity] = useState(search.city || (search.zip ? "" : "Vidalia"));
   const [state, setState] = useState(search.state || "GA");
   const [denomination, setDenomination] = useState(search.denomination || "");
   const [style, setStyle] = useState(search.style || "any");
@@ -155,7 +156,7 @@ function ChurchesPage() {
       setCity(nextCity);
       setState(nextState);
     }
-    if (!search.zip) {
+    if (!search.zip && !search.city) {
       persistFilters({ zip: nextZip, city: nextCity, state: nextState });
     }
     const params = new URLSearchParams();
@@ -251,8 +252,8 @@ function ChurchesPage() {
                 onClick={() => setStyle(id)}
                 className={
                   style === id
-                    ? "rounded-full border border-primary bg-primary px-3 py-1.5 text-sm text-primary-fg"
-                    : "rounded-full border border-border bg-bg px-3 py-1.5 text-sm text-fg-muted"
+                    ? "inline-flex min-h-11 items-center rounded-full border border-primary bg-primary px-4 py-2 text-sm text-primary-fg"
+                    : "inline-flex min-h-11 items-center rounded-full border border-border bg-bg px-4 py-2 text-sm text-fg-muted"
                 }
               >
                 {label}
@@ -263,8 +264,8 @@ function ChurchesPage() {
               onClick={() => setTodayOnly((v) => !v)}
               className={
                 todayOnly
-                  ? "rounded-full border border-primary bg-primary-soft px-3 py-1.5 text-sm text-primary"
-                  : "rounded-full border border-border bg-bg px-3 py-1.5 text-sm text-fg-muted"
+                  ? "inline-flex min-h-11 items-center rounded-full border border-primary bg-primary-soft px-4 py-2 text-sm text-primary"
+                  : "inline-flex min-h-11 items-center rounded-full border border-border bg-bg px-4 py-2 text-sm text-fg-muted"
               }
             >
               Today&apos;s services{today ? ` (${today})` : ""}
@@ -277,8 +278,8 @@ function ChurchesPage() {
               }}
               className={
                 morningOnly
-                  ? "rounded-full border border-primary bg-primary-soft px-3 py-1.5 text-sm text-primary"
-                  : "rounded-full border border-border bg-bg px-3 py-1.5 text-sm text-fg-muted"
+                  ? "inline-flex min-h-11 items-center rounded-full border border-primary bg-primary-soft px-4 py-2 text-sm text-primary"
+                  : "inline-flex min-h-11 items-center rounded-full border border-border bg-bg px-4 py-2 text-sm text-fg-muted"
               }
             >
               This morning

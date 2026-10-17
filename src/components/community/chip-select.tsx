@@ -29,7 +29,7 @@ export function ChipSelect({
               }
             }}
             className={cn(
-              "rounded-full border px-3 py-1.5 text-sm transition-colors",
+              "inline-flex min-h-11 items-center rounded-full border px-4 py-2 text-sm transition-colors",
               selected
                 ? "border-primary bg-primary-soft text-primary"
                 : "border-border bg-bg-elevated text-fg-muted hover:border-border-strong",

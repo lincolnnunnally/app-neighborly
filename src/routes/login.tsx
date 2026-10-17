@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SiteHeader } from "@/components/layout/site-header";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { HandHeart } from "lucide-react";
 import {
@@ -105,19 +106,15 @@ function LoginPage() {
   }
 
   return (
-    <main className="grid min-h-dvh place-items-center bg-bg p-6">
-      <Card className="w-full max-w-md">
+    <div className="min-h-dvh bg-bg">
+      <SiteHeader />
+      <main className="grid place-items-center px-5 py-10 sm:py-16">
+      <Card className="w-full max-w-[440px]">
         <CardHeader>
-          <Link to="/" className="mb-2 flex items-center gap-2 text-fg no-underline">
-            <span className="grid h-8 w-8 place-items-center rounded-[var(--radius-sm)] bg-primary text-primary-fg">
-              <HandHeart className="h-4 w-4" />
-            </span>
-            <span className="font-display font-semibold">Neighborly</span>
-          </Link>
           <CardTitle>{mode === "forgot" ? "Reset your password" : "Welcome back"}</CardTitle>
           <CardDescription>
             {mode === "forgot"
-              ? "Neighborly keeps its own email/password login. Google/X sign-in does not need a password."
+              ? "We'll email you a link to choose a new password."
               : "Sign in to your communities, needs, and invites."}
           </CardDescription>
         </CardHeader>
@@ -165,7 +162,7 @@ function LoginPage() {
                     <Label htmlFor="password">Password</Label>
                     <button
                       type="button"
-                      className="text-xs font-medium text-primary underline-offset-4 hover:underline"
+                      className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline"
                       onClick={() => {
                         setMode("forgot");
                         setError(null);
@@ -242,7 +239,7 @@ function LoginPage() {
             <Link
               to="/signup"
               search={{}}
-              className="font-medium text-primary underline-offset-4 hover:underline"
+              className="inline-flex min-h-11 items-center font-medium text-primary underline-offset-4 hover:underline"
             >
               Create a free account
             </Link>
@@ -250,5 +247,6 @@ function LoginPage() {
         </CardContent>
       </Card>
     </main>
+    </div>
   );
 }

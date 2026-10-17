@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { SiteHeader } from "@/components/layout/site-header";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { HandHeart } from "lucide-react";
 import { authClient, authEnabled } from "@/lib/auth/client";
@@ -75,18 +76,14 @@ function ResetPasswordPage() {
   }
 
   return (
-    <main className="grid min-h-dvh place-items-center bg-bg p-6">
-      <Card className="w-full max-w-md">
+    <div className="min-h-dvh bg-bg">
+      <SiteHeader />
+      <main className="grid place-items-center px-5 py-10 sm:py-16">
+      <Card className="w-full max-w-[440px]">
         <CardHeader>
-          <Link to="/" className="mb-2 flex items-center gap-2 text-fg no-underline">
-            <span className="grid h-8 w-8 place-items-center rounded-[var(--radius-sm)] bg-primary text-primary-fg">
-              <HandHeart className="h-4 w-4" />
-            </span>
-            <span className="font-display font-semibold">Neighborly</span>
-          </Link>
           <CardTitle>Set a new password</CardTitle>
           <CardDescription>
-            Neighborly keeps its own login. This does not change Kindred, Kids Need Dads, or Presence.
+            Choose a new password for your Neighborly account.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -95,7 +92,7 @@ function ResetPasswordPage() {
           ) : invalidLink ? (
             <>
               <p className="rounded-[var(--radius-sm)] bg-danger-soft px-3 py-2 text-sm text-danger">
-                This reset link is missing, expired, or already used.
+                This link has expired. We'll send you a fresh one.
               </p>
               <Button asChild className="w-full">
                 <Link to="/login" search={{ redirect: "/app", forgot: "1" }}>
@@ -144,5 +141,6 @@ function ResetPasswordPage() {
         </CardContent>
       </Card>
     </main>
+    </div>
   );
 }

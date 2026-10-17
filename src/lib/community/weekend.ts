@@ -2,12 +2,88 @@ import { createServerFn } from "@tanstack/react-start";
 import { getSql } from "@/lib/db";
 import { listBoardEvents, listSisterCityEvents, parseEventStartMs, type BoardEventRow } from "./board-events";
 import { ensureSeeded } from "./seed";
-import { findOrCreatePlace, resolveCommunityForPlace } from "./place";
+import { findOrCreatePlace, geocodeQuery, resolveCommunityForPlace } from "./place";
+import { searchPublicEvents, normalizeRadius } from "@/lib/events/search";
+import { inferCategory } from "@/lib/events/parse";
+import type { EventSearchResult, PublicEvent } from "@/lib/events/types";
 import { scoreFit, splitByFit, type FitPrefs } from "./fit";
 import type { Community } from "./types";
 
 const DEFAULT_TZ = "America/New_York";
 const VIDALIA_COORDS = { lat: 32.2174, lon: -82.4135 };
+
+/** Known board towns without a stored point (unincorporated or lake areas). */
+const TOWN_COORDS: Record<string, { lat: number; lon: number }> = {
+  "vidalia,ga": VIDALIA_COORDS,
+  "milstead,ga": { lat: 33.6857, lon: -84.0127 },
+  "lake sinclair,ga": { lat: 33.1665, lon: -83.2702 },
+};
+
+async function pointFor(c: { lat?: number | null; lon?: number | null; city?: string; state?: string; zip?: string }) {
+  if (c.lat != null && c.lon != null) return { lat: Number(c.lat), lon: Number(c.lon) };
+  const key = `${(c.city || "").toLowerCase()},${(c.state || "").toLowerCase()}`;
+  if (TOWN_COORDS[key]) return TOWN_COORDS[key];
+  const q = c.zip || [c.city, c.state].filter(Boolean).join(", ");
+  if (q) {
+    try {
+      const g = await geocodeQuery(q);
+      if (g) return { lat: g.lat, lon: g.lon };
+    } catch {
+      /* fall through */
+    }
+  }
+  return null;
+}
+
+function boardRowToEvent(row: BoardEventRow, community: Community, pt: { lat: number; lon: number }): PublicEvent | null {
+  const startMs = parseEventStartMs(row.starts_at);
+  if (startMs == null) return null;
+  const endMs = row.ends_at ? parseEventStartMs(row.ends_at) : null;
+  return {
+    id: `board:${row.id}`,
+    title: row.title,
+    startMs,
+    endMs: endMs && endMs > startMs ? endMs : null,
+    allDay: false,
+    multiDay: false,
+    venue: row.location || community.name,
+    city: community.city || "",
+    lat: pt.lat,
+    lon: pt.lon,
+    url: `/c/${community.slug}?tab=events`,
+    image: null,
+    organizer: `${community.name} neighbors`,
+    sourceId: "board",
+    category: row.kind === "family" ? "family" : inferCategory(row.title, row.description),
+    free: null,
+    summary: row.description.slice(0, 280),
+  };
+}
+
+/** Live public feed for a point: never throws, returns null if the point is unknown. */
+export async function loadEventFeed(opts: {
+  point: { lat: number; lon: number } | null;
+  label: string;
+  zip?: string;
+  radiusMi?: number;
+  extra?: PublicEvent[];
+}): Promise<EventSearchResult | null> {
+  if (!opts.point) return null;
+  try {
+    return await searchPublicEvents({
+      lat: opts.point.lat,
+      lon: opts.point.lon,
+      label: opts.label,
+      zip: opts.zip,
+      radiusMi: normalizeRadius(opts.radiusMi),
+      tz: DEFAULT_TZ,
+      extra: opts.extra,
+    });
+  } catch (e) {
+    console.warn("[events] feed failed", e);
+    return null;
+  }
+}
 
 export type WeatherDay = {
   date: string;
@@ -53,9 +129,13 @@ export type WeekendPlan = {
     state: string;
     zip: string;
     created: boolean;
+    /** False when the town has no Neighborly board yet (slug is only a label). */
+    board: boolean;
   };
   refresh: { status: string; note: string };
   fitApplied: boolean;
+  /** Live public events (festivals, shows, park days) plus this board's own gatherings. */
+  feed: EventSearchResult | null;
 };
 
 function wmoSummary(code: number): string {
@@ -171,6 +251,22 @@ function buildArrivingNote(days: WeatherDay[], withChild: WeekendSlot[], placeNa
   return parts.join(" ");
 }
 
+/** The weekend days (Fri–Sun) drive the one-line weather note. */
+function weatherNoteFor(days: WeatherDay[], error: string | null): string {
+  if (error) return "The forecast is unavailable right now — check the sky before you head out.";
+  const wk = days.filter((d) => [5, 6, 0].includes(new Date(`${d.date}T12:00:00Z`).getUTCDay()));
+  const use = wk.length ? wk : days.slice(0, 3);
+  if (!use.length) return "";
+  const hi = Math.max(...use.map((d) => d.maxF));
+  const lo = Math.min(...use.map((d) => d.minF));
+  const rain = Math.max(...use.map((d) => d.rainChance));
+  if (hi >= 85) return `Warm this weekend (highs near ${hi}°) — go early, and save the parks for evening.`;
+  if (rain >= 50) return `Rain is likely at times (${rain}%) — have an indoor backup.`;
+  if (hi < 55) return `Chilly this weekend (highs near ${hi}°) — bring a jacket.`;
+  if (lo < 50) return `Cool mornings (${lo}°), highs near ${hi}° — bring a layer.`;
+  return `Highs near ${hi}° — good weather to be outside.`;
+}
+
 function applyFit(slots: WeekendSlot[], prefs?: FitPrefs | null): WeekendSlot[] {
   return slots.map((slot) => {
     const fit = scoreFit(slot, prefs);
@@ -188,6 +284,7 @@ export async function buildWeekendPlan(opts?: {
   query?: string;
   prefs?: FitPrefs | null;
   create?: boolean;
+  radiusMi?: number;
 }): Promise<WeekendPlan> {
   const sql = await getSql();
   await ensureSeeded(sql);
@@ -198,9 +295,15 @@ export async function buildWeekendPlan(opts?: {
   if (!looked.community) {
     const geo = looked.geo;
     const emptyName = geo?.city || q;
+    const pt = geo ? { lat: geo.lat, lon: geo.lon } : null;
+    const [wx, feed] = await Promise.all([
+      pt ? fetchWeather(pt.lat, pt.lon, DEFAULT_TZ) : Promise.resolve({ days: [] as WeatherDay[], error: null }),
+      loadEventFeed({ point: pt, label: geo ? `${geo.city}, ${geo.state}` : q, zip: geo?.zip, radiusMi: opts?.radiusMi }),
+    ]);
     return {
-      weather: [],
-      weatherNote: "",
+      feed,
+      weather: wx.days.slice(0, 5),
+      weatherNote: wx.days.length ? weatherNoteFor(wx.days, wx.error) : "",
       arrivingNote: "",
       all: [],
       withChild: [],
@@ -215,6 +318,7 @@ export async function buildWeekendPlan(opts?: {
         state: geo?.state || "",
         zip: geo?.zip || "",
         created: false,
+        board: false,
       },
       refresh: looked.refresh,
       fitApplied: false,
@@ -222,9 +326,11 @@ export async function buildWeekendPlan(opts?: {
   }
   const community: Community = looked.community;
   const tz = DEFAULT_TZ;
-  const lat = community.lat ?? looked.geo?.lat ?? VIDALIA_COORDS.lat;
-  const lon = community.lon ?? looked.geo?.lon ?? VIDALIA_COORDS.lon;
-  const { days, error } = await fetchWeather(lat, lon, tz);
+  const point =
+    (await pointFor({ ...community, lat: community.lat ?? looked.geo?.lat, lon: community.lon ?? looked.geo?.lon })) ??
+    VIDALIA_COORDS;
+  const { lat, lon } = point;
+  const weatherP = fetchWeather(lat, lon, tz);
   const boardRows = await listBoardEvents(sql, community.id);
   const sisterRows = await listSisterCityEvents(sql, {
     id: community.id,
@@ -238,6 +344,19 @@ export async function buildWeekendPlan(opts?: {
     seen.add(row.id);
     rows.push(row);
   }
+  const extra = rows
+    .map((row) => boardRowToEvent(row, community, point))
+    .filter((e): e is PublicEvent => e != null);
+  const [{ days, error }, feed] = await Promise.all([
+    weatherP,
+    loadEventFeed({
+      point,
+      label: `${community.city || community.name}, ${community.state || "GA"}`,
+      zip: community.zip || looked.geo?.zip,
+      radiusMi: opts?.radiusMi,
+      extra,
+    }),
+  ]);
 
   const all: WeekendSlot[] = [];
   const withChild: WeekendSlot[] = [];
@@ -334,15 +453,7 @@ export async function buildWeekendPlan(opts?: {
     if (!all.some((a) => a.id === slot.id)) all.push(slot);
   }
 
-  const weatherNote = error
-    ? error
-    : days.slice(0, 3).some((d) => d.maxF >= 85)
-      ? "Hot this weekend — plan indoor or early, and save parks for the evening."
-      : days.slice(0, 3).some((d) => d.maxF < 50)
-        ? "Cool this weekend — bring a jacket."
-        : days.slice(0, 3).some((d) => d.rainChance >= 50)
-          ? "Rain is possible — have an indoor backup."
-          : "Good weather to be outside this weekend.";
+  const weatherNote = weatherNoteFor(days, error);
 
   const prefs = opts?.prefs ?? null;
   const allSorted = splitByFit(applyFit(all, prefs), prefs).primary;
@@ -364,6 +475,7 @@ export async function buildWeekendPlan(opts?: {
   ];
 
   const plan: WeekendPlan = {
+    feed,
     weather: days.slice(0, 5),
     weatherNote,
     arrivingNote: buildArrivingNote(days, childSplit.primary, community.name),
@@ -391,6 +503,7 @@ export async function buildWeekendPlan(opts?: {
       state: community.state,
       zip: community.zip || looked.geo?.zip || "",
       created: looked.created,
+      board: true,
     },
     refresh: looked.refresh,
     fitApplied: Boolean(prefs && (prefs.interests.length || prefs.setting_pref || prefs.mobility)),
@@ -403,7 +516,10 @@ export const getWeekendPlan = createServerFn({ method: "GET" }).handler(async ()
 });
 
 export const loadWeekendPlan = createServerFn({ method: "GET" })
-  .validator((input: { place?: string; query?: string; interests?: string; setting?: string; mobility?: string }) => input)
+  .validator(
+    (input: { place?: string; query?: string; interests?: string; setting?: string; mobility?: string; radius?: number }) =>
+      input,
+  )
   .handler(async ({ data }) => {
     const interests = (data.interests || "")
       .split(",")
@@ -417,5 +533,6 @@ export const loadWeekendPlan = createServerFn({ method: "GET" })
       slug: data.place,
       query: data.query || data.place,
       prefs,
+      radiusMi: data.radius,
     });
   });

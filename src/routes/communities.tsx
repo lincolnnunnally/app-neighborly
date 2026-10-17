@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { townPhoto } from "@/components/community/cover";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Badge } from "@/components/ui/badge";
@@ -72,15 +73,24 @@ function CommunitiesPage() {
 
         <div className="grid gap-4 sm:grid-cols-2">
           {filtered.map((c) => (
-            <div key={c.id} className="surface-card flex flex-col p-5">
+            <div key={c.id} className="surface-card flex flex-col overflow-hidden p-0">
+              {townPhoto(c.slug) ? (
+                <img src={townPhoto(c.slug)!.src} alt={townPhoto(c.slug)!.alt} loading="lazy" className="h-40 w-full object-cover" />
+              ) : (
+                <div className="grid h-40 place-items-center bg-primary-soft font-display text-2xl font-semibold text-primary">
+                  {c.city || c.name}
+                </div>
+              )}
+              <div className="flex flex-1 flex-col p-5">
               <div className="mb-2 flex flex-wrap gap-2">
                 <Badge variant="secondary">{KIND_LABELS[c.kind]}</Badge>
                 {c.is_featured && <Badge>Featured</Badge>}
               </div>
               <h2 className="font-display text-xl font-semibold">{c.name}</h2>
-              <p className="mt-1 flex-1 text-sm text-fg-muted">{c.description}</p>
-              <p className="mt-3 text-xs text-fg-subtle">
-                {c.city}, {c.state} · {c.member_count} members · invite {c.invite_code}
+              <p className="mt-1 flex-1 text-base text-fg-muted">{c.description}</p>
+              <p className="mt-3 text-base text-fg-muted">
+                {c.city}, {c.state}
+                {c.member_count > 1 ? ` · ${c.member_count} members` : " · New — be one of the first"}
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
                 <Button asChild size="sm">
@@ -98,6 +108,7 @@ function CommunitiesPage() {
                     Join
                   </Link>
                 </Button>
+              </div>
               </div>
             </div>
           ))}
