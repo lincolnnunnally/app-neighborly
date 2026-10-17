@@ -149,6 +149,8 @@ export function WeekendFeed({
   const groups = groupByDay(shown, feed ? Date.parse(feed.generatedAt) : 0);
   const [allNearby, setAllNearby] = useState(false);
   const [allNext, setAllNext] = useState(false);
+  const nearbyCap = allNearby ? nearby.length : Math.min(nearby.length, limit ? Math.max(2, limit - shown.length) : 9);
+  const nextCap = allNext ? next.length : Math.min(next.length, limit ? 4 : 10);
   const near = feed?.place.zip || feed?.place.label || zip || "";
   const wide = feed?.wideRadiusMi ?? 60;
 
@@ -189,19 +191,22 @@ export function WeekendFeed({
       {nearby.length > 0 && (!limit || shown.length < limit) && (
         <section className="space-y-4">
           <div>
-            <h3 className="font-display text-2xl font-semibold text-fg">Worth the drive this weekend</h3>
+            <h3 className="font-display text-2xl font-semibold text-fg">
+              Worth the drive this weekend <span className="text-fg-muted">({nearby.length})</span>
+            </h3>
             <p className="text-base text-fg-muted">
-              {nearby.length} {nearby.length === 1 ? "event" : "events"} {feed?.radiusMi ?? 25}–{wide} miles from {town}.
+              {nearbyCap < nearby.length ? `Showing ${nearbyCap} of ${nearby.length}` : nearby.length}{" "}
+              {nearby.length === 1 ? "event" : "events"} {feed?.radiusMi ?? 25}–{wide} miles from {town}.
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {(allNearby ? nearby : nearby.slice(0, limit ? Math.max(2, limit - shown.length) : 6)).map((e) => (
+            {nearby.slice(0, nearbyCap).map((e) => (
               <EventCard key={e.id} event={e} compact near={near} />
             ))}
           </div>
-          {!limit && !allNearby && nearby.length > 6 && (
+          {!limit && !allNearby && nearby.length > nearbyCap && (
             <Button variant="secondary" onClick={() => setAllNearby(true)}>
-              Show {nearby.length - 6} more
+              Show all {nearby.length}
             </Button>
           )}
         </section>
@@ -210,19 +215,22 @@ export function WeekendFeed({
       {showNext && next.length > 0 && (
         <section className="space-y-4">
           <div>
-            <h3 className="font-display text-2xl font-semibold text-fg">Next weekend</h3>
+            <h3 className="font-display text-2xl font-semibold text-fg">
+              Next weekend <span className="text-fg-muted">({next.length})</span>
+            </h3>
             <p className="text-base text-fg-muted">
-              {feed?.nextWindow.label} · {next.length} {next.length === 1 ? "event" : "events"} within {wide} miles
+              {feed?.nextWindow.label} · {nextCap < next.length ? `showing ${nextCap} of ${next.length}` : next.length}{" "}
+              {next.length === 1 ? "event" : "events"} within {wide} miles
             </p>
           </div>
           <div className="grid gap-3 md:grid-cols-2">
-            {(allNext ? next : next.slice(0, limit ? 4 : 10)).map((e) => (
+            {next.slice(0, nextCap).map((e) => (
               <EventRow key={e.id} event={e} near={near} />
             ))}
           </div>
-          {!limit && !allNext && next.length > 10 && (
+          {!limit && !allNext && next.length > nextCap && (
             <Button variant="secondary" onClick={() => setAllNext(true)}>
-              Show {next.length - 10} more
+              Show all {next.length}
             </Button>
           )}
         </section>

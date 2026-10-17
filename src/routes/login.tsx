@@ -12,20 +12,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SUPPORT_EMAIL } from "@/lib/contact";
+import { readNext, safeNext } from "@/lib/safe-next";
 import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 
-type LoginSearch = { redirect?: string; forgot?: string };
+type LoginSearch = { redirect?: string; next?: string; forgot?: string };
 
 export const Route = createFileRoute("/login")({
   validateSearch: (s: Record<string, unknown>): LoginSearch => ({
-    redirect: typeof s.redirect === "string" ? s.redirect : undefined,
+    // `redirect` and `next` both mean "come back here"; only safe same-site paths survive.
+    redirect: readNext(s.redirect),
+    next: readNext(s.next),
     forgot: typeof s.forgot === "string" ? s.forgot : undefined,
   }),
   component: LoginPage,
 });
 
 function LoginPage() {
-  const { redirect, forgot } = Route.useSearch();
+  const { redirect: redirectParam, next: nextParam, forgot } = Route.useSearch();
+  const redirect = readNext(nextParam) ?? readNext(redirectParam);
+  const back = safeNext(redirect);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -47,8 +52,7 @@ function LoginPage() {
         setError(res.error.message ?? "Could not sign in");
         return;
       }
-      // Only same-site paths; `href` keeps any ?query on the way back (e.g. an RSVP).
-      const back = redirect && redirect.startsWith("/") && !redirect.startsWith("//") ? redirect : "/app";
+      // `href` keeps any ?query on the way back (e.g. an RSVP).
       await navigate({ href: back });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not sign in");
@@ -133,7 +137,7 @@ function LoginPage() {
                     type="button"
                     variant="secondary"
                     className="w-full"
-                    onClick={() => signIn(p.providerId, { callbackURL: redirect || "/app" })}
+                    onClick={() => signIn(p.providerId, { callbackURL: back })}
                   >
                     Continue with {p.label}
                   </Button>
@@ -241,7 +245,7 @@ function LoginPage() {
             New here?{" "}
             <Link
               to="/signup"
-              search={{}}
+              search={redirect ? { next: redirect } : {}}
               className="inline-flex min-h-11 items-center font-medium text-primary underline-offset-4 hover:underline"
             >
               Create a free account

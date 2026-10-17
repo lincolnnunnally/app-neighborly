@@ -11,7 +11,7 @@ function PrivacyPage() {
       <SiteHeader solid />
       <main className="page-shell max-w-2xl space-y-6 py-12">
         <p className="text-base text-fg-muted">
-          <Link to="/" className="inline-flex min-h-11 items-center hover:text-fg">
+          <Link to="/" className="inline-flex min-h-11 min-w-11 items-center hover:text-fg">
             Home
           </Link>{" "}
           · Privacy

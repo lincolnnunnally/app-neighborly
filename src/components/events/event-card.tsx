@@ -63,7 +63,7 @@ export function whenLabel(e: PublicEvent): string {
     const date = new Intl.DateTimeFormat("en-US", { timeZone: TZ, month: "short", day: "numeric" }).format(e.startMs);
     return e.multiDay && e.endMs
       ? `${day} ${date} – ${new Intl.DateTimeFormat("en-US", { timeZone: TZ, weekday: "short", month: "short", day: "numeric" }).format(e.endMs - 1)}`
-      : `${day} · All day`;
+      : `${day}, ${date} · All day`;
   }
   const time = new Intl.DateTimeFormat("en-US", { timeZone: TZ, hour: "numeric", minute: "2-digit" }).format(e.startMs);
   return `${day} · ${time}`;

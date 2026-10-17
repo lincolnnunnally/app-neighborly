@@ -19,7 +19,8 @@ type LeafletNS = {
     attributionControl?: { setPrefix: (p: string | false) => void };
   };
   tileLayer: (url: string, opts: Record<string, unknown>) => { addTo: (m: unknown) => void };
-  marker: (latlng: [number, number]) => LeafletMarker;
+  marker: (latlng: [number, number], opts?: Record<string, unknown>) => LeafletMarker;
+  divIcon: (opts: Record<string, unknown>) => unknown;
   latLngBounds: (pts: [number, number][]) => unknown;
 };
 
@@ -85,6 +86,15 @@ export function PantryMap({ pantries }: { pantries: Facility[] }) {
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
           attribution: "&copy; OpenStreetMap",
         }).addTo(map);
+        // 44x44 tap target around a 26x38 pin, anchored at the pin's tip.
+        const pinIcon = L.divIcon({
+          className: "n-pantry-pin",
+          html:
+            '<svg width="26" height="38" viewBox="0 0 26 38" aria-hidden="true"><path d="M13 1C6.4 1 1 6.3 1 12.9 1 22 13 37 13 37s12-15 12-24.1C25 6.3 19.6 1 13 1z" fill="#2f5d50" stroke="#fff" stroke-width="2"/><circle cx="13" cy="13" r="4.5" fill="#fff"/></svg>',
+          iconSize: [44, 44],
+          iconAnchor: [22, 41],
+          popupAnchor: [0, -38],
+        });
         const pts: [number, number][] = [];
         for (const { p, c } of pins) {
           pts.push([c.lat, c.lon]);
@@ -100,7 +110,9 @@ export function PantryMap({ pantries }: { pantries: Facility[] }) {
             text(hours) +
             closed +
             (drive ? '<br/><a href="' + drive + '" target="_blank" rel="noreferrer">Drive</a>' : "");
-          L.marker([c.lat, c.lon]).addTo(map).bindPopup(body);
+          L.marker([c.lat, c.lon], { icon: pinIcon, title: p.name, alt: p.name, keyboard: true })
+            .addTo(map)
+            .bindPopup(body);
         }
         if (pts.length === 1) map.setView(pts[0], 15);
         else map.fitBounds(L.latLngBounds(pts), { padding: [28, 28], maxZoom: 13 });

@@ -40,10 +40,16 @@ export function PlaceSearch({
   defaultValue = "",
   size = "md",
   persist = true,
+  onSearchStart,
+  onSearchEnd,
 }: {
   defaultValue?: string;
   size?: "md" | "lg";
   persist?: boolean;
+  /** Fired the moment a new search begins, so the page can clear old results. */
+  onSearchStart?: (query: string) => void;
+  /** Fired when the lookup (and any navigation) is done or failed. */
+  onSearchEnd?: () => void;
 }) {
   const navigate = useNavigate();
   const { user } = useCurrentUserState();
@@ -112,6 +118,7 @@ export function PlaceSearch({
     setBusy(true);
     setError("");
     setPendingCreate(null);
+    onSearchStart?.(query);
     try {
       const d = await lookup(query);
       if (d.community?.slug) {
@@ -128,6 +135,7 @@ export function PlaceSearch({
       setError(err instanceof Error ? err.message : "Could not look that up. Try again.");
     } finally {
       setBusy(false);
+      onSearchEnd?.();
     }
   }
 
@@ -141,6 +149,7 @@ export function PlaceSearch({
     setPendingCreate(null);
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
+        onSearchStart?.("");
         try {
           const d = await lookup("", { lat: pos.coords.latitude, lon: pos.coords.longitude });
           if (d.community?.slug) {
@@ -158,6 +167,7 @@ export function PlaceSearch({
           setError(err instanceof Error ? err.message : "Location lookup failed.");
         } finally {
           setBusy(false);
+          onSearchEnd?.();
         }
       },
       () => {

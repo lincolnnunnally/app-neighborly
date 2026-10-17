@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 import { resolveInvite } from "@/lib/community/server";
 import type { Community } from "@/lib/community/types";
+import { isEventNext, readNext } from "@/lib/safe-next";
 
 type SignupSearch = { community?: string; code?: string; next?: string };
 
@@ -22,7 +23,7 @@ export const Route = createFileRoute("/signup")({
   validateSearch: (s: Record<string, unknown>): SignupSearch => ({
     community: typeof s.community === "string" ? s.community : undefined,
     code: typeof s.code === "string" ? s.code : undefined,
-    next: typeof s.next === "string" ? s.next : undefined,
+    next: readNext(s.next),
   }),
   component: SignupPage,
 });
@@ -48,6 +49,12 @@ function SignupPage() {
 
   useEffect(() => {
     if (!isPending && user) {
+      // Came from an event's "I'll be there": go straight back so the RSVP
+      // finishes. The rest of the profile can wait.
+      if (isEventNext(search.next)) {
+        void navigate({ href: search.next });
+        return;
+      }
       void navigate({
         to: "/onboarding",
         search: {
@@ -63,7 +70,9 @@ function SignupPage() {
   if (search.community) onboardingQs.set("community", search.community);
   if (search.code) onboardingQs.set("code", search.code);
   if (search.next) onboardingQs.set("next", search.next);
-  const callbackURL = `/onboarding${onboardingQs.toString() ? `?${onboardingQs}` : ""}`;
+  const callbackURL = isEventNext(search.next)
+    ? search.next
+    : `/onboarding${onboardingQs.toString() ? `?${onboardingQs}` : ""}`;
 
   async function onEmailSignUp(e: React.FormEvent) {
     e.preventDefault();
@@ -77,6 +86,10 @@ function SignupPage() {
       });
       if (res.error) {
         setError(res.error.message ?? "Could not create account");
+        return;
+      }
+      if (isEventNext(search.next)) {
+        await navigate({ href: search.next });
         return;
       }
       await navigate({
@@ -195,7 +208,7 @@ function SignupPage() {
             Already have an account?{" "}
             <Link
               to="/login"
-              search={{ redirect: search.next || "/app" }}
+              search={search.next ? { next: search.next } : {}}
               className="font-medium text-primary underline-offset-4 hover:underline"
             >
               Sign in
