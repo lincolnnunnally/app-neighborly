@@ -328,4 +328,4 @@ export function parseSimpleCalendar(
 
 /** Continuing-ed classes, tests and office notices are not weekend outings. */
 export const NOT_A_PUBLIC_OUTING =
-  /\b(class(es)?|course|test(ing)?|exam|hiset|ged|registration|register|payment|deadline|orientation|advisement|semester|withdraw|drop\/add|financial aid|certification|certificate|cpr|cna|phlebotomy|training|closed|holiday|board meeting|webinar|info(rmation)? session|online)\b/i;
+  /\b(class(es)?|course|test(ing)?|exam|hiset|ged|registration|register|payment|deadline|orientation|advisement|semester|withdraw|drop\/add|financial aid|certification|certificate|cpr|cna|phlebotomy|training|closed|holiday|board meeting|webinar|info(rmation)? session|online|continuing ed(ucation)?|osha|casualty care|first aid|cdl|forklift|welding|hvac|nursing)\b/i;
