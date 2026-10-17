@@ -8,7 +8,7 @@
  * a day when a source is down or rate-limits us), so a busy weekend page makes
  * one request per source per half hour, not one per visitor.
  */
-import { haversineMiles } from "@/lib/community/churches";
+import { haversineMiles } from "./geo";
 import { GA_PARK_COORDS } from "./ga-parks";
 import { parseGaParks, parseLocalist, parsePalShows, parseTribe, inferCategory } from "./parse";
 import { addDaysKey, DEFAULT_TZ } from "./time";
@@ -58,6 +58,7 @@ const UA = "Mozilla/5.0 (compatible; NeighborlyEvents/1.0; +https://neighborly.u
 const FRESH_MS = 30 * 60 * 1000;
 const STALE_MS = 24 * 3600 * 1000;
 const TIMEOUT_MS = 6500;
+const SOURCE_BUDGET_MS = 7000;
 
 type CacheEntry = { at: number; events: PublicEvent[] };
 const g = globalThis as typeof globalThis & {
@@ -206,12 +207,21 @@ async function cached(key: string, load: () => Promise<PublicEvent[]>): Promise<
   if (hit && now - hit.at < FRESH_MS) return { events: hit.events, status: "cached" };
   let p = inflight.get(key);
   if (!p) {
-    p = load().finally(() => inflight.delete(key));
+    p = load()
+      .then((events) => {
+        cache.set(key, { at: Date.now(), events });
+        return events;
+      })
+      .finally(() => inflight.delete(key));
     inflight.set(key, p);
   }
   try {
-    const events = await p;
-    cache.set(key, { at: Date.now(), events });
+    // A slow source never holds the page hostage: answer within the budget and
+    // let the fetch finish in the background to warm the cache.
+    const events = await Promise.race([
+      p,
+      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("slow source")), SOURCE_BUDGET_MS)),
+    ]);
     return { events, status: "ok" };
   } catch (e) {
     const error = e instanceof Error ? e.message : String(e);

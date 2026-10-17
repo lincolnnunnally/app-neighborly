@@ -1,4 +1,4 @@
-import { haversineMiles } from "@/lib/community/churches";
+import { haversineMiles } from "./geo";
 import { runSources } from "./sources";
 import { DEFAULT_TZ, effectiveEndMs, localDateKey, overlapsWindow, weekendWindow, type WeekendWindow } from "./time";
 import type { EventSearchResult, PublicEvent } from "./types";
