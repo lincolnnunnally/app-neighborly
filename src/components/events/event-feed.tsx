@@ -124,6 +124,19 @@ export function CategoryChips({
   const counts = chipCounts(events);
   const item = (id: ChipId | undefined, label: string, n: number) => {
     const target = id && chip === id ? undefined : id;
+    // Nothing to show at this distance: muted, count shown, not tappable.
+    if (id && n === 0 && chip !== id)
+      return (
+        <span
+          key={id}
+          aria-disabled="true"
+          title={`No ${label.toLowerCase()} at this distance`}
+          className="inline-flex min-h-11 cursor-not-allowed items-center gap-2 rounded-full border border-dashed border-border bg-transparent px-4 text-base font-medium text-fg-muted opacity-70"
+        >
+          {label}
+          <span className="text-sm">0</span>
+        </span>
+      );
     return (
     <a
       key={id ?? "all"}

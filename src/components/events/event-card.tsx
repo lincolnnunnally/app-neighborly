@@ -59,7 +59,15 @@ export function dayKey(ms: number): string {
   return new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(ms);
 }
 
-export function whenLabel(e: PublicEvent): string {
+/** A multi-day event that has already started (a festival on day 3): when it ends. */
+export function ongoingEndMs(e: PublicEvent, nowMs = Date.now()): number | null {
+  return e.multiDay && e.endMs && e.startMs < nowMs && e.endMs > nowMs ? e.endMs - 1 : null;
+}
+
+export function whenLabel(e: PublicEvent, nowMs = Date.now()): string {
+  const through = ongoingEndMs(e, nowMs);
+  if (through != null)
+    return `Through ${new Intl.DateTimeFormat("en-US", { timeZone: TZ, weekday: "short", month: "short", day: "numeric" }).format(through).replace(",", "")}`;
   const day = new Intl.DateTimeFormat("en-US", { timeZone: TZ, weekday: "short" }).format(e.startMs);
   if (e.allDay || e.multiDay) {
     const date = new Intl.DateTimeFormat("en-US", { timeZone: TZ, month: "short", day: "numeric" }).format(e.startMs);
@@ -162,7 +170,9 @@ export function EventCard({ event, compact = false, near }: { event: PublicEvent
         )}
       </div>
       <div className="flex flex-1 flex-col gap-1.5 p-4 sm:p-5">
-        <span className="text-base font-bold text-accent">{whenLabel(event)}</span>
+        <span className="text-base font-bold text-accent" suppressHydrationWarning>
+          {whenLabel(event)}
+        </span>
         <h3 className="font-display text-xl font-semibold leading-snug text-fg [overflow-wrap:anywhere]">
           <Link {...eventDetailLink(event, near)} className="flex min-h-11 items-center text-fg no-underline hover:underline">
             {event.title}
@@ -205,14 +215,23 @@ export function EventCard({ event, compact = false, near }: { event: PublicEvent
 }
 
 export function EventRow({ event, near }: { event: PublicEvent; near?: string }) {
-  const wd = new Intl.DateTimeFormat("en-US", { timeZone: TZ, weekday: "short" }).format(event.startMs);
-  const d = new Intl.DateTimeFormat("en-US", { timeZone: TZ, day: "numeric" }).format(event.startMs);
-  const time = event.allDay
-    ? "All day"
-    : new Intl.DateTimeFormat("en-US", { timeZone: TZ, hour: "numeric", minute: "2-digit" }).format(event.startMs);
+  // Already running (a festival on day 3): the box shows when it ends, not the past start day.
+  const through = ongoingEndMs(event);
+  const boxMs = through ?? event.startMs;
+  const wd = through != null ? "Thru" : new Intl.DateTimeFormat("en-US", { timeZone: TZ, weekday: "short" }).format(boxMs);
+  const d = new Intl.DateTimeFormat("en-US", { timeZone: TZ, day: "numeric" }).format(boxMs);
+  const time =
+    through != null
+      ? whenLabel(event)
+      : event.allDay || event.multiDay
+        ? "All day"
+        : new Intl.DateTimeFormat("en-US", { timeZone: TZ, hour: "numeric", minute: "2-digit" }).format(event.startMs);
   const inner = (
     <>
-      <span className="grid h-14 w-14 shrink-0 place-items-center rounded-[14px] bg-primary-soft text-center text-sm font-bold uppercase leading-none text-primary">
+      <span
+        className="grid h-14 w-14 shrink-0 place-items-center rounded-[14px] bg-primary-soft text-center text-sm font-bold uppercase leading-none text-primary"
+        suppressHydrationWarning
+      >
         <span>
           {wd}
           <span className="block text-2xl">{d}</span>
@@ -220,7 +239,7 @@ export function EventRow({ event, near }: { event: PublicEvent; near?: string })
       </span>
       <span className="min-w-0">
         <span className="block font-display text-lg font-semibold text-fg [overflow-wrap:anywhere]">{event.title}</span>
-        <span className="block text-base text-fg-muted [overflow-wrap:anywhere]">
+        <span className="block text-base text-fg-muted [overflow-wrap:anywhere]" suppressHydrationWarning>
           {time} · {whereLine(event)}
         </span>
       </span>

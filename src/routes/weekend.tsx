@@ -147,9 +147,11 @@ let scrollToResultsAfterLoad = false;
 
 function scrollToResults() {
   if (typeof document === "undefined") return;
-  const el = document.getElementById("weekend-results");
+  // The results heading lands just below the sticky header (64px) with a little air.
+  const el = document.querySelector("[data-testid=results-heading]") ?? document.getElementById("weekend-results");
   if (!el) return;
-  const top = el.getBoundingClientRect().top + window.scrollY - 80;
+  const header = document.querySelector("header")?.getBoundingClientRect().height ?? 64;
+  const top = el.getBoundingClientRect().top + window.scrollY - header - 16;
   window.scrollTo({ top: Math.max(0, top), behavior: "auto" });
 }
 
