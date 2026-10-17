@@ -21,7 +21,7 @@ function navFor(place: CurrentPlace): NavItem[] {
     { label: "This weekend", to: "/weekend", match: (p) => p.startsWith("/weekend") },
     board.slug
       ? { label: board.label, to: "/c/$slug", params: { slug: board.slug }, match: (p) => p === `/c/${board.slug}` }
-      : { label: board.label, to: "/near", match: (p) => p === "/near" },
+      : { label: board.label, to: "/near", search: place.zip ? { zip: place.zip } : undefined, match: (p) => p === "/near" },
     { label: "Search", to: "/search", match: (p) => p.startsWith("/search") },
     {
       label: "Churches",
@@ -113,7 +113,13 @@ export function SiteHeader({ solid: _solid = true }: { solid?: boolean }) {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-bg/95 backdrop-blur">
       <div className="page-shell flex min-h-16 flex-nowrap items-center gap-2">
-        <Link to="/" className="inline-flex min-h-11 shrink-0 items-center gap-2.5 text-fg no-underline" aria-label="Neighborly home">
+        {/* No hover prefetch: bare / follows the saved-town cookie, so load it on click. */}
+        <Link
+          to="/"
+          preload={false}
+          className="inline-flex min-h-11 shrink-0 items-center gap-2.5 text-fg no-underline"
+          aria-label="Neighborly home"
+        >
           <span className="grid h-9 w-9 place-items-center rounded-[10px] bg-primary text-primary-fg">
             <HandHeart className="h-5 w-5" aria-hidden />
           </span>

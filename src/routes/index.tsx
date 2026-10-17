@@ -34,7 +34,15 @@ function homePlace(plan: WeekendPlan | null) {
     p?.board && p.slug ? { place: p.slug } : { q: p?.zip || town };
   // The town's own board for "Post a need" and friends; Vidalia's on Vidalia.
   const boardSlug = isVidalia ? "vidalia" : p?.board && p.slug ? p.slug : null;
-  return { p, town, state, stateName: STATE_NAMES[state] || state, isVidalia, weekendSearch, boardSlug };
+  return {
+    p,
+    town,
+    state,
+    stateName: STATE_NAMES[state] || state,
+    isVidalia,
+    weekendSearch,
+    boardSlug,
+  };
 }
 
 export const Route = createFileRoute("/")({
@@ -45,22 +53,33 @@ export const Route = createFileRoute("/")({
     q: str(s.q) ?? str(s.zip),
   }),
   loaderDeps: ({ search }) => ({ place: search.place, q: search.q }),
-  loader: async ({ deps }) => {
-    // Bare / (and the logo) use the visitor's saved town from the cookie, on the server too.
-    if (!deps.place && !deps.q) {
-      const saved = await loadSavedPlace();
-      if (saved) deps = { place: saved.slug || undefined, q: saved.zip || saved.city || undefined };
-    }
-    const [plan, communities] = await Promise.all([
-      loadWeekendPlan({
-        data: {
-          place: deps.place || (deps.q ? undefined : "vidalia"),
-          query: deps.q || deps.place || "vidalia",
-        },
-      }).catch(() => null as WeekendPlan | null),
-      listCommunities().catch(() => [] as Community[]),
-    ]);
-    return { plan, communities };
+  // Bare / depends on a cookie the URL doesn't show, so never reuse an older
+  // render of it (that was the one-time Vidalia flash after a search): drop it
+  // from the cache on leave, and wait for the fresh load instead of painting stale data.
+  gcTime: 0,
+  staleTime: 0,
+  loader: {
+    staleReloadMode: "blocking",
+    handler: async ({ deps }) => {
+      const explicit = Boolean(deps.place || deps.q);
+      // Bare / (and the logo) use the visitor's saved town from the cookie, on the server too.
+      if (!explicit) {
+        const saved = await loadSavedPlace();
+        if (saved)
+          deps = { place: saved.slug || undefined, q: saved.zip || saved.city || undefined };
+      }
+      const [plan, communities] = await Promise.all([
+        loadWeekendPlan({
+          data: {
+            place: deps.place || (deps.q ? undefined : "vidalia"),
+            query: deps.q || deps.place || "vidalia",
+            remember: explicit,
+          },
+        }).catch(() => null as WeekendPlan | null),
+        listCommunities().catch(() => [] as Community[]),
+      ]);
+      return { plan, communities };
+    },
   },
   head: ({ loaderData }) => {
     const { town, stateName } = homePlace(loaderData?.plan ?? null);
@@ -85,6 +104,13 @@ export const Route = createFileRoute("/")({
   },
   component: LandingPage,
 });
+
+/**
+ * Boards that belong with a town but don't share its slug. Milstead is a
+ * Rockdale County community next to Conyers (seeded with city "Milstead"), so it
+ * shows under Conyers, never under Vidalia.
+ */
+const NEARBY_BOARDS: Record<string, string[]> = { conyers: ["milstead"] };
 
 const PLACES = [
   {
@@ -130,9 +156,11 @@ function LandingPage() {
   const feed = plan?.feed ?? null;
   const weather = weekendWeatherDays(plan?.weather ?? []);
   const groups = isVidalia
-    ? communities.filter((c) => c.slug.startsWith("vidalia") || c.slug === "milstead")
+    ? communities.filter((c) => c.slug.startsWith("vidalia"))
     : boardSlug
-      ? communities.filter((c) => c.slug === boardSlug || c.slug.startsWith(`${boardSlug}-`))
+      ? communities.filter(
+          (c) => c.slug === boardSlug || c.slug.startsWith(`${boardSlug}-`) || (NEARBY_BOARDS[boardSlug] ?? []).includes(c.slug),
+        )
       : [];
 
   return (
@@ -354,13 +382,16 @@ function LandingPage() {
               <div className="grid gap-4 md:grid-cols-3">
                 <div className="flex flex-col gap-2.5 rounded-[var(--radius-xl)] bg-primary-soft p-6">
                   <HandHeart className="h-7 w-7 text-primary" aria-hidden />
-                  <h3 className="font-display text-2xl font-semibold text-fg">Start the {town} board</h3>
+                  <h3 className="font-display text-2xl font-semibold text-fg">
+                    Start the {town} board
+                  </h3>
                   <p className="text-base text-fg-muted">
                     A board is where neighbors ask for a hand, offer a skill, and post gatherings.
                     It takes one person to start.
                   </p>
                   <Link
                     to="/near"
+                    search={(p?.zip ? { zip: p.zip } : {}) as never}
                     className="mt-2 inline-flex min-h-12 w-fit items-center rounded-full bg-primary px-5 text-base font-semibold text-primary-fg no-underline"
                   >
                     Start the {town} board
@@ -368,13 +399,17 @@ function LandingPage() {
                 </div>
                 <div className="flex flex-col gap-2.5 rounded-[var(--radius-xl)] bg-accent-soft p-6">
                   <Wrench className="h-7 w-7 text-accent" aria-hidden />
-                  <h3 className="font-display text-2xl font-semibold text-fg">Churches near {town}</h3>
+                  <h3 className="font-display text-2xl font-semibold text-fg">
+                    Churches near {town}
+                  </h3>
                   <p className="text-base text-fg-muted">
                     Service times, ministries, and contacts for churches nearby.
                   </p>
                   <Link
                     to="/churches"
-                    search={{ zip: p?.zip || undefined, city: town, state: state || undefined } as never}
+                    search={
+                      { zip: p?.zip || undefined, city: town, state: state || undefined } as never
+                    }
                     className="mt-2 inline-flex min-h-12 w-fit items-center rounded-full bg-accent px-5 text-base font-semibold text-white no-underline"
                   >
                     Churches near {town}
@@ -382,9 +417,11 @@ function LandingPage() {
                 </div>
                 <div className="flex flex-col gap-2.5 rounded-[var(--radius-xl)] bg-sky-soft p-6">
                   <Soup className="h-7 w-7 text-sky" aria-hidden />
-                  <h3 className="font-display text-2xl font-semibold text-fg">Food help near {town}</h3>
+                  <h3 className="font-display text-2xl font-semibold text-fg">
+                    Food help near {town}
+                  </h3>
                   <p className="text-base text-fg-muted">
-                    Churches near you that help with groceries and meals, from ChurchConnect.
+                    Ask churches nearby for groceries, meals, or a hand, through ChurchConnect&apos;s Get Help form.
                   </p>
                   <a
                     href={CC_GET_HELP}

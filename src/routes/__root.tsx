@@ -7,7 +7,7 @@ import { loadSavedPlace } from "@/lib/community/place-cookie";
 
 export const Route = createRootRoute({
   // The visitor's saved town (cookie), so the header's place links render right on the server.
-  loader: async () => ({ savedPlace: await loadSavedPlace() }),
+  loader: { staleReloadMode: "blocking", handler: async () => ({ savedPlace: await loadSavedPlace() }) },
   head: () => ({
     meta: [
       { charSet: "utf-8" },

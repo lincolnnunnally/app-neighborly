@@ -2,6 +2,7 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { BookOpen, HandHeart, HeartHandshake, Users } from "lucide-react";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SearchBox } from "@/components/community/search-box";
+import { townFigure } from "@/components/community/cover";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getCommunityFeed } from "@/lib/community/server";
@@ -136,10 +137,15 @@ function MinistryPage() {
           </p>
         </div>
 
-        <figure className="overflow-hidden rounded-[var(--radius-xl)] border border-border">
-          <img src="/img/vidalia/church.jpg" alt="New Branch United Methodist Church in Toombs County" className="aspect-[16/9] w-full object-cover" />
-          <figcaption className="bg-bg-elevated px-4 py-2 text-sm text-fg-muted">New Branch United Methodist Church, Toombs County. Photo by Michael Rivera (CC BY-SA 4.0), via Wikimedia Commons.</figcaption>
-        </figure>
+        {/* The Toombs County church photo belongs to Vidalia's boards only. */}
+        {slug.startsWith("vidalia") ? (
+          <figure className="overflow-hidden rounded-[var(--radius-xl)] border border-border">
+            <img src="/img/vidalia/church.jpg" alt="New Branch United Methodist Church in Toombs County" className="aspect-[16/9] w-full object-cover" />
+            <figcaption className="bg-bg-elevated px-4 py-2 text-sm text-fg-muted">New Branch United Methodist Church, Toombs County. Photo by Michael Rivera (CC BY-SA 4.0), via Wikimedia Commons.</figcaption>
+          </figure>
+        ) : (
+          townFigure(slug)
+        )}
         <SearchBox
           slug={slug}
           placeholder="Search — bible study, prayer, youth, serve…"

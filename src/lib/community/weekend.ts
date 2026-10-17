@@ -530,7 +530,16 @@ export const getWeekendPlan = createServerFn({ method: "GET" }).handler(async ()
 
 export const loadWeekendPlan = createServerFn({ method: "GET" })
   .validator(
-    (input: { place?: string; query?: string; interests?: string; setting?: string; mobility?: string; radius?: number }) =>
+    (input: {
+      place?: string;
+      query?: string;
+      interests?: string;
+      setting?: string;
+      mobility?: string;
+      radius?: number;
+      /** The page was opened for this place: save it as the visitor's town (cookie). */
+      remember?: boolean;
+    }) =>
       input,
   )
   .handler(async ({ data }) => {
@@ -555,5 +564,26 @@ export const loadWeekendPlan = createServerFn({ method: "GET" })
       const row = await sql<{ id: string }>`select id from communities where slug = ${plan.place.slug} limit 1`;
       if (!row[0] || !(await canViewCommunity(sql, { id: row[0].id, slug: plan.place.slug }))) return null;
     }
+    if (data.remember && (plan.place.zip || plan.place.city)) await rememberPlaceCookie(plan.place);
     return plan;
   });
+
+/**
+ * Set the saved-place cookie on this response, so whatever renders next (bare /,
+ * the logo, a prefetch) already knows the town: on SSR it rides the page, on a
+ * client navigation it rides the server-function response.
+ */
+async function rememberPlaceCookie(place: WeekendPlan["place"]): Promise<void> {
+  try {
+    const { setCookie, getRequest } = await import("@tanstack/react-start/server");
+    const { PLACE_COOKIE, PLACE_COOKIE_MAX_AGE, placeCookieJson } = await import("./saved-place");
+    const https = new URL(getRequest().url).protocol === "https:";
+    setCookie(
+      PLACE_COOKIE,
+      placeCookieJson({ zip: place.zip, city: place.city || place.name, state: place.state, slug: place.board ? place.slug : "" }),
+      { path: "/", maxAge: PLACE_COOKIE_MAX_AGE, sameSite: "lax", secure: https },
+    );
+  } catch {
+    /* outside a request (tests, scripts): nothing to set */
+  }
+}
