@@ -145,7 +145,15 @@ export function EventCard({ event, compact = false, near }: { event: PublicEvent
     : "";
   return (
     <article className="flex flex-col overflow-hidden rounded-[var(--radius-xl)] border border-border bg-bg-elevated shadow-[0_1px_0_rgba(28,27,25,0.04)] transition-shadow hover:shadow-md">
-      <div className={cn("relative", compact ? "h-32" : "h-40", photo ? "bg-bg-subtle" : meta.tint)}>
+      <div
+        className={cn(
+          "relative",
+          compact ? "h-32" : "h-40",
+          // A sports icon block carries no picture, so it stays short on phones.
+          !photo && event.category === "sports" && "h-[120px] sm:h-40",
+          photo ? "bg-bg-subtle" : meta.tint,
+        )}
+      >
         {photo ? (
           <img
             src={photo.src}

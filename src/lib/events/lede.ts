@@ -1,8 +1,8 @@
 /**
- * The home page's one-line "This weekend:" intro. Pure, so it is tested.
+ * The home page's one-line weekend intro. Pure, so it is tested.
  *
  * Saturday and Sunday only, local first (within 15 mi), at most two items,
- * written the way a neighbor would say it: "This weekend: Saturday dads'
+ * written the way a neighbor would say it: "Saturday dads'
  * coffee and Sunday pickleball at the Rec Complex, plus 14 more nearby."
  */
 import { DEFAULT_TZ } from "./time";
@@ -75,7 +75,7 @@ export function weekendLede(
     // In town first (board posts, under a mile), then within 15 mi, then the rest; feed order within each.
     .sort((a, b) => tier(a.e) - tier(b.e) || a.i - b.i)
     .slice(0, 2);
-  if (!candidates.length) return `This weekend: ${events.length} ${events.length === 1 ? "thing" : "things"} to do nearby.`;
+  if (!candidates.length) return `${events.length} ${events.length === 1 ? "thing" : "things"} to do nearby.`;
   const pick = (c: (typeof candidates)[number]) => {
     const p = shortPhrase(c.e.title, town);
     if (!c.w.running) return `${c.w.day} ${p}`;
@@ -90,5 +90,7 @@ export function weekendLede(
       ? `${pick(a)} and ${shortPhrase(b.e.title, town)}`
       : `${pick(a)} and ${pick(b)}`;
   const rest = events.length - candidates.length;
-  return `This weekend: ${list}${rest > 0 ? `, plus ${rest} more nearby` : ""}.`;
+  // The headline above already says "This weekend", so the line starts with the picks.
+  const line = `${list}${rest > 0 ? `, plus ${rest} more nearby` : ""}.`;
+  return line.charAt(0).toUpperCase() + line.slice(1);
 }
