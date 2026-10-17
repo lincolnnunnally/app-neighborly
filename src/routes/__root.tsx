@@ -5,6 +5,8 @@ import appCss from "../styles.css?url";
 import { NotFoundPage } from "@/components/layout/not-found";
 import { loadSavedPlace } from "@/lib/community/place-cookie";
 
+const MENU_TAP_BEFORE_READY = `window.addEventListener("click",function(e){if(window.__nbMenuReady)return;var t=e.target;var b=t&&t.closest&&t.closest('[aria-controls="site-menu"]');if(b){window.__nbMenuTap=true;e.stopPropagation();}},true);`;
+
 export const Route = createRootRoute({
   // The visitor's saved town (cookie), so the header's place links render right on the server.
   loader: { staleReloadMode: "blocking", handler: async () => ({ savedPlace: await loadSavedPlace() }) },
@@ -34,6 +36,9 @@ export const Route = createRootRoute({
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
       { rel: "stylesheet", href: appCss },
     ],
+    // A tap on ☰ before the page has finished loading its script used to be lost
+    // (no click handler yet). Note it here; the header opens the menu once it's ready.
+    scripts: [{ children: MENU_TAP_BEFORE_READY }],
   }),
   component: RootComponent,
   notFoundComponent: () => <NotFoundPage />,

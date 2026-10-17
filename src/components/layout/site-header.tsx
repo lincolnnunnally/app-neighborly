@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { HandHeart, Menu, X } from "lucide-react";
 import { SignedIn } from "@/lib/auth/gates";
@@ -89,23 +89,64 @@ function HeaderUserChip({ name }: { name: string }) {
   );
 }
 
+/**
+ * The ☰ menu's open state lives outside the header component. Every page renders
+ * its own <SiteHeader>, so a tap made while the next page was still loading used
+ * to open a header that was about to be replaced: the new page mounted a fresh,
+ * closed header and the tap was lost ("the first tap does nothing"). The menu now
+ * stays open across that swap and closes when the visitor goes to another page
+ * (a menu link, Escape, the backdrop, or a different path).
+ */
+type MenuState = { open: boolean; path: string };
+const MENU_CLOSED: MenuState = { open: false, path: "" };
+let menuState: MenuState = MENU_CLOSED;
+const menuListeners = new Set<() => void>();
+function setMenu(next: MenuState) {
+  menuState = next;
+  for (const l of menuListeners) l();
+}
+function subscribeMenu(l: () => void) {
+  menuListeners.add(l);
+  return () => {
+    menuListeners.delete(l);
+  };
+}
+function useMenuOpen(path: string): [boolean, (open: boolean) => void] {
+  const m = useSyncExternalStore(subscribeMenu, () => menuState, () => MENU_CLOSED);
+  const open = m.open && m.path === path;
+  return [open, (next) => setMenu(next ? { open: true, path } : MENU_CLOSED)];
+}
+
 /** Shared site header: logo, main nav (≥1180px), Sign in, and a ☰ menu under 1180px. */
 export function SiteHeader({ solid: _solid = true }: { solid?: boolean }) {
   const { user, isPending } = useCurrentUserState();
   const loc = useRouterState({ select: (s) => s.location });
   const path = loc.pathname;
   const search = loc.searchStr ?? "";
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useMenuOpen(path);
   const place = useCurrentPlace();
   const NAV = navFor(place);
 
+  // The page is interactive now: open the menu for a ☰ tap made before it was
+  // (noted by the small inline script in __root).
   useEffect(() => {
-    setOpen(false);
-  }, [path, search]);
+    const w = window as Window & { __nbMenuReady?: boolean; __nbMenuTap?: boolean };
+    w.__nbMenuReady = true;
+    if (w.__nbMenuTap) {
+      w.__nbMenuTap = false;
+      setMenu({ open: true, path: window.location.pathname });
+    }
+  }, []);
+
+  // Left the page the menu was opened on (back button, a link elsewhere): close it.
+  // A query-string tidy-up on the same page (e.g. ?zip= gaining &q=) keeps it open.
+  useEffect(() => {
+    if (menuState.open && menuState.path !== path) setMenu(MENU_CLOSED);
+  }, [path]);
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMenu(MENU_CLOSED);
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
@@ -159,7 +200,7 @@ export function SiteHeader({ solid: _solid = true }: { solid?: boolean }) {
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           aria-controls="site-menu"
-          onClick={() => setOpen((v) => !v)}
+          onClick={() => setOpen(!open)}
         >
           {open ? <X className="h-5 w-5" aria-hidden /> : <Menu className="h-5 w-5" aria-hidden />}
         </button>
@@ -167,10 +208,12 @@ export function SiteHeader({ solid: _solid = true }: { solid?: boolean }) {
 
       {open && (
         <>
+          {/* The header's backdrop-blur makes it the containing block for `fixed`
+              children, so a fixed backdrop collapsed to nothing; hang it below the header. */}
           <button
             type="button"
             aria-label="Close menu"
-            className="fixed inset-0 top-16 z-30 cursor-default bg-fg/20 min-[1180px]:hidden"
+            className="absolute inset-x-0 top-full z-30 h-[100dvh] cursor-default bg-fg/20 min-[1180px]:hidden"
             onClick={() => setOpen(false)}
           />
           <nav

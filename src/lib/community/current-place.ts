@@ -4,7 +4,7 @@
  * else the saved place (cookie, read by the root loader), else Vidalia.
  */
 import { useRouterState } from "@tanstack/react-router";
-import type { SavedPlace } from "./saved-place";
+import { readPlaceCookie, type SavedPlace } from "./saved-place";
 
 export type CurrentPlace = {
   city: string;
@@ -52,7 +52,14 @@ export function placeFromMatches(matches: { loaderData?: unknown }[]): CurrentPl
 }
 
 export function useCurrentPlace(): CurrentPlace {
-  return useRouterState({ select: (s) => placeFromMatches(s.matches) }) ?? VIDALIA;
+  const fromPage = useRouterState({ select: (s) => placeFromMatches(s.matches) });
+  if (fromPage) return fromPage;
+  // While the next page loads its matches carry no data yet; the loading header
+  // should still name the saved town (browser cookie), not fall back to Vidalia.
+  const saved = typeof document !== "undefined" ? readPlaceCookie() : null;
+  return saved
+    ? placeFrom({ city: saved.city, state: saved.state, zip: saved.zip, slug: saved.slug, board: Boolean(saved.slug) })
+    : VIDALIA;
 }
 
 /** Header/board link: the town's own board, else a neutral label to the board list. */
