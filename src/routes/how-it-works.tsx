@@ -2,12 +2,14 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useCurrentPlace } from "@/lib/community/current-place";
 
 export const Route = createFileRoute("/how-it-works")({
   component: HowItWorksPage,
 });
 
 function HowItWorksPage() {
+  const place = useCurrentPlace();
   return (
     <div className="min-h-dvh bg-bg">
       <SiteHeader solid />
@@ -69,26 +71,39 @@ function HowItWorksPage() {
 
         <div className="flex flex-wrap gap-3">
           <Button asChild>
-            <Link to="/weekend" search={{ place: "vidalia" }}>This weekend</Link>
+            <Link to="/weekend" search={place.board ? { place: place.board } : { q: place.zip || place.city }}>
+              This weekend
+            </Link>
           </Button>
           <Button asChild variant="outline">
             <Link to="/near">Find a town</Link>
           </Button>
           <Button asChild variant="outline">
-            <Link to="/churches" search={{ zip: "30474" }}>
+            <Link to="/churches" search={place.zip ? { zip: place.zip } : { city: place.city, state: place.state }}>
               Churches
             </Link>
           </Button>
-          <Button asChild variant="secondary">
-            <Link to="/c/$slug" params={{ slug: "vidalia" }}>
-              Browse Vidalia without signing up
-            </Link>
-          </Button>
-          <Button asChild variant="outline">
-            <Link to="/signup" search={{ community: "vidalia", code: "VIDALIA-WELCOME" }}>
-              Join Vidalia
-            </Link>
-          </Button>
+          {place.board ? (
+            <>
+              <Button asChild variant="secondary">
+                <Link to="/c/$slug" params={{ slug: place.board }}>
+                  Browse {place.city} without signing up
+                </Link>
+              </Button>
+              <Button asChild variant="outline">
+                <Link
+                  to="/signup"
+                  search={place.isVidalia ? { community: "vidalia", code: "VIDALIA-WELCOME" } : { community: place.board }}
+                >
+                  Join {place.city}
+                </Link>
+              </Button>
+            </>
+          ) : (
+            <Button asChild variant="secondary">
+              <Link to="/near">Start the {place.city} board</Link>
+            </Button>
+          )}
         </div>
       </div>
     </div>

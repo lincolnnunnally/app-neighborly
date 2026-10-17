@@ -7,12 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { listCommunities } from "@/lib/community/server";
 import { KIND_LABELS, type Community } from "@/lib/community/types";
+import { useCurrentPlace } from "@/lib/community/current-place";
 
 export const Route = createFileRoute("/communities")({
   component: CommunitiesPage,
 });
 
 function CommunitiesPage() {
+  const place = useCurrentPlace();
   const [communities, setCommunities] = useState<Community[]>([]);
   const [q, setQ] = useState("");
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -48,9 +50,16 @@ function CommunitiesPage() {
             </p>
           </div>
           <Button asChild>
-            <Link to="/signup" search={{ community: "vidalia", code: "VIDALIA-WELCOME" }}>
-              Join Vidalia
-            </Link>
+            {place.board ? (
+              <Link
+                to="/signup"
+                search={place.isVidalia ? { community: "vidalia", code: "VIDALIA-WELCOME" } : { community: place.board }}
+              >
+                Join {place.city}
+              </Link>
+            ) : (
+              <Link to="/near">Start the {place.city} board</Link>
+            )}
           </Button>
         </div>
 

@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { weekendLede } from "@/lib/events/lede";
 import { HandHeart, Soup, Wrench } from "lucide-react";
 import { SiteHeader } from "@/components/layout/site-header";
@@ -10,7 +9,9 @@ import { WeekendFeed } from "@/components/events/event-feed";
 import { listCommunities } from "@/lib/community/server";
 import { loadWeekendPlan, weekendWeatherDays, type WeekendPlan } from "@/lib/community/weekend";
 import type { Community } from "@/lib/community/types";
-import { readSavedPlace } from "@/lib/community/saved-place";
+import { loadSavedPlace } from "@/lib/community/place-cookie";
+import { CC_GET_HELP } from "@/lib/community/pantry";
+import { useRememberPlace } from "@/lib/community/remember-place";
 
 type HomeSearch = { place?: string; q?: string };
 
@@ -31,17 +32,25 @@ function homePlace(plan: WeekendPlan | null) {
   // A town with its own board links to it; anywhere else goes by ZIP (or name).
   const weekendSearch: { place?: string; q?: string } =
     p?.board && p.slug ? { place: p.slug } : { q: p?.zip || town };
-  return { p, town, state, stateName: STATE_NAMES[state] || state, isVidalia, weekendSearch };
+  // The town's own board for "Post a need" and friends; Vidalia's on Vidalia.
+  const boardSlug = isVidalia ? "vidalia" : p?.board && p.slug ? p.slug : null;
+  return { p, town, state, stateName: STATE_NAMES[state] || state, isVidalia, weekendSearch, boardSlug };
 }
 
 export const Route = createFileRoute("/")({
-  // /?zip=30014, /?q=Covington or /?place=<board> server-render that town; plain / is Vidalia.
+  // /?zip=30014, /?q=Covington or /?place=<board> server-render that town; bare / renders
+  // the saved town (cookie), else Vidalia.
   validateSearch: (s: Record<string, unknown>): HomeSearch => ({
     place: str(s.place),
     q: str(s.q) ?? str(s.zip),
   }),
   loaderDeps: ({ search }) => ({ place: search.place, q: search.q }),
   loader: async ({ deps }) => {
+    // Bare / (and the logo) use the visitor's saved town from the cookie, on the server too.
+    if (!deps.place && !deps.q) {
+      const saved = await loadSavedPlace();
+      if (saved) deps = { place: saved.slug || undefined, q: saved.zip || saved.city || undefined };
+    }
     const [plan, communities] = await Promise.all([
       loadWeekendPlan({
         data: {
@@ -114,26 +123,17 @@ function ledeFor(plan: WeekendPlan | null, town: string): string {
 function LandingPage() {
   const { plan, communities } = Route.useLoaderData();
   const search = Route.useSearch();
-  const navigate = useNavigate();
-  const { p, town, state, stateName, isVidalia, weekendSearch } = homePlace(plan);
-  // A guest's saved town (localStorage) can't be server-rendered, so plain /
-  // switches to it once on the client; a place in the URL always wins.
-  useEffect(() => {
-    if (search.place || search.q) return;
-    const saved = readSavedPlace();
-    if (!saved) return;
-    if (/^vidalia$/i.test(saved.city) || saved.zip === "30474" || saved.slug?.startsWith("vidalia"))
-      return;
-    const next = saved.zip
-      ? { q: saved.zip }
-      : saved.slug
-        ? { place: saved.slug }
-        : { q: saved.city };
-    void navigate({ to: "/", search: next, replace: true, resetScroll: false });
-  }, [search.place, search.q, navigate]);
+  const { p, town, state, stateName, isVidalia, weekendSearch, boardSlug } = homePlace(plan);
+  // Opening /?zip=… (or searching) makes that the visitor's town, so bare /
+  // and the logo keep it on the next visit.
+  useRememberPlace(search.place || search.q ? plan : null);
   const feed = plan?.feed ?? null;
   const weather = weekendWeatherDays(plan?.weather ?? []);
-  const groups = communities.filter((c) => c.slug.startsWith("vidalia") || c.slug === "milstead");
+  const groups = isVidalia
+    ? communities.filter((c) => c.slug.startsWith("vidalia") || c.slug === "milstead")
+    : boardSlug
+      ? communities.filter((c) => c.slug === boardSlug || c.slug.startsWith(`${boardSlug}-`))
+      : [];
 
   return (
     <div className="min-h-dvh overflow-x-clip bg-bg">
@@ -288,111 +288,167 @@ function LandingPage() {
                 Help when you can. Ask when you need.
               </h2>
               <p className="mt-1.5 text-[1.0625rem] text-fg-muted">
-                Browsing is free. Make a free account to post, RSVP, or offer a hand.
+                {boardSlug
+                  ? "Browsing is free. Make a free account to post, RSVP, or offer a hand."
+                  : `${town} doesn't have a Neighborly board yet. Until it does, here's help nearby.`}
               </p>
             </div>
-            <div className="grid gap-4 md:grid-cols-3">
-              <div className="flex flex-col gap-2.5 rounded-[var(--radius-xl)] bg-primary-soft p-6">
-                <HandHeart className="h-7 w-7 text-primary" aria-hidden />
-                <h3 className="font-display text-2xl font-semibold text-fg">Ask for a hand</h3>
-                <p className="text-base text-fg-muted">
-                  A ride to the pharmacy, help moving a couch, a casserole after surgery. Post it
-                  and neighbors can offer.
-                </p>
-                <Link
-                  to="/c/$slug"
-                  params={{ slug: "vidalia" }}
-                  search={{ tab: "needs" } as never}
-                  className="mt-2 inline-flex min-h-12 w-fit items-center rounded-full bg-primary px-5 text-base font-semibold text-primary-fg no-underline"
-                >
-                  Post a need
-                </Link>
+            {boardSlug ? (
+              <div className="grid gap-4 md:grid-cols-3">
+                <div className="flex flex-col gap-2.5 rounded-[var(--radius-xl)] bg-primary-soft p-6">
+                  <HandHeart className="h-7 w-7 text-primary" aria-hidden />
+                  <h3 className="font-display text-2xl font-semibold text-fg">Ask for a hand</h3>
+                  <p className="text-base text-fg-muted">
+                    A ride to the pharmacy, help moving a couch, a casserole after surgery. Post it
+                    and neighbors can offer.
+                  </p>
+                  <Link
+                    to="/c/$slug"
+                    params={{ slug: boardSlug }}
+                    search={{ tab: "needs" } as never}
+                    className="mt-2 inline-flex min-h-12 w-fit items-center rounded-full bg-primary px-5 text-base font-semibold text-primary-fg no-underline"
+                  >
+                    Post a need
+                  </Link>
+                </div>
+                <div className="flex flex-col gap-2.5 rounded-[var(--radius-xl)] bg-accent-soft p-6">
+                  <Wrench className="h-7 w-7 text-accent" aria-hidden />
+                  <h3 className="font-display text-2xl font-semibold text-fg">
+                    Offer what you&apos;re good at
+                  </h3>
+                  <p className="text-base text-fg-muted">
+                    Yard work, tutoring, woodworking, a mower to lend. Small skills go a long way
+                    here.
+                  </p>
+                  <Link
+                    to="/c/$slug"
+                    params={{ slug: boardSlug }}
+                    search={{ tab: "services" } as never}
+                    className="mt-2 inline-flex min-h-12 w-fit items-center rounded-full bg-accent px-5 text-base font-semibold text-white no-underline"
+                  >
+                    Offer a skill
+                  </Link>
+                </div>
+                <div className="flex flex-col gap-2.5 rounded-[var(--radius-xl)] bg-sky-soft p-6">
+                  <Soup className="h-7 w-7 text-sky" aria-hidden />
+                  <h3 className="font-display text-2xl font-semibold text-fg">
+                    Find food &amp; support
+                  </h3>
+                  <p className="text-base text-fg-muted">
+                    {isVidalia
+                      ? "Toombs and Vidalia food pantries, churches, and GriefShare, with addresses and hours where they're posted."
+                      : `Food pantries and churches neighbors have listed on the ${town} board, with hours where they're posted.`}
+                  </p>
+                  <Link
+                    to="/c/$slug"
+                    params={{ slug: boardSlug }}
+                    search={{ tab: "places", cat: "pantry" } as never}
+                    className="mt-2 inline-flex min-h-12 w-fit items-center rounded-full border border-border bg-bg-elevated px-5 text-base font-semibold text-fg no-underline"
+                  >
+                    Find a pantry
+                  </Link>
+                </div>
               </div>
-              <div className="flex flex-col gap-2.5 rounded-[var(--radius-xl)] bg-accent-soft p-6">
-                <Wrench className="h-7 w-7 text-accent" aria-hidden />
-                <h3 className="font-display text-2xl font-semibold text-fg">
-                  Offer what you&apos;re good at
-                </h3>
-                <p className="text-base text-fg-muted">
-                  Yard work, tutoring, woodworking, a mower to lend. Small skills go a long way
-                  here.
-                </p>
-                <Link
-                  to="/c/$slug"
-                  params={{ slug: "vidalia" }}
-                  search={{ tab: "services" } as never}
-                  className="mt-2 inline-flex min-h-12 w-fit items-center rounded-full bg-accent px-5 text-base font-semibold text-white no-underline"
-                >
-                  Offer a skill
-                </Link>
+            ) : (
+              // No board here: the same honest fallback the weekend page uses.
+              <div className="grid gap-4 md:grid-cols-3">
+                <div className="flex flex-col gap-2.5 rounded-[var(--radius-xl)] bg-primary-soft p-6">
+                  <HandHeart className="h-7 w-7 text-primary" aria-hidden />
+                  <h3 className="font-display text-2xl font-semibold text-fg">Start the {town} board</h3>
+                  <p className="text-base text-fg-muted">
+                    A board is where neighbors ask for a hand, offer a skill, and post gatherings.
+                    It takes one person to start.
+                  </p>
+                  <Link
+                    to="/near"
+                    className="mt-2 inline-flex min-h-12 w-fit items-center rounded-full bg-primary px-5 text-base font-semibold text-primary-fg no-underline"
+                  >
+                    Start the {town} board
+                  </Link>
+                </div>
+                <div className="flex flex-col gap-2.5 rounded-[var(--radius-xl)] bg-accent-soft p-6">
+                  <Wrench className="h-7 w-7 text-accent" aria-hidden />
+                  <h3 className="font-display text-2xl font-semibold text-fg">Churches near {town}</h3>
+                  <p className="text-base text-fg-muted">
+                    Service times, ministries, and contacts for churches nearby.
+                  </p>
+                  <Link
+                    to="/churches"
+                    search={{ zip: p?.zip || undefined, city: town, state: state || undefined } as never}
+                    className="mt-2 inline-flex min-h-12 w-fit items-center rounded-full bg-accent px-5 text-base font-semibold text-white no-underline"
+                  >
+                    Churches near {town}
+                  </Link>
+                </div>
+                <div className="flex flex-col gap-2.5 rounded-[var(--radius-xl)] bg-sky-soft p-6">
+                  <Soup className="h-7 w-7 text-sky" aria-hidden />
+                  <h3 className="font-display text-2xl font-semibold text-fg">Food help near {town}</h3>
+                  <p className="text-base text-fg-muted">
+                    Churches near you that help with groceries and meals, from ChurchConnect.
+                  </p>
+                  <a
+                    href={CC_GET_HELP}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-2 inline-flex min-h-12 w-fit items-center rounded-full border border-border bg-bg-elevated px-5 text-base font-semibold text-fg no-underline"
+                  >
+                    Find food help
+                  </a>
+                </div>
               </div>
-              <div className="flex flex-col gap-2.5 rounded-[var(--radius-xl)] bg-sky-soft p-6">
-                <Soup className="h-7 w-7 text-sky" aria-hidden />
-                <h3 className="font-display text-2xl font-semibold text-fg">
-                  Find food &amp; support
-                </h3>
-                <p className="text-base text-fg-muted">
-                  Toombs and Vidalia food pantries, churches, and GriefShare, with addresses and
-                  hours where they&apos;re posted.
-                </p>
-                <Link
-                  to="/c/$slug"
-                  params={{ slug: "vidalia" }}
-                  search={{ tab: "places", cat: "pantry" } as never}
-                  className="mt-2 inline-flex min-h-12 w-fit items-center rounded-full border border-border bg-bg-elevated px-5 text-base font-semibold text-fg no-underline"
-                >
-                  Find a pantry
-                </Link>
-              </div>
-            </div>
+            )}
           </div>
         </section>
 
-        {/* Groups */}
-        <section className="border-y border-border bg-bg-elevated py-11">
-          <div className="page-shell">
-            <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <h2 className="font-display text-3xl font-semibold text-fg">Find your people</h2>
-                <p className="mt-1.5 text-[1.0625rem] text-fg-muted">
-                  Join as many groups as fit. Every group starts with one person who says yes.
-                </p>
-              </div>
-              <Link
-                to="/communities"
-                className="inline-flex min-h-12 items-center rounded-full border border-border bg-bg px-5 text-base font-semibold text-fg no-underline hover:bg-bg-subtle"
-              >
-                All communities →
-              </Link>
-            </div>
-            <div className="flex flex-wrap gap-2.5">
-              {groups.map((c) => (
+        {/* Groups: only the boards in this town */}
+        {boardSlug && (
+          <section className="border-y border-border bg-bg-elevated py-11">
+            <div className="page-shell">
+              <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+                <div>
+                  <h2 className="font-display text-3xl font-semibold text-fg">Find your people</h2>
+                  <p className="mt-1.5 text-[1.0625rem] text-fg-muted">
+                    Join as many groups as fit. Every group starts with one person who says yes.
+                  </p>
+                </div>
                 <Link
-                  key={c.id}
-                  to="/c/$slug"
-                  params={{ slug: c.slug }}
-                  className="inline-flex min-h-11 items-center gap-2 rounded-full border border-border bg-bg px-4 text-base text-fg no-underline hover:border-border-strong"
+                  to="/communities"
+                  className="inline-flex min-h-12 items-center rounded-full border border-border bg-bg px-5 text-base font-semibold text-fg no-underline hover:bg-bg-subtle"
                 >
-                  {c.slug === "vidalia"
-                    ? "Vidalia neighbors"
-                    : c.name.replace(/^Vidalia\s+/i, "").replace(/^./, (ch) => ch.toUpperCase())}
-                  {c.member_count > 1 ? (
-                    <span className="font-semibold text-primary">{c.member_count}</span>
-                  ) : null}
+                  All communities →
                 </Link>
-              ))}
-              <Link
-                to="/ministry"
-                search={{ place: "vidalia" }}
-                className="inline-flex min-h-11 items-center rounded-full border border-border bg-bg px-4 text-base text-fg no-underline hover:border-border-strong"
-              >
-                Bible studies &amp; serving
-              </Link>
+              </div>
+              <div className="flex flex-wrap gap-2.5">
+                {groups.map((c) => (
+                  <Link
+                    key={c.id}
+                    to="/c/$slug"
+                    params={{ slug: c.slug }}
+                    className="inline-flex min-h-11 items-center gap-2 rounded-full border border-border bg-bg px-4 text-base text-fg no-underline hover:border-border-strong"
+                  >
+                    {c.slug === boardSlug
+                      ? `${town} neighbors`
+                      : c.name
+                          .replace(new RegExp(`^${town.replace(/[^A-Za-z ]/g, "")}\\s+`, "i"), "")
+                          .replace(/^./, (ch) => ch.toUpperCase())}
+                    {c.member_count > 1 ? (
+                      <span className="font-semibold text-primary">{c.member_count}</span>
+                    ) : null}
+                  </Link>
+                ))}
+                <Link
+                  to="/ministry"
+                  search={{ place: boardSlug }}
+                  className="inline-flex min-h-11 items-center rounded-full border border-border bg-bg px-4 text-base text-fg no-underline hover:border-border-strong"
+                >
+                  Bible studies &amp; serving
+                </Link>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
       </main>
-      <SiteFooter credits />
+      <SiteFooter credits={isVidalia} />
       <JsonLd
         data={{
           "@context": "https://schema.org",

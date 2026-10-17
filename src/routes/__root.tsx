@@ -3,8 +3,11 @@ import { AuthProvider } from "@/lib/auth/provider";
 import { Toaster } from "sonner";
 import appCss from "../styles.css?url";
 import { NotFoundPage } from "@/components/layout/not-found";
+import { loadSavedPlace } from "@/lib/community/place-cookie";
 
 export const Route = createRootRoute({
+  // The visitor's saved town (cookie), so the header's place links render right on the server.
+  loader: async () => ({ savedPlace: await loadSavedPlace() }),
   head: () => ({
     meta: [
       { charSet: "utf-8" },
