@@ -1,3 +1,4 @@
+import { isListedCommunity } from "@/lib/community/public-filters";
 import { useEffect, useMemo, useState } from "react";
 import { NotFoundPage } from "@/components/layout/not-found";
 import { WeekendFeed } from "@/components/events/event-feed";
@@ -117,6 +118,7 @@ export const Route = createFileRoute("/c/$slug")({
         { name: "description", content: description },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
+        ...(isListedCommunity(params.slug) ? [] : [{ name: "robots", content: "noindex, nofollow" }]),
       ],
     };
   },

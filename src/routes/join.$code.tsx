@@ -9,6 +9,7 @@ import { resolveInvite } from "@/lib/community/server";
 import type { Community } from "@/lib/community/types";
 
 export const Route = createFileRoute("/join/$code")({
+  head: () => ({ meta: [{ title: "You're invited — Neighborly" }, { name: "robots", content: "noindex, nofollow" }] }),
   component: JoinInvitePage,
 });
 
