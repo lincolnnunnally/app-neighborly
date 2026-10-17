@@ -18,6 +18,7 @@ import { Link } from "@tanstack/react-router";
 import { RsvpButton } from "./rsvp-button";
 import type { EventCategory, PublicEvent } from "@/lib/events/types";
 import { cn } from "@/lib/utils";
+import { cardLabels } from "@/lib/events/chips";
 
 const TZ = "America/New_York";
 
@@ -148,7 +149,7 @@ export function EventCard({ event, compact = false, near }: { event: PublicEvent
           </div>
         )}
         <span className="absolute left-3 top-3 rounded-full bg-bg-elevated/95 px-3 py-1 text-sm font-semibold text-fg shadow-sm">
-          {board ? "Neighbors" : meta.label}
+          {cardLabels(event).join(" · ")}
         </span>
         {event.free && (
           <span className="absolute right-3 top-3 rounded-full bg-primary px-3 py-1 text-sm font-semibold text-primary-fg">

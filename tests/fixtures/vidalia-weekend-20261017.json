@@ -1,0 +1,342 @@
+[
+ {
+  "id": "headinhome:2026-10-14",
+  "title": "Headin' Home Fest (bluegrass festival)",
+  "category": "festival",
+  "sourceId": "headinhome",
+  "summary": "",
+  "venue": "Stagger Lee Music Park",
+  "city": "Hazlehurst",
+  "distanceMi": 26.8
+ },
+ {
+  "id": "statesboromarket:1792234800000",
+  "title": "Statesboro Main Street Farmers Market",
+  "category": "food",
+  "sourceId": "statesboromarket",
+  "summary": "",
+  "venue": "The Market at Visit Statesboro",
+  "city": "Statesboro",
+  "distanceMi": 40.1
+ },
+ {
+  "id": "gseagles:vcal_17466-admin.gseagles.com:1792238400000",
+  "title": "Georgia Southern Women's Rifle vs West Virginia",
+  "category": "sports",
+  "sourceId": "gseagles",
+  "summary": "",
+  "venue": "Shooting Sports Education Center",
+  "city": "Statesboro",
+  "distanceMi": 39.4
+ },
+ {
+  "id": "board:evt_vidalia_dads_coffee",
+  "title": "Vidalia dads — Saturday coffee",
+  "category": "community",
+  "sourceId": "board",
+  "summary": "Dads, grab a coffee downtown and meet a few others who are in the same season. RSVP so we can save you a seat.",
+  "venue": "Downtown Vidalia",
+  "city": "Vidalia",
+  "distanceMi": 0
+ },
+ {
+  "id": "gaparks:32731856",
+  "title": "Who was George L Smith II",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "George L. Smith State Park",
+  "city": "",
+  "distanceMi": 29.3
+ },
+ {
+  "id": "visitdublin:10019591:1792245600000",
+  "title": "Fall Used Book Sale",
+  "category": "family",
+  "sourceId": "visitdublin",
+  "summary": "As crisp autumn air begins to usher in autumn, there’s no better way to embrace the season than by wandering through the Fall Used Book Sale at the Laurens County Library, September 21st to October 31st. Fall Finds Fall…",
+  "venue": "Oconee Regional Library",
+  "city": "Dublin",
+  "distanceMi": 36.8
+ },
+ {
+  "id": "bpcathletics:vcal_7395-bpcuathletics.com:1792252800000",
+  "title": "Brewton-Parker Women's Soccer vs Abraham Baldwin Agricultural College - Senior Day",
+  "category": "sports",
+  "sourceId": "bpcathletics",
+  "summary": "",
+  "venue": "BPC Soccer Field & Track",
+  "city": "Mount Vernon",
+  "distanceMi": 10.9
+ },
+ {
+  "id": "visitdublin:24600:1792252800000",
+  "title": "Downtown Dublin Chili Cook-Off & Fall Festival",
+  "category": "festival",
+  "sourceId": "visitdublin",
+  "summary": "What better way to get into all of the fall feelings than with a belly full of chili and full day of fun! Dig into the Downtown Dublin Chili Cook-Off and Fall Festival on Saturday, October 17th from 12 PM to 4 PM to ind…",
+  "venue": "Market on Madison",
+  "city": "Dublin",
+  "distanceMi": 36.3
+ },
+ {
+  "id": "gseagles:vcal_17670-admin.gseagles.com:1792256400000",
+  "title": "Georgia Southern Swimming and Diving vs SCAD/Converse - Alumni Weekend",
+  "category": "sports",
+  "sourceId": "gseagles",
+  "summary": "",
+  "venue": "Aquatics Center at the RAC",
+  "city": "Statesboro",
+  "distanceMi": 39.4
+ },
+ {
+  "id": "gseagles:vcal_17523-admin.gseagles.com:1792256400000",
+  "title": "Georgia Southern Volleyball vs Arkansas State",
+  "category": "sports",
+  "sourceId": "gseagles",
+  "summary": "",
+  "venue": "Hanner Fieldhouse",
+  "city": "Statesboro",
+  "distanceMi": 39.4
+ },
+ {
+  "id": "gseagles:vcal_17743-admin.gseagles.com:1792256400000",
+  "title": "Georgia Southern Baseball vs Winthrop University",
+  "category": "sports",
+  "sourceId": "gseagles",
+  "summary": "",
+  "venue": "J.I. Clements Stadium",
+  "city": "Statesboro",
+  "distanceMi": 39.4
+ },
+ {
+  "id": "visitdublin:10019661:1792278000000",
+  "title": "Dublin Farm Dinners",
+  "category": "food",
+  "sourceId": "visitdublin",
+  "summary": "Feast like royalty at Dublin Farm on Fridays and Saturdays with the Dublin Farm Feast, a five-course experience featuring handcrafted, refined international dining specialties. Each week, the chef thoughtfully creates a…",
+  "venue": "Dublin Farm",
+  "city": "Dublin",
+  "distanceMi": 33.3
+ },
+ {
+  "id": "gseagles:vcal_17496-admin.gseagles.com:1792278000000",
+  "title": "Georgia Southern Men's Soccer vs James Madison",
+  "category": "sports",
+  "sourceId": "gseagles",
+  "summary": "",
+  "venue": "Bo Pitts Field",
+  "city": "Statesboro",
+  "distanceMi": 39.4
+ },
+ {
+  "id": "gasouthern:53568073531786",
+  "title": "Sometimes the Rain, Sometimes the Sea",
+  "category": "arts",
+  "sourceId": "gasouthern",
+  "summary": "Sometimes the Rain, Sometimes the Sea By Julia Izumi The Little Mermaid is Hans Christian Andersen's most beloved and well-known fairy tale, which is why it's not the story our friend, Dolan, is going to tell you today.…",
+  "venue": "Center for Art & Theatre (Statesboro Campus)",
+  "city": "Statesboro",
+  "distanceMi": 39.4
+ },
+ {
+  "id": "gasouthern:53814729324446",
+  "title": "The Merry Widow",
+  "category": "arts",
+  "sourceId": "gasouthern",
+  "summary": "Georgia Southern Opera presents Franz Lehár's The Merry Widow.",
+  "venue": "Performing Arts Center (PAC)",
+  "city": "Statesboro",
+  "distanceMi": 39.4
+ },
+ {
+  "id": "gseagles:vcal_17468-admin.gseagles.com:1792324800000",
+  "title": "Georgia Southern Women's Rifle vs UAB",
+  "category": "sports",
+  "sourceId": "gseagles",
+  "summary": "",
+  "venue": "Shooting Sports Education Center",
+  "city": "Statesboro",
+  "distanceMi": 39.4
+ },
+ {
+  "id": "board:evt_vidalia_rec_pb",
+  "title": "Outdoor pickleball — Rec Complex",
+  "category": "sports",
+  "sourceId": "board",
+  "summary": "Public listing: open play at Vidalia Recreation Complex, 102 Stockyard Rd, Vidalia, Georgia. Courts are public and free. Typical open play has been Sunday 2:00pm and Monday/Thursday 5:30pm — show up, or post a need if you want a hitting partner. Confirm with Vidalia Parks & Rec (",
+  "venue": "102 Stockyard Rd, Vidalia, GA",
+  "city": "Vidalia",
+  "distanceMi": 0
+ },
+ {
+  "id": "gaparks:33320348",
+  "title": "5K Trail Run",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Mistletoe State Park",
+  "city": "",
+  "distanceMi": 99.1
+ },
+ {
+  "id": "gaparks:33320204",
+  "title": "Red, White, & Boo Halloween Scavenger Hunt - 9 AM",
+  "category": "family",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Hofwyl-Broadfield Plantation Historic Site",
+  "city": "",
+  "distanceMi": 84.2
+ },
+ {
+  "id": "gaparks:33849755",
+  "title": "Public Archaeology Day",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Fort Morris Historic Site",
+  "city": "",
+  "distanceMi": 73.2
+ },
+ {
+  "id": "gaparks:33319959",
+  "title": "Archery",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Skidaway Island State Park",
+  "city": "",
+  "distanceMi": 81.6
+ },
+ {
+  "id": "gaparks:33320336",
+  "title": "Beginner Archery",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Mistletoe State Park",
+  "city": "",
+  "distanceMi": 99.1
+ },
+ {
+  "id": "gaparks:33320141",
+  "title": "Bows and Boos: Spooky archery",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "A.H. Stephens State Park",
+  "city": "",
+  "distanceMi": 97.4
+ },
+ {
+  "id": "gaparks:33319946",
+  "title": "Butterflies and Roses Craft",
+  "category": "arts",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Laura S. Walker State Park",
+  "city": "",
+  "distanceMi": 75.1
+ },
+ {
+  "id": "gaparks:33319909",
+  "title": "Drinking History: A Cuppa Tea",
+  "category": "arts",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Fort King George Historic Site",
+  "city": "",
+  "distanceMi": 83.2
+ },
+ {
+  "id": "gaparks:33319947",
+  "title": "Lake Trail Nature Hike",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Laura S. Walker State Park",
+  "city": "",
+  "distanceMi": 75.1
+ },
+ {
+  "id": "gaparks:33849766",
+  "title": "Afternoon Paddle",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Reed Bingham State Park",
+  "city": "",
+  "distanceMi": 97.9
+ },
+ {
+  "id": "gaparks:33319966",
+  "title": "Bat Walk & Talk",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Skidaway Island State Park",
+  "city": "",
+  "distanceMi": 81.6
+ },
+ {
+  "id": "gaparks:33320021",
+  "title": "Sunset on the Swamp Cruise",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Okefenokee State Park",
+  "city": "",
+  "distanceMi": 96.4
+ },
+ {
+  "id": "gaparks:33319948",
+  "title": "Sunset Paddle",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Laura S. Walker State Park",
+  "city": "",
+  "distanceMi": 75.1
+ },
+ {
+  "id": "gaparks:32443270",
+  "title": "Haunted Forest: The Last Sighting",
+  "category": "family",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Fort McAllister State Park",
+  "city": "",
+  "distanceMi": 74.5
+ },
+ {
+  "id": "gaparks:33319913",
+  "title": "Lye, Dye, Weave & Ply: Making Clothes in the 1700s",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Fort King George Historic Site",
+  "city": "",
+  "distanceMi": 83.2
+ },
+ {
+  "id": "gaparks:33319970",
+  "title": "Paint a Bat",
+  "category": "arts",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Skidaway Island State Park",
+  "city": "",
+  "distanceMi": 81.6
+ },
+ {
+  "id": "gaparks:33849767",
+  "title": "Ask the Naturalist",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Reed Bingham State Park",
+  "city": "",
+  "distanceMi": 97.9
+ }
+]

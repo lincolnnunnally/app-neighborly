@@ -4,7 +4,8 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { NotFoundPage } from "@/components/layout/not-found";
 import { RsvpButton } from "@/components/events/rsvp-button";
-import { categoryMeta, icsHrefFor, placePhoto } from "@/components/events/event-card";
+import { icsHrefFor, placePhoto } from "@/components/events/event-card";
+import { cardLabels } from "@/lib/events/chips";
 import { getEventDetail } from "@/lib/community/event-detail";
 import type { PublicEvent } from "@/lib/events/types";
 
@@ -76,7 +77,6 @@ export const Route = createFileRoute("/e/$id")({
 function EventPage() {
   const { event: e, board, description, hostName } = Route.useLoaderData();
   const { near, rsvp } = Route.useSearch();
-  const meta = categoryMeta(e.category);
   const place = placeLine(e.venue, e.city);
   const isBoard = e.sourceId === "board";
   const organizerSite = !isBoard && e.url.startsWith("http") ? e.url : "";
@@ -102,7 +102,7 @@ function EventPage() {
           ) : null}
           <div className="space-y-6 p-5 sm:p-8">
             <div className="space-y-3">
-              <span className="eyebrow">{isBoard ? "Neighbors" : meta.label}</span>
+              <span className="eyebrow">{cardLabels(e).join(" · ")}</span>
               <h1 className="font-display text-3xl font-semibold leading-tight text-fg sm:text-4xl [overflow-wrap:anywhere]">
                 {e.title}
               </h1>
