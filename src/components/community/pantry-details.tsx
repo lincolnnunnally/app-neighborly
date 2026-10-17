@@ -127,14 +127,14 @@ export function PantryDetails({
       {(pantry.phone || pantry.website || pantry.facebook_url) && (
         <div className="flex flex-wrap gap-3 text-sm">
           {pantry.phone ? (
-            <a className="inline-flex items-center gap-1 text-primary" href={`tel:${pantry.phone}`}>
+            <a className="inline-flex min-h-11 items-center gap-1 text-primary" href={`tel:${pantry.phone}`}>
               <Phone className="h-3.5 w-3.5" />
               {pantry.phone}
             </a>
           ) : null}
           {pantry.website ? (
             <a
-              className="inline-flex items-center gap-1 text-primary"
+              className="inline-flex min-h-11 items-center gap-1 text-primary"
               href={pantry.website}
               target="_blank"
               rel="noreferrer"

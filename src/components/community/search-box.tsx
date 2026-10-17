@@ -80,7 +80,7 @@ export function SearchBox({
                 setQ(example);
                 void go(example);
               }}
-              className="rounded-full border border-border bg-bg-elevated px-2.5 py-1 text-xs text-fg-muted transition-colors hover:border-border-strong hover:text-fg"
+              className="inline-flex min-h-11 items-center rounded-full border border-border bg-bg-elevated px-4 py-2 text-sm text-fg-muted transition-colors hover:border-border-strong hover:text-fg"
             >
               {example}
             </button>
