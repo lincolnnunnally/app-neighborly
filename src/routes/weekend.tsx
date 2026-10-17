@@ -138,6 +138,21 @@ function ResultsSkeleton({ label }: { label: string | null }) {
   );
 }
 
+/**
+ * A radius change reloads the weekend (the page shows a skeleton meanwhile),
+ * so once it lands we bring the results back into view instead of leaving the
+ * reader at the top. Module-level because the page can remount while loading.
+ */
+let scrollToResultsAfterLoad = false;
+
+function scrollToResults() {
+  if (typeof document === "undefined") return;
+  const el = document.getElementById("weekend-results");
+  if (!el) return;
+  const top = el.getBoundingClientRect().top + window.scrollY - 80;
+  window.scrollTo({ top: Math.max(0, top), behavior: "auto" });
+}
+
 function WeekendPage() {
   const search = Route.useSearch();
   const loaded = Route.useLoaderData();
@@ -158,6 +173,12 @@ function WeekendPage() {
     // searchingFor is cleared by PlaceSearch when the *latest* search ends, so
     // an older search landing first never flashes its results.
   }, [loaded.plan]);
+
+  useEffect(() => {
+    if (stale || !scrollToResultsAfterLoad) return;
+    scrollToResultsAfterLoad = false;
+    requestAnimationFrame(scrollToResults);
+  }, [stale, plan]);
 
   useEffect(() => {
     if (!search.place && !search.q) {
@@ -269,13 +290,20 @@ function WeekendPage() {
         <div className="page-shell space-y-10 py-10">
           {!stale && plan && <WeatherStrip plan={plan} />}
 
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <ModeChips mode={mode} onMode={(m) => void navigate({ search: (s) => ({ ...s, who: m === "all" ? undefined : m }), replace: true })} />
+          <div id="weekend-results" className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <ModeChips
+              mode={mode}
+              onMode={(m) => void navigate({ search: (s) => ({ ...s, who: m === "all" ? undefined : m }), replace: true, resetScroll: false })}
+            />
             <RadiusChips
               radius={radius}
               choices={RADII}
               hrefFor={(r) => hrefWith({ radius: r })}
-              onPick={(r) => void navigate({ search: (s) => ({ ...s, radius: r === DEFAULT_RADIUS_MI ? undefined : r }) })}
+              onPick={(r) => {
+                if (r === radius) return;
+                scrollToResultsAfterLoad = true;
+                void navigate({ search: (s) => ({ ...s, radius: r === DEFAULT_RADIUS_MI ? undefined : r }), resetScroll: false });
+              }}
             />
           </div>
           {!stale && feed && (
@@ -283,7 +311,7 @@ function WeekendPage() {
               chip={search.cat}
               events={filterMode(feed.events, mode)}
               hrefFor={(c) => hrefWith({ cat: c })}
-              onPick={(c) => void navigate({ search: (s) => ({ ...s, cat: c }), replace: true })}
+              onPick={(c) => void navigate({ search: (s) => ({ ...s, cat: c }), replace: true, resetScroll: false })}
             />
           )}
 

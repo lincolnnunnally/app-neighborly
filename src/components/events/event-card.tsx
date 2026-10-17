@@ -19,6 +19,7 @@ import { RsvpButton } from "./rsvp-button";
 import type { EventCategory, PublicEvent } from "@/lib/events/types";
 import { cn } from "@/lib/utils";
 import { cardLabels } from "@/lib/events/chips";
+import { runsLabel } from "@/lib/events/time";
 
 const TZ = "America/New_York";
 
@@ -85,6 +86,8 @@ function whereLine(e: PublicEvent): string {
   if (e.city && !e.venue.toLowerCase().includes(e.city.toLowerCase())) parts.push(e.city);
   let line = parts.filter(Boolean).join(", ");
   if (typeof e.distanceMi === "number" && e.distanceMi >= 1) line += ` · ${Math.round(e.distanceMi)} mi away`;
+  // Under a mile (board posts, things in town): say so rather than nothing.
+  else if (typeof e.distanceMi === "number" || e.sourceId === "board") line += e.city ? ` · In ${e.city}` : " · In town";
   return line;
 }
 
@@ -125,6 +128,7 @@ export function EventCard({ event, compact = false, near }: { event: PublicEvent
   const local = placePhoto(event);
   const photo = event.image && !broken ? { src: event.image, alt: "" } : local;
   const board = event.sourceId === "board";
+  const runs = event.multiDay ? null : runsLabel(event.summary, event.startMs);
   const more = event.alsoOn?.length
     ? `Also ${event.alsoOn
         .map((k) => new Intl.DateTimeFormat("en-US", { timeZone: "UTC", weekday: "short" }).format(new Date(`${k}T12:00:00Z`)))
@@ -168,6 +172,7 @@ export function EventCard({ event, compact = false, near }: { event: PublicEvent
           <MapPin className="mt-1 h-4 w-4 shrink-0" aria-hidden />
           <span className="[overflow-wrap:anywhere]">{whereLine(event)}</span>
         </p>
+        {runs && <p className="text-base text-fg-muted">{runs}</p>}
         {more && <p className="text-base text-fg-muted">{more}</p>}
         <OtherPlaces event={event} />
         <p className="mt-auto pt-2 text-base text-fg-muted">
