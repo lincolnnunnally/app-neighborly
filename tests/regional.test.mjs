@@ -165,6 +165,7 @@ test("Category chips: keyword + source rules, sports never under arts chips", ()
   assert.deepEqual(chipsFor(ev({ title: "Headin' Home Fest (bluegrass festival)", category: "festival" })), ["festivals", "music"]);
   assert.ok(chipsFor(ev({ title: "The Merry Widow", category: "arts", sourceId: "gasouthern", summary: "Opera Theatre performance" })).includes("performing"));
   assert.ok(chipsFor(ev({ title: "Wilson Fairchild", sourceId: "averitt" })).includes("performing"));
+  assert.deepEqual(chipsFor(ev({ title: "TRIBUTE, A Celebration of The Allman Brothers", sourceId: "averitt", category: "festival" })), ["performing", "music"]);
   assert.ok(chipsFor(ev({ title: "Sometimes the Rain, Sometimes the Sea", category: "arts", venue: "Center for Art & Theatre" })).includes("performing"));
   assert.ok(!chipsFor(ev({ title: "Fall Used Book Sale", venue: "Oconee Regional Library" })).includes("performing"));
   assert.deepEqual(chipsFor(ev({ title: "Statesboro Main Street Farmers Market", category: "food" })), ["markets"]);

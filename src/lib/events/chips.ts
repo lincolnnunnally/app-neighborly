@@ -41,7 +41,9 @@ export function chipsFor(e: Classifiable): ChipId[] {
   const sports = e.category === "sports";
   if (!sports && (STAGE_SOURCES.has(e.sourceId) || stageVenue || RULES.performing.test(text) || (e.category === "arts" && /show|perform/i.test(text))))
     out.push("performing");
-  if (!sports && (e.category === "festival" || RULES.festivals.test(text))) out.push("festivals");
+  // A stage show called "A Celebration of …" is a concert, not a festival.
+  const stage = STAGE_SOURCES.has(e.sourceId) || stageVenue;
+  if (!sports && (stage ? /festival|\bfest\b/i.test(text) : e.category === "festival" || RULES.festivals.test(text))) out.push("festivals");
   if (!sports && (e.category === "music" || RULES.music.test(text))) out.push("music");
   if (e.category === "family" || RULES.family.test(text)) out.push("family");
   if (!sports && RULES.markets.test(text)) out.push("markets");
