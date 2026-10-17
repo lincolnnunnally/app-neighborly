@@ -273,10 +273,10 @@ test("Home intro: Sat/Sun only, local first, two items, through Sun, no genre ta
     mk({ title: "Vidalia dads — Saturday coffee", startMs: Date.parse("2026-10-17T13:00:00Z"), distanceMi: 0, sourceId: "board" }),
     mk({ title: "Outdoor pickleball — Rec Complex", startMs: Date.parse("2026-10-18T18:00:00Z"), distanceMi: 0, sourceId: "board" }),
   ];
-  assert.equal(weekendLede(events, "Vidalia", now), "This weekend: Saturday dads’ coffee and Sunday pickleball at the Rec Complex, plus 2 more nearby.");
+  assert.equal(weekendLede(events, "Vidalia", now), "Saturday dads’ coffee and Sunday pickleball at the Rec Complex, plus 2 more nearby.");
   const far = events.slice(0, 2);
   const line = weekendLede(far, "Vidalia", now);
-  assert.equal(line, "This weekend: Headin' Home Fest through Sun and Saturday Statesboro Main Street Farmers Market.");
+  assert.equal(line, "Headin' Home Fest through Sun and Saturday Statesboro Main Street Farmers Market.");
   assert.ok(!/Wednesday|\(/.test(line));
   assert.equal(shortPhrase("Brewton-Parker Women's Soccer vs Abraham Baldwin Agricultural College - Senior Day", "Vidalia"), "Brewton-Parker Women's Soccer");
   // A Friday-night-only event is not a weekend pick.
