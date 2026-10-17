@@ -33,6 +33,10 @@ export type PublicEvent = {
   distanceMi?: number;
   /** Other days in the same window this exact event repeats (YYYY-MM-DD). */
   alsoOn?: string[];
+  /** Same title and start time at other venues (e.g. one watch party listed at 3 bars). */
+  otherPlaces?: { id: string; venue: string; city: string; distanceMi?: number; url: string }[];
+  /** Neighbor-board events only: how many neighbors said they're going. */
+  rsvpCount?: number;
 };
 
 export type SourceStatus = {

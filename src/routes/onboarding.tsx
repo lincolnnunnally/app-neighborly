@@ -391,8 +391,8 @@ function OnboardingPage() {
             <CardHeader>
               <CardTitle>Who you are becoming</CardTitle>
               <CardDescription>
-                This is not a diagnosis and not a dating wall. It helps us point you at
-                groups that will build you up — you can still try more than one.
+                A few quick picks help us point you to groups that will build you up.
+                You can always try more than one.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-5">

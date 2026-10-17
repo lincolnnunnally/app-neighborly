@@ -10,10 +10,12 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as ChurchesRouteImport } from './routes/churches'
 import { Route as CommunitiesRouteImport } from './routes/communities'
+import { Route as HelpRouteImport } from './routes/help'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as MinistryRouteImport } from './routes/ministry'
@@ -44,6 +46,7 @@ import { Route as AppServicesRouteImport } from './routes/app/services'
 import { Route as AppSettingsRouteImport } from './routes/app/settings'
 import { Route as AppToolsRouteImport } from './routes/app/tools'
 import { Route as CSlugRouteImport } from './routes/c.$slug'
+import { Route as EIdRouteImport } from './routes/e.$id'
 import { Route as JoinCodeRouteImport } from './routes/join.$code'
 import { Route as ApiAdminStatsRouteImport } from './routes/api/admin/stats'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
@@ -51,6 +54,11 @@ import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -71,6 +79,11 @@ const ChurchesRoute = ChurchesRouteImport.update({
 const CommunitiesRoute = CommunitiesRouteImport.update({
   id: '/communities',
   path: '/communities',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HelpRoute = HelpRouteImport.update({
+  id: '/help',
+  path: '/help',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HowItWorksRoute = HowItWorksRouteImport.update({
@@ -223,6 +236,11 @@ const CSlugRoute = CSlugRouteImport.update({
   path: '/c/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EIdRoute = EIdRouteImport.update({
+  id: '/e/$id',
+  path: '/e/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const JoinCodeRoute = JoinCodeRouteImport.update({
   id: '/join/$code',
   path: '/join/$code',
@@ -241,10 +259,12 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/app': typeof AppRouteWithChildren
   '/churches': typeof ChurchesRoute
   '/communities': typeof CommunitiesRoute
+  '/help': typeof HelpRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
   '/ministry': typeof MinistryRoute
@@ -274,6 +294,7 @@ export interface FileRoutesByFullPath {
   '/app/settings': typeof AppSettingsRoute
   '/app/tools': typeof AppToolsRoute
   '/c/$slug': typeof CSlugRoute
+  '/e/$id': typeof EIdRoute
   '/join/$code': typeof JoinCodeRoute
   '/app/': typeof AppIndexRoute
   '/api/admin/stats': typeof ApiAdminStatsRoute
@@ -281,9 +302,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/churches': typeof ChurchesRoute
   '/communities': typeof CommunitiesRoute
+  '/help': typeof HelpRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
   '/ministry': typeof MinistryRoute
@@ -313,6 +336,7 @@ export interface FileRoutesByTo {
   '/app/settings': typeof AppSettingsRoute
   '/app/tools': typeof AppToolsRoute
   '/c/$slug': typeof CSlugRoute
+  '/e/$id': typeof EIdRoute
   '/join/$code': typeof JoinCodeRoute
   '/app': typeof AppIndexRoute
   '/api/admin/stats': typeof ApiAdminStatsRoute
@@ -321,10 +345,12 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/app': typeof AppRouteWithChildren
   '/churches': typeof ChurchesRoute
   '/communities': typeof CommunitiesRoute
+  '/help': typeof HelpRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
   '/ministry': typeof MinistryRoute
@@ -354,6 +380,7 @@ export interface FileRoutesById {
   '/app/settings': typeof AppSettingsRoute
   '/app/tools': typeof AppToolsRoute
   '/c/$slug': typeof CSlugRoute
+  '/e/$id': typeof EIdRoute
   '/join/$code': typeof JoinCodeRoute
   '/app/': typeof AppIndexRoute
   '/api/admin/stats': typeof ApiAdminStatsRoute
@@ -363,10 +390,12 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/admin'
     | '/app'
     | '/churches'
     | '/communities'
+    | '/help'
     | '/how-it-works'
     | '/login'
     | '/ministry'
@@ -396,6 +425,7 @@ export interface FileRouteTypes {
     | '/app/settings'
     | '/app/tools'
     | '/c/$slug'
+    | '/e/$id'
     | '/join/$code'
     | '/app/'
     | '/api/admin/stats'
@@ -403,9 +433,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/admin'
     | '/churches'
     | '/communities'
+    | '/help'
     | '/how-it-works'
     | '/login'
     | '/ministry'
@@ -435,6 +467,7 @@ export interface FileRouteTypes {
     | '/app/settings'
     | '/app/tools'
     | '/c/$slug'
+    | '/e/$id'
     | '/join/$code'
     | '/app'
     | '/api/admin/stats'
@@ -442,10 +475,12 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/about'
     | '/admin'
     | '/app'
     | '/churches'
     | '/communities'
+    | '/help'
     | '/how-it-works'
     | '/login'
     | '/ministry'
@@ -475,6 +510,7 @@ export interface FileRouteTypes {
     | '/app/settings'
     | '/app/tools'
     | '/c/$slug'
+    | '/e/$id'
     | '/join/$code'
     | '/app/'
     | '/api/admin/stats'
@@ -483,10 +519,12 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRoute
   AppRoute: typeof AppRouteWithChildren
   ChurchesRoute: typeof ChurchesRoute
   CommunitiesRoute: typeof CommunitiesRoute
+  HelpRoute: typeof HelpRoute
   HowItWorksRoute: typeof HowItWorksRoute
   LoginRoute: typeof LoginRoute
   MinistryRoute: typeof MinistryRoute
@@ -507,6 +545,7 @@ export interface RootRouteChildren {
   ApiNearRoute: typeof ApiNearRoute
   ApiWeekendRoute: typeof ApiWeekendRoute
   CSlugRoute: typeof CSlugRoute
+  EIdRoute: typeof EIdRoute
   JoinCodeRoute: typeof JoinCodeRoute
   ApiAdminStatsRoute: typeof ApiAdminStatsRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -519,6 +558,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -547,6 +593,13 @@ declare module '@tanstack/react-router' {
       path: '/communities'
       fullPath: '/communities'
       preLoaderRoute: typeof CommunitiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/help': {
+      id: '/help'
+      path: '/help'
+      fullPath: '/help'
+      preLoaderRoute: typeof HelpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/how-it-works': {
@@ -759,6 +812,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/e/$id': {
+      id: '/e/$id'
+      path: '/e/$id'
+      fullPath: '/e/$id'
+      preLoaderRoute: typeof EIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/join/$code': {
       id: '/join/$code'
       path: '/join/$code'
@@ -813,10 +873,12 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   AdminRoute: AdminRoute,
   AppRoute: AppRouteWithChildren,
   ChurchesRoute: ChurchesRoute,
   CommunitiesRoute: CommunitiesRoute,
+  HelpRoute: HelpRoute,
   HowItWorksRoute: HowItWorksRoute,
   LoginRoute: LoginRoute,
   MinistryRoute: MinistryRoute,
@@ -837,6 +899,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiNearRoute: ApiNearRoute,
   ApiWeekendRoute: ApiWeekendRoute,
   CSlugRoute: CSlugRoute,
+  EIdRoute: EIdRoute,
   JoinCodeRoute: JoinCodeRoute,
   ApiAdminStatsRoute: ApiAdminStatsRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,

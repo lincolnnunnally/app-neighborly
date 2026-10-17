@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/layout/site-header";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { SUPPORT_EMAIL } from "@/lib/contact";
 
 export const Route = createFileRoute("/terms")({ component: TermsPage });
 
@@ -8,8 +10,8 @@ function TermsPage() {
     <div className="min-h-dvh bg-bg">
       <SiteHeader solid />
       <main className="page-shell max-w-2xl space-y-6 py-12">
-        <p className="text-sm text-fg-muted">
-          <Link to="/" className="hover:text-fg">
+        <p className="text-base text-fg-muted">
+          <Link to="/" className="inline-flex min-h-11 items-center hover:text-fg">
             Home
           </Link>{" "}
           · Terms
@@ -68,7 +70,7 @@ function TermsPage() {
           <h2 className="font-display text-xl font-semibold text-fg">4. Accounts</h2>
           <p>
             Keep your login secure. Your Neighborly account is separate from other
-            United Under God apps unless you sign in with the same Google or X account. We may suspend accounts that abuse the board, post fabricated
+            United Under God apps unless you sign in with the same Google or X account. We may suspend accounts that abuse the board, post made-up
             content as real, or harm the community.
           </p>
           <h2 className="font-display text-xl font-semibold text-fg">5. Changes</h2>
@@ -76,14 +78,17 @@ function TermsPage() {
             We may update these terms as the product grows. The date at the top will
             change. Continued use after an update means you accept the current version.
           </p>
-          <h2 className="font-display text-xl font-semibold text-fg">6. Contact</h2>
+          <h2 className="font-display text-xl font-semibold text-fg">6. Contact us</h2>
           <p>
-            <a className="text-primary underline" href="mailto:lincoln@unitedundergod.org">
-              lincoln@unitedundergod.org
+            Questions about these terms? Email{" "}
+            <a className="inline-flex min-h-11 items-center text-primary underline" href={`mailto:${SUPPORT_EMAIL}`}>
+              {SUPPORT_EMAIL}
             </a>
+            .
           </p>
         </div>
       </main>
+      <SiteFooter />
     </div>
   );
 }

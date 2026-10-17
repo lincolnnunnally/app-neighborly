@@ -418,7 +418,7 @@ function PlacesPage() {
           <a className="text-primary underline" href={CC_GET_HELP} target="_blank" rel="noreferrer">
             ChurchConnect Get Help
           </a>
-          . Neighborly does not copy that directory.
+          , our sister directory of churches that help with food.
         </p>
       </section>
 

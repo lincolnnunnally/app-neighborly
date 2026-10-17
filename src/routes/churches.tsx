@@ -83,7 +83,7 @@ function ChurchesPage() {
         error?: string;
       };
       if (!res.ok || !d.ok) {
-        setError(d.error || "ChurchConnect did not answer. Try again in a moment.");
+        setError(d.error || "We couldn't load churches just now. Try again in a moment.");
         setRows([]);
         return;
       }
@@ -91,8 +91,37 @@ function ChurchesPage() {
       setNote(d.note || "");
       setToday(d.today || "");
     } catch {
-      setError("Could not reach ChurchConnect public data.");
+      setError("We couldn't load churches just now. Try again in a moment.");
       setRows([]);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  /** Widen a city search to the churches near that town's ZIP. */
+  async function searchNearby() {
+    const place = [city.trim(), state.trim()].filter(Boolean).join(", ") || zip.trim();
+    if (!place) return;
+    setBusy(true);
+    try {
+      const res = await fetch(`/api/near?q=${encodeURIComponent(place)}`);
+      const d = (await res.json()) as { geo?: { zip?: string; lat?: number; lon?: number } | null };
+      const z = d.geo?.zip || zip.trim();
+      if (!z) {
+        setError("We couldn't find towns near there. Try a ZIP.");
+        return;
+      }
+      setZip(z);
+      setCity("");
+      const params = new URLSearchParams();
+      params.set("zip", z);
+      if (state.trim()) params.set("state", state.trim());
+      if (d.geo?.lat != null) params.set("lat", String(d.geo.lat));
+      if (d.geo?.lon != null) params.set("lon", String(d.geo.lon));
+      persistFilters({ zip: z, city: "" });
+      await load(params);
+    } catch {
+      setError("We couldn't load churches just now. Try again in a moment.");
     } finally {
       setBusy(false);
     }
@@ -378,7 +407,15 @@ function ChurchesPage() {
           ))}
         </div>
         {!busy && rows.length === 0 && !error && (
-          <p className="text-sm text-fg-muted">No churches matched. Try a nearby ZIP or a wider search.</p>
+          <div className="surface-card space-y-3 p-5" data-testid="churches-empty">
+            <h2 className="font-display text-xl font-semibold text-fg">
+              No churches matched{city.trim() ? ` in ${city.trim()}` : ""}
+            </h2>
+            <p className="text-base text-fg-muted">Small towns often share churches with the next town over.</p>
+            <Button onClick={() => void searchNearby()} disabled={busy}>
+              Search nearby towns
+            </Button>
+          </div>
         )}
 
         <Card>

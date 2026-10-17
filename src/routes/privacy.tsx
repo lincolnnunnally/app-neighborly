@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/layout/site-header";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { SUPPORT_EMAIL } from "@/lib/contact";
 
 export const Route = createFileRoute("/privacy")({ component: PrivacyPage });
 
@@ -8,8 +10,8 @@ function PrivacyPage() {
     <div className="min-h-dvh bg-bg">
       <SiteHeader solid />
       <main className="page-shell max-w-2xl space-y-6 py-12">
-        <p className="text-sm text-fg-muted">
-          <Link to="/" className="hover:text-fg">
+        <p className="text-base text-fg-muted">
+          <Link to="/" className="inline-flex min-h-11 items-center hover:text-fg">
             Home
           </Link>{" "}
           · Privacy
@@ -27,8 +29,8 @@ function PrivacyPage() {
           <ul className="list-disc space-y-2 pl-5">
             <li>Account details you provide (name, email, password if you use email sign-in).</li>
             <li>
-              Profile answers you choose to share (skills, interests, life season, faith
-              posture, hopes, city).
+              Profile answers you choose to share, like your skills, interests, stage of
+              life, faith (if you want to share it), what you're hoping for, and your town.
             </li>
             <li>
               Community activity: needs, offers, services, events, RSVPs, facility requests,
@@ -45,9 +47,8 @@ function PrivacyPage() {
             <li>To run your community board so neighbors can help each other.</li>
             <li>To keep accounts secure, recover passwords, and prevent abuse.</li>
             <li>
-              To recommend sibling Life Produces Life tools (Kids Need Dads, Kindred,
-              Presence, and others) based on what you told us. We never create accounts in
-              those apps for you.
+              To suggest other free United Under God services that might help you, based on
+              what you told us. We never sign you up for anything without asking.
             </li>
             <li>To improve Neighborly and related United Under God tools.</li>
           </ul>
@@ -60,22 +61,21 @@ function PrivacyPage() {
           </p>
           <h2 className="font-display text-xl font-semibold text-fg">Retention and your choices</h2>
           <p>
-            You can edit your profile in the app. To close an account or ask what we store,
-            write{" "}
-            <a className="text-primary underline" href="mailto:lincoln@unitedundergod.org">
-              lincoln@unitedundergod.org
-            </a>
-            . We keep safety reports as needed to protect the community.
+            You can edit your profile in the app any time. To close your account or ask what
+            we store about you, contact us below. We keep safety reports as long as needed to
+            protect the community.
           </p>
-          <h2 className="font-display text-xl font-semibold text-fg">Contact</h2>
+          <h2 className="font-display text-xl font-semibold text-fg">Contact us</h2>
           <p>
-            Questions:{" "}
-            <a className="text-primary underline" href="mailto:lincoln@unitedundergod.org">
-              lincoln@unitedundergod.org
-            </a>
+            Questions about your privacy? Email{" "}
+            <a className="inline-flex min-h-11 items-center text-primary underline" href={`mailto:${SUPPORT_EMAIL}`}>
+              {SUPPORT_EMAIL}
+            </a>{" "}
+            and a real person will write back.
           </p>
         </div>
       </main>
+      <SiteFooter />
     </div>
   );
 }

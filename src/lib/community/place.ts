@@ -21,6 +21,8 @@ export type PlaceLookup = {
   wouldCreate: boolean;
 };
 
+import { normalizePlaceQuery } from "./place-query";
+
 const ZIP_RE = /^(\d{5})(?:-\d{4})?$/;
 
 export function slugify(value: string): string {
@@ -127,7 +129,7 @@ function parseCityState(trimmed: string): { city: string; state: string } | null
 }
 
 export async function geocodeQuery(q: string): Promise<GeoPlace | null> {
-  const trimmed = q.trim();
+  const trimmed = normalizePlaceQuery(q);
   if (!trimmed) return null;
   const zip = trimmed.match(ZIP_RE);
   if (zip) return zippopotam(`/us/${zip[1]}`);
@@ -376,7 +378,7 @@ export async function resolveCommunityForPlace(
   sql: Sql,
   q: string,
 ): Promise<PlaceLookup> {
-  const query = q.trim() || "vidalia";
+  const query = normalizePlaceQuery(q) || "vidalia";
   if (!ZIP_RE.test(query)) {
     const slug = slugify(query);
     if (slug) {
@@ -398,7 +400,7 @@ export async function lookupPlace(
   q: string,
   opts?: { lat?: number; lon?: number },
 ): Promise<PlaceLookup> {
-  const query = q.trim();
+  const query = normalizePlaceQuery(q);
   let geo: GeoPlace | null = null;
   if (opts?.lat != null && opts?.lon != null) {
     geo = await reverseGeocode(opts.lat, opts.lon);

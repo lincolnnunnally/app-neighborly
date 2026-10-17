@@ -67,6 +67,27 @@ function collapseRepeats(list: PublicEvent[], tz: string): PublicEvent[] {
 }
 
 /**
+ * One event listed once per venue (a game-watch party at 3 bars, a chain-wide
+ * class) becomes one card: the closest venue leads, the rest ride along.
+ */
+export function groupMultiVenue(list: PublicEvent[]): PublicEvent[] {
+  const byKey = new Map<string, PublicEvent>();
+  const sorted = [...list].sort((a, b) => (a.distanceMi ?? 0) - (b.distanceMi ?? 0));
+  for (const e of sorted) {
+    const k = `${e.title.toLowerCase().replace(/[^a-z0-9]+/g, "").slice(0, 64)}|${Math.round(e.startMs / 60000)}`;
+    const lead = byKey.get(k);
+    if (!lead) {
+      byKey.set(k, { ...e, otherPlaces: [] });
+      continue;
+    }
+    if (lead.venue.toLowerCase() === e.venue.toLowerCase()) continue;
+    if (lead.otherPlaces!.some((p) => p.venue.toLowerCase() === e.venue.toLowerCase())) continue;
+    lead.otherPlaces!.push({ id: e.id, venue: e.venue, city: e.city, distanceMi: e.distanceMi, url: e.url });
+  }
+  return [...byKey.values()].map((e) => (e.otherPlaces!.length ? e : { ...e, otherPlaces: undefined }));
+}
+
+/**
  * Real public events for this weekend around a point.
  *
  * `events`   — this weekend, within the radius.
@@ -106,7 +127,7 @@ export async function searchPublicEvents(opts: {
 
   // A months-long exhibit is not "this weekend" news; keep multi-day things under ~2 weeks.
   const reasonable = located.filter((e) => effectiveEndMs(e) - e.startMs < 16 * 24 * 3600 * 1000);
-  const thisWeekend = reasonable.filter((e) => overlapsWindow(e, w, nowMs));
+  const thisWeekend = groupMultiVenue(reasonable.filter((e) => overlapsWindow(e, w, nowMs)));
   const events = collapseRepeats(sortForWindow(thisWeekend.filter((e) => (e.distanceMi ?? 0) <= radiusMi), w, tz), tz).slice(0, 80);
   const nearby = collapseRepeats(
     sortForWindow(
@@ -118,7 +139,7 @@ export async function searchPublicEvents(opts: {
   ).slice(0, 30);
   const nextWeekend = collapseRepeats(
     sortForWindow(
-      reasonable.filter((e) => overlapsWindow(e, w2, nowMs) && (e.distanceMi ?? 0) <= wideMi),
+      groupMultiVenue(reasonable.filter((e) => overlapsWindow(e, w2, nowMs) && (e.distanceMi ?? 0) <= wideMi)),
       w2,
       tz,
     ),

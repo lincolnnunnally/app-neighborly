@@ -60,7 +60,7 @@ export function ReportBlockControls({
       toast.success(
         res.blocked
           ? "Report submitted. You will no longer see this person."
-          : "Report submitted. Lincoln will review it on the ops desk.",
+          : "Thanks for telling us. Our team will look into it.",
       );
       setOpen(false);
       setDetails("");

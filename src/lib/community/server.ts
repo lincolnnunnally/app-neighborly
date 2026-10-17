@@ -11,6 +11,7 @@ import {
   normalizeWebsite,
 } from "./pantry";
 import { ensureSeeded } from "./seed";
+import { canViewCommunity } from "./access";
 import { blockedUserIds } from "./safety";
 import { mapTool } from "./tools-server";
 import type {
@@ -292,6 +293,7 @@ export const resolveInvite = createServerFn({ method: "GET" })
       const c = await sql<Record<string, unknown>>`
         select * from communities where id = ${inv[0].community_id} limit 1
       `;
+      if (c[0] && !(await canViewCommunity(sql, mapCommunity(c[0])))) return null;
       if (c[0]) {
         return {
           code: inv[0].code,
@@ -304,6 +306,7 @@ export const resolveInvite = createServerFn({ method: "GET" })
       select * from communities where upper(invite_code) = ${code} limit 1
     `;
     if (!c2[0]) return null;
+    if (!(await canViewCommunity(sql, mapCommunity(c2[0])))) return null;
     return {
       code,
       label: "Community invite",
@@ -318,7 +321,8 @@ export const getCommunityFeed = createServerFn({ method: "GET" })
     const communities = await sql<Record<string, unknown>>`
       select * from communities where slug = ${data.slug} limit 1
     `;
-    const community = communities[0] ? mapCommunity(communities[0]) : null;
+    const found = communities[0] ? mapCommunity(communities[0]) : null;
+    const community = found && (await canViewCommunity(sql, found)) ? found : null;
     if (!community) {
       return {
         community: null as Community | null,
@@ -1252,8 +1256,8 @@ function readPantryInput(data: PantryInput) {
   if (!address) throw new Error("Street address required");
   if (!city) throw new Error("City required");
   if (!isValidPantryZip(zip)) throw new Error("Use a 5-digit ZIP");
-  if (!serve_days) throw new Error("Serve days required — we will not invent hours");
-  if (!serve_times) throw new Error("Serve times required — we will not invent hours");
+  if (!serve_days) throw new Error("Add the days you serve so neighbors know when to come.");
+  if (!serve_times) throw new Error("Add the hours you serve so neighbors know when to come.");
   const website = data.website?.trim() ? normalizeWebsite(data.website) : "";
   if (website && !isSafeWebsite(website)) throw new Error("Website must be an http(s) link");
   const facebook_url = data.facebook_url?.trim() ? normalizeWebsite(data.facebook_url) : "";

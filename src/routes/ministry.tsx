@@ -136,6 +136,10 @@ function MinistryPage() {
           </p>
         </div>
 
+        <figure className="overflow-hidden rounded-[var(--radius-xl)] border border-border">
+          <img src="/img/vidalia/church.jpg" alt="New Branch United Methodist Church in Toombs County" className="aspect-[16/9] w-full object-cover" />
+          <figcaption className="bg-bg-elevated px-4 py-2 text-sm text-fg-muted">New Branch United Methodist Church, Toombs County. Photo by Michael Rivera (CC BY-SA 4.0), via Wikimedia Commons.</figcaption>
+        </figure>
         <SearchBox
           slug={slug}
           placeholder="Search — bible study, prayer, youth, serve…"

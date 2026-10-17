@@ -14,6 +14,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
+import { RsvpButton } from "./rsvp-button";
 import type { EventCategory, PublicEvent } from "@/lib/events/types";
 import { cn } from "@/lib/utils";
 
@@ -36,14 +38,17 @@ export function categoryMeta(c: EventCategory) {
 }
 
 /** Local place photos for well-known Vidalia spots (credited in the footer). */
-function placePhoto(e: PublicEvent): { src: string; alt: string } | null {
+export function placePhoto(e: PublicEvent): { src: string; alt: string } | null {
   const t = `${e.title} ${e.venue}`.toLowerCase();
+  // Generic photos picked by what the event is (credited in the footer).
+  if (/pickleball|tennis|\bcourts?\b/.test(t)) return { src: "/img/vidalia/pickleball.jpg", alt: "Outdoor pickleball courts" };
+  if (/coffee|café|cafe|latte|espresso/.test(t)) return { src: "/img/vidalia/coffee.jpg", alt: "A cup of coffee on a wooden table" };
   if (!/vidalia/.test(`${e.city} ${e.venue} ${e.organizer}`.toLowerCase()) && e.sourceId !== "board" && e.sourceId !== "pal")
     return null;
   if (/fountain|city hall|jackson st/.test(t)) return { src: "/img/vidalia/fountain.jpg", alt: "The fountain in Vidalia's downtown park" };
-  if (/ben smith|park|amphitheater|stockyard|rec complex|pickleball/.test(t))
+  if (/ben smith|park|amphitheater|stockyard|rec complex/.test(t))
     return { src: "/img/vidalia/amphitheater.jpg", alt: "Downtown park amphitheater in Vidalia" };
-  if (/downtown|church st|coffee/.test(t)) return { src: "/img/vidalia/cityhall.jpg", alt: "The Vidalia Municipal Building downtown" };
+  if (/downtown|church st/.test(t)) return { src: "/img/vidalia/cityhall.jpg", alt: "The Vidalia Municipal Building downtown" };
   if (/onion/.test(t)) return { src: "/img/vidalia/onions.jpg", alt: "Sweet Vidalia onions" };
   return null;
 }
@@ -82,7 +87,37 @@ function whereLine(e: PublicEvent): string {
   return line;
 }
 
-export function EventCard({ event, compact = false }: { event: PublicEvent; compact?: boolean }) {
+/** In-app detail page. Public events carry `near` so the page can find them again. */
+export function eventDetailLink(e: PublicEvent, near?: string): { to: "/e/$id"; params: { id: string }; search: { near?: string } } {
+  return {
+    to: "/e/$id",
+    params: { id: e.id },
+    search: e.sourceId === "board" || !near ? {} : { near },
+  };
+}
+
+function OtherPlaces({ event }: { event: PublicEvent }) {
+  const others = event.otherPlaces ?? [];
+  if (!others.length) return null;
+  return (
+    <details className="group">
+      <summary className="inline-flex min-h-11 cursor-pointer items-center text-base font-semibold text-primary underline">
+        At {others.length + 1} places
+      </summary>
+      <ul className="mt-1 space-y-1 text-base text-fg-muted">
+        {[{ venue: event.venue, city: event.city, distanceMi: event.distanceMi }, ...others].map((p, i) => (
+          <li key={i} className="[overflow-wrap:anywhere]">
+            {p.venue}
+            {p.city && !p.venue.toLowerCase().includes(p.city.toLowerCase()) ? `, ${p.city}` : ""}
+            {typeof p.distanceMi === "number" && p.distanceMi >= 1 ? ` · ${Math.round(p.distanceMi)} mi` : ""}
+          </li>
+        ))}
+      </ul>
+    </details>
+  );
+}
+
+export function EventCard({ event, compact = false, near }: { event: PublicEvent; compact?: boolean; near?: string }) {
   const meta = categoryMeta(event.category);
   const Icon = meta.icon;
   const [broken, setBroken] = useState(false);
@@ -123,33 +158,33 @@ export function EventCard({ event, compact = false }: { event: PublicEvent; comp
       </div>
       <div className="flex flex-1 flex-col gap-1.5 p-4 sm:p-5">
         <span className="text-base font-bold text-accent">{whenLabel(event)}</span>
-        <h3 className="font-display text-xl font-semibold leading-snug text-fg [overflow-wrap:anywhere]">{event.title}</h3>
+        <h3 className="font-display text-xl font-semibold leading-snug text-fg [overflow-wrap:anywhere]">
+          <Link {...eventDetailLink(event, near)} className="flex min-h-11 items-center text-fg no-underline hover:underline">
+            {event.title}
+          </Link>
+        </h3>
         <p className="flex items-start gap-1.5 text-base text-fg-muted">
           <MapPin className="mt-1 h-4 w-4 shrink-0" aria-hidden />
           <span className="[overflow-wrap:anywhere]">{whereLine(event)}</span>
         </p>
         {more && <p className="text-base text-fg-muted">{more}</p>}
+        <OtherPlaces event={event} />
         <p className="mt-auto pt-2 text-base text-fg-muted">
           {board ? "Posted by neighbors" : `From ${event.organizer}`}. Confirm before you go.
         </p>
         <div className="mt-2 flex flex-wrap gap-2">
-          {board ? (
-            <a
-              href={event.url}
-              className="inline-flex min-h-11 items-center justify-center rounded-full bg-primary px-4 text-base font-semibold text-primary-fg no-underline"
-            >
-              I&apos;ll be there
-            </a>
-          ) : event.url ? (
-            <a
-              href={event.url}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex min-h-11 items-center justify-center rounded-full bg-primary px-4 text-base font-semibold text-primary-fg no-underline"
-            >
-              Details
-            </a>
-          ) : null}
+          {board && <RsvpButton eventId={event.id} initialCount={event.rsvpCount ?? 0} showCount={false} />}
+          <Link
+            {...eventDetailLink(event, near)}
+            className={cn(
+              "inline-flex min-h-11 items-center justify-center rounded-full px-4 text-base font-semibold no-underline",
+              board
+                ? "border border-border bg-bg-elevated text-fg hover:bg-bg-subtle"
+                : "bg-primary text-primary-fg",
+            )}
+          >
+            Details
+          </Link>
           <a
             href={icsHrefFor(event)}
             className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-border bg-bg-elevated px-4 text-base font-medium text-fg no-underline hover:bg-bg-subtle"
@@ -163,13 +198,12 @@ export function EventCard({ event, compact = false }: { event: PublicEvent; comp
   );
 }
 
-export function EventRow({ event }: { event: PublicEvent }) {
+export function EventRow({ event, near }: { event: PublicEvent; near?: string }) {
   const wd = new Intl.DateTimeFormat("en-US", { timeZone: TZ, weekday: "short" }).format(event.startMs);
   const d = new Intl.DateTimeFormat("en-US", { timeZone: TZ, day: "numeric" }).format(event.startMs);
   const time = event.allDay
     ? "All day"
     : new Intl.DateTimeFormat("en-US", { timeZone: TZ, hour: "numeric", minute: "2-digit" }).format(event.startMs);
-  const external = event.url.startsWith("http");
   const inner = (
     <>
       <span className="grid h-14 w-14 shrink-0 place-items-center rounded-[14px] bg-primary-soft text-center text-sm font-bold uppercase leading-none text-primary">
@@ -188,14 +222,10 @@ export function EventRow({ event }: { event: PublicEvent }) {
   );
   const cls =
     "flex min-h-[72px] items-center gap-4 rounded-[var(--radius-lg)] border border-border bg-bg-elevated px-4 py-3 no-underline hover:border-border-strong";
-  return external ? (
-    <a href={event.url} target="_blank" rel="noreferrer" className={cls}>
+  return (
+    <Link {...eventDetailLink(event, near)} className={cls}>
       {inner}
-    </a>
-  ) : (
-    <a href={event.url || "#"} className={cls}>
-      {inner}
-    </a>
+    </Link>
   );
 }
 

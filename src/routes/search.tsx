@@ -228,8 +228,8 @@ function SearchPage() {
               {direct.length === 0 ? "Closest things on the board" : "Related"}
             </h2>
             <p className="text-sm text-fg-muted">
-              These do not contain the words you typed — they came up because they are
-              about something similar. Nothing here is a match we are dressing up.
+              Not an exact match for what you typed, but close — these are about something
+              similar.
             </p>
             {loose.slice(0, 12).map((hit) => (
               <ResultCard key={`loose-${hit.kind}-${hit.id}`} hit={hit} query={q} />

@@ -34,7 +34,7 @@ export async function sendNeighborlyResetMail(opts: {
 <h1 style="font-size:20px;margin:0 0 8px">Reset your Neighborly password</h1>
 <p style="color:#475569;font-size:15px;line-height:1.6;margin:0 0 20px">Hi ${esc(opts.name || "neighbor")}, we received a request to reset the password for this Neighborly account. This link expires in one hour.</p>
 <a href="${esc(opts.url)}" style="display:inline-block;background:#c2410c;color:#fff;text-decoration:none;padding:12px 22px;border-radius:10px;font-weight:600;font-size:15px">Set a new password</a>
-<p style="color:#94a3b8;font-size:13px;line-height:1.6;margin:22px 0 0">If you didn't request this, ignore this email — your password will not change. Neighborly is a United Under God community board. Questions: lincoln@unitedundergod.org</p>
+<p style="color:#94a3b8;font-size:13px;line-height:1.6;margin:22px 0 0">If you didn't request this, ignore this email — your password will not change. Neighborly is a United Under God community board. Questions: support@unitedundergod.org</p>
 </div></body></html>`,
   });
 

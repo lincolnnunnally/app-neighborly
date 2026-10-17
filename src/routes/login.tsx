@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { SUPPORT_EMAIL } from "@/lib/contact";
 import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 
 type LoginSearch = { redirect?: string; forgot?: string };
@@ -46,7 +47,9 @@ function LoginPage() {
         setError(res.error.message ?? "Could not sign in");
         return;
       }
-      await navigate({ to: (redirect || "/app") as "/app" });
+      // Only same-site paths; `href` keeps any ?query on the way back (e.g. an RSVP).
+      const back = redirect && redirect.startsWith("/") && !redirect.startsWith("//") ? redirect : "/app";
+      await navigate({ href: back });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not sign in");
     } finally {
@@ -77,7 +80,7 @@ function LoginPage() {
       };
       const requestReset = client.requestPasswordReset ?? client.forgetPassword;
       if (!requestReset) {
-        setError("Password reset is not available in this build. Write lincoln@unitedundergod.org.");
+        setError(`Password reset isn't working right now. Email ${SUPPORT_EMAIL} and we'll help you get back in.`);
         return;
       }
       const res = await requestReset({
@@ -87,18 +90,18 @@ function LoginPage() {
       if (res.error) {
         setError(
           res.error.message ??
-            "Could not start a password reset. Write lincoln@unitedundergod.org.",
+            `We couldn't start a password reset. Email ${SUPPORT_EMAIL} and we'll help.`,
         );
         return;
       }
       setResetNote(
-        "If an account exists for that email, we queued a reset. Check your inbox and spam. Neighborly uses its own login — this does not reset Kindred, Kids Need Dads, or Presence. If nothing arrives, write lincoln@unitedundergod.org and we will finish the reset from the ops desk.",
+        `If there's an account for that email, a reset link is on its way. Check your inbox and spam folder. Nothing after a few minutes? Email ${SUPPORT_EMAIL} and we'll help.`,
       );
     } catch (err) {
       setError(
         err instanceof Error
           ? err.message
-          : "Could not start a password reset. Write lincoln@unitedundergod.org.",
+          : `We couldn't start a password reset. Email ${SUPPORT_EMAIL} and we'll help.`,
       );
     } finally {
       setBusy(false);
