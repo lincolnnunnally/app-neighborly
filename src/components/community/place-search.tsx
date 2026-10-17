@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { LocateFixed } from "lucide-react";
 import { toast } from "sonner";
@@ -58,8 +58,16 @@ export function PlaceSearch({
   const [busy, setBusy] = useState(false);
   const [pendingCreate, setPendingCreate] = useState<NearResponse | null>(null);
 
+  // Latest submit wins: every search gets a number, and only the newest one may
+  // navigate, clear the busy state, or sync the box.
+  const seqRef = useRef(0);
+  const abortRef = useRef<AbortController | null>(null);
+  // While the person is typing (or a search is in flight), never overwrite the
+  // box with the place from an older result.
+  const editingRef = useRef(false);
+
   useEffect(() => {
-    setQ(defaultValue);
+    if (!editingRef.current) setQ(defaultValue);
   }, [defaultValue]);
 
   async function persistPlace(d: NearResponse) {
@@ -84,8 +92,10 @@ export function PlaceSearch({
     }
   }
 
-  async function go(d: NearResponse) {
+  async function go(d: NearResponse, seq?: number) {
+    if (seq !== undefined && seq !== seqRef.current) return;
     await persistPlace(d);
+    if (seq !== undefined && seq !== seqRef.current) return;
     if (d.community?.slug) {
       await navigate({ to: "/weekend", search: { place: d.community.slug } });
       return;
@@ -94,13 +104,17 @@ export function PlaceSearch({
     await navigate({ to: "/weekend", search: { q: label } });
   }
 
-  async function lookup(query: string, extra: { lat?: number; lon?: number; create?: boolean } = {}) {
+  async function lookup(
+    query: string,
+    extra: { lat?: number; lon?: number; create?: boolean } = {},
+    signal?: AbortSignal,
+  ) {
     const params = new URLSearchParams();
     if (query) params.set("q", query);
     if (extra.lat != null) params.set("lat", String(extra.lat));
     if (extra.lon != null) params.set("lon", String(extra.lon));
     if (extra.create) params.set("create", "1");
-    const res = await fetch(`/api/near?${params.toString()}`);
+    const res = await fetch(`/api/near?${params.toString()}`, { signal });
     const d = (await res.json()) as NearResponse;
     if (!res.ok && !d.wouldCreate) {
       throw new Error(d.error || "Could not find that place.");
@@ -115,27 +129,34 @@ export function PlaceSearch({
       setError("Type a 5-digit ZIP or City, ST.");
       return;
     }
+    const seq = ++seqRef.current;
+    abortRef.current?.abort();
+    const ctrl = new AbortController();
+    abortRef.current = ctrl;
+    editingRef.current = true;
     setBusy(true);
     setError("");
     setPendingCreate(null);
     onSearchStart?.(query);
+    const latest = () => seq === seqRef.current;
     try {
-      const d = await lookup(query);
-      if (d.community?.slug) {
-        await go(d);
-        return;
-      }
-      if (d.geo) {
-        // No board yet: still show what's on nearby this weekend.
-        await go(d);
+      const d = await lookup(query, {}, ctrl.signal);
+      if (!latest()) return;
+      if (d.community?.slug || d.geo) {
+        // No board yet still shows what's on nearby this weekend.
+        await go(d, seq);
         return;
       }
       setError(d.error || "We couldn't find that place. Try a 5-digit ZIP.");
     } catch (err) {
+      if (!latest() || (err instanceof DOMException && err.name === "AbortError")) return;
       setError(err instanceof Error ? err.message : "Could not look that up. Try again.");
     } finally {
-      setBusy(false);
-      onSearchEnd?.();
+      if (latest()) {
+        setBusy(false);
+        editingRef.current = false;
+        onSearchEnd?.();
+      }
     }
   }
 
@@ -149,25 +170,30 @@ export function PlaceSearch({
     setPendingCreate(null);
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
+        const seq = ++seqRef.current;
+        abortRef.current?.abort();
         onSearchStart?.("");
         try {
           const d = await lookup("", { lat: pos.coords.latitude, lon: pos.coords.longitude });
+          if (seq !== seqRef.current) return;
           if (d.community?.slug) {
             toast.success(`Using ${d.community.city}, ${d.community.state}`);
-            await go(d);
+            await go(d, seq);
             return;
           }
           if (d.geo) {
             setQ(`${d.geo.city}, ${d.geo.state}`);
-            await go(d);
+            await go(d, seq);
             return;
           }
           setError(d.error || "Could not turn that location into a town.");
         } catch (err) {
-          setError(err instanceof Error ? err.message : "Location lookup failed.");
+          if (seq === seqRef.current) setError(err instanceof Error ? err.message : "Location lookup failed.");
         } finally {
-          setBusy(false);
-          onSearchEnd?.();
+          if (seq === seqRef.current) {
+            setBusy(false);
+            onSearchEnd?.();
+          }
         }
       },
       () => {
@@ -202,14 +228,17 @@ export function PlaceSearch({
       <div className="flex flex-col gap-2 sm:flex-row">
         <Input
           value={q}
-          onChange={(e) => setQ(e.target.value)}
+          onChange={(e) => {
+            editingRef.current = true;
+            setQ(e.target.value);
+          }}
           placeholder="Your ZIP or town, like 30474"
           aria-label="Town or ZIP"
           inputMode="search"
           autoComplete="postal-code"
           className="h-[52px] min-w-0 rounded-full px-5 text-base sm:flex-1"
         />
-        <Button type="submit" disabled={busy} size="lg" className="h-[52px] rounded-full px-6">
+        <Button type="submit" aria-busy={busy} size="lg" className="h-[52px] rounded-full px-6">
           {busy ? "Looking…" : "See what's on"}
         </Button>
       </div>
