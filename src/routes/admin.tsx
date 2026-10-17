@@ -219,7 +219,7 @@ function AdminPage() {
         ) : gate === "signed_out" ? (
           <Card>
             <CardHeader>
-              <CardTitle>Please sign in</CardTitle>
+              <h1 className="font-display text-2xl font-semibold tracking-tight text-fg">Please sign in</h1>
               <CardDescription>This page is for the Neighborly team.</CardDescription>
             </CardHeader>
             <CardContent>

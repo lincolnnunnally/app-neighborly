@@ -120,7 +120,18 @@ export const rsvpNeighborEvent = createServerFn({ method: "POST" })
     const profile = await sql<{ display_name: string }>`
       select display_name from profiles where user_id = ${context.userId} limit 1
     `;
-    if (!profile[0]) return { ok: false as const, needsProfile: true, count: 0 };
+    // RSVP is never gated on finishing onboarding: a brand-new account gets a
+    // minimal profile (first name from sign-up) and can fill in the rest later.
+    let displayName = profile[0]?.display_name || "";
+    if (!profile[0]) {
+      const who = await sql<{ name: string | null }>`select name from "user" where id = ${context.userId} limit 1`;
+      const first = String(who[0]?.name || "").trim().split(/\s+/)[0]?.slice(0, 60) || "Neighbor";
+      await sql`
+        insert into profiles (user_id, display_name) values (${context.userId}, ${first})
+        on conflict (user_id) do nothing
+      `;
+      displayName = first;
+    }
 
     const member = await sql<{ id: string; status: string }>`
       select id, status from memberships
@@ -148,7 +159,7 @@ export const rsvpNeighborEvent = createServerFn({ method: "POST" })
     if (existing.length === 0) {
       await sql`
         insert into event_rsvps (id, event_id, user_id, display_name)
-        values (${uid("rsvp")}, ${eventId}, ${context.userId}, ${profile[0].display_name || "Neighbor"})
+        values (${uid("rsvp")}, ${eventId}, ${context.userId}, ${displayName || "Neighbor"})
       `;
       await sql`update events set rsvp_count = rsvp_count + 1 where id = ${eventId}`;
     }

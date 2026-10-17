@@ -4,7 +4,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { NotFoundPage } from "@/components/layout/not-found";
 import { RsvpButton } from "@/components/events/rsvp-button";
-import { categoryMeta, icsHrefFor } from "@/components/events/event-card";
+import { categoryMeta, icsHrefFor, placePhoto } from "@/components/events/event-card";
 import { getEventDetail } from "@/lib/community/event-detail";
 import type { PublicEvent } from "@/lib/events/types";
 
@@ -80,6 +80,7 @@ function EventPage() {
   const place = placeLine(e.venue, e.city);
   const isBoard = e.sourceId === "board";
   const organizerSite = !isBoard && e.url.startsWith("http") ? e.url : "";
+  const photo = e.image ? null : placePhoto(e);
   const backHref = board
     ? { to: "/c/$slug" as const, params: { slug: board.slug }, search: { tab: "events" } }
     : { to: "/weekend" as const, search: near ? { q: near } : {} };
@@ -96,6 +97,8 @@ function EventPage() {
         <article className="overflow-hidden rounded-[var(--radius-xl)] border border-border bg-bg-elevated">
           {e.image ? (
             <img src={e.image} alt="" referrerPolicy="no-referrer" className="h-56 w-full object-cover sm:h-72" />
+          ) : photo ? (
+            <img src={photo.src} alt={photo.alt} className="h-56 w-full object-cover sm:h-72" />
           ) : null}
           <div className="space-y-6 p-5 sm:p-8">
             <div className="space-y-3">

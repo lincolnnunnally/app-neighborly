@@ -3,12 +3,8 @@ export const OFFER_SERVICE_PATH = "/app/services" as const;
 export const OFFER_TOOL_PATH = "/app/tools" as const;
 export const OFFER_PANTRY_PATH = "/app/places" as const;
 
-export function isSafeNext(raw?: string | null): raw is string {
-  if (!raw) return false;
-  if (!raw.startsWith("/")) return false;
-  if (raw.startsWith("//") || raw.includes("://")) return false;
-  return raw.length < 180;
-}
+export { isSafeNext } from "@/lib/safe-next";
+import { isSafeNext } from "@/lib/safe-next";
 
 export function isOfferServiceNext(raw?: string | null): boolean {
   return !!raw && raw.split("?")[0] === OFFER_SERVICE_PATH;
@@ -39,7 +35,8 @@ export type JoinDestination =
   | { to: "/app/tools" }
   | { to: "/app/places"; search?: { register?: string } }
   | { to: "/app" }
-  | { to: "/c/$slug"; params: { slug: string }; search: { tab?: string; cat?: string } };
+  | { to: "/c/$slug"; params: { slug: string }; search: { tab?: string; cat?: string } }
+  | { href: string };
 
 export function destinationAfterJoin(next?: string | null): JoinDestination {
   if (isOfferServiceNext(next)) return { to: "/app/services" };
@@ -60,5 +57,8 @@ export function destinationAfterJoin(next?: string | null): JoinDestination {
       };
     }
   }
+  // Any other safe same-origin path (an event page, a weekend search) is
+  // honored as-is so sign-up never drops the visitor's place.
+  if (isSafeNext(next) && next !== "/app") return { href: next };
   return { to: "/app" };
 }

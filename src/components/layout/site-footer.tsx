@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 
 export const PHOTO_CREDITS =
-  "Photos: water tower by Geogre (public domain); downtown park fountain, amphitheater and Municipal Building by Michael Rivera (CC BY-SA 4.0); Vidalia onions by ryan griffis (CC BY-SA 2.0); New Branch United Methodist Church by Michael Rivera (CC BY-SA 4.0); coffee by Artem Beliaikin (CC BY 2.0); pickleball courts by Wikideas1 (CC0), via Wikimedia Commons.";
+  "Photos: water tower by Geogre (public domain); downtown park fountain, amphitheater and Municipal Building by Michael Rivera (CC BY-SA 4.0); Vidalia onions by ryan griffis (CC BY-SA 2.0); New Branch United Methodist Church by Michael Rivera (CC BY-SA 4.0); coffee by Artem Beliaikin (CC BY 2.0); pickleball courts by Wikideas1 (CC0); Midtown Atlanta from Piedmont Park by Thomson200 (CC0); downtown Conyers by formulanone (CC BY-SA 2.0); Rockdale County Courthouse by Skarg (CC BY 2.5), via Wikimedia Commons.";
 
 export function SiteFooter({ credits = false }: { credits?: boolean }) {
   return (

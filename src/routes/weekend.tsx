@@ -1,6 +1,6 @@
 import { isListedCommunity } from "@/lib/community/public-filters";
 import { useEffect, useState } from "react";
-import { Link, createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
+import { Link, createFileRoute, notFound, useNavigate, useRouterState } from "@tanstack/react-router";
 import { CloudRain, CloudSun, Sun } from "lucide-react";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -120,16 +120,39 @@ function WeatherStrip({ plan }: { plan: WeekendPlan }) {
   );
 }
 
+function ResultsSkeleton({ label }: { label: string | null }) {
+  return (
+    <section aria-busy="true" aria-live="polite" className="space-y-4" data-testid="weekend-loading">
+      <p className="text-base text-fg-muted">
+        {label ? `Finding what's on near ${label}…` : "Finding what's on…"}
+      </p>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 6 }, (_, i) => (
+          <div key={i} className="h-56 animate-pulse rounded-[var(--radius-xl)] border border-border bg-bg-subtle" />
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function WeekendPage() {
   const search = Route.useSearch();
   const loaded = Route.useLoaderData();
   const navigate = useNavigate({ from: "/weekend" });
   const { user } = useCurrentUserState();
   const [plan, setPlan] = useState<WeekendPlan | null>(loaded.plan);
+  // A new search clears the old list right away: while the place lookup runs
+  // (PlaceSearch) and while the router loads the new weekend, show a skeleton.
+  const [searchingFor, setSearchingFor] = useState<string | null>(null);
+  const routerLoading = useRouterState({
+    select: (s) => s.isLoading && s.location.pathname === "/weekend",
+  });
+  const stale = searchingFor !== null || routerLoading;
   const mode: FeedMode = search.who ?? "all";
 
   useEffect(() => {
     setPlan(loaded.plan);
+    setSearchingFor(null);
   }, [loaded.plan]);
 
   useEffect(() => {
@@ -185,22 +208,28 @@ function WeekendPage() {
           <div className="page-shell grid items-center gap-8 py-10 lg:grid-cols-[1.1fr_1fr] lg:py-14">
             <div className="space-y-5">
               <span className="eyebrow">
-                {place ? `${town}${place.state ? `, ${place.state}` : ""}` : "This weekend"}
+                {!stale && place ? `${town}${place.state ? `, ${place.state}` : ""}` : "This weekend"}
                 {feed ? ` · ${feed.window.label}` : ""}
               </span>
               <h1 className="font-display text-4xl font-bold leading-[1.1] tracking-tight text-fg text-balance sm:text-5xl">
-                What&apos;s on in {town} this weekend
+                {stale ? "Looking up this weekend…" : <>What&apos;s on in {town} this weekend</>}
               </h1>
               <p className="max-w-xl text-lg text-fg-muted">Pick one, add it to your calendar, and go say hello.</p>
-              <PlaceSearch defaultValue={place?.zip || place?.city || ""} />
+              <PlaceSearch
+                defaultValue={place?.zip || place?.city || ""}
+                onSearchStart={(q) => setSearchingFor(q)}
+                onSearchEnd={() => setSearchingFor(null)}
+              />
             </div>
             <div
               className={cn(
                 "relative min-h-[220px] overflow-hidden rounded-[var(--radius-xl)] sm:min-h-[300px]",
-                isVidalia ? "bg-sky-soft" : "bg-primary-soft",
+                stale ? "bg-bg-subtle" : isVidalia ? "bg-sky-soft" : "bg-primary-soft",
               )}
             >
-              {isVidalia ? (
+              {stale ? (
+                <div aria-hidden className="absolute inset-0 animate-pulse bg-bg-subtle" />
+              ) : isVidalia ? (
                 <img
                   src="/img/vidalia/fountain.jpg"
                   alt="The fountain in Vidalia's downtown park"
@@ -211,7 +240,7 @@ function WeekendPage() {
                   <p className="font-display text-3xl font-semibold text-primary">{town}</p>
                 </div>
               )}
-              {feed && total > 0 && (
+              {!stale && feed && total > 0 && (
                 <div className="absolute bottom-4 left-4 rounded-[var(--radius-md)] bg-bg-elevated/95 px-4 py-2 text-base font-semibold text-fg shadow-md">
                   {feed.events.length > 1
                     ? `${feed.events.length} things within ${radius} miles`
@@ -225,7 +254,7 @@ function WeekendPage() {
         </section>
 
         <div className="page-shell space-y-10 py-10">
-          {plan && <WeatherStrip plan={plan} />}
+          {!stale && plan && <WeatherStrip plan={plan} />}
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <ModeChips mode={mode} onMode={(m) => void navigate({ search: (s) => ({ ...s, who: m === "all" ? undefined : m }), replace: true })} />
@@ -245,7 +274,9 @@ function WeekendPage() {
             </label>
           </div>
 
-          {plan ? (
+          {stale ? (
+            <ResultsSkeleton label={searchingFor} />
+          ) : plan ? (
             <WeekendFeed
               feed={feed}
               town={town}
@@ -263,7 +294,7 @@ function WeekendPage() {
             </div>
           )}
 
-          <section className="grid gap-4 md:grid-cols-3">
+          <section className={cn("grid gap-4 md:grid-cols-3", stale && "hidden")}>
             <div className="rounded-[var(--radius-xl)] bg-primary-soft p-6">
               <h2 className="font-display text-xl font-semibold text-fg">Meet people</h2>
               <ul className="mt-3 space-y-1 text-base">

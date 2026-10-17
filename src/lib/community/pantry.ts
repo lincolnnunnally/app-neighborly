@@ -133,13 +133,32 @@ export function isClosedListing(
  * One line a neighbor can act on: who published this and when it was last read
  * off that source. Never claims a pantry was verified by us today.
  */
+/** "Plenty field visit (plenty…/around)" → "a Plenty visit"; drops URLs and asides. */
+export function pantrySourceName(raw: string): string {
+  const base = raw.replace(/\s*\([^)]*\)\s*/g, " ").replace(/\s+/g, " ").trim();
+  if (/^plenty field visit$/i.test(base)) return "a Plenty visit";
+  if (/resource guide$/i.test(base) && !/^the\s/i.test(base)) return `the ${base}`;
+  return base;
+}
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/** "2026-10-17" → "Oct 17" (adds the year when it isn't this year). Leaves other text alone. */
+export function checkedLabel(raw: string, now = new Date()): string {
+  const m = raw.trim().match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!m) return raw.trim();
+  const [, y, mo, d] = m;
+  const label = `${MONTHS[Number(mo) - 1]} ${Number(d)}`;
+  return Number(y) === now.getFullYear() ? label : `${label}, ${y}`;
+}
+
 export function pantrySourceLine(
   place: Pick<Facility, "source_name" | "verified_on" | "listed_by_name">,
 ): string {
   const parts: string[] = [];
-  if (place.source_name.trim()) parts.push(`From ${place.source_name.trim()}`);
+  if (place.source_name.trim()) parts.push(`From ${pantrySourceName(place.source_name)}`);
   else if (place.listed_by_name.trim()) parts.push(`Listed by ${place.listed_by_name.trim()}`);
-  if (place.verified_on.trim()) parts.push(`last checked ${place.verified_on.trim()}`);
+  if (place.verified_on.trim()) parts.push(`checked ${checkedLabel(place.verified_on)}`);
   return parts.join(" · ");
 }
 

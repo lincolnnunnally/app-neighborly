@@ -221,7 +221,8 @@ function saturdayOn(days: WeatherDay[]): WeatherDay | undefined {
 }
 
 function formatWeatherDay(d: WeatherDay): string {
-  const label = new Date(`${d.date}T12:00:00`).toLocaleDateString("en-US", {
+  const label = new Date(`${d.date}T12:00:00Z`).toLocaleDateString("en-US", {
+    timeZone: "UTC",
     weekday: "long",
     month: "short",
     day: "numeric",
@@ -256,8 +257,13 @@ function buildArrivingNote(days: WeatherDay[], withChild: WeekendSlot[], placeNa
 
 /** Fri–Sun of the coming weekend. The forecast strips and the weather line all use this same range. */
 export function weekendWeatherDays(days: WeatherDay[]): WeatherDay[] {
-  const wk = days.filter((d) => [5, 6, 0].includes(new Date(`${d.date}T12:00:00Z`).getUTCDay())).slice(0, 3);
-  return wk.length ? wk : days.slice(0, 3);
+  // Only the first run of Fri/Sat/Sun — never next week's Friday.
+  const isWkd = (d: WeatherDay) => [5, 6, 0].includes(new Date(`${d.date}T12:00:00Z`).getUTCDay());
+  const start = days.findIndex(isWkd);
+  if (start < 0) return days.slice(0, 3);
+  const wk: WeatherDay[] = [];
+  for (let i = start; i < days.length && wk.length < 3 && isWkd(days[i]); i++) wk.push(days[i]);
+  return wk;
 }
 
 function weatherNoteFor(days: WeatherDay[], error: string | null): string {
@@ -310,7 +316,7 @@ export async function buildWeekendPlan(opts?: {
     return {
       feed,
       weather: wx.days.slice(0, 5),
-      weatherNote: wx.days.length ? weatherNoteFor(wx.days, wx.error) : "",
+      weatherNote: wx.days.length ? weatherNoteFor(wx.days.slice(0, 5), wx.error) : "",
       arrivingNote: "",
       all: [],
       withChild: [],
@@ -460,7 +466,7 @@ export async function buildWeekendPlan(opts?: {
     if (!all.some((a) => a.id === slot.id)) all.push(slot);
   }
 
-  const weatherNote = weatherNoteFor(days, error);
+  const weatherNote = weatherNoteFor(days.slice(0, 5), error);
 
   const prefs = opts?.prefs ?? null;
   const allSorted = splitByFit(applyFit(all, prefs), prefs).primary;

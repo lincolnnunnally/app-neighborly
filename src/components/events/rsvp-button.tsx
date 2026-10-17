@@ -37,6 +37,9 @@ export function RsvpButton({
   const [going, setGoing] = useState(false);
   const [busy, setBusy] = useState(false);
   const [autoDone, setAutoDone] = useState(false);
+  // Until we know whether this person is going, show a quiet placeholder of
+  // the same size instead of "I'll be there" (which used to flip to "Going").
+  const [known, setKnown] = useState(false);
 
   useEffect(() => {
     if (isPending) return;
@@ -46,8 +49,11 @@ export function RsvpButton({
         if (!live) return;
         setCount(s.count);
         setGoing(s.going);
+        setKnown(true);
       })
-      .catch(() => undefined);
+      .catch(() => {
+        if (live) setKnown(true);
+      });
     return () => {
       live = false;
     };
@@ -56,17 +62,12 @@ export function RsvpButton({
   async function rsvp() {
     if (!user) {
       const back = `/e/${encodeURIComponent(`board:${id}`)}?rsvp=1`;
-      await navigate({ to: "/login", search: { redirect: back } as never });
+      await navigate({ to: "/login", search: { next: back } as never });
       return;
     }
     setBusy(true);
     try {
       const r = await rsvpNeighborEvent({ data: id });
-      if (!r.ok && r.needsProfile) {
-        toast("Add your name first, then you're on the list.");
-        await navigate({ to: "/onboarding" });
-        return;
-      }
       setGoing(true);
       setCount(r.count);
       toast.success("You're on the list. See you there!");
@@ -92,16 +93,21 @@ export function RsvpButton({
   }
 
   useEffect(() => {
-    if (autoConfirm && user && !isPending && !autoDone && !going) {
+    if (autoConfirm && known && user && !isPending && !autoDone && !going) {
       setAutoDone(true);
       void rsvp();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [autoConfirm, user?.id, isPending, going]);
+  }, [autoConfirm, known, user?.id, isPending, going]);
 
   return (
     <div className={cn("flex flex-wrap items-center gap-x-3 gap-y-1", className)}>
-      {going ? (
+      {!known ? (
+        <span
+          aria-hidden
+          className="inline-flex min-h-11 w-[8.5rem] animate-pulse rounded-full bg-bg-subtle"
+        />
+      ) : going ? (
         <button
           type="button"
           onClick={() => void cancel()}
@@ -122,7 +128,8 @@ export function RsvpButton({
           {busy ? "Saving…" : "I'll be there"}
         </button>
       )}
-      {showCount && (
+      {showCount && !known && <span className="text-base text-fg-muted">&nbsp;</span>}
+      {showCount && known && (
         <span className="text-base text-fg-muted" aria-live="polite">
           {goingLine(count, going)}
         </span>

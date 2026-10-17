@@ -146,3 +146,19 @@
   min-height: 44px;
   align-items: center;
 }
+
+/* Pantry pins: the whole 44x44 box is the tap target. */
+.n-pantry-map .n-pantry-pin {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 3px;
+  background: transparent;
+  border: 0;
+}
+/* Map-data credit stays, at a readable 14px. */
+.n-pantry-map.leaflet-container .leaflet-control-attribution {
+  font-size: 14px;
+  line-height: 1.4;
+  padding: 2px 6px;
+}

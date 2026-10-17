@@ -22,7 +22,9 @@ export function parseJsonArray(raw: string | null | undefined): string[] {
 export function formatEventWhen(iso: string): string {
   try {
     const d = new Date(iso);
-    return d.toLocaleString(undefined, {
+    // Fixed locale + zone so the server render and the browser agree (no React #418).
+    return d.toLocaleString("en-US", {
+      timeZone: "America/New_York",
       weekday: "short",
       month: "short",
       day: "numeric",

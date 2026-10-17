@@ -9,12 +9,17 @@ const colorMap: Record<string, string> = {
   water: "from-[color-mix(in_oklab,var(--color-sky)_22%,var(--color-bg))] to-[var(--color-bg-elevated)]",
 };
 
-const TOWN_PHOTOS: Record<string, { src: string; alt: string }> = {
+const TOWN_PHOTOS: Record<string, { src: string; alt: string; credit?: string }> = {
   vidalia: { src: "/img/vidalia/fountain.jpg", alt: "The fountain in Vidalia's downtown park" },
   "vidalia-pickleball": { src: "/img/vidalia/amphitheater.jpg", alt: "The downtown park amphitheater in Vidalia" },
   "vidalia-outdoors": { src: "/img/vidalia/amphitheater.jpg", alt: "The downtown park amphitheater in Vidalia" },
   "vidalia-dads": { src: "/img/vidalia/cityhall.jpg", alt: "The Vidalia Municipal Building downtown" },
   "vidalia-makers": { src: "/img/vidalia/downtown.jpg", alt: "The Vidalia water tower" },
+  atlanta: { src: "/img/towns/atlanta.jpg", alt: "The Midtown Atlanta skyline from Piedmont Park", credit: "Photo: Thomson200, CC0, via Wikimedia Commons" },
+  conyers: { src: "/img/towns/conyers.jpg", alt: "Painted storefronts in downtown Conyers", credit: "Photo: formulanone, CC BY-SA 2.0, via Wikimedia Commons" },
+  milstead: { src: "/img/towns/rockdale.jpg", alt: "The Rockdale County Courthouse in Conyers, near Milstead", credit: "Photo: Skarg, CC BY 2.5, via Wikimedia Commons" },
+  "milstead-fellowship": { src: "/img/towns/rockdale.jpg", alt: "The Rockdale County Courthouse in Conyers, near Milstead", credit: "Photo: Skarg, CC BY 2.5, via Wikimedia Commons" },
+  "oakridge-hoa": { src: "/img/towns/rockdale.jpg", alt: "The Rockdale County Courthouse in Conyers, near Milstead", credit: "Photo: Skarg, CC BY 2.5, via Wikimedia Commons" },
 };
 
 export function townPhoto(slug: string) {
@@ -68,13 +73,19 @@ export function CommunityCover({
           {community.tagline}
         </p>
       </div>
-      {photo && (
-        <img
-          src={photo.src}
-          alt={photo.alt}
-          className="relative z-10 aspect-video w-full rounded-[var(--radius-lg)] object-cover"
-        />
-      )}
+      {photo &&
+        (photo.credit ? (
+          <figure className="relative z-10 space-y-1">
+            <img src={photo.src} alt={photo.alt} className="aspect-video w-full rounded-[var(--radius-lg)] object-cover" />
+            <figcaption className="text-sm text-fg-muted">{photo.credit}</figcaption>
+          </figure>
+        ) : (
+          <img
+            src={photo.src}
+            alt={photo.alt}
+            className="relative z-10 aspect-video w-full rounded-[var(--radius-lg)] object-cover"
+          />
+        ))}
       <div
         aria-hidden
         className="pointer-events-none absolute -right-8 -top-8 h-36 w-36 rounded-full bg-[color-mix(in_oklab,var(--color-primary)_10%,transparent)]"
