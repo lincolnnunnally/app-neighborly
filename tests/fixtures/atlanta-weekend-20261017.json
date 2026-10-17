@@ -1,0 +1,1172 @@
+[
+ {
+  "id": "poncecity:10004165:1792238400000",
+  "title": "Atlanta Run Club",
+  "category": "outdoors",
+  "sourceId": "poncecity",
+  "summary": "Every Saturday. Open to all levels.",
+  "venue": "The Courtyard",
+  "city": "Atlanta",
+  "distanceMi": 1.9
+ },
+ {
+  "id": "piedmont:25302:1792242000000",
+  "title": "Green Market",
+  "category": "food",
+  "sourceId": "piedmont",
+  "summary": "For more than 20 years, the Green Market has been a beloved Piedmont Park tradition — connecting our community with local farmers, producers, and artisans in one of the most beautiful settings in Atlanta. From farm-fres…",
+  "venue": "Piedmont Park Conservancy",
+  "city": "Atlanta",
+  "distanceMi": 2.4
+ },
+ {
+  "id": "gaparks:33054649",
+  "title": "Guided Mountain Hike",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Panola Mountain State Park",
+  "city": "",
+  "distanceMi": 15.6
+ },
+ {
+  "id": "gaparks:33319990",
+  "title": "Guided Tours of the Old Fort",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Fort Yargo State Park",
+  "city": "",
+  "distanceMi": 40.7
+ },
+ {
+  "id": "gaparks:33054562",
+  "title": "Amicalola in Autumn: Guided Waterfall Hike - 9:30 AM",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Amicalola Falls State Park and Lodge",
+  "city": "",
+  "distanceMi": 56.5
+ },
+ {
+  "id": "civilrights:144519:1792245600000",
+  "title": "Saturday Adventures at the Center: Side Quest",
+  "category": "family",
+  "sourceId": "civilrights",
+  "summary": "Become a detective for justice and uncover the stories of remarkable changemakers throughout the Center. During this interactive, family-friendly side quest, guests will follow clues hidden throughout the galleries to i…",
+  "venue": "National Center for Civil and Human Rights",
+  "city": "Atlanta",
+  "distanceMi": 0.8
+ },
+ {
+  "id": "decaturarts:10018971:1792245600000",
+  "title": "Acrylics Class",
+  "category": "learning",
+  "sourceId": "decaturarts",
+  "summary": "Open to new painters or artists looking to continue honing their craft, this acrylics class will meet at Legacy Park in Decatur, GA. Four sessions on Saturday mornings from 10am to 12pm.",
+  "venue": "Hyatt Cottage at Legacy Park",
+  "city": "Decatur",
+  "distanceMi": 6.2
+ },
+ {
+  "id": "gaparks:33849839",
+  "title": "Plein Air In The Park!",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Indian Springs State Park",
+  "city": "",
+  "distanceMi": 43.7
+ },
+ {
+  "id": "gaparks:33320108",
+  "title": "Bats of Georgia",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Don Carter State Park",
+  "city": "",
+  "distanceMi": 57.4
+ },
+ {
+  "id": "gaparks:33320110",
+  "title": "Adopt a Bat!",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Don Carter State Park",
+  "city": "",
+  "distanceMi": 57.4
+ },
+ {
+  "id": "gaparks:33320223",
+  "title": "Leaf Bat Craft",
+  "category": "arts",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Don Carter State Park",
+  "city": "",
+  "distanceMi": 57.4
+ },
+ {
+  "id": "poncecity:1933:1792256400000",
+  "title": "Andrew Blooms Art Class – Crane",
+  "category": "arts",
+  "sourceId": "poncecity",
+  "summary": "Create your own Asian art Masterpiece in this 2-hour guided art class with Atlanta painter and tattoo artist Andrew Blooms.",
+  "venue": "Blooms Emporium",
+  "city": "Atlanta",
+  "distanceMi": 1.9
+ },
+ {
+  "id": "decaturarts:10018907:1792256400000",
+  "title": "The Book As Art v.14: Ghosted",
+  "category": "arts",
+  "sourceId": "decaturarts",
+  "summary": "The Book As Art: Ghosted is the fourteenth edition of an art show celebrating books: objects that, in an increasingly digital world, stubbornly survive. In stories and folktales, ghosts are harbingers, haints, and often…",
+  "venue": "Fourth Floor Gallery of the Decatur Library",
+  "city": "Decatur",
+  "distanceMi": 5.6
+ },
+ {
+  "id": "gaparks:33054515",
+  "title": "Birds of Prey",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Amicalola Falls State Park and Lodge",
+  "city": "",
+  "distanceMi": 56.5
+ },
+ {
+  "id": "gaparks:33319998",
+  "title": "Teach a Kid to Fish: Fish with a Ranger",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Fort Yargo State Park",
+  "city": "",
+  "distanceMi": 40.7
+ },
+ {
+  "id": "gaparks:33849831",
+  "title": "Fall Mushroom Hike",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "High Falls State Park",
+  "city": "",
+  "distanceMi": 45.1
+ },
+ {
+  "id": "poncecity:10001502:1792263600000",
+  "title": "City Winery Tour + Tasting",
+  "category": "food",
+  "sourceId": "poncecity",
+  "summary": "Take an exclusive tour of City Winery Atlanta and learn about our winemaking journey — from grape to glass.",
+  "venue": "City Winery",
+  "city": "Atlanta",
+  "distanceMi": 1.9
+ },
+ {
+  "id": "gaparks:33054633",
+  "title": "Paddle and Hike to the Cemetery",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Hard Labor Creek State Park",
+  "city": "",
+  "distanceMi": 45.8
+ },
+ {
+  "id": "gaparks:33849841",
+  "title": "Happy Howl-O-Ween!",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Indian Springs State Park",
+  "city": "",
+  "distanceMi": 43.7
+ },
+ {
+  "id": "gaparks:32443607",
+  "title": "Sunset Stories",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Amicalola Falls State Park and Lodge",
+  "city": "",
+  "distanceMi": 56.5
+ },
+ {
+  "id": "agnesscott:53025147674335",
+  "title": "Danceworks Fall Production",
+  "category": "arts",
+  "sourceId": "agnesscott",
+  "summary": "There is a vitality, a life force, an energy, a quickening that is translated through you into action, and because there is only one of you in all time, this expression is unique. And if you block it, it will never exis…",
+  "venue": "Dana Fine Arts Building",
+  "city": "Decatur",
+  "distanceMi": 5.5
+ },
+ {
+  "id": "gaparks:33320112",
+  "title": "Haunts of Hall County",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Don Carter State Park",
+  "city": "",
+  "distanceMi": 57.4
+ },
+ {
+  "id": "gaparks:33320328",
+  "title": "Star \"Hike\" With Astronomers Dr Jones & Jim Wyrosdick",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Don Carter State Park",
+  "city": "",
+  "distanceMi": 57.4
+ },
+ {
+  "id": "uga:53674587176300",
+  "title": "Atlanta Chapter: Game Watching Party - UGA vs Auburn",
+  "category": "sports",
+  "sourceId": "uga",
+  "summary": "Game Watch Parties begin at or before kickoff. Be sure to check https://georgiadogs.com/ for latest kickoff times and information. Throughout the football season, UGA Alumni Chapters all over the world are hosting Game…",
+  "venue": "Monday Night Brewing - The Grove",
+  "city": "Atlanta",
+  "distanceMi": 3.2
+ },
+ {
+  "id": "uga:53932599913352",
+  "title": "MILONGAS - Drawings by Martin Malamud",
+  "category": "arts",
+  "sourceId": "uga",
+  "summary": "“Gilbert’s Wall” presents a selection from Martin Malamud’s series Milongas (pronounced mee-LOHNG-gah), inspired by the atmosphere, movement, and social world of tango dancing. Martin Malamud is an Argentine artist, ill…",
+  "venue": "Gilbert Hall",
+  "city": "Athens",
+  "distanceMi": 59.8
+ },
+ {
+  "id": "uga:54124652750128",
+  "title": "Exhibition: Torreah \"Cookie\" Washington",
+  "category": "food",
+  "sourceId": "uga",
+  "summary": "This exhibition runs October 14-27, with a free, public reception on Saturday, October 24, 2026, from 4-5 p.m. Torreah “Cookie” Washington is a fourth-generation needle worker and the first in her family to embrace art…",
+  "venue": "Lyndon House Arts Center",
+  "city": "Athens",
+  "distanceMi": 59.9
+ },
+ {
+  "id": "poncecity:10002859:1792256400000",
+  "title": "Nancy’s Flower Truck",
+  "category": "community",
+  "sourceId": "poncecity",
+  "summary": "Nancy’s Flower Truck rolls into the Ponce City Market Courtyard every Saturday from 1–6 PM.",
+  "venue": "The Courtyard",
+  "city": "Atlanta",
+  "distanceMi": 1.9
+ },
+ {
+  "id": "gaparks:33849832",
+  "title": "Fall Photo Scavenger Hunt",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "High Falls State Park",
+  "city": "",
+  "distanceMi": 45.1
+ },
+ {
+  "id": "decaturarts:10018938:1792332000000",
+  "title": "Placita Latina v.6: Puentes",
+  "category": "arts",
+  "sourceId": "decaturarts",
+  "summary": "The Decatur Arts Alliance presents the 6th annual Placita Latina exhibition in celebration of Hispanic Heritage Month. This juried exhibition aims to celebrate and showcase the rich and diverse heritage of Latinx and Hi…",
+  "venue": "Decatur Arts Alliance",
+  "city": "Decatur",
+  "distanceMi": 5.5
+ },
+ {
+  "id": "gaparks:33054588",
+  "title": "Salamander Meander",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Panola Mountain State Park",
+  "city": "",
+  "distanceMi": 15.6
+ },
+ {
+  "id": "gaparks:33054672",
+  "title": "Arts & Crafts with a Ranger",
+  "category": "arts",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Red Top Mountain State Park",
+  "city": "",
+  "distanceMi": 32.8
+ },
+ {
+  "id": "gaparks:33849752",
+  "title": "Art in the Park",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Etowah Indian Mounds Historic Site",
+  "city": "",
+  "distanceMi": 35.2
+ },
+ {
+  "id": "gaparks:33319999",
+  "title": "Branch Out Your Knowledge",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Fort Yargo State Park",
+  "city": "",
+  "distanceMi": 40.7
+ },
+ {
+  "id": "gaparks:33054634",
+  "title": "Toddler Fun Sunday",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Hard Labor Creek State Park",
+  "city": "",
+  "distanceMi": 45.8
+ },
+ {
+  "id": "gaparks:33849842",
+  "title": "Owl-O-Ween!",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Indian Springs State Park",
+  "city": "",
+  "distanceMi": 43.7
+ },
+ {
+  "id": "gaparks:33054635",
+  "title": "Edible and Multi-Use Plant Hike",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Hard Labor Creek State Park",
+  "city": "",
+  "distanceMi": 45.8
+ },
+ {
+  "id": "gaparks:33054589",
+  "title": "Creature Feature",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Panola Mountain State Park",
+  "city": "",
+  "distanceMi": 15.6
+ },
+ {
+  "id": "gaparks:33054673",
+  "title": "Meditation at the park",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Red Top Mountain State Park",
+  "city": "",
+  "distanceMi": 32.8
+ },
+ {
+  "id": "gaparks:33849843",
+  "title": "Reptile Ramble",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Indian Springs State Park",
+  "city": "",
+  "distanceMi": 43.7
+ },
+ {
+  "id": "gaparks:33054606",
+  "title": "Hike with a Ranger",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "F.D. Roosevelt State Park",
+  "city": "",
+  "distanceMi": 64.1
+ },
+ {
+  "id": "gaparks:33054607",
+  "title": "Archery",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "F.D. Roosevelt State Park",
+  "city": "",
+  "distanceMi": 64.1
+ },
+ {
+  "id": "gaparks:33320181",
+  "title": "Big Rock Falls Hike",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Fort Mountain State Park",
+  "city": "",
+  "distanceMi": 72.2
+ },
+ {
+  "id": "gaparks:32732686",
+  "title": "Beginner Archery",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Tallulah Gorge State Park",
+  "city": "",
+  "distanceMi": 89.2
+ },
+ {
+  "id": "gaparks:33849771",
+  "title": "Tails on Trails",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "James H. (Sloppy) Floyd State Park",
+  "city": "",
+  "distanceMi": 72
+ },
+ {
+  "id": "gaparks:33320071",
+  "title": "Lakeside Yoga",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Tugaloo State Park",
+  "city": "",
+  "distanceMi": 91.7
+ },
+ {
+  "id": "gaparks:33320377",
+  "title": "Tarpology 101",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Cloudland Canyon State Park",
+  "city": "",
+  "distanceMi": 97.4
+ },
+ {
+  "id": "gaparks:33319977",
+  "title": "Spooky Serpents",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Tallulah Gorge State Park",
+  "city": "",
+  "distanceMi": 89.2
+ },
+ {
+  "id": "gaparks:33320141",
+  "title": "Bows and Boos: Spooky archery",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "A.H. Stephens State Park",
+  "city": "",
+  "distanceMi": 86.7
+ },
+ {
+  "id": "gaparks:33320072",
+  "title": "Dig Into Geology",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Tugaloo State Park",
+  "city": "",
+  "distanceMi": 91.7
+ },
+ {
+  "id": "gaparks:33320154",
+  "title": "Fire Tower Open House",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Fort Mountain State Park",
+  "city": "",
+  "distanceMi": 72.2
+ },
+ {
+  "id": "gaparks:33576427",
+  "title": "Nature Bingo",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Unicoi State Park and Lodge",
+  "city": "",
+  "distanceMi": 76.4
+ },
+ {
+  "id": "gaparks:33054609",
+  "title": "Web-Walking",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "F.D. Roosevelt State Park",
+  "city": "",
+  "distanceMi": 64.1
+ },
+ {
+  "id": "gaparks:33320049",
+  "title": "Explore the Nature Hut",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Tugaloo State Park",
+  "city": "",
+  "distanceMi": 91.7
+ },
+ {
+  "id": "gaparks:33849773",
+  "title": "Campfire Cookies",
+  "category": "food",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "James H. (Sloppy) Floyd State Park",
+  "city": "",
+  "distanceMi": 72
+ },
+ {
+  "id": "gaparks:32442144",
+  "title": "Halloween Haunted Hike",
+  "category": "family",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Smithgall Woods State Park",
+  "city": "",
+  "distanceMi": 74
+ },
+ {
+  "id": "gaparks:33319978",
+  "title": "Fall Fest",
+  "category": "festival",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Tallulah Gorge State Park",
+  "city": "",
+  "distanceMi": 89.2
+ },
+ {
+  "id": "gaparks:33849828",
+  "title": "Haunted Hayride",
+  "category": "family",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Watson Mill Bridge State Park",
+  "city": "",
+  "distanceMi": 77.5
+ },
+ {
+  "id": "gaparks:33849774",
+  "title": "Sunset Paddle",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "James H. (Sloppy) Floyd State Park",
+  "city": "",
+  "distanceMi": 72
+ },
+ {
+  "id": "uga:53674968195565",
+  "title": "Northeast Georgia Mountains Chapter: Game Watching Party - UGA vs Auburn",
+  "category": "sports",
+  "sourceId": "uga",
+  "summary": "Game Watch Parties begin at or before kickoff. Be sure to check https://georgiadogs.com/ for latest kickoff times and information. Throughout the football season, UGA Alumni Chapters all over the world are hosting Game…",
+  "venue": "Fender's",
+  "city": "Cornelia",
+  "distanceMi": 71.9
+ },
+ {
+  "id": "uga:53674875990906",
+  "title": "Milledgeville Chapter: Game Watching Party - UGA vs Auburn",
+  "category": "sports",
+  "sourceId": "uga",
+  "summary": "Game Watch Parties begin at or before kickoff. Be sure to check https://georgiadogs.com/ for latest kickoff times and information. Throughout the football season, UGA Alumni Chapters all over the world are hosting Game…",
+  "venue": "Dukes Lounge and Dawghouse",
+  "city": "Milledgeville",
+  "distanceMi": 75.4
+ },
+ {
+  "id": "gaparks:33320073",
+  "title": "Sunrise Hike",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Tugaloo State Park",
+  "city": "",
+  "distanceMi": 91.7
+ },
+ {
+  "id": "gaparks:33320406",
+  "title": "Fantastic Fungi: the Marvelous World of Mushrooms",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Cloudland Canyon State Park",
+  "city": "",
+  "distanceMi": 97.4
+ },
+ {
+  "id": "gaparks:33319973",
+  "title": "Snake Sunday",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Tallulah Gorge State Park",
+  "city": "",
+  "distanceMi": 89.2
+ },
+ {
+  "id": "gaparks:33320176",
+  "title": "Bear Talk",
+  "category": "learning",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Fort Mountain State Park",
+  "city": "",
+  "distanceMi": 72.2
+ },
+ {
+  "id": "gaparks:33320149",
+  "title": "Mushroom Mile",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Fort Mountain State Park",
+  "city": "",
+  "distanceMi": 72.2
+ },
+ {
+  "id": "gaparks:33319980",
+  "title": "Waterfalls and Watercolors",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Tallulah Gorge State Park",
+  "city": "",
+  "distanceMi": 89.2
+ },
+ {
+  "id": "uga:54102736534823",
+  "title": "Align & Engage 2026",
+  "category": "learning",
+  "sourceId": "uga",
+  "summary": "UGA Institute for Artificial Intelligence presents Align & Engage 2026. This AI-centered event will feature two keynote talks (one from academia and the other from industry), lightning round of research talks from selec…",
+  "venue": "Tate Student Center",
+  "city": "Athens",
+  "distanceMi": 59.7
+ },
+ {
+  "id": "uga:54257895578730",
+  "title": "Screening of \"In Search of Phillis Wheatley Peters\" and Q&A with filmmaker Leslie Askew",
+  "category": "arts",
+  "sourceId": "uga",
+  "summary": "UGA hosts a screening and discussion of In Search of Phillis Wheatley Peters, a new, 35-minute documentary about America’s first published Black poet. Produced by Askew Pictures, the film illuminates a largely overlooke…",
+  "venue": "Richard B. Russell Special Collections Libraries",
+  "city": "Athens",
+  "distanceMi": 59.7
+ },
+ {
+  "id": "gsu:54055168989852",
+  "title": "Welch School of Art & Design: 2026 MFA Open Studios",
+  "category": "arts",
+  "sourceId": "gsu",
+  "summary": "It’s that time of year! Our annual MFA Open Studios event is a chance to explore five stories of art, meet our grads and enjoy an evening of creative connection with our students, faculty, and staff. Music, food, and be…",
+  "venue": "Ernest G. Welch School of Art & Design",
+  "city": "Atlanta",
+  "distanceMi": 0.2
+ },
+ {
+  "id": "gsu:54054675860120",
+  "title": "Where Being Takes Root: Chair of Collections-led Tour",
+  "category": "community",
+  "sourceId": "gsu",
+  "summary": "Chair of Collections Dr. Jennifer Siegler guides an exploration of Where Being Takes Root in the Welch School Galleries. \"Where Being Takes Root: Works by Southern Artists From the Larry M. and Gwendolyn E. Walker Colle…",
+  "venue": "The Welch School Galleries",
+  "city": "Atlanta",
+  "distanceMi": 0.2
+ },
+ {
+  "id": "gaparks:33320113",
+  "title": "Paint The Park",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Don Carter State Park",
+  "city": "",
+  "distanceMi": 57.4
+ },
+ {
+  "id": "poncecity:10000977:1792792800000",
+  "title": "The Upper Room Cocktail-Making Class",
+  "category": "learning",
+  "sourceId": "poncecity",
+  "summary": "Enjoy a guided tasting of a featured spirit, led by a brand expert sharing its history and unique flavor notes.",
+  "venue": "Citizen Supply",
+  "city": "Atlanta",
+  "distanceMi": 1.9
+ },
+ {
+  "id": "decaturarts:8126:1792792800000",
+  "title": "Closing Reception – Placita Latina v.6: Puentes",
+  "category": "community",
+  "sourceId": "decaturarts",
+  "summary": "The Decatur Arts Alliance presents the 6th annual Placita Latina exhibition in celebration of Hispanic Heritage Month. This juried exhibition aims to celebrate and showcase the rich and diverse heritage of Latinx and Hi…",
+  "venue": "Decatur Arts Alliance",
+  "city": "Decatur",
+  "distanceMi": 5.5
+ },
+ {
+  "id": "gaparks:33054662",
+  "title": "Campfire Comradery",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Red Top Mountain State Park",
+  "city": "",
+  "distanceMi": 32.8
+ },
+ {
+  "id": "gaparks:33054545",
+  "title": "Keep It Wild: Black Bear Safety & Outdoor Etiquette",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Amicalola Falls State Park and Lodge",
+  "city": "",
+  "distanceMi": 56.5
+ },
+ {
+  "id": "piedmont:26888:1792794600000",
+  "title": "Paint & Sip: Fall in the Park!",
+  "category": "outdoors",
+  "sourceId": "piedmont",
+  "summary": "Support the Park while creating your own seasonal decor to take home! The subject will be classic fall tree foliage in Piedmont Park. Our evening will include instruction and all materials will be included. Participants…",
+  "venue": "Community Center",
+  "city": "Atlanta",
+  "distanceMi": 2.2
+ },
+ {
+  "id": "gaparks:33320114",
+  "title": "Fall Movie Night: Double Feature!",
+  "category": "arts",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Don Carter State Park",
+  "city": "",
+  "distanceMi": 57.4
+ },
+ {
+  "id": "gaparks:33054637",
+  "title": "Haunted Hollow Glow-in-the-Dark Mini Golf",
+  "category": "family",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Hard Labor Creek State Park",
+  "city": "",
+  "distanceMi": 45.8
+ },
+ {
+  "id": "uga:53808310149589",
+  "title": "Gershwin’s Rhapsody in Blue with the Atlanta Symphony Orchestra",
+  "category": "music",
+  "sourceId": "uga",
+  "summary": "Sullivan Fortner, piano Kristiina Poska, conductor Often called “the great American opera,” Porgy and Bess has shaped American culture since 1935, inspiring artists from Maya Angelou to Miles Davis and Janis Joplin to S…",
+  "venue": "Performing Arts Center",
+  "city": "Athens",
+  "distanceMi": 59.9
+ },
+ {
+  "id": "poncecity:10005015:1792800000000",
+  "title": "Placitas at Ponce",
+  "category": "community",
+  "sourceId": "poncecity",
+  "summary": "Kick off your weekend every Friday at Placitas at Ponce.",
+  "venue": "El Super Pan",
+  "city": "Atlanta",
+  "distanceMi": 1.9
+ },
+ {
+  "id": "kennesaw:53748098767472",
+  "title": "Coming Out!",
+  "category": "arts",
+  "sourceId": "kennesaw",
+  "summary": "Onyx Theater Celebrating its fourteenth year, this inspiring, celebratory and thought-provoking performance features stories, musical acts and more from KSU and metro-area communities, performed by KSU students. Please…",
+  "venue": "Onyx Theater",
+  "city": "Kennesaw",
+  "distanceMi": 22.8
+ },
+ {
+  "id": "gsu:53381976486456",
+  "title": "Envisioning a Just South",
+  "category": "learning",
+  "sourceId": "gsu",
+  "summary": "As we celebrate 10 years of innovative, equity-driven work, we are excited to announce that our annual conference, Envisioning a Just South, will be held on October 23, 2026, at the College of Law’s Knowles Conference C…",
+  "venue": "College of Law",
+  "city": "Atlanta",
+  "distanceMi": 0.3
+ },
+ {
+  "id": "uga:53932599931790",
+  "title": "MILONGAS - Drawings by Martin Malamud",
+  "category": "arts",
+  "sourceId": "uga",
+  "summary": "“Gilbert’s Wall” presents a selection from Martin Malamud’s series Milongas (pronounced mee-LOHNG-gah), inspired by the atmosphere, movement, and social world of tango dancing. Martin Malamud is an Argentine artist, ill…",
+  "venue": "Gilbert Hall",
+  "city": "Athens",
+  "distanceMi": 59.8
+ },
+ {
+  "id": "uga:54124652782902",
+  "title": "Exhibition: Torreah \"Cookie\" Washington",
+  "category": "food",
+  "sourceId": "uga",
+  "summary": "This exhibition runs October 14-27, with a free, public reception on Saturday, October 24, 2026, from 4-5 p.m. Torreah “Cookie” Washington is a fourth-generation needle worker and the first in her family to embrace art…",
+  "venue": "Lyndon House Arts Center",
+  "city": "Athens",
+  "distanceMi": 59.9
+ },
+ {
+  "id": "poncecity:10004166:1792843200000",
+  "title": "Atlanta Run Club",
+  "category": "outdoors",
+  "sourceId": "poncecity",
+  "summary": "Every Saturday. Open to all levels.",
+  "venue": "The Courtyard",
+  "city": "Atlanta",
+  "distanceMi": 1.9
+ },
+ {
+  "id": "gaparks:33054596",
+  "title": "Friends of Panola Mountain Extended Hike",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Panola Mountain State Park",
+  "city": "",
+  "distanceMi": 15.6
+ },
+ {
+  "id": "gaparks:33319991",
+  "title": "Guided Tours of the Old Fort",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Fort Yargo State Park",
+  "city": "",
+  "distanceMi": 40.7
+ },
+ {
+  "id": "gaparks:33054569",
+  "title": "Amicalola in Autumn: Guided Waterfall Hike - 9:30 AM",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Amicalola Falls State Park and Lodge",
+  "city": "",
+  "distanceMi": 56.5
+ },
+ {
+  "id": "poncecity:10005337:1792850400000",
+  "title": "Dope Dads Run",
+  "category": "community",
+  "sourceId": "poncecity",
+  "summary": "Join Dope Dads for a family-friendly fun run celebrating fitness, community, and connection.",
+  "venue": "The Shed",
+  "city": "Atlanta",
+  "distanceMi": 1.9
+ },
+ {
+  "id": "gaparks:33849844",
+  "title": "Bitty Beasts!",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Indian Springs State Park",
+  "city": "",
+  "distanceMi": 43.7
+ },
+ {
+  "id": "gaparks:33320109",
+  "title": "Bats of Georgia",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Don Carter State Park",
+  "city": "",
+  "distanceMi": 57.4
+ },
+ {
+  "id": "gaparks:33320111",
+  "title": "Adopt a Bat!",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Don Carter State Park",
+  "city": "",
+  "distanceMi": 57.4
+ },
+ {
+  "id": "civilrights:144682:1792857600000",
+  "title": "Saturday Adventures at the Center",
+  "category": "family",
+  "sourceId": "civilrights",
+  "summary": "Join us this Saturday for an unforgettable experience with interactive storyteller Mama Koku , who will lead high-energy, improvised storytelling sessions at 12 p.m. Known for her magnetic stage presence, Mama Koku tran…",
+  "venue": "National Center for Civil and Human Rights",
+  "city": "Atlanta",
+  "distanceMi": 0.8
+ },
+ {
+  "id": "gsu:54196076524689",
+  "title": "Beyond the Hype: AI Research Meets Real Deployment",
+  "category": "learning",
+  "sourceId": "gsu",
+  "summary": "Artificial intelligence is no longer a distant trend, a niche technical topic, or something safely contained inside research labs and vendor slide decks. It is quickly becoming part of how organizations think, compete,…",
+  "venue": "Buckhead Center",
+  "city": "Atlanta",
+  "distanceMi": 6.7
+ },
+ {
+  "id": "gaparks:33320115",
+  "title": "Colors of the Canopy Hike",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Don Carter State Park",
+  "city": "",
+  "distanceMi": 57.4
+ },
+ {
+  "id": "poncecity:1930:1792861200000",
+  "title": "Andrew Blooms Art Class – Hannyas",
+  "category": "arts",
+  "sourceId": "poncecity",
+  "summary": "Create your own Asian art Masterpiece in this 2-hour guided art class with Atlanta painter and tattoo artist Andrew Blooms.",
+  "venue": "Blooms Emporium",
+  "city": "Atlanta",
+  "distanceMi": 1.9
+ },
+ {
+  "id": "decaturarts:10018910:1792861200000",
+  "title": "The Book As Art v.14: Ghosted",
+  "category": "arts",
+  "sourceId": "decaturarts",
+  "summary": "The Book As Art: Ghosted is the fourteenth edition of an art show celebrating books: objects that, in an increasingly digital world, stubbornly survive. In stories and folktales, ghosts are harbingers, haints, and often…",
+  "venue": "Fourth Floor Gallery of the Decatur Library",
+  "city": "Decatur",
+  "distanceMi": 5.6
+ },
+ {
+  "id": "gaparks:33849845",
+  "title": "Toxin Talk",
+  "category": "learning",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Indian Springs State Park",
+  "city": "",
+  "distanceMi": 43.7
+ },
+ {
+  "id": "gaparks:32441625",
+  "title": "Haunted Village at Hard Labor Creek",
+  "category": "family",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Hard Labor Creek State Park",
+  "city": "",
+  "distanceMi": 45.8
+ },
+ {
+  "id": "gaparks:33320001",
+  "title": "Art in the Park",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Fort Yargo State Park",
+  "city": "",
+  "distanceMi": 40.7
+ },
+ {
+  "id": "poncecity:10001503:1792868400000",
+  "title": "City Winery Tour + Tasting",
+  "category": "food",
+  "sourceId": "poncecity",
+  "summary": "Take an exclusive tour of City Winery Atlanta and learn about our winemaking journey — from grape to glass.",
+  "venue": "City Winery",
+  "city": "Atlanta",
+  "distanceMi": 1.9
+ },
+ {
+  "id": "gaparks:33054664",
+  "title": "Iron Pour",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Red Top Mountain State Park",
+  "city": "",
+  "distanceMi": 32.8
+ },
+ {
+  "id": "gaparks:33054658",
+  "title": "Bat Week",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Amicalola Falls State Park and Lodge",
+  "city": "",
+  "distanceMi": 56.5
+ },
+ {
+  "id": "gaparks:33320116",
+  "title": "3rd Annual Trunk or Treat!",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Don Carter State Park",
+  "city": "",
+  "distanceMi": 57.4
+ },
+ {
+  "id": "gaparks:33849846",
+  "title": "Batty Banter!",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Indian Springs State Park",
+  "city": "",
+  "distanceMi": 43.7
+ },
+ {
+  "id": "uga:53824445662941",
+  "title": "Guest Artist Recital: Fowler-Mrofchak Guitar Duo",
+  "category": "music",
+  "sourceId": "uga",
+  "summary": "Free recital presented by guest artists the Fowler-Mrofchak Guitar Duo.",
+  "venue": "Hugh Hodgson School of Music",
+  "city": "Athens",
+  "distanceMi": 60
+ },
+ {
+  "id": "gaparks:33320117",
+  "title": "Halloween Campsite Decoration Contest!",
+  "category": "family",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Don Carter State Park",
+  "city": "",
+  "distanceMi": 57.4
+ },
+ {
+  "id": "atlpride:6384:1792814400000",
+  "title": "Savannah Pride 2026",
+  "category": "festival",
+  "sourceId": "atlpride",
+  "summary": "Marking its 27th year as the premier event for the Savannah and Coastal Georgia LGBTQIA+ community and allies, Savannah Pride serves as a vital reminder of hope and unity, offering a platform for expression and connecti…",
+  "venue": "Atlanta Pride",
+  "city": "Atlanta",
+  "distanceMi": 2.4
+ },
+ {
+  "id": "poncecity:10002860:1792861200000",
+  "title": "Nancy’s Flower Truck",
+  "category": "community",
+  "sourceId": "poncecity",
+  "summary": "Nancy’s Flower Truck rolls into the Ponce City Market Courtyard every Saturday from 1–6 PM.",
+  "venue": "The Courtyard",
+  "city": "Atlanta",
+  "distanceMi": 1.9
+ },
+ {
+  "id": "gaparks:33849833",
+  "title": "Fall Photo Scavenger Hunt",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "High Falls State Park",
+  "city": "",
+  "distanceMi": 45.1
+ },
+ {
+  "id": "gaparks:33320413",
+  "title": "Adaptive Halloween Fair",
+  "category": "festival",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Sweetwater Creek State Park",
+  "city": "",
+  "distanceMi": 13.9
+ },
+ {
+  "id": "gaparks:33054595",
+  "title": "Basic Archery",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Panola Mountain State Park",
+  "city": "",
+  "distanceMi": 15.6
+ },
+ {
+  "id": "gaparks:33849753",
+  "title": "Atlatl throwing",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Etowah Indian Mounds Historic Site",
+  "city": "",
+  "distanceMi": 35.2
+ },
+ {
+  "id": "gaparks:33849847",
+  "title": "Turtle Talk",
+  "category": "learning",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Indian Springs State Park",
+  "city": "",
+  "distanceMi": 43.7
+ },
+ {
+  "id": "gaparks:33054671",
+  "title": "Reptile Rendezvous",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Red Top Mountain State Park",
+  "city": "",
+  "distanceMi": 32.8
+ },
+ {
+  "id": "gaparks:33849848",
+  "title": "Colors Of Fall Hike",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Indian Springs State Park",
+  "city": "",
+  "distanceMi": 43.7
+ },
+ {
+  "id": "gaparks:33320002",
+  "title": "Full Moon Hike",
+  "category": "outdoors",
+  "sourceId": "gaparks",
+  "summary": "",
+  "venue": "Fort Yargo State Park",
+  "city": "",
+  "distanceMi": 40.7
+ }
+]

@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { weekendLede } from "@/lib/events/lede";
 import { HandHeart, Soup, Wrench } from "lucide-react";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -65,37 +66,8 @@ const PLACES = [
   },
 ];
 
-const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
-/** "Vidalia dads — Saturday coffee" → "dads’ coffee"; "Outdoor pickleball — Rec Complex" → "outdoor pickleball". */
-function shortPhrase(title: string, town: string): string {
-  let t = title.replace(new RegExp(`^${town}\\s+`, "i"), "");
-  t = t.replace(new RegExp(`\\b(${WEEKDAYS.join("|")})s?\\b`, "gi"), "").replace(/\s{2,}/g, " ");
-  const parts = t.split(/\s+[—–-]\s+|:\s+/).map((x) => x.trim()).filter(Boolean);
-  let phrase = parts[0] || t.trim();
-  if (parts.length > 1 && phrase.split(" ").length === 1) {
-    phrase = /s$/i.test(phrase) ? `${phrase}’ ${parts[1]}` : `${phrase} ${parts[1]}`;
-  }
-  const [first, ...rest] = phrase.split(" ");
-  if (rest.every((w) => w === w.toLowerCase()) && /^[A-Z][a-z]+$/.test(first)) {
-    phrase = [first.toLowerCase(), ...rest].join(" ");
-  }
-  return phrase.trim();
-}
-
 function ledeFor(plan: WeekendPlan | null): string {
-  const events = plan?.feed?.events ?? [];
-  if (!events.length) {
-    return "Festivals, shows, park days, and neighbor gatherings in and around town. Pick one and go say hello.";
-  }
-  const town = plan?.place.city || "Vidalia";
-  const picks = events.slice(0, 3).map((e) => {
-    const day = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", weekday: "long" }).format(e.startMs);
-    return `${day} ${shortPhrase(e.title, town)}`;
-  });
-  const list = picks.length === 1 ? picks[0] : `${picks.slice(0, -1).join(", ")} and ${picks[picks.length - 1]}`;
-  const more = events.length > picks.length ? ` Plus ${events.length - picks.length} more nearby.` : "";
-  return `This weekend: ${list}.${more}`;
+  return weekendLede(plan?.feed?.events ?? [], plan?.place.city || "Vidalia");
 }
 
 function LandingPage() {

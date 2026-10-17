@@ -159,7 +159,11 @@ export function CategoryChips({
     );
   };
   return (
-    <nav aria-label="What kind of event" className="flex flex-wrap gap-2">
+    // One swipeable row on phones (8 chips would wrap to four rows), wrapping from sm up.
+    <nav
+      aria-label="What kind of event"
+      className="-mx-5 flex snap-x snap-mandatory scroll-px-5 gap-2 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0 [&>*]:shrink-0 [&>*]:snap-start"
+    >
       {item(undefined, "All", events.length)}
       {CHIPS.map((c) => item(c.id, c.label, counts[c.id]))}
     </nav>
@@ -279,7 +283,7 @@ export function WeekendFeed({
             No {chipLabel.toLowerCase()} within {feed?.radiusMi ?? 60} miles this weekend
           </h3>
           <p className="text-base text-fg-muted">
-            {nearby.length ? "There is more a longer drive out, below." : "Try everything, or a wider distance."}
+            {nearby.length ? "More a short drive away below." : "Try everything, or a wider distance."}
           </p>
           {clearChipHref && (
             <Button asChild variant="secondary">

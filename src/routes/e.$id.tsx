@@ -104,7 +104,7 @@ function EventPage() {
           ) : null}
           <div className="space-y-6 p-5 sm:p-8">
             <div className="space-y-3">
-              <span className="eyebrow">{cardLabels(e).join(" · ")}</span>
+              {cardLabels(e).length > 0 && <span className="eyebrow">{cardLabels(e).join(" · ")}</span>}
               <h1 className="font-display text-3xl font-semibold leading-tight text-fg sm:text-4xl [overflow-wrap:anywhere]">
                 {e.title}
               </h1>
