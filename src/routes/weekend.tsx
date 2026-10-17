@@ -1,3 +1,4 @@
+import { isListedCommunity } from "@/lib/community/public-filters";
 import { useEffect, useState } from "react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { CloudRain, CloudSun, Sun } from "lucide-react";
@@ -56,6 +57,7 @@ export const Route = createFileRoute("/weekend")({
         { name: "description", content: desc },
         { property: "og:title", content: title },
         { property: "og:description", content: desc },
+        ...(p?.slug && !isListedCommunity(p.slug) ? [{ name: "robots", content: "noindex, nofollow" }] : []),
       ],
     };
   },
