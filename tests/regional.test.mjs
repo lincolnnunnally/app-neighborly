@@ -282,4 +282,6 @@ test("Home intro: Sat/Sun only, local first, two items, through Sun, no genre ta
   // A Friday-night-only event is not a weekend pick.
   const fri = [mk({ title: "Friday concert", startMs: Date.parse("2026-10-16T23:00:00Z"), distanceMi: 1 })];
   assert.ok(!/Friday concert/.test(weekendLede(fri, "Vidalia", Date.parse("2026-10-16T20:00:00Z"))));
+  // Long names never end on a dangling "of the".
+  assert.equal(shortPhrase("Daily Life, Skills, and Tools of the Kolomoki People", "Arlington"), "Daily Life, Skills, and Tools");
 });

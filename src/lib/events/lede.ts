@@ -41,7 +41,10 @@ export function shortPhrase(title: string, town: string): string {
       if ((out ? `${out} ${w}` : w).length > MAX_CHARS) break;
       out = out ? `${out} ${w}` : w;
     }
-    phrase = out.replace(/\s+(vs\.?|and|&|of|the|at|with)$/i, "");
+    // Repeat so "Tools of the" ends at "Tools", not "Tools of".
+    const dangling = /[\s,;:–—-]+(vs\.?|and|&|of|the|a|an|at|in|on|for|to|with|from)?$/i;
+    while (dangling.test(out) && out.replace(dangling, "") !== out) out = out.replace(dangling, "");
+    phrase = out;
   }
   // "Saturday coffee" style: a capitalized first word over lowercase words reads better lowercased.
   const [first, ...rest] = phrase.split(" ");
