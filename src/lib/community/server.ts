@@ -413,7 +413,7 @@ export const getCommunityFeed = createServerFn({ method: "GET" })
       tools: visible(toolRows.map(mapTool)),
       events: visible(eventRows.map(mapEvent)).filter((r) => !looksLikeQaRow(r)),
       facilities: facilityRows.map(mapFacility),
-      neighbors,
+      neighbors: neighbors.filter((r) => !looksLikeQaRow(r)),
     };
   });
 
