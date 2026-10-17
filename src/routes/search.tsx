@@ -33,7 +33,7 @@ export const Route = createFileRoute("/search")({
         {
           name: "description",
           content:
-            "Search everything on Neighborly — food pantries, needs, events and Bible studies, services, tools, places and neighbors. Real listings only; we will not invent results.",
+            "Search everything on Neighborly — food pantries, needs, events and Bible studies, services, tools, places and neighbors. Search what your neighbors have posted.",
         },
       ],
     };
@@ -205,8 +205,7 @@ function SearchPage() {
 
         {status === "error" && (
           <p className="text-sm text-danger">
-            Search could not run just now. Try again — we will not show made-up results
-            instead.
+            Search didn&apos;t load just now. Please try again.
           </p>
         )}
 
@@ -275,8 +274,8 @@ function SearchPage() {
         {status === "ready" && direct.length === 0 && (
           <div className="surface-card space-y-3 p-4">
             <p className="text-sm text-fg-muted">
-              An empty result is the honest answer — nobody has posted this yet. You can be
-              the first: post it as a need, or add the listing if you can speak for it.
+              Nobody has posted this yet. You could be the first — post it as a need, or add
+              the listing if you can speak for it.
             </p>
             <div className="flex flex-wrap gap-2">
               <Button asChild size="sm">

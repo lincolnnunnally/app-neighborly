@@ -98,7 +98,7 @@ export const TOOMBS_PANTRY_LISTINGS: PublicPantryListing[] = [
     visit_frequency: "",
     id_docs: "",
     other_notes:
-      "Plenty's own pantry. Register at plenty.unitedundergod.org/need-food. Hours and address stay empty until they are real — we will not invent a Saturday. Walk-ins and deliveries both welcome once a line is posted.",
+      "Plenty's own pantry. Register at plenty.unitedundergod.org/need-food. Hours will be posted here soon. Walk-ins and deliveries both welcome.",
     phone: "",
     website: "https://plenty.unitedundergod.org/need-food",
     facebook_url: "",

@@ -20,7 +20,7 @@ export function useRequireNeighbor() {
     if (isPending) return false;
 
     if (!user) {
-      toast.message("Create an account to continue — we don't invent a neighbor for you.");
+      toast.message("Create a free account to continue.");
       await navigate({
         to: "/signup",
         search: offerSignupSearch({

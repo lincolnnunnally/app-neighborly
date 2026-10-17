@@ -142,8 +142,7 @@ function AppHome() {
           <CardHeader className="pb-2">
             <CardTitle className="text-lg">Suggested for you</CardTitle>
             <CardDescription>
-              From what you shared. Not a lock. Friendship before dating. We do not
-              invent people or open other apps for you.
+              Based on what you shared. Take what helps.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">

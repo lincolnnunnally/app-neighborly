@@ -80,7 +80,7 @@ async function fetchWeather(
     `&temperature_unit=fahrenheit&timezone=${encodeURIComponent(tz)}&forecast_days=7`;
   try {
     const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
-    if (!res.ok) return { days: [], error: "Weather did not load. Assume September heat — indoor midday." };
+    if (!res.ok) return { days: [], error: "Weather is unavailable right now — check the forecast before you head out." };
     const data = (await res.json()) as {
       daily?: {
         time: string[];
@@ -91,7 +91,7 @@ async function fetchWeather(
       };
     };
     const d = data.daily;
-    if (!d?.time?.length) return { days: [], error: "Weather did not load. Assume September heat — indoor midday." };
+    if (!d?.time?.length) return { days: [], error: "Weather is unavailable right now — check the forecast before you head out." };
     const days: WeatherDay[] = d.time.map((date, i) => {
       const maxF = Math.round(d.temperature_2m_max[i] ?? 90);
       const rainChance = d.precipitation_probability_max[i] ?? 0;
@@ -109,7 +109,7 @@ async function fetchWeather(
     });
     return { days, error: null };
   } catch {
-    return { days: [], error: "Weather did not load. Assume September heat — indoor midday." };
+    return { days: [], error: "Weather is unavailable right now — check the forecast before you head out." };
   }
 }
 
@@ -150,15 +150,24 @@ function formatWeatherDay(d: WeatherDay): string {
 function buildArrivingNote(days: WeatherDay[], withChild: WeekendSlot[], placeName: string): string {
   const today = days[0];
   const tomorrow = days[1];
-  if (!today) return `Check the weather in ${placeName} before you linger outside. Confirm listings before you go.`;
+  if (!today) return `Check the forecast for ${placeName} before you head out.`;
   const paw = withChild.find((s) => /paw patrol/i.test(s.title) && /watch party|10:00/i.test(`${s.title} ${s.starts_at}`));
+  const hot = [today, tomorrow].some((d) => d && d.maxF >= 85);
+  const cold = [today, tomorrow].some((d) => d && d.maxF < 50);
+  const wet = [today, tomorrow].some((d) => d && d.rainChance >= 50);
+  const tip = hot
+    ? "Hot — plan indoor or early."
+    : cold
+      ? "Bring a jacket."
+      : wet
+        ? "Pack an umbrella."
+        : "Good weather to be outside.";
   const parts = [
-    `If you are arriving in ${placeName} now — ${formatWeatherDay(today)}${tomorrow ? `. Next day: ${formatWeatherDay(tomorrow)}` : ""}. Indoor and morning first when it is hot.`,
+    `${placeName}: ${formatWeatherDay(today)}${tomorrow ? `. ${formatWeatherDay(tomorrow)}` : ""}. ${tip}`,
   ];
   if (paw) {
-    parts.push(`Saturday with a child: ${paw.title} at the Pal Theatre (122 Church St) — air-conditioned.`);
+    parts.push(`For families: ${paw.title} at the Pal Theatre (122 Church St).`);
   }
-  parts.push("We will not invent a crowd.");
   return parts.join(" ");
 }
 
@@ -191,8 +200,8 @@ export async function buildWeekendPlan(opts?: {
     const emptyName = geo?.city || q;
     return {
       weather: [],
-      weatherNote: looked.refresh.note,
-      arrivingNote: looked.refresh.note,
+      weatherNote: "",
+      arrivingNote: "",
       all: [],
       withChild: [],
       alone: [],
@@ -243,12 +252,12 @@ export async function buildWeekendPlan(opts?: {
     const family = row.kind === "family" || /paw patrol|watch party|splash|kids|child|fun run/i.test(`${row.title} ${row.description}`);
     const adultOnly = /wine|girls night|21\+|not a kid|tribute|skynyrd|freebird/i.test(`${row.title} ${row.description}`);
     let why = "";
-    if (wx?.heatWarning && indoor) why = `Heat looks like ${wx.maxF}° — this one is indoors. Good call.`;
+    if (wx?.heatWarning && indoor) why = `High near ${wx.maxF}° — this one is indoors.`;
     else if (wx?.heatWarning && hour < 11) why = `Hottest part of the day is later (${wx.maxF}°). Morning outdoor is kinder.`;
-    else if (wx?.heatWarning && !indoor) why = `High near ${wx.maxF}°. Keep this short, or swap for AC.`;
+    else if (wx?.heatWarning && !indoor) why = `High near ${wx.maxF}°. Bring water and find some shade.`;
     else if ((wx?.rainChance ?? 0) >= 50 && indoor) why = `${wx?.rainChance}% rain chance — indoor is the safer slot.`;
     else if (wx) why = `${wx.summary}, high ${wx.maxF}°.`;
-    else why = error || "Check the heat before you linger outside.";
+    else why = error || "Check the forecast before you head out.";
 
     const slot: WeekendSlot = {
       id: row.id,
@@ -291,11 +300,11 @@ export async function buildWeekendPlan(opts?: {
     withChild.push({
       id: "place_ben_smith",
       starts_at: `${sat.date}T17:30:00-04:00`,
-      title: "Ben Smith Park — evening, not midday",
+      title: "Ben Smith Park in the evening",
       location: "Thompson St, Vidalia",
       why: sat.heatWarning
-        ? `High ${sat.maxF}°. Playground/splash pad after the heat breaks, not at noon.`
-        : "A simple park. No ticket. Leave if it does not feel like a yes.",
+        ? `High ${sat.maxF}°. The playground and splash pad are best once the heat breaks.`
+        : "Playground, shade, and room to run. Free.",
       indoor: false,
       withChild: true,
       alone: false,
@@ -307,9 +316,9 @@ export async function buildWeekendPlan(opts?: {
     withChild.push({
       id: "place_fountain",
       starts_at: `${sat.date}T19:30:00-04:00`,
-      title: "Onion fountain after dark",
+      title: "The onion fountain after dark",
       location: "Behind City Hall, 114 Jackson St",
-      why: "Lights and water after sunset. Short, free, and cooler than afternoon.",
+      why: "Lights and water after sunset. A short, free walk downtown.",
       indoor: false,
       withChild: true,
       alone: true,
@@ -327,9 +336,13 @@ export async function buildWeekendPlan(opts?: {
 
   const weatherNote = error
     ? error
-    : days.some((d) => d.heatWarning)
-      ? "South Georgia September: do indoor or morning first. Save parks for evening."
-      : "Outdoor is reasonable. Still pack water.";
+    : days.slice(0, 3).some((d) => d.maxF >= 85)
+      ? "Hot this weekend — plan indoor or early, and save parks for the evening."
+      : days.slice(0, 3).some((d) => d.maxF < 50)
+        ? "Cool this weekend — bring a jacket."
+        : days.slice(0, 3).some((d) => d.rainChance >= 50)
+          ? "Rain is possible — have an indoor backup."
+          : "Good weather to be outside this weekend.";
 
   const prefs = opts?.prefs ?? null;
   const allSorted = splitByFit(applyFit(all, prefs), prefs).primary;
@@ -346,7 +359,7 @@ export async function buildWeekendPlan(opts?: {
     {
       name: "First Baptist Vidalia, Georgia",
       url: "https://www.fbcvidalia.org",
-      note: "107 E Second St — GriefShare and worship. Not the Louisiana church.",
+      note: "107 E Second St — worship and GriefShare",
     },
   ];
 
@@ -366,8 +379,8 @@ export async function buildWeekendPlan(opts?: {
               name: `${community.name} board`,
               url: `https://neighborly.unitedundergod.org/c/${community.slug}`,
               note: looked.created
-                ? "New town board — empty until a real public listing is added."
-                : "Public listings only. We do not invent a calendar.",
+                ? "Neighbor gatherings and help, posted by people who live here."
+                : "Neighbor gatherings and help, posted by people who live here.",
             },
           ],
     weatherError: error,

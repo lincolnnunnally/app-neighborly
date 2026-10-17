@@ -79,6 +79,7 @@ export async function ensureSeeded(sql: Sql): Promise<void> {
   await ensureVidaliaGeorgiaNotLouisiana(sql);
   await refreshVidaliaPublicEvents(sql);
   await refreshToombsPantries(sql);
+  await ensurePublicCopy(sql);
 }
 
 /**
@@ -210,7 +211,7 @@ async function ensureMilsteadV1(sql: Sql): Promise<void> {
       'milstead',
       'Milstead',
       'Neighbors helping neighbors across Milstead',
-      'The first Neighborly test market. Post a real need, offer a real skill, plan a gathering, or welcome someone new. Whether you have lived here for decades or just arrived, this is how we look out for each other.',
+      'Post a real need, offer a real skill, plan a gathering, or welcome someone new. Whether you have lived here for decades or just arrived, this is how we look out for each other.',
       'Milstead',
       'GA',
       'neighborhood',
@@ -341,7 +342,7 @@ async function ensureVidaliaV2(sql: Sql): Promise<void> {
       'vidalia-pickleball',
       'Vidalia pickleball',
       'Play together, then talk',
-      'Public play at the Recreation Complex, 102 Stockyard Rd, Vidalia, Georgia. Free outdoor courts. Beginners welcome. We do not list gym hours from Vidalia, Louisiana.',
+      'Public play at the Recreation Complex, 102 Stockyard Rd, Vidalia, Georgia. Free outdoor courts. Beginners welcome.',
       'Vidalia',
       'GA',
       'interest',
@@ -404,7 +405,7 @@ async function ensureVidaliaV2(sql: Sql): Promise<void> {
     ),
     (
       'fac_vid_fbc_gym', 'comm_vidalia', 'First Baptist Church of Vidalia, Georgia',
-      '107 E Second St, Vidalia, GA 30474. Sunday worship 10:30am. GriefShare and other ministries as posted at fbcvidalia.org. This is not fbcvidalia.com (Vidalia, Louisiana). Phone 912-537-4196.',
+      '107 E Second St, Vidalia, GA 30474. Sunday worship 10:30am. GriefShare and other ministries — see fbcvidalia.org. Phone 912-537-4196.',
       200, ${JSON.stringify(["Worship", "GriefShare", "Downtown"])},
       'Public church — confirm ministries on fbcvidalia.org', 'First Baptist Church of Vidalia, Georgia'
     ),
@@ -421,6 +422,28 @@ async function ensureVidaliaV2(sql: Sql): Promise<void> {
   `;
 }
 
+
+/**
+ * Always-run: keep the public wording on seeded boards warm and visitor-facing.
+ * Only touches seeded/system text by id, plus the auto-created town template.
+ */
+async function ensurePublicCopy(sql: Sql): Promise<void> {
+  const copy: [string, string, string][] = [
+    ["comm_milstead", "Neighbors helping neighbors across Milstead", "Post a need, offer a skill, plan a gathering, or welcome someone new. Whether you have lived here for decades or just arrived, this is how we look out for each other."],
+    ["comm_vidalia", "Neighbors helping neighbors in the Sweet Onion City", "Vidalia, Georgia — a small town where people still gather: pickleball, church, downtown, the Onion Festival, and quiet tables where a new person can be known. Post a need, offer a skill, or show up to a gathering."],
+    ["comm_vidalia_dads", "Dads who want to stay close to their kids", "Coffee, pickleball, and honest friendship for dads in every season. Deeper support for fathers also lives at Kids Need Dads."],
+    ["comm_vidalia_makers", "Wood, metal, spoons, shops", "For people who like making things with their hands — woodworking, welding, blacksmithing, spoon carving. Share a project, borrow a tool, or host a shop night."],
+  ];
+  for (const [id, tagline, description] of copy) {
+    await sql`update communities set tagline = ${tagline}, description = ${description} where id = ${id}`;
+  }
+  await sql`
+    update communities
+    set description = 'Neighbors in ' || city || ', ' || state || ' sharing what''s on, lending a hand, and getting to know each other. Post a gathering, ask for help, or offer a skill.'
+    where description like '%We will not invent neighbors or events.%'
+  `;
+}
+
 /** Always-run correction: never treat Vidalia, Louisiana as this town. */
 async function ensureVidaliaGeorgiaNotLouisiana(sql: Sql): Promise<void> {
   await sql`
@@ -428,7 +451,7 @@ async function ensureVidaliaGeorgiaNotLouisiana(sql: Sql): Promise<void> {
     set city = 'Vidalia',
         state = 'GA',
         zip = coalesce(nullif(zip, ''), '30474'),
-        description = 'Public play at the Recreation Complex, 102 Stockyard Rd, Vidalia, Georgia. Free outdoor courts. Beginners welcome. We do not list gym hours from Vidalia, Louisiana.'
+        description = 'Public play at the Recreation Complex, 102 Stockyard Rd, Vidalia, Georgia. Free outdoor courts. Beginners welcome.'
     where id = 'comm_vidalia_pickleball'
   `;
   await sql`
@@ -440,7 +463,7 @@ async function ensureVidaliaGeorgiaNotLouisiana(sql: Sql): Promise<void> {
     update facilities
     set community_id = 'comm_vidalia',
         name = ${FBC_VIDALIA_GA.name},
-        description = ${`${FBC_VIDALIA_GA.address}. Sunday worship 10:30am. GriefShare and other ministries as posted at fbcvidalia.org. This is not fbcvidalia.com (Vidalia, Louisiana). Phone ${FBC_VIDALIA_GA.phone}.`},
+        description = ${`${FBC_VIDALIA_GA.address}. Sunday worship 10:30am. GriefShare and other ministries — see fbcvidalia.org. Phone ${FBC_VIDALIA_GA.phone}.`},
         amenities = ${JSON.stringify(["Worship", "GriefShare", "Downtown"])},
         rate_note = 'Public church — confirm ministries on fbcvidalia.org',
         contact_name = ${FBC_VIDALIA_GA.name}
@@ -471,7 +494,7 @@ async function ensureVidaliaV3(sql: Sql): Promise<void> {
       'vidalia-makers',
       'Vidalia makers',
       'Wood, metal, spoons, shops',
-      'For people who like making things with their hands — woodworking, welding, blacksmithing, spoon carving. Empty until real makers join. We do not invent a workshop full of neighbors.',
+      'For people who like making things with their hands — woodworking, welding, blacksmithing, spoon carving. Share a project, borrow a tool, or host a shop night.',
       'Vidalia',
       'GA',
       'interest',
@@ -646,7 +669,7 @@ export async function refreshVidaliaPublicEvents(sql: Sql): Promise<void> {
       community_id: "comm_vidalia",
       title: "GriefShare — First Baptist Vidalia, Georgia",
       description:
-        `Public listing from ${FBC_VIDALIA_GA.name} (${FBC_VIDALIA_GA.address}): a grief support group. The church homepage lists Tuesdays at 5:30pm; confirm the current session and room at ${FBC_VIDALIA_GA.griefshareUrl} before you go. This is not First Baptist in Vidalia, Louisiana.`,
+        `Public listing from ${FBC_VIDALIA_GA.name} (${FBC_VIDALIA_GA.address}): a grief support group. Tuesdays at 5:30pm; confirm the current session and room at ${FBC_VIDALIA_GA.griefshareUrl} before you go.`,
       kind: "meeting",
       location: FBC_VIDALIA_GA.address,
       starts_at: nextEasternISO(2, 17, 30),
@@ -654,9 +677,9 @@ export async function refreshVidaliaPublicEvents(sql: Sql): Promise<void> {
     {
       id: "evt_vidalia_downtown",
       community_id: "comm_vidalia",
-      title: "Downtown Vidalia — one honest conversation",
+      title: "Coffee downtown — come say hello",
       description:
-        "A standing invitation, not a fake meetup: Church Street, the PAL Theatre, or the library. RSVP if you want to be findable for coffee. Until someone else RSVPs, the chair is empty — that honesty is the point.",
+        "An open invitation to meet neighbors on Church Street, near the Pal Theatre and the library. RSVP so others know to look for you.",
       kind: "social",
       location: "Downtown Vidalia",
       starts_at: nextEasternISO(5, 10, 0),
@@ -664,11 +687,11 @@ export async function refreshVidaliaPublicEvents(sql: Sql): Promise<void> {
     {
       id: "evt_vidalia_dads_coffee",
       community_id: "comm_vidalia_dads",
-      title: "Vidalia dads — first coffee (open chair)",
+      title: "Vidalia dads — Saturday coffee",
       description:
-        "A standing invitation, not a fake meetup: the first dad who arrives in town can host coffee downtown and RSVP here so others can find the table. Until someone hosts, this is an empty chair — not a room full of invented brothers.",
+        "Dads, grab a coffee downtown and meet a few others who are in the same season. RSVP so we can save you a seat.",
       kind: "social",
-      location: "Downtown Vidalia — host names the table when they RSVP",
+      location: "Downtown Vidalia",
       starts_at: nextEasternISO(6, 9, 0),
     },
     {
@@ -676,7 +699,7 @@ export async function refreshVidaliaPublicEvents(sql: Sql): Promise<void> {
       community_id: "comm_vidalia",
       title: "PAW Patrol: Dino Movie watch party",
       description:
-        "Public listing from The Pal Theatre (thepaltheatre.com): Saturday Sept 5, 2026 at 10:00am. $5. Decorations, photo ops, themed treats, crafts, tattoos, raffle. Confirm tickets on the Pal site before you go. Air-conditioned — a good heat-of-the-day plan with a child.",
+        "Public listing from The Pal Theatre (thepaltheatre.com): Saturday Sept 5, 2026 at 10:00am. $5. Decorations, photo ops, themed treats, crafts, tattoos, raffle. Confirm tickets on the Pal site before you go. Air-conditioned and great for families.",
       kind: "family",
       location: "The Pal Theatre, 122 Church St, Vidalia",
       starts_at: easternDateISO("2026-09-05", 10, 0),
@@ -696,7 +719,7 @@ export async function refreshVidaliaPublicEvents(sql: Sql): Promise<void> {
       community_id: "comm_vidalia",
       title: "Freebird: The Ultimate Lynyrd Skynyrd Experience",
       description:
-        "Public listing from The Pal Theatre: Thursday Sept 3, 2026 at 7:00pm. Southern rock tribute. Tickets at thepaltheatre.com. Not a kid show.",
+        "Public listing from The Pal Theatre: Thursday Sept 3, 2026 at 7:00pm. Southern rock tribute. Tickets at thepaltheatre.com.",
       kind: "social",
       location: "The Pal Theatre, 122 Church St, Vidalia",
       starts_at: easternDateISO("2026-09-03", 19, 0),
@@ -716,7 +739,7 @@ export async function refreshVidaliaPublicEvents(sql: Sql): Promise<void> {
       community_id: "comm_vidalia",
       title: "Girls Night Out: Practical Magic 2",
       description:
-        "Public listing from The Pal Theatre: Saturday Sept 12, 2026 at 6:00pm. Two glasses of wine or wine slushies and charcuterie included. 21+ energy — not a child plan. Tickets at thepaltheatre.com.",
+        "Public listing from The Pal Theatre: Saturday Sept 12, 2026 at 6:00pm. Two glasses of wine or wine slushies and charcuterie included. Tickets at thepaltheatre.com.",
       kind: "social",
       location: "The Pal Theatre, 122 Church St, Vidalia",
       starts_at: easternDateISO("2026-09-12", 18, 0),
@@ -726,7 +749,7 @@ export async function refreshVidaliaPublicEvents(sql: Sql): Promise<void> {
       community_id: "comm_vidalia",
       title: "Wine Down Downtown",
       description:
-        "Public listing via Visit Vidalia / Downtown Vidalia Association: Thursday Sept 17, 2026. Confirm details at visitvidaliaga.com before you go. A way to meet people who already live here.",
+        "Public listing via Visit Vidalia / Downtown Vidalia Association: Thursday Sept 17, 2026. Confirm details at visitvidaliaga.com before you go.",
       kind: "social",
       location: "Downtown Vidalia",
       starts_at: easternDateISO("2026-09-17", 18, 0),

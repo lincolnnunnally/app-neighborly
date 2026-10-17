@@ -90,9 +90,8 @@ function EventsPage() {
         <div>
           <h1 className="font-display text-2xl font-semibold">Events & gatherings</h1>
           <p className="text-sm text-fg-muted">
-            Host a book club, spoon carving, trivia night, or tennis. Or post “who’s
-            interested?” and wait for real neighbors. Posting is free. A paid highlight
-            comes later — we will not charge until a sponsored slot is actually shown.
+            Host a book club, spoon carving, trivia night, or tennis — or post “who’s
+            interested?” and see who raises a hand. Posting is free.
           </p>
         </div>
         <Button onClick={() => setShowForm((v) => !v)}>
@@ -169,7 +168,7 @@ function EventsPage() {
           </div>
           <p className="text-xs text-fg-subtle">
             {kind === "invite"
-              ? "People tap “I’m interested.” When enough say yes, you name the table. We will not invent a crowd."
+              ? "Neighbors tap “I’m interested.” When enough say yes, you pick the time and place."
               : "Publishes to the community board. Confirm details with anyone who RSVPs."}
           </p>
           <Button type="submit">{kind === "invite" ? "Ask who's interested" : "Publish event"}</Button>

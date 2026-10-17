@@ -43,7 +43,7 @@ function CommunitiesPage() {
           <div>
             <h1 className="font-display text-3xl font-semibold tracking-tight">Communities</h1>
             <p className="mt-1 text-fg-muted">
-              Choose one or many. Vidalia, Georgia is the live test market now; Milstead stays available.
+              Find your neighborhood, church, or interest group. You can join more than one.
             </p>
           </div>
           <Button asChild>

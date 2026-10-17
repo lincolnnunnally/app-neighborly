@@ -97,7 +97,7 @@ export const Route = createFileRoute("/c/$slug")({
     const city = c ? `${c.city}, ${c.state}` : name;
     const title = `What's going on in ${name} — Neighborly`;
     const description = c?.tagline
-      ? `${c.tagline} Public board for ${city}. We will not invent neighbors or events.`
+      ? `${c.tagline}. What's on, who needs a hand, and who's offering one in ${city}.`
       : `Neighbor board for ${city}.`;
     return {
       meta: [
@@ -392,15 +392,13 @@ function CommunityPublicPage() {
 
         <p className="max-w-3xl text-fg-muted">{community.description}</p>
         <p className="text-sm text-fg-subtle">
-          Browse freely. To RSVP, offer help, or book a place, create a real
-          account — we will not invent a neighbor for you.
+          Browse freely. Create a free account to RSVP, offer help, or book a place.
         </p>
         {demand.length > 0 && (
           <aside className="rounded-[var(--radius-lg)] border border-border bg-bg-elevated p-4">
-            <p className="text-sm font-medium text-fg">What neighbors here actually marked</p>
-            <p className="mt-1 text-xs text-fg-subtle">
-              Real profiles only. A church, library, or organizer can host a first table — we
-              do not invent a class or email a room that does not exist.
+            <p className="text-sm font-medium text-fg">What neighbors here are into</p>
+            <p className="mt-1 text-sm text-fg-muted">
+              A church, library, or organizer could host the first one.
             </p>
             <ul className="mt-2 flex flex-wrap gap-2">
               {demand.map((d) => (
@@ -422,7 +420,7 @@ function CommunityPublicPage() {
               onChange={(e) => setQueryDraft(e.target.value)}
               data-testid="board-filter-input"
               aria-label={`Search the ${community.name} board`}
-              placeholder="Search this board — food pantry, bible study, mower, someone to change a lightbulb…"
+              placeholder="Search this board"
               className="pl-9"
             />
           </div>
@@ -842,7 +840,7 @@ function CommunityPublicPage() {
                 <p className="text-sm text-fg-muted">
                   {events.length
                     ? "Nothing in this date or kind filter. Choose This week or All dates to see the rest of the board."
-                    : "Nothing dated yet. If the town is quiet, host the first table — a book club, crochet, spoon carving, trivia at a restaurant, tennis. We will not invent a crowd."}
+                    : "Nothing on the calendar yet. Host the first one — a book club, a walk, trivia, or tennis."}
                 </p>
                 <Button size="sm" onClick={() => setShowHost(true)}>
                   Ask who&apos;s interested
@@ -888,8 +886,8 @@ function CommunityPublicPage() {
               </Button>
             </div>
             <p className="text-sm text-fg-muted">
-              Food pantries are listings — hours, ZIP limits, and what to bring. Pavilions
-              and rooms stay reservable. We will not invent pantry hours.
+              Food pantries with hours, who they serve, and what to bring — plus pavilions and
+              rooms you can reserve.
             </p>
             <div className="flex flex-wrap gap-2">
               {[
@@ -942,9 +940,7 @@ function CommunityPublicPage() {
                 {facilities.filter(isPantry).length === 0 && (
                   <div className="space-y-3">
                     <p className="text-sm text-fg-muted">
-                      No pantry listings yet for this board. We will not invent addresses
-                      or hours. Add or claim a real Toombs / Vidalia pantry if you can
-                      speak for it.
+                      No pantry listings yet for this board. Know one? Add it or claim it.
                     </p>
                     <Button
                       data-testid="add-pantry-empty"
@@ -1530,8 +1526,7 @@ function CommunityPublicPage() {
           <DialogHeader>
             <DialogTitle>Host something in {community.name}</DialogTitle>
             <DialogDescription>
-              Book club, crochet, tennis, trivia, spoon carving. Posting is free. We will
-              not invent people who said yes.
+              Book club, crochet, tennis, trivia, spoon carving. Posting is free.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
@@ -1585,10 +1580,6 @@ function CommunityPublicPage() {
                 />
               </div>
             </div>
-            <p className="text-xs text-fg-subtle">
-              A paid highlight or banner is not for sale yet. Free post first. We will not
-              take money until a sponsored slot is actually shown to neighbors.
-            </p>
           </div>
           <DialogFooter>
             <Button variant="secondary" onClick={() => setShowHost(false)}>
@@ -1617,7 +1608,7 @@ function CommunityPublicPage() {
                   });
                   toast.success(
                     hostKind === "invite"
-                      ? "Posted. Neighbors can tap interested — no invented crowd."
+                      ? "Posted. Neighbors can tap “interested.”"
                       : "Gathering posted.",
                   );
                   setShowHost(false);

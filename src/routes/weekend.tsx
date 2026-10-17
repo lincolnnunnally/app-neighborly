@@ -42,7 +42,7 @@ export const Route = createFileRoute("/weekend")({
         { title: `What's going on in ${label} this week — Neighborly` },
         {
           name: "description",
-          content: `Public gatherings, weather, and a calendar file for ${label}. We will not invent events or neighbors.`,
+          content: `Festivals, shows, park days, and neighbor gatherings in ${label} this weekend — with the weather and an add-to-calendar button.`,
         },
         { property: "og:title", content: `What's going on in ${label} this week` },
       ],
@@ -164,9 +164,7 @@ function WeekendPage() {
             What&apos;s going on in {plan?.place?.name || "your town"} this week
           </h1>
           <p className="text-lg text-fg-muted">
-            Public calendars stay theirs. Neighborly pulls the ones we can verify so you can plan a
-            Saturday with a child — or a quiet week when you don&apos;t. We will not invent a crowd.
-            A new town stays empty until someone adds a real listing.
+            Pick one, add it to your calendar, and go say hello.
           </p>
           <PlaceSearch defaultValue={plan?.place?.zip || plan?.place?.city || plan?.place?.name || ""} />
           <p className="text-sm">
@@ -186,13 +184,9 @@ function WeekendPage() {
               Open the board
             </Link>
           </p>
-          {plan?.refresh?.note && (
-            <p className="text-xs text-fg-subtle">{plan.refresh.note}</p>
-          )}
           {plan?.place?.created && (
             <p className="text-sm text-fg-muted">
-              You are the first person to open {plan.place.name} on Neighborly. The board is saved
-              so the next neighbor is not starting from zero.
+              Welcome! You&apos;re one of the first neighbors here from {plan.place.name}.
             </p>
           )}
           {plan?.arrivingNote && (
@@ -239,13 +233,13 @@ function WeekendPage() {
         <div className="space-y-3">
           <div className="flex flex-wrap gap-2">
             <Button variant={mode === "all" ? "default" : "secondary"} onClick={() => setMode("all")}>
-              This week&apos;s board
+              Everything
             </Button>
             <Button variant={mode === "child" ? "default" : "secondary"} onClick={() => setMode("child")}>
-              Weekend with her
+              With kids
             </Button>
             <Button variant={mode === "alone" ? "default" : "secondary"} onClick={() => setMode("alone")}>
-              When I don&apos;t have her
+              Just me
             </Button>
           </div>
           <ActivityFilters
@@ -262,7 +256,7 @@ function WeekendPage() {
             <p className="text-sm text-fg-muted">
               {plan?.all?.length
                 ? "Nothing in this filter. Clear the date or kind to see the rest of the board."
-                : "No dated listings in this window yet. Host one — a book club, tennis, trivia — or use the Pal, Visit Vidalia, and Parks & Rec links below. We will not invent a crowd."}
+                : `Nothing posted for ${plan?.place?.name || "this town"} this weekend yet. Be the first — host a coffee, a walk, or a game night, and neighbors nearby will see it.`}
             </p>
           )}
           {loading && !plan && <p className="text-sm text-fg-muted">Loading this week&apos;s board…</p>}
@@ -273,11 +267,7 @@ function WeekendPage() {
 
         {plan && (plan.other ?? []).length > 0 && (
           <section className="space-y-3">
-            <h2 className="font-display text-xl font-semibold">Doesn&apos;t match how you like to spend time</h2>
-            <p className="text-sm text-fg-muted">
-              Hidden from your main list because of indoor/outdoor or seated vs walking. Still
-              real public listings — tap through if you want them.
-            </p>
+            <h2 className="font-display text-xl font-semibold">More this weekend</h2>
             <div className="grid gap-4 lg:grid-cols-2">
               {(plan.other ?? []).map((slot) => (
                 <SlotCard key={slot.id} slot={slot} />
@@ -290,18 +280,22 @@ function WeekendPage() {
           <Card>
             <CardHeader>
               <CardTitle>Meet people</CardTitle>
-              <CardDescription>Friendship, not a feed.</CardDescription>
+              <CardDescription>Coffee, a walk, a game night.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
               <a className="block underline" href="https://kindred.unitedundergod.org/">
                 Kindred — friends who build you up
               </a>
-              <Link className="block underline" to="/c/$slug" params={{ slug: "vidalia-dads" }}>
-                Vidalia dads
-              </Link>
-              <Link className="block underline" to="/c/$slug" params={{ slug: "vidalia-pickleball" }}>
-                Pickleball
-              </Link>
+              {(plan?.place?.slug || "vidalia").startsWith("vidalia") && (
+                <>
+                  <Link className="block underline" to="/c/$slug" params={{ slug: "vidalia-dads" }}>
+                    Vidalia dads
+                  </Link>
+                  <Link className="block underline" to="/c/$slug" params={{ slug: "vidalia-pickleball" }}>
+                    Pickleball
+                  </Link>
+                </>
+              )}
               <a className="block underline" href="https://presence.unitedundergod.org/">
                 Presence — coffee, a walk, a meal
               </a>
@@ -310,7 +304,7 @@ function WeekendPage() {
           <Card>
             <CardHeader>
               <CardTitle>Get established</CardTitle>
-              <CardDescription>Belonging in this town.</CardDescription>
+              <CardDescription>Settle in and find your place.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
               <Link
@@ -318,10 +312,10 @@ function WeekendPage() {
                 to="/c/$slug"
                 params={{ slug: plan?.place?.slug || "vidalia" }}
               >
-                {plan?.place?.name || "Vidalia"} board — host, needs, services, events
+                {plan?.place?.name || "Vidalia"} board — gatherings, help, and services
               </Link>
               <Link className="block underline" to="/churches" search={{ zip: plan?.place?.zip || "30474" }}>
-                Neighborly Churches — same ChurchConnect records
+                Churches near {plan?.place?.name || "you"}
               </Link>
               <a className="block underline" href="https://churchconnect.unitedundergod.org/find-church">
                 ChurchConnect finder
@@ -329,15 +323,12 @@ function WeekendPage() {
               <a className="block underline" href="https://liveonmission.unitedundergod.org/">
                 Live On Mission — a small way to serve
               </a>
-              <a className="block underline" href="https://presence.unitedundergod.org/t/LOOKUP">
-                You Are Awesome coin — look up
-              </a>
             </CardContent>
           </Card>
           <Card>
             <CardHeader>
               <CardTitle>Where listings come from</CardTitle>
-              <CardDescription>We do not replace their calendars.</CardDescription>
+              <CardDescription>Confirm before you go.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
               {(plan?.sources ?? []).map((s) => (

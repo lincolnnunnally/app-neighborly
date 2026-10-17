@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { isListedCommunity, looksLikeQaRow } from "./public-filters";
 import { getSql } from "@/lib/db";
 import { authMiddleware } from "@/lib/auth/middleware";
 import { parseJsonArray, uid } from "@/lib/utils";
@@ -267,7 +268,7 @@ export const listCommunities = createServerFn({ method: "GET" }).handler(async (
   const rows = await sql<Record<string, unknown>>`
     select * from communities order by is_featured desc, name asc
   `;
-  return rows.map(mapCommunity);
+  return rows.map(mapCommunity).filter((c) => isListedCommunity(c.slug));
 });
 
 export const getCommunityBySlug = createServerFn({ method: "GET" })
@@ -407,10 +408,10 @@ export const getCommunityFeed = createServerFn({ method: "GET" })
 
     return {
       community,
-      needs: visible(needsRows.map(mapNeed)),
-      services: visible(serviceRows.map(mapService)),
+      needs: visible(needsRows.map(mapNeed)).filter((r) => !looksLikeQaRow(r)),
+      services: visible(serviceRows.map(mapService)).filter((r) => !looksLikeQaRow(r)),
       tools: visible(toolRows.map(mapTool)),
-      events: visible(eventRows.map(mapEvent)),
+      events: visible(eventRows.map(mapEvent)).filter((r) => !looksLikeQaRow(r)),
       facilities: facilityRows.map(mapFacility),
       neighbors,
     };

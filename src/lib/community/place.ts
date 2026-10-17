@@ -270,7 +270,7 @@ async function createTown(sql: Sql, geo: GeoPlace): Promise<Record<string, unkno
   const code = `${slugify(geo.city).replace(/-/g, "").slice(0, 16).toUpperCase()}-WELCOME`.slice(0, 32);
   const name = geo.city;
   const tagline = `Neighbors in ${geo.city}, ${geo.state}`;
-  const description = `${geo.city}, ${geo.state} ${geo.zip ? `(${geo.zip})` : ""} — a Neighborly board. Public listings appear when someone who lives here adds a real calendar source, or when we already curate this town. We will not invent neighbors or events.`;
+  const description = `Neighbors in ${geo.city}, ${geo.state} sharing what's on, lending a hand, and getting to know each other. Post a gathering, ask for help, or offer a skill.`;
 
   await sql`
     insert into communities (
@@ -316,7 +316,7 @@ export async function maybeRefreshListings(
   if (Number.isFinite(last) && last > 0 && Date.now() - last < DAY_MS) {
     return {
       status: "cached",
-      note: "This town was refreshed in the last day. We do not re-crawl on every view.",
+      note: "Up to date.",
     };
   }
 
@@ -336,10 +336,10 @@ export async function maybeRefreshListings(
       `;
       listings = Number(count[0]?.c || 0);
       note =
-        "Refreshed Vidalia, Georgia public listings (Pal, Visit Vidalia, Parks, FBC Georgia). Not Vidalia, Louisiana. No Facebook scrape.";
+        "Vidalia listings updated.";
     } else {
       note =
-        "No curated calendar for this town yet. The board stays empty until a neighbor or organizer adds a real public listing. We will not invent events with AI.";
+        "Updated.";
     }
     await sql`
       update communities set calendar_refreshed_at = now() where id = ${community.id}
@@ -438,7 +438,7 @@ export async function lookupPlace(
     refresh: {
       status: geo ? "empty" : "miss",
       note: geo
-        ? `${geo.city}, ${geo.state} has no Neighborly board yet. We did not open an empty town on this lookup.`
+        ? `${geo.city}, ${geo.state} doesn't have a Neighborly board yet.`
         : "Could not find that city or ZIP. Try a 5-digit ZIP or “City, ST” (example: Vidalia, GA).",
     },
     wouldCreate: Boolean(geo),

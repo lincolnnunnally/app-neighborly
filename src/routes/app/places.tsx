@@ -236,8 +236,7 @@ function PlacesPage() {
           }}
         >
           <p className="text-sm text-fg-muted">
-            Only add a pantry you can speak for. Hours and address must be real. We
-            will not invent listings.
+            Add a pantry you can speak for, with its real hours and address.
           </p>
           <div className="space-y-1.5">
             <Label>Pantry name</Label>
@@ -385,7 +384,7 @@ function PlacesPage() {
         {communityPantries.length === 0 && (
           <p className="text-sm text-fg-muted">
             {facilities.filter(isPantry).length === 0
-              ? "No pantry listings on this board yet. We did not seed invented hours — add or claim a real one."
+              ? "No pantry listings on this board yet. Know one? Add it or claim it."
               : `No pantry matches “${pantryFilter}”. Clear the box to see all of them.`}
           </p>
         )}

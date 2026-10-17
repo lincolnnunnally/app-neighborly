@@ -559,7 +559,7 @@ function OnboardingPage() {
                         <span className="flex flex-wrap items-center gap-2">
                           <span className="font-medium text-fg">{c.name}</span>
                           <Badge variant="secondary">{KIND_LABELS[c.kind]}</Badge>
-                          {c.is_featured && <Badge>Test market</Badge>}
+                          {c.is_featured && <Badge>Featured</Badge>}
                         </span>
                         <span className="mt-0.5 block text-sm text-fg-muted">{c.tagline}</span>
                         <span className="mt-1 block text-xs text-fg-subtle">
@@ -668,8 +668,7 @@ function OnboardingPage() {
               <div className="space-y-2">
                 <p className="text-sm font-medium">Recommended next steps</p>
                 <p className="text-xs text-fg-muted">
-                  We do not create accounts in other apps for you. Open the door when you
-                  are ready. Friendship before dating. More than one group is allowed.
+                  A few good places to start. Join as many groups as you like.
                 </p>
                 {recommendNextSteps({
                   life_season: lifeSeason,

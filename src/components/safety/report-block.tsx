@@ -126,7 +126,7 @@ export function ReportBlockControls({
           <DialogHeader>
             <DialogTitle>Report</DialogTitle>
             <DialogDescription>
-              Reports are private. They go to the owner ops desk for review — this is not
+              Reports are private. Our team reviews every one. This is not
               911. If someone is in immediate danger, call local emergency services or 988.
             </DialogDescription>
           </DialogHeader>

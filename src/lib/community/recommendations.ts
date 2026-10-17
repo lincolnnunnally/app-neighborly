@@ -37,7 +37,7 @@ export function recommendNextSteps(profile: Partial<Profile>): NextStep[] {
   steps.push({
     kind: "app",
     title: "This weekend in Vidalia",
-    why: "Weather, Pal Theatre, parks, and a calendar file — with your daughter or on your own.",
+    why: "Festivals, shows, and park days — with the kids or on your own.",
     href: "/weekend",
   });
   steps.push({
@@ -63,7 +63,7 @@ export function recommendNextSteps(profile: Partial<Profile>): NextStep[] {
     steps.push({
       kind: "app",
       title: "Kids Need Dads",
-      why: "A place to be accepted and become the dad your kids still have. Use the same email when you are ready — we do not invent a second login for you.",
+      why: "A place to be accepted and become the dad your kids still have.",
       href: "https://dads.unitedundergod.org",
     });
   }
@@ -90,7 +90,7 @@ export function recommendNextSteps(profile: Partial<Profile>): NextStep[] {
     steps.push({
       kind: "app",
       title: "Aligned Souls (optional, later)",
-      why: "A separate door for a companion — not a fix for loneliness. Become first. We will not create this account for you.",
+      why: "A place to meet a companion, when you are ready.",
       href: "https://alignedsouls.unitedundergod.org",
     });
   }

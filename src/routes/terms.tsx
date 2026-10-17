@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/layout/site-header";
-import { CounselReviewBanner } from "@/components/legal/counsel-review-banner";
 
 export const Route = createFileRoute("/terms")({ component: TermsPage });
 
@@ -17,7 +16,6 @@ function TermsPage() {
         </p>
         <h1 className="font-display text-3xl font-semibold text-fg">Terms of Service</h1>
         <p className="text-sm text-fg-muted">Last updated: August 29, 2026</p>
-        <CounselReviewBanner product="Neighborly" />
         <div className="space-y-4 text-fg-muted">
           <p>
             Neighborly (“the Platform”) is a community board operated by{" "}
@@ -28,8 +26,8 @@ function TermsPage() {
           <h2 className="font-display text-xl font-semibold text-fg">1. Purpose</h2>
           <p>
             Neighborly helps neighbors post real needs, offer real help, plan gatherings, and
-            look after one another. You must post honestly. Do not invent people, needs,
-            businesses, or events. Empty boards stay empty until a real person posts.
+            look after one another. Please post honestly: only real people, needs,
+            businesses, and events.
           </p>
           <h2 className="font-display text-xl font-semibold text-fg">2. Your responsibilities</h2>
           <ul className="list-disc space-y-2 pl-5">
@@ -40,8 +38,8 @@ function TermsPage() {
             </li>
             <li>
               Do not harass, scam, or endanger anyone. Use Report on a person, need, or
-              event. Use Block to remove someone from your feed. Reports go to the owner
-              ops desk for review.
+              event. Use Block to remove someone from your feed. Reports go to our team
+              for review.
             </li>
             <li>
               Obey local law when offering paid services. Youth offerings need parental
@@ -69,24 +67,16 @@ function TermsPage() {
           </ul>
           <h2 className="font-display text-xl font-semibold text-fg">4. Accounts</h2>
           <p>
-            Keep your login secure. Neighborly email/password accounts are separate from
-            Kindred, Kids Need Dads, Presence, Aligned Souls, and Live On Mission unless you
-            used the same Google/X identity. A password reset here does not change those
-            other apps. We may suspend accounts that abuse the board, post fabricated
+            Keep your login secure. Your Neighborly account is separate from other
+            United Under God apps unless you sign in with the same Google or X account. We may suspend accounts that abuse the board, post fabricated
             content as real, or harm the community.
           </p>
-          <h2 className="font-display text-xl font-semibold text-fg">5. First market</h2>
-          <p>
-            Vidalia, Georgia is the first live community we are serving. Listings you see
-            are real posts from people who joined — we will not pad the board with fake
-            neighbors.
-          </p>
-          <h2 className="font-display text-xl font-semibold text-fg">6. Changes</h2>
+          <h2 className="font-display text-xl font-semibold text-fg">5. Changes</h2>
           <p>
             We may update these terms as the product grows. The date at the top will
             change. Continued use after an update means you accept the current version.
           </p>
-          <h2 className="font-display text-xl font-semibold text-fg">7. Contact</h2>
+          <h2 className="font-display text-xl font-semibold text-fg">6. Contact</h2>
           <p>
             <a className="text-primary underline" href="mailto:lincoln@unitedundergod.org">
               lincoln@unitedundergod.org

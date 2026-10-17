@@ -161,7 +161,7 @@ export function PlaceSearch({
       },
       () => {
         setBusy(false);
-        setError("Location was blocked. Type a ZIP or City, ST instead — we will not guess.");
+        setError("Location is turned off. Type a ZIP or City, ST instead.");
       },
       { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 },
     );
@@ -177,7 +177,7 @@ export function PlaceSearch({
         setError(d.error || "Could not open that board.");
         return;
       }
-      toast.message(`Opened an empty board for ${d.community.name}. We did not invent events.`);
+      toast.success(`Welcome to ${d.community.name} on Neighborly.`);
       await go(d);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not open that board.");
@@ -205,9 +205,7 @@ export function PlaceSearch({
           <LocateFixed className="h-4 w-4" />
           Use my location
         </Button>
-        <p className="text-xs text-fg-subtle">
-          Location is optional. A probe never opens an empty town — you confirm first.
-        </p>
+        <p className="text-base text-fg-muted">Or type a ZIP like 30474, or a town like Vidalia, GA.</p>
       </div>
       {pendingCreate?.geo && (
         <div className="rounded-[var(--radius-lg)] border border-border bg-bg-elevated p-3 text-sm">
@@ -216,12 +214,11 @@ export function PlaceSearch({
             {pendingCreate.geo.zip ? ` ${pendingCreate.geo.zip}` : ""} has no Neighborly board yet.
           </p>
           <p className="mt-1 text-fg-muted">
-            We can save an honest empty board so the next neighbor is not starting from zero. We
-            will not invent events.
+            Start one so neighbors nearby can share what&apos;s on and lend a hand.
           </p>
           <div className="mt-2 flex flex-wrap gap-2">
             <Button type="button" size="sm" disabled={busy} onClick={() => void confirmCreate()}>
-              Open empty board
+              Start the {pendingCreate.geo.city} board
             </Button>
             <Button type="button" size="sm" variant="ghost" onClick={() => setPendingCreate(null)}>
               Not now
