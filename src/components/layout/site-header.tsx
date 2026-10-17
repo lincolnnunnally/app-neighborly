@@ -1,5 +1,5 @@
 import { useEffect, useSyncExternalStore } from "react";
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useRouter, useRouterState } from "@tanstack/react-router";
 import { HandHeart, Menu, X } from "lucide-react";
 import { SignedIn } from "@/lib/auth/gates";
 import { authEnabled, signOut } from "@/lib/auth/client";
@@ -111,6 +111,47 @@ function subscribeMenu(l: () => void) {
     menuListeners.delete(l);
   };
 }
+/**
+ * A page change (e.g. Vidalia -> Covington) runs in a React transition, so the
+ * old page — and its header with the old town — stays on screen until the new
+ * one is ready. The router's own events say when that starts and ends; kept in
+ * an external store so the header hears about it right away.
+ */
+let swapping = false;
+const swapListeners = new Set<() => void>();
+function setSwapping(next: boolean) {
+  if (swapping === next) return;
+  swapping = next;
+  for (const l of swapListeners) l();
+}
+function subscribeSwap(l: () => void) {
+  swapListeners.add(l);
+  return () => {
+    swapListeners.delete(l);
+  };
+}
+let swapHooked = false;
+function useTownSwapping(): boolean {
+  const router = useRouter();
+  useEffect(() => {
+    if (swapHooked) return;
+    swapHooked = true;
+    let safety: ReturnType<typeof setTimeout> | undefined;
+    router.subscribe("onBeforeNavigate", (e) => {
+      if (!e.hrefChanged) return;
+      setSwapping(true);
+      // Never leave the menu stuck if a navigation is dropped without rendering.
+      clearTimeout(safety);
+      safety = setTimeout(() => setSwapping(false), 10000);
+    });
+    router.subscribe("onRendered", () => {
+      clearTimeout(safety);
+      setSwapping(false);
+    });
+  }, [router]);
+  return useSyncExternalStore(subscribeSwap, () => swapping, () => false);
+}
+
 function useMenuOpen(path: string): [boolean, (open: boolean) => void] {
   const m = useSyncExternalStore(subscribeMenu, () => menuState, () => MENU_CLOSED);
   const open = m.open && m.path === path;
@@ -127,7 +168,8 @@ export function SiteHeader({ solid: _solid = true }: { solid?: boolean }) {
   // While the next page loads (e.g. Vidalia -> Covington), this header still
   // holds the old town. A ☰ tap now is remembered for the incoming page and the
   // menu opens once it has arrived, with that town's links, never the old one's.
-  const settling = useRouterState({ select: (s) => s.status === "pending" || s.isLoading });
+  const routerPending = useRouterState({ select: (s) => s.status === "pending" || s.isLoading });
+  const settling = useTownSwapping() || routerPending;
   const open = wantOpen && !settling;
   const place = useCurrentPlace();
   const NAV = navFor(place);
