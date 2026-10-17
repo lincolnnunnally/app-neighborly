@@ -425,7 +425,7 @@ export function suggestDoors(parsed: ParsedQuery, opts: { slug?: string } = {}):
     doors.push({
       id: "cc-get-help",
       title: "ChurchConnect — Get Help",
-      why: "Church food assistance lives there. Neighborly does not copy that directory.",
+      why: "Churches nearby that help with groceries and meals.",
       href: "https://churchconnect.unitedundergod.org/get-help",
       external: true,
     });

@@ -2,6 +2,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { getSql } from "@/lib/db";
 import { listBoardEvents, listSisterCityEvents, parseEventStartMs, type BoardEventRow } from "./board-events";
 import { ensureSeeded } from "./seed";
+import { canViewCommunity } from "./access";
+import { isMembersOnlyCommunity } from "./public-filters";
 import { findOrCreatePlace, geocodeQuery, resolveCommunityForPlace } from "./place";
 import { searchPublicEvents, normalizeRadius } from "@/lib/events/search";
 import { inferCategory } from "@/lib/events/parse";
@@ -19,7 +21,7 @@ const TOWN_COORDS: Record<string, { lat: number; lon: number }> = {
   "lake sinclair,ga": { lat: 33.1665, lon: -83.2702 },
 };
 
-async function pointFor(c: { lat?: number | null; lon?: number | null; city?: string; state?: string; zip?: string }) {
+export async function pointFor(c: { lat?: number | null; lon?: number | null; city?: string; state?: string; zip?: string }) {
   if (c.lat != null && c.lon != null) return { lat: Number(c.lat), lon: Number(c.lon) };
   const key = `${(c.city || "").toLowerCase()},${(c.state || "").toLowerCase()}`;
   if (TOWN_COORDS[key]) return TOWN_COORDS[key];
@@ -35,7 +37,7 @@ async function pointFor(c: { lat?: number | null; lon?: number | null; city?: st
   return null;
 }
 
-function boardRowToEvent(row: BoardEventRow, community: Community, pt: { lat: number; lon: number }): PublicEvent | null {
+export function boardRowToEvent(row: BoardEventRow, community: Community, pt: { lat: number; lon: number }): PublicEvent | null {
   const startMs = parseEventStartMs(row.starts_at);
   if (startMs == null) return null;
   const endMs = row.ends_at ? parseEventStartMs(row.ends_at) : null;
@@ -57,6 +59,7 @@ function boardRowToEvent(row: BoardEventRow, community: Community, pt: { lat: nu
     category: row.kind === "family" ? "family" : inferCategory(row.title, row.description),
     free: null,
     summary: row.description.slice(0, 280),
+    rsvpCount: Number(row.rsvp_count ?? 0),
   };
 }
 
@@ -251,11 +254,15 @@ function buildArrivingNote(days: WeatherDay[], withChild: WeekendSlot[], placeNa
   return parts.join(" ");
 }
 
-/** The weekend days (Fri–Sun) drive the one-line weather note. */
+/** Fri–Sun of the coming weekend. The forecast strips and the weather line all use this same range. */
+export function weekendWeatherDays(days: WeatherDay[]): WeatherDay[] {
+  const wk = days.filter((d) => [5, 6, 0].includes(new Date(`${d.date}T12:00:00Z`).getUTCDay())).slice(0, 3);
+  return wk.length ? wk : days.slice(0, 3);
+}
+
 function weatherNoteFor(days: WeatherDay[], error: string | null): string {
   if (error) return "The forecast is unavailable right now — check the sky before you head out.";
-  const wk = days.filter((d) => [5, 6, 0].includes(new Date(`${d.date}T12:00:00Z`).getUTCDay()));
-  const use = wk.length ? wk : days.slice(0, 3);
+  const use = weekendWeatherDays(days);
   if (!use.length) return "";
   const hi = Math.max(...use.map((d) => d.maxF));
   const lo = Math.min(...use.map((d) => d.minF));
@@ -529,10 +536,18 @@ export const loadWeekendPlan = createServerFn({ method: "GET" })
       interests.length || data.setting || data.mobility
         ? { interests, setting_pref: data.setting || "", mobility: data.mobility || "" }
         : null;
-    return buildWeekendPlan({
+    const plan = await buildWeekendPlan({
       slug: data.place,
       query: data.query || data.place,
       prefs,
       radiusMi: data.radius,
     });
+    // Members-only boards: no weekend view for visitors (null → 404).
+    if (plan.place.board && isMembersOnlyCommunity(plan.place.slug)) {
+      const { getSql } = await import("@/lib/db");
+      const sql = await getSql();
+      const row = await sql<{ id: string }>`select id from communities where slug = ${plan.place.slug} limit 1`;
+      if (!row[0] || !(await canViewCommunity(sql, { id: row[0].id, slug: plan.place.slug }))) return null;
+    }
+    return plan;
   });

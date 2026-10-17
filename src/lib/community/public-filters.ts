@@ -4,6 +4,17 @@
  */
 export const UNLISTED_COMMUNITY_SLUGS = new Set<string>(["lakeside-getaway"]);
 
+/**
+ * Members-only boards: signed-out visitors and non-members get a 404 on the
+ * board, its invite link and its weekend view. Nothing is deleted.
+ * To reopen a board, remove its slug here.
+ */
+export const MEMBERS_ONLY_COMMUNITY_SLUGS = new Set<string>(["lakeside-getaway"]);
+
+export function isMembersOnlyCommunity(slug: string): boolean {
+  return MEMBERS_ONLY_COMMUNITY_SLUGS.has(slug);
+}
+
 export function isListedCommunity(slug: string): boolean {
   return !UNLISTED_COMMUNITY_SLUGS.has(slug);
 }

@@ -6,6 +6,7 @@ import { authClient, authEnabled } from "@/lib/auth/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { SUPPORT_EMAIL } from "@/lib/contact";
 import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 
 type ResetSearch = { token?: string; error?: string };
@@ -53,7 +54,7 @@ function ResetPasswordPage() {
         }) => Promise<{ error?: { message?: string } | null }>;
       };
       if (!client.resetPassword) {
-        setFormError("Password reset is not available in this build. Write lincoln@unitedundergod.org.");
+        setFormError(`Password reset isn't working right now. Email ${SUPPORT_EMAIL} and we'll help you get back in.`);
         return;
       }
       const res = await client.resetPassword({

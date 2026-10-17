@@ -367,10 +367,10 @@ export async function searchPublicChurches(input: ChurchSearchInput): Promise<{
 
   const note =
     mapped.length === 0
-      ? "No churches matched. Try a nearby ZIP."
+      ? ""
       : mapped.every((c) => !c.service_times && !c.worship_style && !c.denomination)
-        ? "Names and addresses are from ChurchConnect. Service times, worship style, and denomination appear here when CC publishes them."
-        : "Live from ChurchConnect public records. Confirm times on their profile before you go.";
+        ? "Service times, worship style, and denomination show here when the church shares them. Confirm times before you go."
+        : "Confirm service times with the church before you go.";
 
   return {
     churches: mapped.slice(0, limit),

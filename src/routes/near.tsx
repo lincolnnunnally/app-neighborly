@@ -31,6 +31,11 @@ function NearPage() {
           </p>
         </div>
         <PlaceSearch size="lg" />
+        <figure className="overflow-hidden rounded-[var(--radius-xl)] border border-border">
+          <img src="/img/vidalia/cityhall.jpg" alt="The Vidalia Municipal Building downtown" className="aspect-[16/9] w-full object-cover" />
+          <figcaption className="bg-bg-elevated px-4 py-2 text-sm text-fg-muted">Downtown Vidalia. Photo by Michael Rivera (CC BY-SA 4.0), via Wikimedia Commons.</figcaption>
+        </figure>
+
         <Card>
           <CardHeader>
             <CardTitle>What you&apos;ll find</CardTitle>

@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 
 export const PHOTO_CREDITS =
-  "Photos: water tower by Geogre (public domain); downtown park fountain, amphitheater and Municipal Building by Michael Rivera (CC BY-SA 4.0); Vidalia onions by ryan griffis (CC BY-SA 2.0), via Wikimedia Commons.";
+  "Photos: water tower by Geogre (public domain); downtown park fountain, amphitheater and Municipal Building by Michael Rivera (CC BY-SA 4.0); Vidalia onions by ryan griffis (CC BY-SA 2.0); New Branch United Methodist Church by Michael Rivera (CC BY-SA 4.0); coffee by Artem Beliaikin (CC BY 2.0); pickleball courts by Wikideas1 (CC0), via Wikimedia Commons.";
 
 export function SiteFooter({ credits = false }: { credits?: boolean }) {
   return (
@@ -12,6 +12,9 @@ export function SiteFooter({ credits = false }: { credits?: boolean }) {
           live. · A United Under God project
         </p>
         <nav aria-label="Footer" className="-mx-2 flex flex-wrap gap-x-2">
+          <Link to="/about" className="tap px-2 text-fg-muted no-underline hover:text-fg">
+            About
+          </Link>
           <Link to="/how-it-works" className="tap px-2 text-fg-muted no-underline hover:text-fg">
             How it works
           </Link>
@@ -21,9 +24,9 @@ export function SiteFooter({ credits = false }: { credits?: boolean }) {
           <Link to="/terms" className="tap px-2 text-fg-muted no-underline hover:text-fg">
             Terms
           </Link>
-          <a href="/how-it-works#help" className="tap px-2 text-fg-muted no-underline hover:text-fg">
+          <Link to="/help" className="tap px-2 text-fg-muted no-underline hover:text-fg">
             Need help?
-          </a>
+          </Link>
         </nav>
         {credits && <p className="text-xs leading-relaxed text-fg-muted">{PHOTO_CREDITS}</p>}
       </div>

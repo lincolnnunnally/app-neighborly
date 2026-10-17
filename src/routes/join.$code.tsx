@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute, notFound } from "@tanstack/react-router";
+import { NotFoundPage } from "@/components/layout/not-found";
 import { QrCode, Share2 } from "lucide-react";
 import { SiteHeader } from "@/components/layout/site-header";
 import { CommunityCover } from "@/components/community/cover";
@@ -10,6 +11,17 @@ import type { Community } from "@/lib/community/types";
 
 export const Route = createFileRoute("/join/$code")({
   head: () => ({ meta: [{ title: "You're invited — Neighborly" }, { name: "robots", content: "noindex, nofollow" }] }),
+  loader: async ({ params }) => {
+    const r = await resolveInvite({ data: params.code }).catch(() => undefined);
+    if (r === null) throw notFound();
+    return null;
+  },
+  notFoundComponent: () => (
+    <NotFoundPage
+      title="We couldn't find that invite"
+      line="The link may be old or mistyped. Here's what's on this weekend instead."
+    />
+  ),
   component: JoinInvitePage,
 });
 

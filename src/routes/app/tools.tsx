@@ -113,7 +113,7 @@ function ToolsPage() {
           <h1 className="font-display text-2xl font-semibold">Tools to borrow</h1>
           <p className="text-sm text-fg-muted">
             List a mower, welder, trailer, or other physical tool. Neighbors book dates
-            and arrange pickup here. Services stay for skill and labor — this is inventory.
+            and arrange pickup here. (Offering your time or a skill? List it under Services.)
           </p>
         </div>
         <Button onClick={() => setShowForm((v) => !v)}>

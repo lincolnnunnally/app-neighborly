@@ -25,9 +25,7 @@ export const Route = createFileRoute("/api/churches")({
             ok: true,
             ...result,
             copied: false,
-            note:
-              result.note +
-              " Neighborly does not keep a second church database — these are ChurchConnect records.",
+            note: result.note,
           });
         } catch (error) {
           const message = error instanceof Error ? error.message : "Church lookup failed";

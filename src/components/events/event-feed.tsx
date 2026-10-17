@@ -148,6 +148,8 @@ export function WeekendFeed({
   const shown = limit ? events.slice(0, limit) : events;
   const groups = groupByDay(shown, feed ? Date.parse(feed.generatedAt) : 0);
   const [allNearby, setAllNearby] = useState(false);
+  const [allNext, setAllNext] = useState(false);
+  const near = feed?.place.zip || feed?.place.label || zip || "";
   const wide = feed?.wideRadiusMi ?? 60;
 
   return (
@@ -168,7 +170,7 @@ export function WeekendFeed({
       ) : limit ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {shown.map((e) => (
-            <EventCard key={e.id} event={e} />
+            <EventCard key={e.id} event={e} near={near} />
           ))}
         </div>
       ) : (
@@ -177,7 +179,7 @@ export function WeekendFeed({
             <h3 className="text-base font-bold uppercase tracking-wide text-fg-muted">{dayHeading(key)}</h3>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {list.map((e) => (
-                <EventCard key={e.id} event={e} />
+                <EventCard key={e.id} event={e} near={near} />
               ))}
             </div>
           </section>
@@ -189,12 +191,12 @@ export function WeekendFeed({
           <div>
             <h3 className="font-display text-2xl font-semibold text-fg">Worth the drive this weekend</h3>
             <p className="text-base text-fg-muted">
-              {feed?.radiusMi ?? 25}–{wide} miles from {town}.
+              {nearby.length} {nearby.length === 1 ? "event" : "events"} {feed?.radiusMi ?? 25}–{wide} miles from {town}.
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {(allNearby ? nearby : nearby.slice(0, limit ? Math.max(2, limit - shown.length) : 6)).map((e) => (
-              <EventCard key={e.id} event={e} compact />
+              <EventCard key={e.id} event={e} compact near={near} />
             ))}
           </div>
           {!limit && !allNearby && nearby.length > 6 && (
@@ -209,13 +211,20 @@ export function WeekendFeed({
         <section className="space-y-4">
           <div>
             <h3 className="font-display text-2xl font-semibold text-fg">Next weekend</h3>
-            <p className="text-base text-fg-muted">{feed?.nextWindow.label}</p>
+            <p className="text-base text-fg-muted">
+              {feed?.nextWindow.label} · {next.length} {next.length === 1 ? "event" : "events"} within {wide} miles
+            </p>
           </div>
           <div className="grid gap-3 md:grid-cols-2">
-            {next.slice(0, limit ? 4 : 10).map((e) => (
-              <EventRow key={e.id} event={e} />
+            {(allNext ? next : next.slice(0, limit ? 4 : 10)).map((e) => (
+              <EventRow key={e.id} event={e} near={near} />
             ))}
           </div>
+          {!limit && !allNext && next.length > 10 && (
+            <Button variant="secondary" onClick={() => setAllNext(true)}>
+              Show {next.length - 10} more
+            </Button>
+          )}
         </section>
       )}
     </div>

@@ -180,7 +180,7 @@ function CommunityPublicPage() {
     if (tab !== "events" || weekendFeed !== undefined) return;
     let live = true;
     loadWeekendPlan({ data: { place: slug, query: slug } })
-      .then((p) => live && setWeekendFeed(p.feed))
+      .then((p) => live && setWeekendFeed(p?.feed ?? null))
       .catch(() => live && setWeekendFeed(null));
     return () => {
       live = false;
@@ -544,9 +544,31 @@ function CommunityPublicPage() {
               </button>
             ))}
             {needs.length === 0 && (
-              <p className="text-sm text-fg-muted">
-                No needs posted yet. Be the first — ask for a hand, or offer one.
-              </p>
+              <div className="surface-card space-y-3 p-5" data-testid="needs-empty">
+                <HandHeart className="h-7 w-7 text-primary" aria-hidden />
+                <h3 className="font-display text-xl font-semibold text-fg">No needs posted yet</h3>
+                <p className="text-base text-fg-muted">Be the first — ask for a hand, or offer one.</p>
+                <div className="flex flex-wrap gap-2">
+                  <Button onClick={() => setShowPostNeed(true)}>Ask for a hand</Button>
+                  <Button
+                    variant="secondary"
+                    onClick={async () => {
+                      if (user) {
+                        await navigate({ to: OFFER_SERVICE_PATH });
+                        return;
+                      }
+                      const ok = await ensureReady({
+                        code: community.invite_code,
+                        community: community.slug,
+                        next: OFFER_SERVICE_PATH,
+                      });
+                      if (ok) await navigate({ to: OFFER_SERVICE_PATH });
+                    }}
+                  >
+                    Offer help
+                  </Button>
+                </div>
+              </div>
             )}
           </TabsContent>
 
@@ -665,7 +687,7 @@ function CommunityPublicPage() {
                 <p className="text-sm text-fg-muted">
                   {services.length
                     ? "Nothing in this category yet. Show all, or be the first maker listed."
-                    : "No services listed yet. Offer a skill — signup and community join first if you need them, then register."}
+                    : "No services listed yet. Good at fixing, teaching, or cooking? Offer a skill to your neighbors."}
                 </p>
                 <Button
                   data-testid="offer-service-empty"
@@ -1023,7 +1045,7 @@ function CommunityPublicPage() {
                   <a className="text-primary underline" href={CC_GET_HELP} target="_blank" rel="noreferrer">
                     ChurchConnect Get Help
                   </a>
-                  . Neighborly does not copy that directory.
+                  , our sister directory of churches that help with food.
                 </p>
               </section>
             )}

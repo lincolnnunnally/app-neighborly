@@ -104,3 +104,31 @@ test("Pal Theatre parser reads its show list with the right year", () => {
   const addams = shows.filter((s) => /Addams/.test(s.title));
   assert.equal(addams.length, 2);
 });
+
+import { groupMultiVenue } from "../src/lib/events/search.ts";
+import { normalizePlaceQuery } from "../src/lib/community/place-query.ts";
+
+test("one watch party at 3 bars becomes one card with 2 other places", () => {
+  const base = { startMs: Date.UTC(2026, 9, 17, 19, 30), endMs: null, allDay: false, multiDay: false, city: "Atlanta", lat: 33.7, lon: -84.4, url: "https://x", image: null, organizer: "UGA", sourceId: "uga", category: "sports", free: true, summary: "" };
+  const out = groupMultiVenue([
+    { ...base, id: "a", title: "Atlanta Chapter: Game Watching Party - UGA vs Auburn", venue: "Bar One", distanceMi: 3 },
+    { ...base, id: "b", title: "Atlanta Chapter: Game-Watching Party — UGA vs Auburn", venue: "Bar Two", distanceMi: 1 },
+    { ...base, id: "c", title: "Atlanta Chapter: Game Watching Party - UGA vs Auburn", venue: "Bar Three", distanceMi: 5 },
+    { ...base, id: "d", title: "Green Market", venue: "Piedmont Park", distanceMi: 2 },
+  ]);
+  assert.equal(out.length, 2);
+  const party = out.find((e) => e.id === "b");
+  assert.equal(party.venue, "Bar Two");
+  assert.equal(party.otherPlaces.length, 2);
+  assert.equal(out.find((e) => e.id === "d").otherPlaces, undefined);
+});
+
+test("free-form place input prefers a ZIP anywhere, else keeps City, ST", () => {
+  assert.equal(normalizePlaceQuery("Vidalia GA 30474"), "30474");
+  assert.equal(normalizePlaceQuery("Vidalia, GA 30474"), "30474");
+  assert.equal(normalizePlaceQuery("30474-1234"), "30474");
+  assert.equal(normalizePlaceQuery(30303), "30303");
+  assert.equal(normalizePlaceQuery("  Vidalia ,  GA "), "Vidalia, GA");
+  assert.equal(normalizePlaceQuery("Atlanta, GA, USA"), "Atlanta, GA");
+  assert.equal(normalizePlaceQuery("Vidalia GA"), "Vidalia GA");
+});

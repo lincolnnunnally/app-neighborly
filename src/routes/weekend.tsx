@@ -1,6 +1,6 @@
 import { isListedCommunity } from "@/lib/community/public-filters";
 import { useEffect, useState } from "react";
-import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Link, createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 import { CloudRain, CloudSun, Sun } from "lucide-react";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -10,7 +10,7 @@ import { WeekendFeed, ModeChips, type FeedMode } from "@/components/events/event
 import { getMyProfile } from "@/lib/community/server";
 import { readSavedPlace } from "@/lib/community/saved-place";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
-import { loadWeekendPlan, type WeekendPlan } from "@/lib/community/weekend";
+import { loadWeekendPlan, weekendWeatherDays, type WeekendPlan } from "@/lib/community/weekend";
 import { cn } from "@/lib/utils";
 
 type WeekendSearch = { place?: string; q?: string; radius?: number; who?: FeedMode };
@@ -39,12 +39,14 @@ export const Route = createFileRoute("/weekend")({
   loader: async ({ deps }) => {
     const place = deps.place || undefined;
     const query = deps.q || deps.place || "vidalia";
+    let plan: WeekendPlan | null;
     try {
-      const plan = await loadWeekendPlan({ data: { place, query, radius: deps.radius } });
-      return { plan };
+      plan = await loadWeekendPlan({ data: { place, query, radius: deps.radius } });
     } catch {
       return { plan: null as WeekendPlan | null };
     }
+    if (plan === null) throw notFound();
+    return { plan };
   },
   head: ({ loaderData }) => {
     const p = loaderData?.plan?.place;
@@ -61,6 +63,9 @@ export const Route = createFileRoute("/weekend")({
       ],
     };
   },
+  // A new town clears the old one right away and shows the loading state.
+  pendingMs: 0,
+  pendingMinMs: 250,
   pendingComponent: WeekendPending,
   component: WeekendPage,
 });
@@ -87,7 +92,7 @@ function WeatherStrip({ plan }: { plan: WeekendPlan }) {
   return (
     <section aria-label="Weather" className="space-y-3">
       <div className="-mx-1 flex snap-x gap-3 overflow-x-auto px-1 pb-1 [scrollbar-width:thin]">
-        {plan.weather.map((d) => {
+        {weekendWeatherDays(plan.weather).map((d) => {
           const Icon = d.rainChance >= 50 ? CloudRain : d.maxF >= 85 ? Sun : CloudSun;
           return (
             <div
