@@ -26,6 +26,20 @@ export function townPhoto(slug: string) {
   return TOWN_PHOTOS[slug] ?? null;
 }
 
+/** A captioned photo of this board's own town, or nothing (never another town's picture). */
+export function townFigure(slug: string | null | undefined) {
+  const photo = slug ? townPhoto(slug) : null;
+  if (!photo) return null;
+  return (
+    <figure className="overflow-hidden rounded-[var(--radius-xl)] border border-border">
+      <img src={photo.src} alt={photo.alt} className="aspect-[16/9] w-full object-cover" />
+      <figcaption className="bg-bg-elevated px-4 py-2 text-sm text-fg-muted">
+        {photo.alt}.{photo.credit ? ` ${photo.credit}.` : ""}
+      </figcaption>
+    </figure>
+  );
+}
+
 export function CommunityCover({
   community,
   className,

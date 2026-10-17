@@ -311,3 +311,10 @@ test("Saved-place cookie: parsed safely; header falls back to it when the page n
   assert.equal(place.city, "Covington");
   assert.deepEqual(boardLink(place), { label: "Neighbor board", slug: null });
 });
+
+test("Place cookie: the server's JSON and the client's encoded value parse the same", async () => {
+  const { placeCookieJson, parsePlaceCookie } = await import("../src/lib/community/saved-place.ts");
+  const json = placeCookieJson({ zip: "30014", city: "Covington", state: "GA" });
+  assert.deepEqual(parsePlaceCookie(json), parsePlaceCookie(encodeURIComponent(json)));
+  assert.equal(parsePlaceCookie(json).city, "Covington");
+});

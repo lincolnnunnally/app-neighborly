@@ -42,6 +42,7 @@ export function PlaceSearch({
   persist = true,
   onSearchStart,
   onSearchEnd,
+  startFor,
 }: {
   defaultValue?: string;
   size?: "md" | "lg";
@@ -50,13 +51,17 @@ export function PlaceSearch({
   onSearchStart?: (query: string) => void;
   /** Fired when the lookup (and any navigation) is done or failed. */
   onSearchEnd?: () => void;
+  /** A town with no board yet: open with the existing "Start the <Town> board" offer showing. */
+  startFor?: { city: string; state: string; zip: string } | null;
 }) {
   const navigate = useNavigate();
   const { user } = useCurrentUserState();
   const [q, setQ] = useState(defaultValue);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
-  const [pendingCreate, setPendingCreate] = useState<NearResponse | null>(null);
+  const [pendingCreate, setPendingCreate] = useState<NearResponse | null>(
+    startFor ? { geo: { ...startFor, lat: 0, lon: 0 } } : null,
+  );
 
   // Latest submit wins: every search gets a number, and only the newest one may
   // navigate, clear the busy state, or sync the box.

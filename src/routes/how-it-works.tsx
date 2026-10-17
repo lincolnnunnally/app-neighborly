@@ -3,6 +3,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useCurrentPlace } from "@/lib/community/current-place";
+import { townFigure } from "@/components/community/cover";
 
 export const Route = createFileRoute("/how-it-works")({
   component: HowItWorksPage,
@@ -24,10 +25,15 @@ function HowItWorksPage() {
           </p>
         </div>
 
-        <figure className="overflow-hidden rounded-[var(--radius-xl)] border border-border">
-          <img src="/img/vidalia/amphitheater.jpg" alt="The downtown park amphitheater in Vidalia" className="aspect-[16/9] w-full object-cover" />
-          <figcaption className="bg-bg-elevated px-4 py-2 text-sm text-fg-muted">Vidalia's downtown park amphitheater. Photo by Michael Rivera (CC BY-SA 4.0), via Wikimedia Commons.</figcaption>
-        </figure>
+        {/* Vidalia's photo only for Vidalia; another town shows its own photo or none. */}
+        {place.isVidalia ? (
+          <figure className="overflow-hidden rounded-[var(--radius-xl)] border border-border">
+            <img src="/img/vidalia/amphitheater.jpg" alt="The downtown park amphitheater in Vidalia" className="aspect-[16/9] w-full object-cover" />
+            <figcaption className="bg-bg-elevated px-4 py-2 text-sm text-fg-muted">Vidalia's downtown park amphitheater. Photo by Michael Rivera (CC BY-SA 4.0), via Wikimedia Commons.</figcaption>
+          </figure>
+        ) : (
+          townFigure(place.board)
+        )}
 
         {[
           {

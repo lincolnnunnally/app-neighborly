@@ -43,9 +43,16 @@ export function writeSavedPlace(place: SavedPlace | null): void {
 export const PLACE_COOKIE = "neighborly_place";
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
+export const PLACE_COOKIE_MAX_AGE = COOKIE_MAX_AGE;
+
+/** Pure: the JSON stored in the cookie (server and client write the same shape). */
+export function placeCookieJson(place: { zip: string; city: string; state: string; slug?: string }): string {
+  return JSON.stringify({ zip: place.zip, city: place.city, state: place.state, slug: place.slug || "" });
+}
+
 export function writePlaceCookie(place: SavedPlace): void {
   if (typeof document === "undefined") return;
-  const v = encodeURIComponent(JSON.stringify({ zip: place.zip, city: place.city, state: place.state, slug: place.slug || "" }));
+  const v = encodeURIComponent(placeCookieJson(place));
   const secure = location.protocol === "https:" ? "; Secure" : "";
   document.cookie = `${PLACE_COOKIE}=${v}; Path=/; Max-Age=${COOKIE_MAX_AGE}; SameSite=Lax${secure}`;
 }

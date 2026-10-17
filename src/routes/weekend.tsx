@@ -45,7 +45,8 @@ export const Route = createFileRoute("/weekend")({
     const query = deps.q || deps.place || "vidalia";
     let plan: WeekendPlan | null;
     try {
-      plan = await loadWeekendPlan({ data: { place, query, radius: deps.radius } });
+      // Any place this page shows becomes the visitor's town (cookie set by the server).
+      plan = await loadWeekendPlan({ data: { place, query, radius: deps.radius, remember: Boolean(deps.place || deps.q) } });
     } catch {
       return { plan: null as WeekendPlan | null };
     }
