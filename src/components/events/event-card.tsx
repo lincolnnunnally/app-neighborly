@@ -101,7 +101,7 @@ export function EventCard({ event, compact = false }: { event: PublicEvent; comp
           <img
             src={photo.src}
             alt={photo.alt}
-            loading="lazy"
+            loading={photo.src.startsWith("/") ? "eager" : "lazy"}
             decoding="async"
             referrerPolicy="no-referrer"
             onError={() => setBroken(true)}
