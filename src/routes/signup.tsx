@@ -12,7 +12,7 @@ import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 import { resolveInvite } from "@/lib/community/server";
 import type { Community } from "@/lib/community/types";
 
@@ -96,7 +96,7 @@ function SignupPage() {
       <main className="grid place-items-center px-5 py-10 sm:py-16">
       <Card className="w-full max-w-[440px]">
         <CardHeader>
-          <CardTitle>Create your neighbor profile</CardTitle>
+          <h1 className="font-display text-2xl font-semibold tracking-tight text-fg">Create your neighbor profile</h1>
           <CardDescription>
             {search.community === "vidalia" || search.code === "VIDALIA-WELCOME" || !search.community
               ? "Join Vidalia, then pick your skills and the groups you care about."

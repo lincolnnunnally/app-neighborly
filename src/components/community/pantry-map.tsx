@@ -8,13 +8,18 @@ type LeafletMap = {
   setView: (c: [number, number], z: number) => void;
 };
 
+type LeafletMarker = {
+  addTo: (m: unknown) => LeafletMarker;
+  bindPopup: (html: string) => LeafletMarker;
+};
+
 type LeafletNS = {
-  map: (el: HTMLElement) => LeafletMap & { addLayer: (l: unknown) => void };
-  tileLayer: (url: string, opts: Record<string, unknown>) => { addTo: (m: unknown) => void };
-  marker: (latlng: [number, number]) => {
-    addTo: (m: unknown) => unknown;
-    bindPopup: (html: string) => unknown;
+  map: (el: HTMLElement) => LeafletMap & {
+    addLayer: (l: unknown) => void;
+    attributionControl?: { setPrefix: (p: string | false) => void };
   };
+  tileLayer: (url: string, opts: Record<string, unknown>) => { addTo: (m: unknown) => void };
+  marker: (latlng: [number, number]) => LeafletMarker;
   latLngBounds: (pts: [number, number][]) => unknown;
 };
 
@@ -75,6 +80,8 @@ export function PantryMap({ pantries }: { pantries: Facility[] }) {
         mapRef.current?.remove();
         const map = L.map(el);
         mapRef.current = map;
+        // Keep the required map-data credit, as plain text (no tiny link to tap).
+        map.attributionControl?.setPrefix(false);
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
           attribution: "&copy; OpenStreetMap",
         }).addTo(map);
@@ -112,8 +119,8 @@ export function PantryMap({ pantries }: { pantries: Facility[] }) {
     <div className="space-y-2">
       <div
         id={`n-pantry-map-${id}`}
-        className="h-64 w-full overflow-hidden rounded-xl border border-border"
-        role="img"
+        className="n-pantry-map h-64 w-full overflow-hidden rounded-xl border border-border"
+        role="region"
         aria-label="Map of food pantries"
       />
       <p className="text-xs text-fg-subtle">Tap a pin, then Drive. Opens Maps on your phone.</p>

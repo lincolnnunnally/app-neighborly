@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 
 type LoginSearch = { redirect?: string; forgot?: string };
 
@@ -111,7 +111,7 @@ function LoginPage() {
       <main className="grid place-items-center px-5 py-10 sm:py-16">
       <Card className="w-full max-w-[440px]">
         <CardHeader>
-          <CardTitle>{mode === "forgot" ? "Reset your password" : "Welcome back"}</CardTitle>
+          <h1 className="font-display text-2xl font-semibold tracking-tight text-fg">{mode === "forgot" ? "Reset your password" : "Welcome back"}</h1>
           <CardDescription>
             {mode === "forgot"
               ? "We'll email you a link to choose a new password."
