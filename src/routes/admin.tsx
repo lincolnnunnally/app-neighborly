@@ -31,6 +31,7 @@ import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { formatEventWhen } from "@/lib/utils";
 
 export const Route = createFileRoute("/admin")({
+  head: () => ({ meta: [{ title: "Sign in — Neighborly" }, { name: "robots", content: "noindex, nofollow" }] }),
   component: AdminPage,
 });
 
@@ -204,29 +205,22 @@ function AdminPage() {
     <div className="min-h-dvh bg-bg">
       <SiteHeader solid />
       <main className="page-shell max-w-5xl space-y-8 py-12">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-            Owner door
-          </p>
-          <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-fg">
-            Connection ops — Vidalia
-          </h1>
-          <p className="mt-2 max-w-2xl text-fg-muted">
-            See what is actually happening, add gatherings, take volunteer requests from
-            churches, schools, and civic groups, and work issues. Empty is empty. This is
-            not a new hub — each app still owns its people.
-          </p>
-        </div>
+        {gate === "ok" ? (
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">Team desk</p>
+            <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-fg">
+              Boards, gatherings and reports
+            </h1>
+          </div>
+        ) : null}
 
         {isPending || gate === "loading" ? (
           <div className="h-40 animate-pulse rounded-[var(--radius-xl)] bg-bg-subtle" />
         ) : gate === "signed_out" ? (
           <Card>
             <CardHeader>
-              <CardTitle>Sign in as the owner</CardTitle>
-              <CardDescription>
-                Counts and posting only work after you sign in with the owner account.
-              </CardDescription>
+              <CardTitle>Please sign in</CardTitle>
+              <CardDescription>This page is for the Neighborly team.</CardDescription>
             </CardHeader>
             <CardContent>
               <Button asChild>
@@ -239,10 +233,8 @@ function AdminPage() {
         ) : gate === "forbidden" ? (
           <Card>
             <CardHeader>
-              <CardTitle>Not the owner door</CardTitle>
-              <CardDescription>
-                Signed in as {email ?? "this account"}. Only Lincoln can run this desk.
-              </CardDescription>
+              <CardTitle>This page is for the Neighborly team</CardTitle>
+              <CardDescription>Your account doesn&apos;t have access here.</CardDescription>
             </CardHeader>
             <CardContent>
               <Button asChild variant="secondary">
@@ -751,6 +743,7 @@ function AdminPage() {
           </>
         ) : null}
 
+        {gate === "ok" ? (
         <div className="flex flex-wrap items-center gap-4 text-sm text-fg-muted">
           <a href="https://liveonmission.unitedundergod.org/admin-ops" className="hover:text-fg">
             Live On Mission ops
@@ -768,6 +761,7 @@ function AdminPage() {
             Back home
           </Link>
         </div>
+        ) : null}
       </main>
     </div>
   );

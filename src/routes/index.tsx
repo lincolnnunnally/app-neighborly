@@ -75,7 +75,6 @@ function LandingPage() {
   }, []);
 
   const vidalia = communities.find((c) => c.slug === "vidalia");
-  const milstead = communities.find((c) => c.slug === "milstead");
 
   async function tryNow() {
     if (user) {
@@ -101,13 +100,12 @@ function LandingPage() {
           <div className="space-y-6">
             <Badge className="w-fit">Live in Vidalia, Georgia</Badge>
             <h1 className="font-display text-balance text-4xl font-semibold tracking-tight text-fg sm:text-5xl lg:text-[3.25rem] lg:leading-[1.1]">
-              Just landed? Start with this weekend.
+              This weekend in Vidalia, and the neighbors who&apos;ll be there.
             </h1>
             <p className="max-w-xl text-lg text-fg-muted">
-              Neighborly is a local board for what is actually happening — starting in
-              Vidalia, and any ZIP you type. Weather, public calendars, pickleball, church
-              listings, and a place to ask for a real hand. No account needed to look.
-              We will not invent neighbors or events for you.
+              Festivals, shows, park days, and neighbor gatherings near you — plus a place to
+              ask for a hand or offer one. Type your ZIP to see what&apos;s on. No account
+              needed to look.
             </p>
             <PlaceSearch size="lg" defaultValue="30474" />
             {/* Two different questions, side by side: PlaceSearch answers
@@ -119,11 +117,6 @@ function LandingPage() {
               </p>
               <SearchBox />
             </div>
-            {weekend?.arrivingNote ? (
-              <p className="max-w-xl rounded-[var(--radius-lg)] border border-primary/25 bg-primary-soft/40 p-4 text-sm text-fg">
-                {weekend.arrivingNote}
-              </p>
-            ) : null}
             <div className="flex flex-wrap gap-3">
               <Button asChild size="lg">
                 <Link to="/weekend" search={{ place: "vidalia" }}>
@@ -145,10 +138,6 @@ function LandingPage() {
                 {user ? "Open my hub" : "Join Vidalia"}
               </Button>
             </div>
-            <p className="text-sm text-fg-subtle">
-              Join is a real email account and profile. Browse and the weekend plan work
-              without signing up.
-            </p>
           </div>
 
           <Card className="relative overflow-hidden">
@@ -161,7 +150,7 @@ function LandingPage() {
                   ? "The live board could not load."
                   : needs[0] || services[0] || events[0]
                     ? "Live from the board — tap any row to open the community."
-                    : "Vidalia is live. The first real posts will show here."}
+                    : "New posts from neighbors will show up here."}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -177,7 +166,8 @@ function LandingPage() {
                   <span>
                     <span className="block text-sm font-medium text-fg">{events[0].title}</span>
                     <span className="text-xs text-fg-muted">
-                      {formatEventWhen(events[0].starts_at)} · {events[0].rsvp_count} going
+                      {formatEventWhen(events[0].starts_at)}
+                      {events[0].rsvp_count > 1 ? ` · ${events[0].rsvp_count} going` : ""}
                     </span>
                   </span>
                 </Link>
@@ -194,7 +184,8 @@ function LandingPage() {
                   <span>
                     <span className="block text-sm font-medium text-fg">{events[1].title}</span>
                     <span className="text-xs text-fg-muted">
-                      {formatEventWhen(events[1].starts_at)} · {events[1].rsvp_count} going
+                      {formatEventWhen(events[1].starts_at)}
+                      {events[1].rsvp_count > 1 ? ` · ${events[1].rsvp_count} going` : ""}
                     </span>
                   </span>
                 </Link>
@@ -262,7 +253,7 @@ function LandingPage() {
             Where people already gather in Vidalia
           </h2>
           <p className="mt-2 text-fg-muted">
-            Real public places — not invented neighbors. Show up, then post if you want company next time.
+            Show up once, and you&apos;ll start seeing familiar faces.
           </p>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -279,12 +270,12 @@ function LandingPage() {
             },
             {
               title: "Vidalia dads",
-              body: "An empty chair on purpose. Dads — including after divorce — who want to be known and stay present for their kids.",
+              body: "Coffee, pickleball, and real friendship for dads who want to stay close to their kids.",
               href: "/c/vidalia-dads",
             },
             {
               title: "First Baptist Vidalia, Georgia",
-              body: "107 E Second St. Sunday worship 10:30am. GriefShare as posted at fbcvidalia.org — not the Louisiana church of the same name.",
+              body: "107 E Second St. Sunday worship at 10:30am, plus GriefShare and other ministries.",
               href: "/c/vidalia",
             },
             {
@@ -309,15 +300,6 @@ function LandingPage() {
             </Link>
           ))}
         </div>
-        {milstead ? (
-          <p className="mt-6 text-sm text-fg-subtle">
-            Milstead remains a Neighborly market.{" "}
-            <Link to="/c/$slug" params={{ slug: "milstead" }} className="underline">
-              Open the Milstead board
-            </Link>
-            .
-          </p>
-        ) : null}
       </section>
 
       <section className="page-shell py-16">
@@ -430,7 +412,7 @@ function LandingPage() {
               How people actually join
             </h2>
             <p className="mt-2 text-fg-muted">
-              Website, invite link, or a QR flyer — then a real account. We do not invent a neighbor for you.
+              Pick a community on the website, follow an invite link, or scan a QR flyer.
             </p>
           </div>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -489,7 +471,7 @@ function LandingPage() {
               Communities ready to explore
             </h2>
             <p className="mt-2 text-fg-muted">
-              Vidalia is the live market. You can belong to more than one — Milstead stays available.
+              Find your neighborhood, church, or interest group. You can join more than one.
             </p>
           </div>
           <Button asChild variant="secondary">
@@ -516,7 +498,8 @@ function LandingPage() {
               <h3 className="font-display text-xl font-semibold text-fg">{c.name}</h3>
               <p className="mt-1 text-sm text-fg-muted">{c.tagline}</p>
               <p className="mt-3 text-xs text-fg-subtle">
-                {c.city}, {c.state} · {c.member_count} members · code {c.invite_code}
+                {c.city}, {c.state}
+                {c.member_count > 1 ? ` · ${c.member_count} members` : ""}
               </p>
             </Link>
           ))}
@@ -530,35 +513,29 @@ function LandingPage() {
               Other doors when you are ready
             </h2>
             <p className="mt-2 text-fg-muted">
-              Neighborly does not open those accounts for you. Same email later is enough.
-              Friendship before dating. The win is a real table, not another feed.
+              More ways to find friendship, serve, and stay close to the people you love.
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {[
               {
-                title: "You Are Awesome coin",
-                body: "If you find a LOOK UP coin, that door is Presence — a dusk prompt, not a leaderboard.",
-                href: "https://presence.unitedundergod.org/t/LOOKUP",
-              },
-              {
                 title: "Presence — coffee, a walk, a meal",
-                body: "One yes with a real person. Hosts are real; empty stays empty.",
+                body: "Say yes to coffee, a walk, or a meal with someone nearby.",
                 href: "https://presence.unitedundergod.org/",
               },
               {
                 title: "Kindred — friendship first",
-                body: "Belonging before romance. We will not create this for you.",
+                body: "Find friends who build you up.",
                 href: "https://kindred.unitedundergod.org/",
               },
               {
                 title: "Neighborly Churches",
-                body: "Nearby congregations from ChurchConnect public records — times and style when CC has them.",
+                body: "Find a church home nearby, with service times and worship style.",
                 href: "/churches",
               },
               {
                 title: "Kids Need Dads",
-                body: "For dads who still matter to their kids — including after divorce.",
+                body: "Encouragement and practical help for dads.",
                 href: "https://dads.unitedundergod.org/",
               },
               {
@@ -588,7 +565,7 @@ function LandingPage() {
           name: "Neighborly",
           url: "https://neighborly.unitedundergod.org/",
           description:
-            "What's going on in your town this week. Public gatherings, a neighbor board, no invented people.",
+            "Festivals, shows, park days, and neighbor gatherings near you this weekend.",
           potentialAction: {
             "@type": "SearchAction",
             target: "https://neighborly.unitedundergod.org/near?q={search_term_string}",
@@ -601,7 +578,7 @@ function LandingPage() {
           <div className="flex items-center gap-2 text-fg">
             <HandHeart className="h-4 w-4 text-primary" />
             <span className="font-display font-semibold">Neighborly</span>
-            <span className="text-sm text-fg-subtle">· Vidalia first market · United Under God</span>
+            <span className="text-sm text-fg-subtle">· United Under God</span>
           </div>
           <div className="flex flex-wrap items-center gap-4 text-sm text-fg-subtle">
             <Link to="/privacy" className="hover:text-fg">

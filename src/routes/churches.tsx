@@ -45,7 +45,7 @@ export const Route = createFileRoute("/churches")({
       {
         name: "description",
         content:
-          "Find nearby churches from ChurchConnect public records — service times, traditional or contemporary, denomination. Neighborly does not keep a second church list.",
+          "Find churches near you — service times, worship style, and denomination.",
       },
     ],
   }),
@@ -200,23 +200,17 @@ function ChurchesPage() {
       <SiteHeader solid />
       <main className="page-shell space-y-8 py-12">
         <div className="max-w-2xl space-y-3">
-          <Badge>ChurchConnect records</Badge>
+          <p className="text-sm font-semibold uppercase tracking-wide text-primary">Churches</p>
           <h1 className="font-display text-4xl font-semibold tracking-tight">
             Churches near you
           </h1>
           <p className="text-lg text-fg-muted">
-            This door reads the same public ChurchConnect directory used at{" "}
-            <a className="underline" href={`${CC_PUBLIC_ORIGIN}/find-church`} target="_blank" rel="noreferrer">
-              find-church
-            </a>
-            . Same IDs. Neighborly does not copy churches into a second database.
-            Service times, worship style, and denomination show when ChurchConnect
-            has published them. For church food assistance, use{" "}
+            Find a church home nearby — service times, worship style, and denomination
+            where the church has shared them. Need food help? See{" "}
             <a className="underline" href={CC_GET_HELP} target="_blank" rel="noreferrer">
-              ChurchConnect Get Help
-            </a>
-            — Neighborly lists Toombs / Vidalia pantries on the Places tab and does
-            not copy that directory.
+              church food assistance
+            </a>{" "}
+            or the pantries on the Places tab.
           </p>
         </div>
 
@@ -383,23 +377,21 @@ function ChurchesPage() {
           ))}
         </div>
         {!busy && rows.length === 0 && !error && (
-          <p className="text-sm text-fg-muted">No public churches matched. We will not invent a congregation.</p>
+          <p className="text-sm text-fg-muted">No churches matched. Try a nearby ZIP or a wider search.</p>
         )}
 
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Music className="h-5 w-5" />
-              Why some filters look empty
+              Service times and worship style
             </CardTitle>
             <CardDescription>
-              ChurchConnect is finishing service_times, denomination, and worship_style
-              on a separate PR. This page already consumes those fields when they are present.
+              Some churches haven&apos;t shared these details yet.
             </CardDescription>
           </CardHeader>
           <CardContent className="text-sm text-fg-muted">
-            Until those values ship, Vidalia still lists the public directory rows by ZIP and
-            city. Confirm anything before you go.
+            Call ahead or check the church&apos;s site to confirm before you go.
           </CardContent>
         </Card>
       </main>

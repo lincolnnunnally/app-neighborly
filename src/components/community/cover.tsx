@@ -32,11 +32,7 @@ export function CommunityCover({
           <Badge variant="secondary">{KIND_LABELS[community.kind]}</Badge>
           {community.is_featured && (
             <Badge>
-              {community.slug === "milstead"
-                ? "First test market"
-                : community.slug === "vidalia"
-                  ? "Live in Vidalia"
-                  : "Featured"}
+              {community.slug === "vidalia" ? "Vidalia, Georgia" : "Featured"}
             </Badge>
           )}
           <span className="text-xs text-fg-muted">

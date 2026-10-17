@@ -9,12 +9,12 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       {
-        title: "Neighborly — Vidalia neighbors, this weekend, a real next step",
+        title: "Neighborly — what's on this weekend, and the neighbors who'll be there",
       },
       {
         name: "description",
         content:
-          "What's going on around you this week. Type a ZIP or city. Weather, public gatherings, and a neighbor board. No invented people. Account optional until you RSVP or ask for a hand.",
+          "Find festivals, shows, park days, and neighbor gatherings near you this weekend. Type a ZIP or city to start. Browsing is free; join when you want to RSVP or lend a hand.",
       },
     ],
     links: [

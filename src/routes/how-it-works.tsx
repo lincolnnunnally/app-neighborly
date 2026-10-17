@@ -18,18 +18,18 @@ function HowItWorksPage() {
           </h1>
           <p className="mt-2 text-fg-muted">
             Designed for people who live in a place — not for abstract social feeds.
-            If you just moved, start with this weekend. Account comes later.
+            New in town? Start with this weekend. You can join whenever you&apos;re ready.
           </p>
         </div>
 
         {[
           {
             title: "1. See this weekend first",
-            body: "Type a ZIP or City, ST, save a home place, or optionally share browser location. Weather, public calendars, pickleball, and the Churches door (ChurchConnect records, not a second list). Confirm on their sites before you go. Looking up a town does not auto-create an empty board.",
+            body: "Type a ZIP or City, ST, save a home place, or optionally share browser location. See festivals, shows, park days, and neighbor gatherings, with the weather. Confirm details on the organizer’s site before you go.",
           },
           {
             title: "2. Sign up the practical way",
-            body: "Visit the site and choose communities, open a link from a text/email/Facebook/YouTube post, or scan a QR code on a mailbox flyer. One account can belong to many communities. We do not mint a fake neighbor for you.",
+            body: "Visit the site and choose communities, open a link from a text/email/Facebook/YouTube post, or scan a QR code on a mailbox flyer. One account can belong to many communities.",
           },
           {
             title: "3. Build a useful profile",
@@ -37,7 +37,7 @@ function HowItWorksPage() {
           },
           {
             title: "4. Ask, offer, or gather",
-            body: "Post needs (lightbulbs to home projects). Register a service — including maker and artisan work. List a physical tool neighbors can borrow for a few days. Neighbors message you through Neighborly. Host block parties, cleanups, and BBQs. Request the pavilion for a birthday. Add or claim a food pantry listing on Places — we will not invent hours.",
+            body: "Post needs (lightbulbs to home projects). Register a service — including maker and artisan work. List a physical tool neighbors can borrow for a few days. Neighbors message you through Neighborly. Host block parties, cleanups, and BBQs. Request the pavilion for a birthday. Add or claim a food pantry listing on Places.",
           },
           {
             title: "5. Match helpers to needs",
@@ -49,11 +49,11 @@ function HowItWorksPage() {
           },
           {
             title: "7. Fit, not a firehose",
-            body: "Tell us if you want a chair at the library, pickleball, or canoeing. We sort closer-to-you first and still list the rest of the town. If neighbors mark crochet, a church or library can see that demand — we do not invent a class. Host “who’s interested?” for free. A paid highlight for restaurants or coaches comes later, only when a real person sees it.",
+            body: "Tell us if you want a chair at the library, pickleball, or canoeing. We sort closer-to-you first and still list the rest of the town. If neighbors mark crochet, a church or library can see that interest and host a class. Posting “who’s interested?” is free.",
           },
           {
             title: "8. The board is a doorway",
-            body: "The win is not more time on Neighborly. It is coffee, a meal, letting someone help you, or staying in the spare room instead of hiding. Receiving kindness is part of belonging. We will not score your courage. If a kind person is offering hospitality, one next yes is enough. Safety stays: public places, Report and Block, 988 in a crisis.",
+            body: "The win is not more time on Neighborly. It is coffee, a meal, letting someone help you, or staying in the spare room instead of hiding. Receiving kindness is part of belonging. One next yes is enough. Safety stays: public places, Report and Block, 988 in a crisis.",
           },
         ].map((s) => (
           <Card key={s.title} className="p-6">

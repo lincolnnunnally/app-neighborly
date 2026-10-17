@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { isListedCommunity } from "@/lib/community/public-filters";
 import { getSql } from "@/lib/db";
 import { ensureSeeded } from "@/lib/community/seed";
 
@@ -15,7 +16,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           const rows = await sql<{ slug: string }>`
             select slug from communities where kind = 'neighborhood' or is_featured = true order by slug
           `;
-          communityPaths = rows.map((r) => `/c/${r.slug}`);
+          communityPaths = rows.filter((r) => isListedCommunity(String(r.slug))).map((r) => `/c/${r.slug}`);
         } catch {
           /* still emit the core URLs */
         }

@@ -60,7 +60,7 @@ export const Route = createFileRoute("/ministry")({
       {
         name: "description",
         content:
-          "Bible studies, small groups, and ways to serve that neighbors have actually posted. Empty stays empty — we will not invent a group or a ministry.",
+          "Bible studies, small groups, and ways to serve, posted by neighbors and local churches.",
       },
     ],
   }),
@@ -131,9 +131,8 @@ function MinistryPage() {
           </h1>
           <p className="text-fg-muted">
             Bible studies, small groups, and ways to serve in{" "}
-            <strong className="text-fg">{communityName}</strong> — as posted by real people.
-            If a section below is empty, that is the truth: nobody has posted one yet, and
-            we will not invent a group to fill the space.
+            <strong className="text-fg">{communityName}</strong>, posted by neighbors and
+            local churches. Don&apos;t see your group? Add it.
           </p>
         </div>
 
@@ -260,8 +259,7 @@ function MinistryPage() {
             <div className="surface-card p-4">
               <p className="font-medium text-fg">Find a church</p>
               <p className="mt-1 text-sm text-fg-muted">
-                Service times, ministries and contacts come from ChurchConnect&apos;s public
-                records — Neighborly does not keep a second copy.
+                Service times, ministries, and contacts for churches nearby.
               </p>
               <Button asChild size="sm" variant="secondary" className="mt-3">
                 <Link to="/churches" search={{ zip: zip || "30474" }}>

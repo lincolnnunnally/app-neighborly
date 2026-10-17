@@ -111,8 +111,7 @@ function SettingsPage() {
         <div className="space-y-2 rounded-[var(--radius-xl)] border border-border bg-bg-elevated p-4">
           <p className="text-sm font-medium">Home place (for this weekend / churches)</p>
           <p className="text-xs text-fg-muted">
-            ZIP or city is enough. Browser location is optional. We use this when you
-            are researching a town — not to invent a second church list.
+            A ZIP or city is enough. We use it to show what&apos;s on near you.
           </p>
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="space-y-1.5">
@@ -266,11 +265,10 @@ function SettingsPage() {
         </div>
 
         <div className="space-y-3 rounded-[var(--radius-xl)] border border-border bg-bg-elevated p-4">
-          <p className="text-sm font-medium">Weekly fit list (not billed yet)</p>
+          <p className="text-sm font-medium">Weekly picks by email</p>
           <p className="text-xs text-fg-muted">
-            When we can actually email things that match you, a few dollars a month would
-            cover a weekly note with Add to calendar / not interested. We will not take
-            money until that mail arrives. Join the waitlist if you want it.
+            A short weekly note with things that match you. Join the waitlist and we&apos;ll
+            let you know when it starts.
           </p>
           <div className="flex items-center justify-between gap-3">
             <span className="text-sm text-fg-muted">Email me a weekly fit list when it is real</span>

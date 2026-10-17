@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/layout/site-header";
-import { CounselReviewBanner } from "@/components/legal/counsel-review-banner";
 
 export const Route = createFileRoute("/privacy")({ component: PrivacyPage });
 
@@ -17,7 +16,6 @@ function PrivacyPage() {
         </p>
         <h1 className="font-display text-3xl font-semibold text-fg">Privacy Policy</h1>
         <p className="text-sm text-fg-muted">Last updated: August 29, 2026</p>
-        <CounselReviewBanner product="Neighborly" />
         <div className="prose-neighbor space-y-4 text-fg-muted">
           <p>
             Neighborly is operated by{" "}
@@ -48,8 +46,8 @@ function PrivacyPage() {
             <li>To keep accounts secure, recover passwords, and prevent abuse.</li>
             <li>
               To recommend sibling Life Produces Life tools (Kids Need Dads, Kindred,
-              Presence, and others) based on what you told us — we do not silently create
-              accounts in those apps.
+              Presence, and others) based on what you told us. We never create accounts in
+              those apps for you.
             </li>
             <li>To improve Neighborly and related United Under God tools.</li>
           </ul>
@@ -58,7 +56,7 @@ function PrivacyPage() {
             Content you post in a community is visible to other members of that community
             according to how the board works. We do not sell your personal information. We
             may use trusted infrastructure providers (hosting, database, email) solely to
-            operate the product. Reports may be seen by the owner so they can act.
+            operate the product. Safety reports are reviewed by our team so we can act.
           </p>
           <h2 className="font-display text-xl font-semibold text-fg">Retention and your choices</h2>
           <p>

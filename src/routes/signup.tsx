@@ -102,7 +102,7 @@ function SignupPage() {
           <CardTitle>Create your neighbor profile</CardTitle>
           <CardDescription>
             {search.community === "vidalia" || search.code === "VIDALIA-WELCOME" || !search.community
-              ? "Join Vidalia. Then pick skills and circles. We will not invent neighbors for you."
+              ? "Join Vidalia, then pick your skills and the groups you care about."
               : "Step 1 of 3 — account. Then you'll set skills and pick communities."}
           </CardDescription>
           {inviteCommunity && (
@@ -178,7 +178,7 @@ function SignupPage() {
                   <Link to="/privacy" className="text-primary underline-offset-4 hover:underline">
                     Privacy
                   </Link>
-                  . These pages are working product copy pending attorney review.
+                  .
                 </p>
                 {error && (
                   <p className="rounded-[var(--radius-sm)] bg-danger-soft px-3 py-2 text-sm text-danger">
