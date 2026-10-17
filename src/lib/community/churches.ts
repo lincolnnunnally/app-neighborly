@@ -111,6 +111,32 @@ export function churchProfileUrl(church: {
   return `${CC_PUBLIC_ORIGIN}/find-church`;
 }
 
+const SMALL_WORDS = new Set(["of", "the", "and", "in", "at", "for", "on", "a", "an", "to"]);
+
+/** Registry names often arrive in ALL CAPS; show them the way a sign would. */
+export function titleCaseName(name: string): string {
+  const letters = name.replace(/[^A-Za-z]/g, "");
+  if (!letters || letters !== letters.toUpperCase()) return name;
+  return name
+    .toLowerCase()
+    .split(/(\s+)/)
+    .map((w, i) => {
+      if (/^\s+$/.test(w)) return w;
+      if (i > 0 && SMALL_WORDS.has(w)) return w;
+      if (/^(ame|cme|umc|ii|iii|iv)$/.test(w)) return w.toUpperCase();
+      return w.replace(/(^|[-/(])([a-z])/g, (_m, p, c) => p + c.toUpperCase()).replace(/^st\b/, "St");
+    })
+    .join("");
+}
+
+const CHURCHY =
+  /church|chapel|ministr|fellowship|baptist|methodist|presbyterian|lutheran|episcopal|catholic|pentecost|tabernacle|temple|assembl|cathedral|parish|congregation|mission|worship|faith|christ|god|holy|saint|\bst\.?\s|lord|gospel|kingdom|grace|bible|cross|zion|bethel|calvary|covenant|harvest|redeem|apostolic|nazarene|adventist|synagogue|mosque/i;
+
+/** Hide registry rows that are clearly not a congregation and carry no service info. */
+export function looksLikeChurch(c: { name: string; service_times?: string; denomination?: string }): boolean {
+  return Boolean(c.service_times || c.denomination || CHURCHY.test(c.name));
+}
+
 export function parseServiceTimes(raw: string): ParsedService[] {
   const text = (raw || "").trim();
   if (!text) return [];
@@ -208,7 +234,7 @@ function mapChurch(raw: Record<string, unknown>, originLat?: number, originLon?:
     source_id: firstString(raw.source_id, raw.id, raw.ein),
     ein: firstString(raw.ein),
     slug: firstString(raw.slug, raw.church_slug, raw.subdomain),
-    name: firstString(raw.name, raw.church_name) || "Church",
+    name: titleCaseName(firstString(raw.name, raw.church_name) || "Church"),
     address: firstString(raw.address, raw.street_address),
     street_address: firstString(raw.street_address, raw.address),
     city: firstString(raw.city),
@@ -311,7 +337,7 @@ export async function searchPublicChurches(input: ChurchSearchInput): Promise<{
   const listed = await fetchCcJson(`/api/public/churches?${params.toString()}`);
   absorb(churchesFromPayload(listed));
 
-  let mapped = [...collected.values()].map((row) => mapChurch(row, input.lat, input.lon));
+  let mapped = [...collected.values()].map((row) => mapChurch(row, input.lat, input.lon)).filter(looksLikeChurch);
 
   if (denomination) {
     const d = denomination.toLowerCase();

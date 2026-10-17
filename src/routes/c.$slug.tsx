@@ -1,5 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
+import { NotFoundPage } from "@/components/layout/not-found";
+import { WeekendFeed } from "@/components/events/event-feed";
+import { EventGridSkeleton } from "@/components/events/event-card";
+import { loadWeekendPlan } from "@/lib/community/weekend";
+import type { EventSearchResult } from "@/lib/events/types";
+import { Link, createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 import {
   CalendarDays,
   Hammer,
@@ -66,7 +71,7 @@ import { formatEventWhen } from "@/lib/utils";
 import { ActivityFilters, matchesDateWindow, type DateWindow } from "@/components/community/activity-filters";
 import { LOOSE_MATCH_MAX, parseQuery, scoreFields, type ScoredField } from "@/lib/community/search";
 
-type BoardSearch = { tab?: string; cat?: string; q?: string };
+type BoardSearch = { tab?: string; cat?: string; q?: string; host?: string };
 
 export const Route = createFileRoute("/c/$slug")({
   validateSearch: (s: Record<string, unknown>): BoardSearch => ({
@@ -75,11 +80,18 @@ export const Route = createFileRoute("/c/$slug")({
     // Free text lives in the URL like the category chips do, so a filtered
     // board stays shareable ("here's the pantry list, filtered to Lyons").
     q: typeof s.q === "string" ? s.q : undefined,
+    host: s.host === "1" || s.host === 1 ? "1" : undefined,
   }),
   loader: async ({ params }) => {
+    let feed: Awaited<ReturnType<typeof getCommunityFeed>> | null = null;
     try {
-      return await getCommunityFeed({ data: { slug: params.slug } });
+      feed = await getCommunityFeed({ data: { slug: params.slug } });
     } catch {
+      feed = null;
+    }
+    if (feed && !feed.community) throw notFound();
+    if (feed) return feed;
+    {
       return {
         community: null,
         needs: [],
@@ -109,6 +121,12 @@ export const Route = createFileRoute("/c/$slug")({
     };
   },
   component: CommunityPublicPage,
+  notFoundComponent: () => (
+    <NotFoundPage
+      title="We couldn't find that board"
+      line="That link doesn't match a community on Neighborly. Here's what's on this weekend instead."
+    />
+  ),
 });
 
 function CommunityPublicPage() {
@@ -152,6 +170,20 @@ function CommunityPublicPage() {
   const [needTitle, setNeedTitle] = useState("");
   const [needDesc, setNeedDesc] = useState("");
   const [showHost, setShowHost] = useState(false);
+  const [weekendFeed, setWeekendFeed] = useState<EventSearchResult | null | undefined>(undefined);
+  useEffect(() => {
+    if (search.host === "1") setShowHost(true);
+  }, [search.host]);
+  useEffect(() => {
+    if (tab !== "events" || weekendFeed !== undefined) return;
+    let live = true;
+    loadWeekendPlan({ data: { place: slug, query: slug } })
+      .then((p) => live && setWeekendFeed(p.feed))
+      .catch(() => live && setWeekendFeed(null));
+    return () => {
+      live = false;
+    };
+  }, [tab, slug, weekendFeed]);
   const [hostTitle, setHostTitle] = useState("");
   const [hostDesc, setHostDesc] = useState("");
   const [hostWhere, setHostWhere] = useState("");
@@ -448,10 +480,7 @@ function CommunityPublicPage() {
                 </a>
               </>
             ) : (
-              <span>
-                Type anything — this narrows every tab below. The chips are still there when
-                you would rather browse.
-              </span>
+              <span>Type anything to narrow every tab below.</span>
             )}
           </div>
         </div>
@@ -568,8 +597,8 @@ function CommunityPublicPage() {
                 }
                 className={
                   !search.cat
-                    ? "rounded-full border border-primary bg-primary px-3 py-1.5 text-sm text-primary-fg"
-                    : "rounded-full border border-border bg-bg-elevated px-3 py-1.5 text-sm text-fg-muted"
+                    ? "inline-flex min-h-11 items-center rounded-full border border-primary bg-primary px-4 py-2 text-sm text-primary-fg"
+                    : "inline-flex min-h-11 items-center rounded-full border border-border bg-bg-elevated px-4 py-2 text-sm text-fg-muted"
                 }
               >
                 All
@@ -588,8 +617,8 @@ function CommunityPublicPage() {
                   }
                   className={
                     search.cat === c.id
-                      ? "rounded-full border border-primary bg-primary px-3 py-1.5 text-sm text-primary-fg"
-                      : "rounded-full border border-border bg-bg-elevated px-3 py-1.5 text-sm text-fg-muted"
+                      ? "inline-flex min-h-11 items-center rounded-full border border-primary bg-primary px-4 py-2 text-sm text-primary-fg"
+                      : "inline-flex min-h-11 items-center rounded-full border border-border bg-bg-elevated px-4 py-2 text-sm text-fg-muted"
                   }
                 >
                   {c.label}
@@ -710,8 +739,8 @@ function CommunityPublicPage() {
                 }
                 className={
                   !search.cat
-                    ? "rounded-full border border-primary bg-primary px-3 py-1.5 text-sm text-primary-fg"
-                    : "rounded-full border border-border bg-bg-elevated px-3 py-1.5 text-sm text-fg-muted"
+                    ? "inline-flex min-h-11 items-center rounded-full border border-primary bg-primary px-4 py-2 text-sm text-primary-fg"
+                    : "inline-flex min-h-11 items-center rounded-full border border-border bg-bg-elevated px-4 py-2 text-sm text-fg-muted"
                 }
               >
                 All
@@ -730,8 +759,8 @@ function CommunityPublicPage() {
                   }
                   className={
                     search.cat === c.id
-                      ? "rounded-full border border-primary bg-primary px-3 py-1.5 text-sm text-primary-fg"
-                      : "rounded-full border border-border bg-bg-elevated px-3 py-1.5 text-sm text-fg-muted"
+                      ? "inline-flex min-h-11 items-center rounded-full border border-primary bg-primary px-4 py-2 text-sm text-primary-fg"
+                      : "inline-flex min-h-11 items-center rounded-full border border-border bg-bg-elevated px-4 py-2 text-sm text-fg-muted"
                   }
                 >
                   {c.label.split(" (")[0]}
@@ -802,7 +831,31 @@ function CommunityPublicPage() {
             )}
           </TabsContent>
 
-          <TabsContent value="events" className="space-y-3">
+          <TabsContent value="events" className="space-y-6">
+            <section aria-label="This weekend" className="space-y-4">
+              <div>
+                <h2 className="font-display text-2xl font-semibold text-fg">This weekend around {community.city || community.name}</h2>
+                <p className="text-base text-fg-muted">
+                  {weekendFeed?.window.label ? `${weekendFeed.window.label} · ` : ""}Local calendars, parks, and neighbor posts. Confirm before you go.
+                </p>
+              </div>
+              {weekendFeed === undefined ? (
+                <EventGridSkeleton n={3} />
+              ) : (
+                <WeekendFeed
+                  feed={weekendFeed}
+                  town={community.city || community.name}
+                  slug={community.slug}
+                  zip={community.zip || undefined}
+                  city={community.city || undefined}
+                  state={community.state || undefined}
+                  mode="all"
+                  showNext={false}
+                  widerHref={`/weekend?place=${encodeURIComponent(community.slug)}&radius=50`}
+                />
+              )}
+            </section>
+            <h2 className="font-display text-2xl font-semibold text-fg">Neighbor posts</h2>
             <ActivityFilters
               dateWindow={eventDate}
               onDateWindow={setEventDate}
@@ -823,15 +876,17 @@ function CommunityPublicPage() {
                   <Badge variant="sky">{e.kind}</Badge>
                   {e.host_name === "Public listing" && <Badge variant="outline">Public listing</Badge>}
                   {e.kind === "invite" && <Badge variant="accent">Who's interested</Badge>}
-                  <span className="text-xs text-fg-muted">{formatEventWhen(e.starts_at)}</span>
+                  <span className="text-base text-fg-muted">{formatEventWhen(e.starts_at)}</span>
                   {e.has_rsvp && <Badge>Going</Badge>}
                 </div>
                 <h3 className="font-medium">{e.title}</h3>
                 <p className="line-clamp-2 text-sm text-fg-muted">{e.description}</p>
-                <p className="mt-2 flex items-center gap-1 text-xs text-fg-subtle">
-                  <MapPin className="h-3.5 w-3.5" />
-                  {e.location || "TBA"} · {e.rsvp_count}{" "}
-                  {e.kind === "invite" ? "interested" : "going"} · tap to respond
+                <p className="mt-2 flex items-center gap-1 text-base text-fg-muted">
+                  <MapPin className="h-4 w-4" />
+                  {e.location || "Place to be shared"}
+                  {e.rsvp_count > 1
+                    ? ` · ${e.rsvp_count} ${e.kind === "invite" ? "interested" : "going"}`
+                    : " · Be one of the first"}
                 </p>
               </button>
             ))}
@@ -909,8 +964,8 @@ function CommunityPublicPage() {
                   }
                   className={
                     search.cat === chip.id || (!search.cat && !chip.id)
-                      ? "rounded-full border border-primary bg-primary px-3 py-1.5 text-sm text-primary-fg"
-                      : "rounded-full border border-border bg-bg-elevated px-3 py-1.5 text-sm text-fg-muted"
+                      ? "inline-flex min-h-11 items-center rounded-full border border-primary bg-primary px-4 py-2 text-sm text-primary-fg"
+                      : "inline-flex min-h-11 items-center rounded-full border border-border bg-bg-elevated px-4 py-2 text-sm text-fg-muted"
                   }
                 >
                   {chip.label}
@@ -1035,7 +1090,7 @@ function CommunityPublicPage() {
             </div>
             {neighbors.length === 0 && (
               <p className="flex items-center gap-2 text-sm text-fg-muted">
-                <Users className="h-4 w-4" /> Be the first real member to join.
+                <Users className="h-4 w-4" /> Be one of the first to join.
               </p>
             )}
           </TabsContent>
@@ -1135,8 +1190,13 @@ function CommunityPublicPage() {
                 {activeEvent.location || "Location TBA"} · hosted by {activeEvent.host_name}
               </p>
               <p className="text-sm font-medium">
-                {activeEvent.rsvp_count}{" "}
-                {activeEvent.kind === "invite" ? "neighbors interested" : "neighbors going"}
+                {activeEvent.rsvp_count > 1
+                  ? `${activeEvent.rsvp_count} ${activeEvent.kind === "invite" ? "neighbors interested" : "neighbors going"}`
+                  : activeEvent.rsvp_count === 1
+                    ? activeEvent.kind === "invite"
+                      ? "One neighbor is interested"
+                      : "One neighbor is going"
+                    : "Be one of the first to say yes"}
               </p>
               <DialogFooter>
                 <Button variant="secondary" onClick={() => setActiveEvent(null)}>

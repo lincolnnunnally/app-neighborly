@@ -55,8 +55,8 @@ export function ActivityFilters({
             onClick={() => onDateWindow(id)}
             className={
               dateWindow === id
-                ? "rounded-full border border-primary bg-primary px-3 py-1.5 text-sm text-primary-fg"
-                : "rounded-full border border-border bg-bg-elevated px-3 py-1.5 text-sm text-fg-muted"
+                ? "min-h-11 rounded-full border border-primary bg-primary px-4 py-2 text-sm text-primary-fg"
+                : "min-h-11 rounded-full border border-border bg-bg-elevated px-4 py-2 text-sm text-fg-muted"
             }
           >
             {label}
@@ -68,7 +68,7 @@ export function ActivityFilters({
             type="date"
             value={/^\d{4}-\d{2}-\d{2}$/.test(dateWindow) ? dateWindow : ""}
             onChange={(e) => onDateWindow(e.target.value || "week")}
-            className="rounded-full border border-border bg-bg-elevated px-3 py-1.5 text-sm"
+            className="min-h-11 rounded-full border border-border bg-bg-elevated px-4 py-2 text-sm"
           />
         </label>
       </div>
@@ -80,8 +80,8 @@ export function ActivityFilters({
             onClick={() => onKind(k.id)}
             className={
               kind === k.id
-                ? "rounded-full border border-primary bg-primary-soft px-3 py-1.5 text-sm text-primary"
-                : "rounded-full border border-border bg-bg-elevated px-3 py-1.5 text-sm text-fg-muted"
+                ? "min-h-11 rounded-full border border-primary bg-primary-soft px-4 py-2 text-sm text-primary"
+                : "min-h-11 rounded-full border border-border bg-bg-elevated px-4 py-2 text-sm text-fg-muted"
             }
           >
             {k.label}

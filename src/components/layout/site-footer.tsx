@@ -1,0 +1,32 @@
+import { Link } from "@tanstack/react-router";
+
+export const PHOTO_CREDITS =
+  "Photos: water tower by Geogre (public domain); downtown park fountain, amphitheater and Municipal Building by Michael Rivera (CC BY-SA 4.0); Vidalia onions by ryan griffis (CC BY-SA 2.0), via Wikimedia Commons.";
+
+export function SiteFooter({ credits = false }: { credits?: boolean }) {
+  return (
+    <footer className="border-t border-border py-10 text-base text-fg-muted">
+      <div className="page-shell space-y-3">
+        <p>
+          <strong className="text-fg">Neighborly</strong> · Help when you can. Ask when you need. Belong where you
+          live. · A United Under God project
+        </p>
+        <nav aria-label="Footer" className="-mx-2 flex flex-wrap gap-x-2">
+          <Link to="/how-it-works" className="tap px-2 text-fg-muted no-underline hover:text-fg">
+            How it works
+          </Link>
+          <Link to="/privacy" className="tap px-2 text-fg-muted no-underline hover:text-fg">
+            Privacy
+          </Link>
+          <Link to="/terms" className="tap px-2 text-fg-muted no-underline hover:text-fg">
+            Terms
+          </Link>
+          <a href="/how-it-works#help" className="tap px-2 text-fg-muted no-underline hover:text-fg">
+            Need help?
+          </a>
+        </nav>
+        {credits && <p className="text-xs leading-relaxed text-fg-muted">{PHOTO_CREDITS}</p>}
+      </div>
+    </footer>
+  );
+}

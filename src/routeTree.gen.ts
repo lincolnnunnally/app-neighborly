@@ -28,6 +28,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WeekendRouteImport } from './routes/weekend'
 import { Route as ApiChurchesRouteImport } from './routes/api/churches'
+import { Route as ApiEventsRouteImport } from './routes/api/events'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as ApiIcsRouteImport } from './routes/api/ics'
 import { Route as ApiNearRouteImport } from './routes/api/near'
@@ -142,6 +143,11 @@ const ApiChurchesRoute = ApiChurchesRouteImport.update({
   path: '/api/churches',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiEventsRoute = ApiEventsRouteImport.update({
+  id: '/api/events',
+  path: '/api/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiHealthRoute = ApiHealthRouteImport.update({
   id: '/api/health',
   path: '/api/health',
@@ -253,6 +259,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/weekend': typeof WeekendRoute
   '/api/churches': typeof ApiChurchesRoute
+  '/api/events': typeof ApiEventsRoute
   '/api/health': typeof ApiHealthRoute
   '/api/ics': typeof ApiIcsRoute
   '/api/near': typeof ApiNearRoute
@@ -291,6 +298,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/weekend': typeof WeekendRoute
   '/api/churches': typeof ApiChurchesRoute
+  '/api/events': typeof ApiEventsRoute
   '/api/health': typeof ApiHealthRoute
   '/api/ics': typeof ApiIcsRoute
   '/api/near': typeof ApiNearRoute
@@ -331,6 +339,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/weekend': typeof WeekendRoute
   '/api/churches': typeof ApiChurchesRoute
+  '/api/events': typeof ApiEventsRoute
   '/api/health': typeof ApiHealthRoute
   '/api/ics': typeof ApiIcsRoute
   '/api/near': typeof ApiNearRoute
@@ -372,6 +381,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/weekend'
     | '/api/churches'
+    | '/api/events'
     | '/api/health'
     | '/api/ics'
     | '/api/near'
@@ -410,6 +420,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/weekend'
     | '/api/churches'
+    | '/api/events'
     | '/api/health'
     | '/api/ics'
     | '/api/near'
@@ -449,6 +460,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/weekend'
     | '/api/churches'
+    | '/api/events'
     | '/api/health'
     | '/api/ics'
     | '/api/near'
@@ -489,6 +501,7 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   WeekendRoute: typeof WeekendRoute
   ApiChurchesRoute: typeof ApiChurchesRoute
+  ApiEventsRoute: typeof ApiEventsRoute
   ApiHealthRoute: typeof ApiHealthRoute
   ApiIcsRoute: typeof ApiIcsRoute
   ApiNearRoute: typeof ApiNearRoute
@@ -632,6 +645,13 @@ declare module '@tanstack/react-router' {
       path: '/api/churches'
       fullPath: '/api/churches'
       preLoaderRoute: typeof ApiChurchesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/events': {
+      id: '/api/events'
+      path: '/api/events'
+      fullPath: '/api/events'
+      preLoaderRoute: typeof ApiEventsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/health': {
@@ -811,6 +831,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   WeekendRoute: WeekendRoute,
   ApiChurchesRoute: ApiChurchesRoute,
+  ApiEventsRoute: ApiEventsRoute,
   ApiHealthRoute: ApiHealthRoute,
   ApiIcsRoute: ApiIcsRoute,
   ApiNearRoute: ApiNearRoute,

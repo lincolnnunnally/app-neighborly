@@ -173,7 +173,7 @@ function SettingsPage() {
                 type="button"
                 onClick={() => setProfile({ ...profile, life_season: opt.id })}
                 className={cn(
-                  "rounded-full border px-3 py-1.5 text-sm",
+                  "inline-flex min-h-11 items-center rounded-full border px-4 py-2 text-sm",
                   profile.life_season === opt.id
                     ? "border-primary bg-primary text-primary-fg"
                     : "border-border bg-bg-elevated text-fg-muted",
@@ -193,7 +193,7 @@ function SettingsPage() {
                 type="button"
                 onClick={() => setProfile({ ...profile, faith_posture: opt.id })}
                 className={cn(
-                  "rounded-full border px-3 py-1.5 text-left text-sm",
+                  "inline-flex min-h-11 items-center rounded-full border px-4 py-2 text-left text-sm",
                   profile.faith_posture === opt.id
                     ? "border-primary bg-primary text-primary-fg"
                     : "border-border bg-bg-elevated text-fg-muted",
@@ -220,7 +220,7 @@ function SettingsPage() {
                 type="button"
                 onClick={() => setProfile({ ...profile, setting_pref: opt.id })}
                 className={cn(
-                  "rounded-full border px-3 py-1.5 text-sm",
+                  "inline-flex min-h-11 items-center rounded-full border px-4 py-2 text-sm",
                   profile.setting_pref === opt.id
                     ? "border-primary bg-primary text-primary-fg"
                     : "border-border bg-bg-elevated text-fg-muted",
@@ -240,7 +240,7 @@ function SettingsPage() {
                 type="button"
                 onClick={() => setProfile({ ...profile, mobility: opt.id })}
                 className={cn(
-                  "rounded-full border px-3 py-1.5 text-left text-sm",
+                  "inline-flex min-h-11 items-center rounded-full border px-4 py-2 text-left text-sm",
                   profile.mobility === opt.id
                     ? "border-primary bg-primary text-primary-fg"
                     : "border-border bg-bg-elevated text-fg-muted",

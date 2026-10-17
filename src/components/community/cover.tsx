@@ -9,19 +9,35 @@ const colorMap: Record<string, string> = {
   water: "from-[color-mix(in_oklab,var(--color-sky)_22%,var(--color-bg))] to-[var(--color-bg-elevated)]",
 };
 
+const TOWN_PHOTOS: Record<string, { src: string; alt: string }> = {
+  vidalia: { src: "/img/vidalia/fountain.jpg", alt: "The fountain in Vidalia's downtown park" },
+  "vidalia-pickleball": { src: "/img/vidalia/amphitheater.jpg", alt: "The downtown park amphitheater in Vidalia" },
+  "vidalia-outdoors": { src: "/img/vidalia/amphitheater.jpg", alt: "The downtown park amphitheater in Vidalia" },
+  "vidalia-dads": { src: "/img/vidalia/cityhall.jpg", alt: "The Vidalia Municipal Building downtown" },
+  "vidalia-makers": { src: "/img/vidalia/downtown.jpg", alt: "The Vidalia water tower" },
+};
+
+export function townPhoto(slug: string) {
+  return TOWN_PHOTOS[slug] ?? null;
+}
+
 export function CommunityCover({
   community,
   className,
   compact,
+  headingLevel = 1,
 }: {
   community: Community;
   className?: string;
   compact?: boolean;
+  headingLevel?: 1 | 2;
 }) {
+  const photo = compact ? null : townPhoto(community.slug);
   return (
     <div
       className={cn(
         "relative overflow-hidden rounded-[var(--radius-xl)] border border-border bg-gradient-to-br p-5",
+        photo && "grid gap-6 md:grid-cols-[1fr_1fr] md:items-center",
         colorMap[community.cover_color] ?? colorMap.sage,
         compact ? "p-4" : "p-6 sm:p-8",
         className,
@@ -35,22 +51,30 @@ export function CommunityCover({
               {community.slug === "vidalia" ? "Vidalia, Georgia" : "Featured"}
             </Badge>
           )}
-          <span className="text-xs text-fg-muted">
-            {community.city}, {community.state} · {community.member_count} neighbors
+          <span className="text-base text-fg-muted">
+            {community.city}, {community.state}
+            {community.member_count > 1 ? ` · ${community.member_count} neighbors` : ""}
           </span>
+          {community.member_count <= 1 && <Badge variant="accent">New</Badge>}
         </div>
-        <h2
-          className={cn(
-            "font-display font-semibold tracking-tight text-fg",
-            compact ? "text-xl" : "text-2xl sm:text-3xl",
-          )}
-        >
-          {community.name}
-        </h2>
+        {compact || headingLevel === 2 ? (
+          <h2 className={cn("font-display font-semibold tracking-tight text-fg", compact ? "text-xl" : "text-2xl sm:text-3xl")}>
+            {community.name}
+          </h2>
+        ) : (
+          <h1 className="font-display text-3xl font-bold tracking-tight text-fg sm:text-4xl">{community.name}</h1>
+        )}
         <p className={cn("text-fg-muted", compact ? "text-sm" : "max-w-2xl text-base")}>
           {community.tagline}
         </p>
       </div>
+      {photo && (
+        <img
+          src={photo.src}
+          alt={photo.alt}
+          className="relative z-10 aspect-video w-full rounded-[var(--radius-lg)] object-cover"
+        />
+      )}
       <div
         aria-hidden
         className="pointer-events-none absolute -right-8 -top-8 h-36 w-36 rounded-full bg-[color-mix(in_oklab,var(--color-primary)_10%,transparent)]"

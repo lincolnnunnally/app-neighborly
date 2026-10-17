@@ -189,8 +189,8 @@ function SearchPage() {
                   }
                   className={
                     scope === s.id
-                      ? "rounded-full border border-primary bg-primary px-3 py-1.5 text-sm text-primary-fg"
-                      : "rounded-full border border-border bg-bg-elevated px-3 py-1.5 text-sm text-fg-muted"
+                      ? "inline-flex min-h-11 items-center rounded-full border border-primary bg-primary px-4 py-2 text-sm text-primary-fg"
+                      : "inline-flex min-h-11 items-center rounded-full border border-border bg-bg-elevated px-4 py-2 text-sm text-fg-muted"
                   }
                 >
                   {s.label}

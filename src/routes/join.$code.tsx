@@ -60,7 +60,7 @@ function JoinInvitePage() {
             <div className="space-y-2">
               <p className="text-sm font-medium text-primary">You're invited</p>
               <h1 className="font-display text-3xl font-semibold tracking-tight">
-                Join {community.name}
+                Join {community.name} on Neighborly
               </h1>
               <p className="max-w-2xl text-fg-muted">
                 {label || "Community invite"} · share this page, text the code{" "}
@@ -68,7 +68,7 @@ function JoinInvitePage() {
               </p>
             </div>
 
-            <CommunityCover community={community} />
+            <CommunityCover community={community} headingLevel={2} />
 
             <div className="grid gap-4 md:grid-cols-[1fr_auto]">
               <Card>

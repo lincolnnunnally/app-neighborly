@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { SiteHeader } from "@/components/layout/site-header";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { HandHeart } from "lucide-react";
 import {
@@ -90,15 +91,11 @@ function SignupPage() {
   }
 
   return (
-    <main className="grid min-h-dvh place-items-center bg-bg p-6">
-      <Card className="w-full max-w-md">
+    <div className="min-h-dvh bg-bg">
+      <SiteHeader />
+      <main className="grid place-items-center px-5 py-10 sm:py-16">
+      <Card className="w-full max-w-[440px]">
         <CardHeader>
-          <Link to="/" className="mb-2 flex items-center gap-2 text-fg no-underline">
-            <span className="grid h-8 w-8 place-items-center rounded-[var(--radius-sm)] bg-primary text-primary-fg">
-              <HandHeart className="h-4 w-4" />
-            </span>
-            <span className="font-display font-semibold">Neighborly</span>
-          </Link>
           <CardTitle>Create your neighbor profile</CardTitle>
           <CardDescription>
             {search.community === "vidalia" || search.code === "VIDALIA-WELCOME" || !search.community
@@ -207,5 +204,6 @@ function SignupPage() {
         </CardContent>
       </Card>
     </main>
+    </div>
   );
 }

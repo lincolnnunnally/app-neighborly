@@ -3,14 +3,19 @@
 
 @theme {
   --font-sans: "Segoe UI", "Source Sans 3", system-ui, -apple-system, sans-serif;
-  --font-display: "Segoe UI", "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  /* Type floor: visible copy never drops below 16px; xs is reserved for eyebrows. */
+  --text-xs: 0.875rem;
+  --text-xs--line-height: 1.35;
+  --text-sm: 1rem;
+  --text-sm--line-height: 1.5;
 
   --color-bg: #f6f3ee;
   --color-bg-elevated: #fffdf9;
   --color-bg-subtle: #ebe6dc;
   --color-fg: #1c1b19;
   --color-fg-muted: #5c584f;
-  --color-fg-subtle: #8a8478;
+  --color-fg-subtle: #6b665c;
   --color-border: #ddd6c8;
   --color-border-strong: #c4bbab;
 
@@ -83,8 +88,32 @@
   }
 
   .page-shell {
-    width: min(1120px, calc(100% - 2rem));
+    width: min(1160px, calc(100% - 2.5rem));
     margin-inline: auto;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+  }
+  .eyebrow::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--color-accent);
+  }
+
+  .tap {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
   }
 
   .focus-ring {

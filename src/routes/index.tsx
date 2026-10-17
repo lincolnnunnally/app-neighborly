@@ -1,602 +1,309 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
-import { createFileRoute } from "@tanstack/react-router";
-import {
-  ArrowRight,
-  CalendarDays,
-  HandHeart,
-  Link2,
-  Mail,
-  MapPin,
-  Hammer,
-  QrCode,
-  Share2,
-  Users,
-  Wrench,
-} from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { HandHeart, Soup, Wrench } from "lucide-react";
 import { SiteHeader } from "@/components/layout/site-header";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { SiteFooter } from "@/components/layout/site-footer";
 import { PlaceSearch } from "@/components/community/place-search";
-import { SearchBox } from "@/components/community/search-box";
 import { JsonLd } from "@/components/community/json-ld";
-import { getCommunityFeed, listCommunities } from "@/lib/community/server";
-import type { Community, CommunityEvent, Need, Service } from "@/lib/community/types";
-import type { WeekendPlan } from "@/lib/community/weekend";
-import { KIND_LABELS } from "@/lib/community/types";
-import { useCurrentUserState } from "@/lib/auth/use-current-user";
-import { formatEventWhen } from "@/lib/utils";
+import { WeekendFeed } from "@/components/events/event-feed";
+import { listCommunities } from "@/lib/community/server";
+import { loadWeekendPlan, type WeekendPlan } from "@/lib/community/weekend";
+import type { Community } from "@/lib/community/types";
 
-export const Route = createFileRoute("/")({ component: LandingPage });
+export const Route = createFileRoute("/")({
+  loader: async () => {
+    const [plan, communities] = await Promise.all([
+      loadWeekendPlan({ data: { place: "vidalia", query: "vidalia" } }).catch(() => null as WeekendPlan | null),
+      listCommunities().catch(() => [] as Community[]),
+    ]);
+    return { plan, communities };
+  },
+  head: () => ({
+    meta: [
+      { title: "Neighborly — what's on this weekend, and the neighbors who'll be there" },
+      {
+        name: "description",
+        content:
+          "Festivals, shows, park days, and neighbor gatherings in Vidalia, Georgia and towns nearby — plus a friendly place to ask for a hand or offer one.",
+      },
+      { property: "og:title", content: "This weekend in Vidalia, and the neighbors who'll be there" },
+      {
+        property: "og:description",
+        content: "Find what's on near you this weekend. Browse free; join when you want to RSVP or lend a hand.",
+      },
+    ],
+  }),
+  component: LandingPage,
+});
+
+const PLACES = [
+  {
+    title: "Downtown Vidalia",
+    body: "Church Street shops, coffee, The Market on Church, and movies at the historic Pal.",
+    img: "/img/vidalia/cityhall.jpg",
+    alt: "The Vidalia Municipal Building downtown",
+    to: "/c/$slug" as const,
+    params: { slug: "vidalia" },
+    search: { tab: "places" },
+  },
+  {
+    title: "Parks & pickleball",
+    body: "Free courts at the Rec Complex, plus downtown park evenings with the kids.",
+    img: "/img/vidalia/amphitheater.jpg",
+    alt: "The downtown park amphitheater in Vidalia",
+    to: "/c/$slug" as const,
+    params: { slug: "vidalia-pickleball" },
+    search: {},
+  },
+  {
+    title: "Onion Festival & the seasons",
+    body: "Late April every year, plus July 4th, downtown Christmas, and every weekend in between.",
+    img: "/img/vidalia/onions.jpg",
+    alt: "Sweet Vidalia onions",
+    to: "/weekend" as const,
+    params: {},
+    search: { place: "vidalia" },
+  },
+];
+
+function ledeFor(plan: WeekendPlan | null): string {
+  const titles = (plan?.feed?.events ?? []).slice(0, 3).map((e) => e.title);
+  if (titles.length >= 2) {
+    return `${titles.slice(0, -1).join(", ")}, and ${titles[titles.length - 1]}. Pick one, add it to your calendar, and go say hello.`;
+  }
+  return "Festivals, shows, park days, and neighbor gatherings in and around town. Pick one, add it to your calendar, and go say hello.";
+}
 
 function LandingPage() {
-  const navigate = useNavigate();
-  const { user } = useCurrentUserState();
-  const [communities, setCommunities] = useState<Community[]>([]);
-  const [needs, setNeeds] = useState<Need[]>([]);
-  const [services, setServices] = useState<Service[]>([]);
-  const [events, setEvents] = useState<CommunityEvent[]>([]);
-  const [feedStatus, setFeedStatus] = useState<"loading" | "ready" | "error">("loading");
-  const [communitiesError, setCommunitiesError] = useState(false);
-  const [weekend, setWeekend] = useState<WeekendPlan | null>(null);
-
-  useEffect(() => {
-    listCommunities()
-      .then((rows) => {
-        setCommunities(rows);
-        setCommunitiesError(false);
-      })
-      .catch(() => {
-        setCommunities([]);
-        setCommunitiesError(true);
-      });
-    getCommunityFeed({ data: { slug: "vidalia" } })
-      .then((f) => {
-        const cutoff = Date.now() - 6 * 3600 * 1000;
-        const upcoming = f.events.filter((e) => {
-          const t = Date.parse(String(e.starts_at));
-          return Number.isFinite(t) && t >= cutoff;
-        });
-        setNeeds(f.needs.slice(0, 3));
-        setServices(f.services.slice(0, 2));
-        setEvents((upcoming.length ? upcoming : f.events).slice(0, 2));
-        setFeedStatus("ready");
-      })
-      .catch(() => setFeedStatus("error"));
-    fetch("/api/weekend")
-      .then(async (res) => {
-        const d = (await res.json()) as { ok?: boolean; plan?: WeekendPlan };
-        if (res.ok && d.ok && d.plan) setWeekend(d.plan);
-      })
-      .catch(() => {
-        /* weekend page still works if this card is empty */
-      });
-  }, []);
-
-  const vidalia = communities.find((c) => c.slug === "vidalia");
-
-  async function tryNow() {
-    if (user) {
-      await navigate({ to: "/app" });
-      return;
-    }
-    await navigate({
-      to: "/signup",
-      search: { community: "vidalia", code: "VIDALIA-WELCOME" },
-    });
-  }
+  const { plan, communities } = Route.useLoaderData();
+  const feed = plan?.feed ?? null;
+  const weather = (plan?.weather ?? []).filter((d) => [6, 0].includes(new Date(`${d.date}T12:00:00Z`).getUTCDay()));
+  const groups = communities.filter((c) => c.slug.startsWith("vidalia") || c.slug === "milstead");
 
   return (
-    <div className="min-h-dvh bg-bg">
+    <div className="min-h-dvh overflow-x-clip bg-bg">
       <SiteHeader />
-
-      <section className="relative overflow-hidden border-b border-border pt-20">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,color-mix(in_oklab,var(--color-primary)_12%,transparent),transparent_55%),radial-gradient(ellipse_at_bottom_left,color-mix(in_oklab,var(--color-accent)_10%,transparent),transparent_50%)]"
-        />
-        <div className="page-shell relative grid gap-10 py-14 sm:py-20 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
-          <div className="space-y-6">
-            <Badge className="w-fit">Live in Vidalia, Georgia</Badge>
-            <h1 className="font-display text-balance text-4xl font-semibold tracking-tight text-fg sm:text-5xl lg:text-[3.25rem] lg:leading-[1.1]">
-              This weekend in Vidalia, and the neighbors who&apos;ll be there.
-            </h1>
-            <p className="max-w-xl text-lg text-fg-muted">
-              Festivals, shows, park days, and neighbor gatherings near you — plus a place to
-              ask for a hand or offer one. Type your ZIP to see what&apos;s on. No account
-              needed to look.
-            </p>
-            <PlaceSearch size="lg" defaultValue="30474" />
-            {/* Two different questions, side by side: PlaceSearch answers
-                "which town?", SearchBox answers "what am I looking for?". */}
-            <div className="max-w-xl border-t border-border pt-4">
-              <p className="mb-2 text-sm text-fg-muted">
-                Looking for something in particular — a food pantry, a Bible study, a hand
-                with the yard? Search it in plain words.
+      <main>
+        {/* Hero */}
+        <section className="relative">
+          <div className="page-shell grid items-center gap-8 py-8 lg:grid-cols-[1.05fr_1fr] lg:gap-10 lg:py-14">
+            <div className="space-y-5">
+              <span className="eyebrow">Vidalia, Georgia{feed ? ` · ${feed.window.label}` : ""}</span>
+              <h1 className="font-display text-[2.5rem] font-bold leading-[1.1] tracking-tight text-fg text-balance lg:text-[3.5rem]">
+                This weekend in Vidalia, and the neighbors who&apos;ll be there.
+              </h1>
+              <p className="max-w-[34em] text-lg text-fg-muted">{ledeFor(plan)}</p>
+              <PlaceSearch defaultValue="30474" />
+              <p className="text-base text-fg-muted">
+                Not in Vidalia? Type any town or ZIP. Or{" "}
+                <Link to="/search" className="tap font-medium text-primary underline-offset-4 hover:underline">
+                  search for a pantry, a Bible study, or a hand with the yard →
+                </Link>
               </p>
-              <SearchBox />
             </div>
-            <div className="flex flex-wrap gap-3">
-              <Button asChild size="lg">
-                <Link to="/weekend" search={{ place: "vidalia" }}>
-                  This weekend in Vidalia
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button asChild size="lg" variant="secondary">
-                <Link to="/churches" search={{ zip: "30474" }}>
-                  Churches in Vidalia
-                </Link>
-              </Button>
-              <Button asChild size="lg" variant="secondary">
-                <Link to="/c/$slug" params={{ slug: "vidalia" }}>
-                  Vidalia board
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" onClick={() => void tryNow()}>
-                {user ? "Open my hub" : "Join Vidalia"}
-              </Button>
+            <div className="relative min-h-[300px] overflow-hidden rounded-[var(--radius-xl)] bg-sky-soft lg:min-h-[460px]">
+              <img
+                src="/img/vidalia/downtown.jpg"
+                alt="The Vidalia water tower: The Sweet Onion City"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+              {(weather.length > 0 || plan?.weatherNote) && (
+                <div className="absolute inset-x-4 bottom-4 flex flex-wrap gap-2">
+                  {weather.map((d) => (
+                    <div key={d.date} className="rounded-[var(--radius-md)] bg-bg-elevated/95 px-4 py-2 text-base text-fg shadow-md">
+                      <b className="block text-sm uppercase tracking-wide text-primary">
+                        {new Date(`${d.date}T12:00:00Z`).toLocaleDateString("en-US", { weekday: "short", timeZone: "UTC" })}
+                      </b>
+                      {d.summary} · {d.maxF}°
+                    </div>
+                  ))}
+                  {plan?.weatherNote && (
+                    <div className="max-w-full rounded-[var(--radius-md)] bg-bg-elevated/95 px-4 py-2 text-base text-fg shadow-md">
+                      {plan.weatherNote}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
+        </section>
 
-          <Card className="relative overflow-hidden">
-            <CardHeader>
-              <CardTitle className="text-xl">
-                {vidalia?.name ?? "Vidalia"} right now
-              </CardTitle>
-              <CardDescription>
-                {feedStatus === "error"
-                  ? "The live board could not load."
-                  : needs[0] || services[0] || events[0]
-                    ? "Live from the board — tap any row to open the community."
-                    : "New posts from neighbors will show up here."}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {events[0] && (
-                <Link
-                  to="/c/$slug"
-                  params={{ slug: "vidalia" }}
-                  className="flex items-start gap-3 rounded-[var(--radius-lg)] border border-border bg-bg px-3 py-3 no-underline transition-colors hover:border-border-strong"
-                >
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[var(--radius-sm)] bg-primary-soft text-primary">
-                    <CalendarDays className="h-4 w-4" />
-                  </span>
-                  <span>
-                    <span className="block text-sm font-medium text-fg">{events[0].title}</span>
-                    <span className="text-xs text-fg-muted">
-                      {formatEventWhen(events[0].starts_at)}
-                      {events[0].rsvp_count > 1 ? ` · ${events[0].rsvp_count} going` : ""}
-                    </span>
-                  </span>
-                </Link>
-              )}
-              {events[1] && (
-                <Link
-                  to="/c/$slug"
-                  params={{ slug: "vidalia" }}
-                  className="flex items-start gap-3 rounded-[var(--radius-lg)] border border-border bg-bg px-3 py-3 no-underline transition-colors hover:border-border-strong"
-                >
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[var(--radius-sm)] bg-primary-soft text-primary">
-                    <CalendarDays className="h-4 w-4" />
-                  </span>
-                  <span>
-                    <span className="block text-sm font-medium text-fg">{events[1].title}</span>
-                    <span className="text-xs text-fg-muted">
-                      {formatEventWhen(events[1].starts_at)}
-                      {events[1].rsvp_count > 1 ? ` · ${events[1].rsvp_count} going` : ""}
-                    </span>
-                  </span>
-                </Link>
-              )}
-              {needs[0] && (
-                <Link
-                  to="/c/$slug"
-                  params={{ slug: "vidalia" }}
-                  className="flex items-start gap-3 rounded-[var(--radius-lg)] border border-border bg-bg px-3 py-3 no-underline transition-colors hover:border-border-strong"
-                >
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[var(--radius-sm)] bg-primary-soft text-primary">
-                    <HandHeart className="h-4 w-4" />
-                  </span>
-                  <span>
-                    <span className="block text-sm font-medium text-fg">{needs[0].title}</span>
-                    <span className="text-xs text-fg-muted">
-                      {needs[0].author_name} · {needs[0].urgency}
-                    </span>
-                  </span>
-                </Link>
-              )}
-              {services[0] && (
-                <Link
-                  to="/c/$slug"
-                  params={{ slug: "vidalia" }}
-                  className="flex items-start gap-3 rounded-[var(--radius-lg)] border border-border bg-bg px-3 py-3 no-underline transition-colors hover:border-border-strong"
-                >
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[var(--radius-sm)] bg-primary-soft text-primary">
-                    <Wrench className="h-4 w-4" />
-                  </span>
-                  <span>
-                    <span className="block text-sm font-medium text-fg">{services[0].title}</span>
-                    <span className="text-xs text-fg-muted">
-                      {services[0].provider_name} · {services[0].pricing}
-                    </span>
-                  </span>
-                </Link>
-              )}
-              {feedStatus === "loading" && !needs[0] && !services[0] && !events[0] && (
-                <div className="h-24 animate-pulse rounded-[var(--radius-lg)] bg-bg-subtle" />
-              )}
-              {feedStatus === "error" && (
-                <p className="text-sm text-fg-muted">
-                  Could not load the Vidalia board. Open the full board to try again.
+        {/* Happening this weekend */}
+        <section className="py-11">
+          <div className="page-shell">
+            <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <h2 className="font-display text-3xl font-semibold text-fg">Happening this weekend</h2>
+                <p className="mt-1.5 text-[1.0625rem] text-fg-muted">
+                  From local calendars, parks, the Pal, and your neighbors. Please confirm before you go.
                 </p>
-              )}
-              {feedStatus === "ready" && !needs[0] && !services[0] && !events[0] && (
-                <p className="text-sm text-fg-muted">
-                  No posts yet — be the first neighbor to ask, offer, or gather.
-                </p>
-              )}
-              <Button asChild variant="soft" className="w-full">
-                <Link to="/c/$slug" params={{ slug: "vidalia" }}>
-                  Open full Vidalia board
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      <section className="page-shell py-16">
-        <div className="mb-8 max-w-2xl">
-          <h2 className="font-display text-3xl font-semibold tracking-tight">
-            Where people already gather in Vidalia
-          </h2>
-          <p className="mt-2 text-fg-muted">
-            Show up once, and you&apos;ll start seeing familiar faces.
-          </p>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {[
-            {
-              title: "Pickleball",
-              body: "Outdoor courts at the Rec Complex, 102 Stockyard Rd, Vidalia, Georgia. Free public play. Beginners welcome.",
-              href: "/c/vidalia-pickleball",
-            },
-            {
-              title: "Downtown & PAL Theatre",
-              body: "Church Street shops, coffee, The Market on Church, and the historic PAL Theatre — a way to become a regular.",
-              href: "/c/vidalia",
-            },
-            {
-              title: "Vidalia dads",
-              body: "Coffee, pickleball, and real friendship for dads who want to stay close to their kids.",
-              href: "/c/vidalia-dads",
-            },
-            {
-              title: "First Baptist Vidalia, Georgia",
-              body: "107 E Second St. Sunday worship at 10:30am, plus GriefShare and other ministries.",
-              href: "/c/vidalia",
-            },
-            {
-              title: "Library & civic groups",
-              body: "Vidalia Regional Library (610 Jackson St) plus Rotary and other civic tables that still meet in person.",
-              href: "/c/vidalia",
-            },
-            {
-              title: "Onion Festival & seasons",
-              body: "Late April each year — plus July 4th, downtown Christmas, and the everyday in-between.",
-              href: "/c/vidalia",
-            },
-          ].map((p) => (
-            <Link
-              key={p.title}
-              to="/c/$slug"
-              params={{ slug: p.href.replace("/c/", "") }}
-              className="surface-card block p-5 no-underline transition-colors hover:border-border-strong"
-            >
-              <h3 className="font-display text-lg font-semibold text-fg">{p.title}</h3>
-              <p className="mt-1 text-sm text-fg-muted">{p.body}</p>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <section className="page-shell py-16">
-        <div className="mb-8 max-w-2xl">
-          <h2 className="font-display text-3xl font-semibold tracking-tight">
-            Built for real community life
-          </h2>
-          <p className="mt-2 text-fg-muted">
-            Help, services, events, facilities, and people next door — all interactive.
-          </p>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {[
-            {
-              title: "Ask for help",
-              body: "Post a need, get real offers, accept a neighbor.",
-              icon: HandHeart,
-              to: "/c/vidalia" as const,
-            },
-            {
-              title: "Offer skills & services",
-              body: "Businesses, side hustles, makers, and kids earning money.",
-              icon: Wrench,
-              to: "offer" as const,
-            },
-            {
-              title: "Borrow tools",
-              body: "Mowers, trailers, welders — book dates and meet up.",
-              icon: Hammer,
-              to: "tools" as const,
-            },
-            {
-              title: "Gather together",
-              body: "Block parties, cleanups, BBQs — RSVP sticks.",
-              icon: CalendarDays,
-              to: "/c/vidalia" as const,
-            },
-            {
-              title: "Places",
-              body: "Reserve a pavilion, or find a Toombs / Vidalia food pantry.",
-              icon: MapPin,
-              to: "/c/vidalia" as const,
-            },
-            {
-              title: "Welcome newcomers",
-              body: "New residents get a path to meet people fast.",
-              icon: Users,
-              to: "/c/vidalia" as const,
-            },
-            {
-              title: "Many communities",
-              body: "Neighborhood, church, HOA, vacation home — multi-join.",
-              icon: Share2,
-              to: "/communities" as const,
-            },
-          ].map((f) => {
-            const offerSearch = {
-              community: "vidalia" as const,
-              code: "VIDALIA-WELCOME" as const,
-              next: f.to === "tools" ? "/app/tools" : "/app/services",
-            };
-            const className =
-              "surface-card block p-5 no-underline transition-colors hover:border-border-strong";
-            const inner = (
-              <>
-                <span className="mb-3 grid h-10 w-10 place-items-center rounded-[var(--radius-md)] bg-primary-soft text-primary">
-                  <f.icon className="h-5 w-5" />
-                </span>
-                <h3 className="font-display text-lg font-semibold text-fg">{f.title}</h3>
-                <p className="mt-1 text-sm text-fg-muted">{f.body}</p>
-              </>
-            );
-            if (f.to === "offer" || f.to === "tools") {
-              if (user) {
-                return f.to === "tools" ? (
-                  <Link key={f.title} to="/app/tools" className={className}>
-                    {inner}
-                  </Link>
-                ) : (
-                  <Link key={f.title} to="/app/services" className={className}>
-                    {inner}
-                  </Link>
-                );
-              }
-              return (
-                <Link key={f.title} to="/signup" search={offerSearch} className={className}>
-                  {inner}
-                </Link>
-              );
-            }
-            return (
+              </div>
               <Link
-                key={f.title}
-                to={f.to === "/communities" ? "/communities" : "/c/$slug"}
-                params={f.to === "/communities" ? undefined : { slug: "vidalia" }}
-                search={f.title === "Places" ? { tab: "places" } : undefined}
-                className={className}
+                to="/weekend"
+                search={{ place: "vidalia" }}
+                className="inline-flex min-h-12 items-center rounded-full border border-border bg-bg-elevated px-5 text-base font-semibold text-fg no-underline hover:bg-bg-subtle"
               >
-                {inner}
+                Full weekend plan →
               </Link>
-            );
-          })}
-        </div>
-      </section>
+            </div>
+            <WeekendFeed
+              feed={feed}
+              town="Vidalia"
+              slug="vidalia"
+              zip="30474"
+              city="Vidalia"
+              state="GA"
+              mode="all"
+              limit={4}
+              widerHref="/weekend?place=vidalia&radius=50"
+            />
+          </div>
+        </section>
 
-      <section id="signup-paths" className="border-y border-border bg-bg-elevated py-16">
-        <div className="page-shell">
-          <div className="mb-8 max-w-2xl">
-            <h2 className="font-display text-3xl font-semibold tracking-tight">
-              How people actually join
-            </h2>
-            <p className="mt-2 text-fg-muted">
-              Pick a community on the website, follow an invite link, or scan a QR flyer.
-            </p>
+        {/* Places */}
+        <section className="border-y border-border bg-bg-elevated py-11">
+          <div className="page-shell">
+            <div className="mb-6">
+              <h2 className="font-display text-3xl font-semibold text-fg">Where Vidalia already gathers</h2>
+              <p className="mt-1.5 text-[1.0625rem] text-fg-muted">Real places where you can become a regular.</p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              {PLACES.map((p) => (
+                <Link
+                  key={p.title}
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  to={p.to as any}
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  params={p.params as any}
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  search={p.search as any}
+                  className="block overflow-hidden rounded-[var(--radius-xl)] border border-border bg-bg text-fg no-underline transition-shadow hover:shadow-md"
+                >
+                  <img src={p.img} alt={p.alt} loading="lazy" className="h-48 w-full object-cover" />
+                  <div className="p-5">
+                    <h3 className="font-display text-xl font-semibold">{p.title}</h3>
+                    <p className="mt-1.5 text-base text-fg-muted">{p.body}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {[
-              {
-                icon: MapPin,
-                title: "Pick on the website",
-                body: "Browse communities and multi-select the ones that fit.",
-              },
-              {
-                icon: Link2,
-                title: "Personal invite link",
-                body: "Text, email, Facebook, or YouTube description with a code.",
-              },
-              {
-                icon: QrCode,
-                title: "QR on mailboxes",
-                body: "Printable flyers neighbors hang on doors.",
-              },
-              {
-                icon: Mail,
-                title: "Account + profile",
-                body: "Email/password or Google/X, then skills and alerts.",
-              },
-            ].map((item) => (
-              <div
-                key={item.title}
-                className="rounded-[var(--radius-xl)] border border-border bg-bg p-5"
-              >
-                <item.icon className="mb-3 h-5 w-5 text-primary" />
-                <h3 className="font-medium text-fg">{item.title}</h3>
-                <p className="mt-1 text-sm text-fg-muted">{item.body}</p>
-              </div>
-            ))}
-          </div>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button onClick={() => void tryNow()}>{user ? "Open my hub" : "Join Vidalia"}</Button>
-            <Button asChild variant="outline">
-              <Link to="/join/$code" params={{ code: "VIDALIA-QR" }}>
-                Vidalia invite / QR
-              </Link>
-            </Button>
-            <Button asChild variant="secondary">
-              <Link to="/signup" search={{ community: "vidalia", code: "VIDALIA-WELCOME" }}>
-                Full signup form
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="page-shell py-16">
-        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <h2 className="font-display text-3xl font-semibold tracking-tight">
-              Communities ready to explore
-            </h2>
-            <p className="mt-2 text-fg-muted">
-              Find your neighborhood, church, or interest group. You can join more than one.
-            </p>
-          </div>
-          <Button asChild variant="secondary">
-            <Link to="/communities">See all</Link>
-          </Button>
-        </div>
-        {communitiesError ? (
-          <p className="text-sm text-fg-muted" role="alert">
-            Could not load communities. Refresh the page, or open the Vidalia board.
-          </p>
-        ) : null}
-        <div className="grid gap-4 sm:grid-cols-2">
-          {communities.map((c) => (
-            <Link
-              key={c.id}
-              to="/c/$slug"
-              params={{ slug: c.slug }}
-              className="surface-card block p-5 no-underline transition-colors hover:border-border-strong"
-            >
-              <div className="mb-2 flex flex-wrap items-center gap-2">
-                <Badge variant="secondary">{KIND_LABELS[c.kind]}</Badge>
-                {c.is_featured && <Badge>Featured</Badge>}
-              </div>
-              <h3 className="font-display text-xl font-semibold text-fg">{c.name}</h3>
-              <p className="mt-1 text-sm text-fg-muted">{c.tagline}</p>
-              <p className="mt-3 text-xs text-fg-subtle">
-                {c.city}, {c.state}
-                {c.member_count > 1 ? ` · ${c.member_count} members` : ""}
+        {/* Help */}
+        <section className="py-11">
+          <div className="page-shell">
+            <div className="mb-6">
+              <h2 className="font-display text-3xl font-semibold text-fg">Help when you can. Ask when you need.</h2>
+              <p className="mt-1.5 text-[1.0625rem] text-fg-muted">
+                Browsing is free. Make a free account to post, RSVP, or offer a hand.
               </p>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <section className="border-t border-border bg-bg-elevated py-16">
-        <div className="page-shell">
-          <div className="mb-8 max-w-2xl">
-            <h2 className="font-display text-3xl font-semibold tracking-tight">
-              Other doors when you are ready
-            </h2>
-            <p className="mt-2 text-fg-muted">
-              More ways to find friendship, serve, and stay close to the people you love.
-            </p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="flex flex-col gap-2.5 rounded-[var(--radius-xl)] bg-primary-soft p-6">
+                <HandHeart className="h-7 w-7 text-primary" aria-hidden />
+                <h3 className="font-display text-2xl font-semibold text-fg">Ask for a hand</h3>
+                <p className="text-base text-fg-muted">
+                  A ride to the pharmacy, help moving a couch, a casserole after surgery. Post it and neighbors can offer.
+                </p>
+                <Link
+                  to="/c/$slug"
+                  params={{ slug: "vidalia" }}
+                  search={{ tab: "needs" } as never}
+                  className="mt-2 inline-flex min-h-12 w-fit items-center rounded-full bg-primary px-5 text-base font-semibold text-primary-fg no-underline"
+                >
+                  Post a need
+                </Link>
+              </div>
+              <div className="flex flex-col gap-2.5 rounded-[var(--radius-xl)] bg-accent-soft p-6">
+                <Wrench className="h-7 w-7 text-accent" aria-hidden />
+                <h3 className="font-display text-2xl font-semibold text-fg">Offer what you&apos;re good at</h3>
+                <p className="text-base text-fg-muted">
+                  Yard work, tutoring, woodworking, a mower to lend. Small skills go a long way here.
+                </p>
+                <Link
+                  to="/c/$slug"
+                  params={{ slug: "vidalia" }}
+                  search={{ tab: "services" } as never}
+                  className="mt-2 inline-flex min-h-12 w-fit items-center rounded-full bg-accent px-5 text-base font-semibold text-white no-underline"
+                >
+                  Offer a skill
+                </Link>
+              </div>
+              <div className="flex flex-col gap-2.5 rounded-[var(--radius-xl)] bg-sky-soft p-6">
+                <Soup className="h-7 w-7 text-sky" aria-hidden />
+                <h3 className="font-display text-2xl font-semibold text-fg">Find food &amp; support</h3>
+                <p className="text-base text-fg-muted">
+                  Toombs and Vidalia food pantries, churches, and GriefShare, with addresses and hours where they&apos;re posted.
+                </p>
+                <Link
+                  to="/c/$slug"
+                  params={{ slug: "vidalia" }}
+                  search={{ tab: "places", cat: "pantry" } as never}
+                  className="mt-2 inline-flex min-h-12 w-fit items-center rounded-full border border-border bg-bg-elevated px-5 text-base font-semibold text-fg no-underline"
+                >
+                  Find a pantry
+                </Link>
+              </div>
+            </div>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              {
-                title: "Presence — coffee, a walk, a meal",
-                body: "Say yes to coffee, a walk, or a meal with someone nearby.",
-                href: "https://presence.unitedundergod.org/",
-              },
-              {
-                title: "Kindred — friendship first",
-                body: "Find friends who build you up.",
-                href: "https://kindred.unitedundergod.org/",
-              },
-              {
-                title: "Neighborly Churches",
-                body: "Find a church home nearby, with service times and worship style.",
-                href: "/churches",
-              },
-              {
-                title: "Kids Need Dads",
-                body: "Encouragement and practical help for dads.",
-                href: "https://dads.unitedundergod.org/",
-              },
-              {
-                title: "Live On Mission",
-                body: "A small way to serve once you have a little room to give.",
-                href: "https://liveonmission.unitedundergod.org/",
-              },
-            ].map((item) => (
-              <a
-                key={item.title}
-                href={item.href}
-                className="surface-card block p-5 no-underline transition-colors hover:border-border-strong"
-                {...(item.href.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}
+        </section>
+
+        {/* Groups */}
+        <section className="border-y border-border bg-bg-elevated py-11">
+          <div className="page-shell">
+            <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <h2 className="font-display text-3xl font-semibold text-fg">Find your people</h2>
+                <p className="mt-1.5 text-[1.0625rem] text-fg-muted">
+                  Join as many groups as fit. Every group starts with one person who says yes.
+                </p>
+              </div>
+              <Link
+                to="/communities"
+                className="inline-flex min-h-12 items-center rounded-full border border-border bg-bg px-5 text-base font-semibold text-fg no-underline hover:bg-bg-subtle"
               >
-                <h3 className="font-display text-lg font-semibold text-fg">{item.title}</h3>
-                <p className="mt-1 text-sm text-fg-muted">{item.body}</p>
-              </a>
-            ))}
+                All communities →
+              </Link>
+            </div>
+            <div className="flex flex-wrap gap-2.5">
+              {groups.map((c) => (
+                <Link
+                  key={c.id}
+                  to="/c/$slug"
+                  params={{ slug: c.slug }}
+                  className="inline-flex min-h-11 items-center gap-2 rounded-full border border-border bg-bg px-4 text-base text-fg no-underline hover:border-border-strong"
+                >
+                  {c.slug === "vidalia"
+                    ? "Vidalia neighbors"
+                    : c.name.replace(/^Vidalia\s+/i, "").replace(/^./, (ch) => ch.toUpperCase())}
+                  {c.member_count > 1 ? <span className="font-semibold text-primary">{c.member_count}</span> : null}
+                </Link>
+              ))}
+              <Link
+                to="/ministry"
+                search={{ place: "vidalia" }}
+                className="inline-flex min-h-11 items-center rounded-full border border-border bg-bg px-4 text-base text-fg no-underline hover:border-border-strong"
+              >
+                Bible studies &amp; serving
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
-
+        </section>
+      </main>
+      <SiteFooter credits />
       <JsonLd
         data={{
           "@context": "https://schema.org",
           "@type": "WebSite",
           name: "Neighborly",
           url: "https://neighborly.unitedundergod.org/",
-          description:
-            "Festivals, shows, park days, and neighbor gatherings near you this weekend.",
           potentialAction: {
             "@type": "SearchAction",
-            target: "https://neighborly.unitedundergod.org/near?q={search_term_string}",
+            target: "https://neighborly.unitedundergod.org/search?q={search_term_string}",
             "query-input": "required name=search_term_string",
           },
         }}
       />
-      <footer className="border-t border-border py-10">
-        <div className="page-shell flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2 text-fg">
-            <HandHeart className="h-4 w-4 text-primary" />
-            <span className="font-display font-semibold">Neighborly</span>
-            <span className="text-sm text-fg-subtle">· United Under God</span>
-          </div>
-          <div className="flex flex-wrap items-center gap-4 text-sm text-fg-subtle">
-            <Link to="/privacy" className="hover:text-fg">
-              Privacy
-            </Link>
-            <Link to="/terms" className="hover:text-fg">
-              Terms
-            </Link>
-            <Link to="/how-it-works" className="hover:text-fg">
-              How it works
-            </Link>
-            <a href="https://appengine.unitedundergod.org/help?app=neighborly" className="hover:text-fg">
-              Need help?
-            </a>
-            <span>Help when you can. Ask when you need. Belong where you live.</span>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
