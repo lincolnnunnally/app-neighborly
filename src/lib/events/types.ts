@@ -43,7 +43,7 @@ export type SourceStatus = {
   id: string;
   name: string;
   url: string;
-  status: "ok" | "cached" | "stale" | "error";
+  status: "stored" | "ok" | "cached" | "stale" | "error";
   count: number;
 };
 

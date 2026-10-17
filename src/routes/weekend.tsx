@@ -6,16 +6,18 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { PlaceSearch } from "@/components/community/place-search";
 import { JsonLd } from "@/components/community/json-ld";
-import { WeekendFeed, ModeChips, type FeedMode } from "@/components/events/event-feed";
+import { WeekendFeed, ModeChips, RadiusChips, CategoryChips, filterMode, type FeedMode } from "@/components/events/event-feed";
+import { isChipId, type ChipId } from "@/lib/events/chips";
+import { DEFAULT_RADIUS_MI, RADIUS_CHOICES } from "@/lib/events/radius";
 import { getMyProfile } from "@/lib/community/server";
 import { readSavedPlace } from "@/lib/community/saved-place";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { loadWeekendPlan, weekendWeatherDays, type WeekendPlan } from "@/lib/community/weekend";
 import { cn } from "@/lib/utils";
 
-type WeekendSearch = { place?: string; q?: string; radius?: number; who?: FeedMode };
+type WeekendSearch = { place?: string; q?: string; radius?: number; who?: FeedMode; cat?: ChipId };
 
-const RADII = [10, 25, 50, 100];
+const RADII: readonly number[] = RADIUS_CHOICES;
 
 function str(v: unknown): string | undefined {
   if (typeof v === "string" && v.trim()) return v.trim();
@@ -33,6 +35,7 @@ export const Route = createFileRoute("/weekend")({
       q: str(s.q) ?? str(s.zip),
       radius: RADII.includes(r) ? r : undefined,
       who,
+      cat: isChipId(s.cat) ? s.cat : undefined,
     };
   },
   loaderDeps: ({ search }) => ({ place: search.place, q: search.q, radius: search.radius }),
@@ -191,13 +194,21 @@ function WeekendPage() {
   const town = place?.city || place?.name || "your town";
   const isVidalia = (place?.slug || "").startsWith("vidalia");
   const feed = plan?.feed ?? null;
-  const radius = feed?.radiusMi ?? search.radius ?? 25;
+  const radius = feed?.radiusMi ?? search.radius ?? DEFAULT_RADIUS_MI;
   const hasBoard = Boolean(place?.board);
-  const wideIdx = RADII.findIndex((r) => r > radius);
-  const widerRadius = wideIdx >= 0 ? RADII[Math.min(RADII.length - 1, wideIdx + 1)] : null;
-  const widerHref = widerRadius
-    ? `/weekend?${new URLSearchParams({ ...(search.place ? { place: search.place } : {}), ...(search.q ? { q: search.q } : {}), radius: String(widerRadius) })}`
-    : undefined;
+  const hrefWith = (over: Partial<WeekendSearch>) => {
+    const s = { ...search, ...over };
+    const qs = new URLSearchParams();
+    if (s.place) qs.set("place", s.place);
+    if (s.q) qs.set("q", s.q);
+    if (s.radius && s.radius !== DEFAULT_RADIUS_MI) qs.set("radius", String(s.radius));
+    if (s.who) qs.set("who", s.who);
+    if (s.cat) qs.set("cat", s.cat);
+    const t = qs.toString();
+    return t ? `/weekend?${t}` : "/weekend";
+  };
+  const widerRadius = RADII.find((r) => r > radius) ?? null;
+  const widerHref = widerRadius ? hrefWith({ radius: widerRadius }) : undefined;
 
   const total = (feed?.events.length ?? 0) + (feed?.nearby.length ?? 0);
 
@@ -259,21 +270,21 @@ function WeekendPage() {
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <ModeChips mode={mode} onMode={(m) => void navigate({ search: (s) => ({ ...s, who: m === "all" ? undefined : m }), replace: true })} />
-            <label className="flex items-center gap-3 text-base text-fg-muted">
-              Within
-              <select
-                value={radius}
-                onChange={(e) => void navigate({ search: (s) => ({ ...s, radius: Number(e.target.value) }) })}
-                className="min-h-11 rounded-full border border-border bg-bg-elevated px-4 text-base text-fg"
-              >
-                {RADII.map((r) => (
-                  <option key={r} value={r}>
-                    {r} miles
-                  </option>
-                ))}
-              </select>
-            </label>
+            <RadiusChips
+              radius={radius}
+              choices={RADII}
+              hrefFor={(r) => hrefWith({ radius: r })}
+              onPick={(r) => void navigate({ search: (s) => ({ ...s, radius: r === DEFAULT_RADIUS_MI ? undefined : r }) })}
+            />
           </div>
+          {!stale && feed && (
+            <CategoryChips
+              chip={search.cat}
+              events={filterMode(feed.events, mode)}
+              hrefFor={(c) => hrefWith({ cat: c })}
+              onPick={(c) => void navigate({ search: (s) => ({ ...s, cat: c }), replace: true })}
+            />
+          )}
 
           {stale ? (
             <ResultsSkeleton label={searchingFor} />
@@ -287,6 +298,8 @@ function WeekendPage() {
               state={place?.state}
               mode={mode}
               widerHref={widerHref}
+              chip={search.cat}
+              clearChipHref={hrefWith({ cat: undefined })}
             />
           ) : (
             <div className="surface-card space-y-3 p-8">

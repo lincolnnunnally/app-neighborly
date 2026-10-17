@@ -83,7 +83,7 @@ function whereLine(e: PublicEvent): string {
   const parts = [e.venue];
   if (e.city && !e.venue.toLowerCase().includes(e.city.toLowerCase())) parts.push(e.city);
   let line = parts.filter(Boolean).join(", ");
-  if (typeof e.distanceMi === "number" && e.distanceMi >= 1) line += ` · ${Math.round(e.distanceMi)} mi`;
+  if (typeof e.distanceMi === "number" && e.distanceMi >= 1) line += ` · ${Math.round(e.distanceMi)} mi away`;
   return line;
 }
 
@@ -109,7 +109,7 @@ function OtherPlaces({ event }: { event: PublicEvent }) {
           <li key={i} className="[overflow-wrap:anywhere]">
             {p.venue}
             {p.city && !p.venue.toLowerCase().includes(p.city.toLowerCase()) ? `, ${p.city}` : ""}
-            {typeof p.distanceMi === "number" && p.distanceMi >= 1 ? ` · ${Math.round(p.distanceMi)} mi` : ""}
+            {typeof p.distanceMi === "number" && p.distanceMi >= 1 ? ` · ${Math.round(p.distanceMi)} mi away` : ""}
           </li>
         ))}
       </ul>

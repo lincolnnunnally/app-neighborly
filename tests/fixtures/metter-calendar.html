@@ -1,0 +1,850 @@
+
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<!-- start injected HTML (CCID=2899) -->
+<!-- page template: https://everythingsbetterinmetter.com/chambermaster-template.php -->
+<base href="https://everythingsbetterinmetter.com/" />
+<link href="https://business.everythingsbetterinmetter.com/integration/customerdefinedcss?_=CKnKyQ2" rel="stylesheet" type="text/css" />
+<!-- link for rss not inserted -->
+<link rel="canonical" href="https://business.everythingsbetterinmetter.com/events/calendar" />
+<!-- end injected HTML -->
+
+<meta name="viewport" content="width=device-width"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Events Calendar | Metter-Candler Chamber of Commerce - City of Metter &amp; Candler County Georgia</title>
+<meta name="keywords" content="Metter-Candler Chamber of Commerce,Metter,events,calendar,events calendar,upcoming events,featured events,regional events" />
+<meta name="description" content="Metter-Candler Chamber of Commerce is the best place to find an event in the Metter GA area." />
+<!--meta name="author" content="" /-->
+<!--link rel="shortcut icon" href="" /-->
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+<link rel="stylesheet" href="css/responsive.css" type="text/css" />
+<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+
+<script>window.CMS=1;</script>    <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/globalize/0.1.1/globalize.min.js"></script>
+    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/globalize/0.1.1/cultures/globalize.culture.en-US.js"></script>
+    <script type="text/javascript">
+        var MNI = MNI || {};
+        MNI.CurrentCulture = 'en-US';
+        MNI.CultureDateFormat = 'M/d/yyyy';
+        MNI.BaseUrl = 'https://business.everythingsbetterinmetter.com';
+        MNI.jQuery = jQuery.noConflict(true);
+        MNI.Page = {
+            Domain: 'business.everythingsbetterinmetter.com',
+            Context: 202,
+            Category: null,
+            Member: null,
+            MemberPagePopup: true
+        };
+    </script>
+
+
+    <script src="https://www.google.com/recaptcha/enterprise.js?render=6LfI_T8rAAAAAMkWHrLP_GfSf3tLy9tKa839wcWa" async defer></script>
+    <script>
+
+        const SITE_KEY = '6LfI_T8rAAAAAMkWHrLP_GfSf3tLy9tKa839wcWa';
+
+        // Repeatedly check if grecaptcha has been loaded, and call the callback once it's available
+        function waitForGrecaptcha(callback, retries = 10, interval = 1000) {
+            if (typeof grecaptcha !== 'undefined' && grecaptcha.enterprise.execute) {
+                callback();
+            } else if (retries > 0) { 
+                setTimeout(() => {
+                    waitForGrecaptcha(callback, retries - 1, interval);
+                }, interval);
+            } else {
+                console.error("grecaptcha is not available after multiple attempts");
+            }
+        }
+
+        // Copies the solved v2 checkbox token into the given form when the widget's
+        // response field ended up outside it. Customer site templates can re-load the
+        // reCAPTCHA api script, which re-renders the checkbox widget detached from the
+        // form, so its g-recaptcha-response never posts and validation always fails.
+        function setV2ResponseToken($, formElement) {
+            const $form = $(formElement);
+            const inForm = $form.find('[name="g-recaptcha-response"]');
+
+            // Prefer the reCAPTCHA-managed textarea in the target form; otherwise only consider an orphaned textarea
+            // (not inside any <form>) to avoid copying a token from a different form when multiple widgets exist.
+            let token = inForm.filter('textarea').filter(function () { return this.value; }).first().val();
+            if (!token) {
+                token = $('textarea[name="g-recaptcha-response"]').filter(function () { return this.value && $(this).closest('form').length === 0; }).first().val();
+            }
+            if (!token) {
+                return;
+            }
+
+            if (inForm.length > 0) {
+                inForm.val(token);
+            }
+            else {
+                $('<input>', {
+                    type: 'hidden',
+                    name: 'g-recaptcha-response',
+                    value: token
+                }).appendTo(formElement);
+            }
+        }
+
+        // Generates a reCAPTCHA v3 token using grecaptcha.enterprise and injects it into the given form.
+        // If the token input doesn't exist, it creates one. Then it executes the callback with the token.
+        function setReCaptchaToken(formElement, callback, action = 'submit') {
+            grecaptcha.enterprise.ready(function () {
+                grecaptcha.enterprise.execute(SITE_KEY, { action: action }).then(function (token) {
+
+                    MNI.jQuery(function ($) {
+                        let input = $(formElement).find("input[name='g-recaptcha-v3']");
+
+                        if (input.length === 0) {
+                            input = $('<input>', {
+                                type: 'hidden',
+                                name: 'g-recaptcha-v3',
+                                value: token
+                            });
+                            $(formElement).append(input);
+                        }
+                        else
+                            $(input).val(token);
+
+                        setV2ResponseToken($, formElement);
+                        if (typeof callback === 'function') callback(token);
+                    })
+
+                });
+            });
+        }
+
+    </script>
+
+
+
+
+<script src="https://business.everythingsbetterinmetter.com/Content/bundles/MNI?v=34V3-w6z5bLW9Yl7pjO3C5tja0TdKeHFrpRQ0eCPbz81"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" type="text/css" media="all" />
+
+<script type="text/javascript">
+        MNI.jQuery(function ($) {
+            function hoverIn() {
+                var $this = $(this),
+                    position = $this.position();
+
+                $("<div></div>").addClass("mn-cal-tooltip-container").html($this.attr("tooltip")).css({
+                    left: position.left + 20,
+                    top: position.top + $this.height()
+                }).hide().appendTo($this).fadeIn(500);
+            };
+
+            function hoverOut() {
+                $(".mn-cal-tooltip-container", this).fadeTo(500, 1, removeElement);
+            };
+
+            function removeElement() {
+                $(this).remove();
+            };
+
+            $(".mn-cal-tooltip").hover(hoverIn, hoverOut);
+
+            if (0 > 0)
+            {
+                $('#mn-events-calendar-fullview #mn-cal-actions').prepend('<div id="events-key"></div>');
+            }
+
+        });
+</script>
+<meta name="referrer" content="origin" /></head>
+<body>
+<div id="page" class="site site-opportunity-chambermaster">
+	
+<nav class="sidenav mobile-menu" id="mobile-navigation"></nav>
+
+<header id="masthead" class="site-header clearfix" role="banner">
+	
+
+	<div class="container">
+
+		<div class="site-logo align-left">
+			<h1 class="site-name align-left"><a href="http://betterinmetter.com" rel="home">City of Metter &amp; Candler County Georgia</a></h1>
+			<p class="site-tagline">Everything’s Better in Metter!</p>
+		</div>
+
+
+		
+	<button class="mobilenav-button" type="button" data-target="mobile-navigation"><span class="mobilenav-button-text">Menu</span> <span class="mobilenav-button-bars"></span></button>
+
+	
+	<nav id="access" class="site-navigation align-right">
+	<ul class="menu">
+		<li class="item-community">
+			<a href="http://metter-candler.com/"><strong>Better Community</strong> <small>City &amp; County</small></a>
+			<ul class="submenu">
+				<li><h5><a href="http://metter-candler.com/">City of Metter</a></h5></li>
+				<!-- <li>
+					<a href="http://metter-candler.com/better-community-city-government.php">Government</a>
+					<ul class="submenu">
+						<li><a href="http://metter-candler.com/better-community-city-city-council.php">City Council</a></li>
+						<li><a href="http://metter-candler.com/better-community-city-minutes-agendas.php">Minutes & Agendas</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="http://metter-candler.com/better-community-city-administration.php">Administration</a>
+					<ul class="submenu">
+						<li><a href="http://metter-candler.com/better-community-city-licenses-applications.php">Licenses & Applications</a></li>
+						<li><a href="http://metter-candler.com/better-community-city-building-zoning.php">Building & Zoning</a></li>
+						<li><a href="http://metter-candler.com/better-community-city-faq.php">FAQ</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="http://metter-candler.com/better-community-city-police.php">Police</a>
+					<ul class="submenu">
+						<li><a href="http://metter-candler.com/better-community-city-crime-prevention.php">Crime Prevention Tips</a></li>
+						<li><a href="https://www.municipalonlinepayments.com/metterga" target="_blank">Pay Your Ticket</a></li>
+						<li><a href="http://metter-candler.com/better-community-city-police-our-people.php">Our People</a></li>
+						<li><a href="http://metter-candler.com/better-community-city-faq.php#police">FAQ</a></li>
+						<li><a href="https://gbi.georgia.gov/georgia-sex-offender-registry" target="_blank">Sex Offenders</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="http://metter-candler.com/better-community-city-fire.php">Fire</a>
+					<ul class="submenu">
+						<li><a href="http://metter-candler.com/better-community-city-fire-gallery.php">Gallery</a></li>
+						<li><a href="http://metter-candler.com/better-community-city-fire-volunteer.php">Volunteer</a></li>
+						<li><a href="http://metter-candler.com/better-community-city-fire-our-people.php">Our People</a></li>
+						<li><a href="http://metter-candler.com/better-community-city-faq.php#fire">FAQ</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="http://metter-candler.com/better-community-city-public-works.php">Public Works</a>
+					<ul class="submenu">
+						<li><a href="http://metter-candler.com/better-community-city-public-works-water-sewer.php">Water & Sewer</a></li>
+						<li><a href="http://metter-candler.com/better-community-city-public-works-streets.php">Streets</a></li>
+						<li><a href="http://metter-candler.com/better-community-city-public-works-sanitation.php">Sanitation</a></li>
+						<li><a href="http://metter-candler.com/better-community-city-public-works-animal-control.php">Animal Control</a></li>
+						<li><a href="http://metter-candler.com/better-community-city-building-zoning.php">Building & Zoning</a></li>
+						<li><a href="http://metter-candler.com/better-community-city-faq.php#public-works">FAQ</a></li>
+					</ul>
+				</li>
+				<li><a href="http://metter-candler.com/better-community-city-better-downtown.php">Better Downtown</a></li>
+				<li><hr /></li> -->
+				<li><h5><a href="https://www.candlerco-ga.gov/" target="_blank">Candler County Gov.</a></h5></li>
+				<!-- <li>
+					<a href="http://metter-candlercounty.com/better-community-county-government.php">Government</a>
+					<ul class="submenu">
+						<li><a href="http://metter-candlercounty.com/better-community-county-government-departments.php">Departments</a></li>
+					</ul>
+				</li>
+				<li><a href="http://metter-candlercounty.com/better-community-county-parks-recreation.php">Parks & Recreation</a></li>
+				<li><a href="http://metter-candlercounty.com/better-community-county-voter-registrar.php">Voter Registrar</a></li>
+				<li><a href="http://metter-candlercounty.com/better-community-county-tax-commissioner.php">Tags/Taxes</a></li>
+				<li><a href="http://metter-candlercounty.com/better-community-county-tax-assessors.php">Tax Assessors</a></li>
+				<li>
+					<a href="http://metter-candlercounty.com/better-community-county-courts.php">Courts</a>
+					<ul class="submenu">
+						<li><a href="http://metter-candlercounty.com/better-community-county-courts-magistrate.php">Magistrate</a></li>
+						<li><a href="http://metter-candlercounty.com/better-community-county-courts-clerk-of-court.php">Clerk of Court</a></li>
+						<li><a href="http://metter-candlercounty.com/better-community-county-courts-probate.php">Probate</a></li>
+					</ul>
+				</li>
+				<li><a href="http://metter-candlercounty.com/better-community-county-ems.php">EMS</a></li>
+				<li><a href="http://metter-candlercounty.com/better-community-county-sheriff.php">Sheriff</a></li> -->
+			</ul>
+		</li>
+		<li class="item-experience">
+			<a href="https://www.visitmetter.com/"><strong>Better Experience</strong> <small>Visit Metter</small></a>
+			<ul class="submenu">
+				<li><a href="https://www.visitmetter.com/better-experience-better-adventures.php">Better Adventures</a></li>
+				<li><a href="https://www.visitmetter.com/better-experience-better-shopping.php">Better Shopping</a></li>
+				<li><a href="https://www.visitmetter.com/better-experience-better-eats.php">Better Eats</a></li>
+				<li><a href="https://www.visitmetter.com/better-experience-better-sleeps.php">Better Sleeps</a></li>
+				<li><a href="https://www.visitmetter.com/better-experience-better-day-trips.php">Better Day Trips</a></li>
+				<li><a href="https://everythingsbetterinmetter.com/better-opportunity-bloomin.php">Another Bloomin’ Festival</a></li>
+				<li><a href="https://business.everythingsbetterinmetter.com/weather/">Weather</a></li>
+			</ul>
+		</li>
+		<li class="item-opportunity">
+			<a href="http://everythingsbetterinmetter.com/"><strong>Better Opportunity</strong> <small>Chamber</small></a>
+			<ul class="submenu">
+				<li><a href="http://everythingsbetterinmetter.com/better-opportunity-about.php">About the Chamber</a></li>
+				<li>
+					<a href="http://everythingsbetterinmetter.com/better-opportunity-members.php">Members</a>
+					<ul class="submenu">
+						<li><a href="http://everythingsbetterinmetter.com/better-opportunity-members-benefits.php">Membership Benefits</a></li>
+						<li><a href="https://business.everythingsbetterinmetter.com/map/">Member Map</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="http://everythingsbetterinmetter.com/better-opportunity-community.php">Community</a>
+					<ul class="submenu">
+						<li><a href="http://everythingsbetterinmetter.com/better-opportunity-community-history.php">History</a></li>
+						<li><a href="http://everythingsbetterinmetter.com/better-opportunity-community-education.php">Education</a></li>
+						<li><a href="http://metter-candlercounty.com/better-community-county-parks-recreation.php">Recreation</a></li>
+						<li><a href="http://www.candlercohospital.com/about" target="_blank">Candler County Hospital</a></li>
+					</ul>
+				</li>
+				<!-- <li><a href="#">Visit</a></li> -->
+				<li><a href="http://everythingsbetterinmetter.com/better-opportunity-bloomin.php">Another Bloomin’ Festival</a></li>
+				<li><a href="https://www.visitmetter.com/">Visitors</a></li>
+				<li><a href="http://everythingsbetterinmetter.com/better-opportunity-news-events.php">News/Photo Gallery</a></li>
+				
+				
+						<li><a href="https://everythingsbetterinmetter.com/better-opportunity-map.php">Map</a></li>
+		<li><a href="https://business.everythingsbetterinmetter.com/jobs/">Jobs</a></li>
+		<!-- <li><a href="better-opportunity-how-to-start-a-business.php">How to Start a Business</a></li> -->
+		<li><a href="#">Resources</a>
+
+		<ul class="submenu">
+			<li><a href="https://www.gachamber.com/" target="_blank">Georgia Chamber of Commerce</a></li>
+			<li><a href="http://www.gacce.org/" target="_blank">GACCE (Georgia Association of Chamber of Commerce Executives)</a> </li>
+			<li><a href="http://www.georgia.org/industries/entertainment/georgia-film-tv-production/" target="_blank">Georgia Film, Music & Digital Entertainment Office</a></li>
+			<li><a href="http://www.georgiadowntownassociation.org/" target="_blank">Georgia Downtown Association</a></li>
+			<li><a href="http://www.preservationnation.org" target="_blank">National Main Street Center</a></li>
+		</ul>
+		</li>
+		<li><a href="http://everythingsbetterinmetter.com/better-opportunity-contact-us.php">Contact Us</a></li>
+				<!-- <li><a href="http://everythingsbetterinmetter.com/better-opportunity-how-to-start-a-business.php">How to Start a Business</a></li> -->
+			</ul>
+		</li>
+		<li class="item-investment">
+			<a href="http://selectcandler.com" target="_blank"><strong>Better Investment</strong> <small>industrial Authority</small></a>
+			<ul class="submenu">
+				<li>
+					<a href="http://selectcandler.com/better-investment-advantages.php">Better Advantages</a>
+					<ul class="submenu">
+						<li><a href="http://selectcandler.com/better-investment-advantages-workforce.php">Workforce</a></li>
+						<li><a href="http://selectcandler.com/better-investment-sites-buildings.php">Sites & Buildings</a></li>
+						<li><a href="http://selectcandler.com/better-investment-advantages-demographics.php">Demographics</a></li>
+						<li><a href="http://selectcandler.com/better-investment-advantages-industries.php">Industries</a></li>
+					</ul>
+				</li>
+				<li><a href="http://selectcandler.com/better-investment-transportation-maps.php">Better Location</a></li>
+				<li><a href="http://selectcandler.com/better-investment-sites-buildings.php">Better Properties</a></li>
+				<li>
+					<a href="http://metter-candlercounty.com">Better Community</a>
+					<ul class="submenu">
+						<li><a href="http://selectcandler.com/better-investment-community-history.php">History</a></li>
+						<li><a href="http://selectcandler.com/better-investment-community-education.php">Education</a></li>
+						<li><a href="http://metter-candlercounty.com/better-community-county-parks-recreation.php">Recreation</a></li>
+						<li><a href="http://www.candlercohospital.com/about" target="_blank">Candler County Hospital</a></li>
+						<li><a href="http://metter-candler.com">City of Metter</a></li>
+						<li><a href="http://metter-candlercounty.com">Candler County Gov.</a></li>
+						<li><a href="http://metter-candlercounty.com">Metter-Candler Chamber</a></li>
+						<li><a href="http://metter-candlercounty.com/better-experience.php">Visitor Information</a></li>
+					</ul>
+				</li>
+				<li><a href="http://selectcandler.com/better-investment-contact-us.php">Contact Us</a></li>
+			</ul>
+		</li>
+	</ul>
+</nav>	</div>
+</header><!-- #masthead -->	<main id="main" class="site-main clearfix">
+	<div class="container">
+		<div id="content" class="content-area clearfix">
+			<div class="site-content" role="main">
+				<div class="page-heading">
+					<h1 class="head-title"><span class="cushycms-text" title="Page Title">Better Chamber</span></h1>
+					
+				</div>
+				<ul class="unstyled no-bottom cushycms chambermaster">
+					<li class="section-block unstyled chambermaster">
+					
+
+					<h2 class="section-title cushycms" title="Section Title">Events Calendar</h2>
+
+					    <div id="mn-content" class="mn-content">
+        
+
+
+
+
+
+
+<div id="mn-events-calendar-fullview" class="mn-module-content">
+        
+
+<div class="mn-dealsbuttons">
+        </div>
+
+
+    
+
+
+    <script type="text/javascript">
+        MNI.jQuery(function ($) {
+            MNI.Plugins.Toggler.Init();
+            $('#mn-search-location :input').multiselect({
+                header: 'Choose locations below:',
+                noneSelectedText: 'Any Location',
+                selectedList: 4
+            });
+        });
+    </script>
+    <div id="mn-events-search" class="mn-section mn-filter-section">
+        <div class="mn-form-toggler">
+                <span><a href="javascript:void(0)" title="Toggle Advanced Search Options">Narrow search by:<span class="mn-toggler-arrow"></span></a></span>
+        </div>
+        <div class="mn-form-togglable mn-form-togglable-inactive">
+<form action="https://business.everythingsbetterinmetter.com/events/calendar/2026-10-01" class="mn-form" method="get">                    <input type="hidden" name="m" value="2026-10-01" />
+                    <div class="mn-form-row" id="mn-search-category">
+                        <label>
+                            <span class="mn-form-name">Category:</span>
+                            <span class="mn-form-field"><select class="mn-form-dropdown" name="c"><option value="">Any Category</option>
+<option value="2">Arts &amp; Culture</option>
+<option value="6">Chamber Of Commerce</option>
+<option value="9">Clubs/Organizations</option>
+<option value="3">Community</option>
+<option value="7">Continuing Education</option>
+<option value="1">Festivals &amp; Celebrations</option>
+<option value="4">Government</option>
+<option value="8">Holiday</option>
+<option value="10">Recreation &amp; Sports</option>
+<option value="5">Schools</option>
+</select></span>
+                        </label>
+                    </div>
+                    <div class="mn-form-row" id="mn-search-keyword">
+                        <label>
+                            <span class="mn-form-name">Keyword:</span>
+                            <span class="mn-form-field"><input class="mn-form-text mn-placeholder" id="q" name="q" title="Enter Keyword" type="text" value="" /></span>
+                        </label>
+                    </div>
+                <input id="mn-search-clientstate" type="hidden" name="st" value="0" />
+                <div class="mn-actions">
+                    <ul>
+                        <li class="mn-action-search"><input type="submit" class="mn-button" title="Search" value="Search" /></li>
+                    </ul>
+                </div>
+</form>        </div>
+    </div>
+
+
+    <div id="mn-cal-actions" class="mn-section">
+        <span class="mn-cal-list-view-link"><a href="https://business.everythingsbetterinmetter.com/events/search?from=10/1/2026&amp;to=11/30/2026">Events List View</a></span>
+        <span class="mn-cal-print"><a href="https://business.everythingsbetterinmetter.com/events/calendar?rendermode=print" rel="nofollow" onclick="return!MNI.Window.Print(this)" target="_blank">Print</a></span>
+                    <span class="mn-cal-publicsubmit"><a href="https://business.everythingsbetterinmetter.com/events/public-submission" title="Submit New Event" rel="nofollow">Submit New Event</a></span>
+    </div>
+    <div id="mn-resultscontainer">
+        <table class="mn-cal-grid">
+            <thead>
+                <tr>
+                    <th colspan="7" class="mn-header mn-cal-header">
+ <span class="mn-cal-prev"><a href="https://business.everythingsbetterinmetter.com/events/calendar/2026-09-01" rel="nofollow">&lt;&lt;</a></span>                         <span class="mn-cal-date">October 2026</span>
+ <span class="mn-cal-next"><a href="https://business.everythingsbetterinmetter.com/events/calendar/2026-11-01" rel="nofollow">&gt;&gt;</a></span>                     </th>
+                </tr>
+                <tr class="mn-cal-rows-weekday">
+                    <td class="mn-cal-weekdays">Sun</td>
+                    <td class="mn-cal-weekdays">Mon</td>
+                    <td class="mn-cal-weekdays">Tue</td>
+                    <td class="mn-cal-weekdays">Wed</td>
+                    <td class="mn-cal-weekdays">Thu</td>
+                    <td class="mn-cal-weekdays">Fri</td>
+                    <td class="mn-cal-weekdays">Sat</td>
+                </tr>
+                <tr class="mn-cal-header-sep">
+                    <td colspan="7"></td>
+                </tr>
+            </thead>
+            <tbody>
+                        <tr class="mn-cal-rows mn-cal-rows-odd">
+
+                                <td class="mn-cal-days-prev">
+                                    <div class="mn-cal-day">
+                                            <span>27</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days-prev">
+                                    <div class="mn-cal-day">
+                                            <span>28</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days-prev">
+                                    <div class="mn-cal-day">
+                                            <span>29</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days-prev">
+                                    <div class="mn-cal-day">
+                                            <span>30</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>1</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day mn-cal-activedate">
+<a href="https://business.everythingsbetterinmetter.com/events/index/2026-10-02" rel="nofollow">2</a>                                            <ul>
+                                                    <li class="mn-cal-event mn-cal-event-odd mn-cal-catg2 mn-cal-catg3"><a href="https://business.everythingsbetterinmetter.com/events/details/live-music-at-bevricks-char-house-grille-10-02-2026-1425">Live Music at Bevricks Char House Grille</a></li>
+                                                                                            </ul>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>3</span>
+                                    </div>
+                                </td>
+                        </tr>
+                        <tr class="mn-cal-rows mn-cal-rows-even">
+
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>4</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>5</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>6</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>7</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>8</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day mn-cal-activedate">
+<a href="https://business.everythingsbetterinmetter.com/events/index/2026-10-09" rel="nofollow">9</a>                                            <ul>
+                                                    <li class="mn-cal-event mn-cal-event-odd mn-cal-catg2 mn-cal-catg3"><a href="https://business.everythingsbetterinmetter.com/events/details/live-music-at-bevricks-char-house-grille-10-09-2026-1426">Live Music at Bevricks Char House Grille</a></li>
+                                                                                            </ul>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>10</span>
+                                    </div>
+                                </td>
+                        </tr>
+                        <tr class="mn-cal-rows mn-cal-rows-odd">
+
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>11</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>12</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>13</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>14</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>15</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day mn-cal-activedate">
+<a href="https://business.everythingsbetterinmetter.com/events/index/2026-10-16" rel="nofollow">16</a>                                            <ul>
+                                                    <li class="mn-cal-event mn-cal-event-odd mn-cal-catg2 mn-cal-catg3"><a href="https://business.everythingsbetterinmetter.com/events/details/live-music-at-bevricks-char-house-grille-10-16-2026-1427">Live Music at Bevricks Char House Grille</a></li>
+                                                                                            </ul>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day mn-cal-currentdate">
+                                            <span>17</span>
+                                    </div>
+                                </td>
+                        </tr>
+                        <tr class="mn-cal-rows mn-cal-rows-even">
+
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>18</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>19</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>20</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>21</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>22</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day mn-cal-activedate">
+<a href="https://business.everythingsbetterinmetter.com/events/index/2026-10-23" rel="nofollow">23</a>                                            <ul>
+                                                    <li class="mn-cal-event mn-cal-event-odd mn-cal-catg2 mn-cal-catg3"><a href="https://business.everythingsbetterinmetter.com/events/details/live-music-at-bevricks-char-house-grille-10-23-2026-1428">Live Music at Bevricks Char House Grille</a></li>
+                                                                                            </ul>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>24</span>
+                                    </div>
+                                </td>
+                        </tr>
+                        <tr class="mn-cal-rows mn-cal-rows-odd">
+
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>25</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>26</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>27</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>28</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>29</span>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day mn-cal-activedate">
+<a href="https://business.everythingsbetterinmetter.com/events/index/2026-10-30" rel="nofollow">30</a>                                            <ul>
+                                                    <li class="mn-cal-event mn-cal-event-odd mn-cal-catg2 mn-cal-catg3"><a href="https://business.everythingsbetterinmetter.com/events/details/live-music-at-bevricks-char-house-grille-10-30-2026-1429">Live Music at Bevricks Char House Grille</a></li>
+                                                                                            </ul>
+                                    </div>
+                                </td>
+                                <td class="mn-cal-days">
+                                    <div class="mn-cal-day">
+                                            <span>31</span>
+                                    </div>
+                                </td>
+                        </tr>
+
+            </tbody>
+        </table>
+    </div>
+    <div class="mn-cal-bottom-sep">&nbsp;</div>
+    <div class="mn-actions">
+        <ul>
+            <li><a href="https://business.everythingsbetterinmetter.com/events/search?from=10/1/2026&amp;to=11/30/2026">Events List View</a></li>
+        </ul>
+    </div>
+</div>
+
+
+
+<div id="mn-footer-navigation">
+        <a href="https://business.everythingsbetterinmetter.com/list/">Business Directory</a>  
+                <a href="https://business.everythingsbetterinmetter.com/events/">Events Calendar</a>
+                        <a href="https://business.everythingsbetterinmetter.com/jobs/">Job Postings</a>
+            <a href="https://business.everythingsbetterinmetter.com/contact/">Contact Us</a>
+        </div>
+
+    <div id="mn-footer" class="mn-footer-pblogo">
+        <a href="http://www.growthzone.com/" target="_blank"><img alt="GrowthZone - Membership Management Software" src="https://public.chambermaster.com/content/images/powbyCM_100x33.png" border="0" /></a>
+    </div>
+        <div class="mn-clear"></div>
+    </div>
+
+
+
+					
+				
+					</li>
+				</ul>
+				<hr class="no-line"/>
+				</section>
+			</div>
+			<!-- .site-content -->
+			<div class="site-sidebar" role="complementary">
+				<aside class="clearfix">
+    <!-- <a href="download/Metter Chamber Member Application.pdf" class="join-button" target="_blank">
+		<strong>JOIN NOW</strong>
+	</a>
+	<a href="better-opportunity-membershipdirectory.php" class="join-button">
+		<span>Membership Directory</span>
+	</a> -->
+
+    <!-- <a  class="join-button lightbox-222224917148051" target="_blank" style="cursor: pointer;"> -->
+
+        <a href="https://business.everythingsbetterinmetter.com/member/newmemberapp/" class="join-button">
+
+    <!-- <a href="download/2021 Metter-Candler Chamber Membership  Community Investment.pdf" class="join-button"> -->
+        <strong>JOIN NOW</strong>
+    </a>
+    <a href="https://business.everythingsbetterinmetter.com/list/" class="join-button">
+        <span>Membership Directory</span>
+    </a>
+
+
+</aside>
+
+<nav class="left-navigation clearfix">
+    <h5>Chamber of Commerce</h5>
+    <ul class="menu">
+        <li><a href="better-opportunity-about.php">About the Chamber</a></li>
+        <li><a href="https://business.everythingsbetterinmetter.com/events/calendar/">Community Calendar</a></li>
+        <li>
+            <a href="better-opportunity-members.php">Members</a>
+            <ul class="submenu">
+                <li><a href="better-opportunity-members-benefits.php">Membership Benefits</a></li>
+                <li><a href="https://business.everythingsbetterinmetter.com/map/">Member Map</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="better-opportunity-community.php">Community</a>
+            <ul class="submenu">
+                <li><a href="better-opportunity-community-history.php">History</a></li>
+                <li><a href="better-opportunity-community-education.php">Education</a></li>
+                <li><a href="better-community-county-parks-recreation.php">Recreation</a></li>
+                <li><a href="//www.candlercountyhospital.com" target="_blank">Candler County Hospital</a></li>
+            </ul>
+        </li>
+        <!-- <li><a href="#">Visit</a></li> -->
+        <li><a href="better-opportunity-bloomin.php">Another Bloomin’ Festival</a></li>
+        <li><a href="http://visitmetter.com">Visitors</a></li>
+        <li><a href="better-opportunity-news-events.php">News/Photo Gallery</a></li>
+
+
+        <li><a href="https://everythingsbetterinmetter.com/better-opportunity-map.php">Map</a></li>
+        <li><a href="https://business.everythingsbetterinmetter.com/jobs/">Jobs</a></li>
+        <!-- <li><a href="better-opportunity-how-to-start-a-business.php">How to Start a Business</a></li> -->
+        <li><a href="#">Resources</a>
+
+            <ul class="submenu">
+                <li><a href="https://www.gachamber.com/" target="_blank">Georgia Chamber of Commerce</a></li>
+                <li><a href="http://www.gacce.org/" target="_blank">GACCE (Georgia Association of Chamber of Commerce
+                        Executives)</a> </li>
+                <li><a href="http://www.georgia.org/industries/entertainment/georgia-film-tv-production/"
+                        target="_blank">Georgia Film, Music & Digital Entertainment Office</a></li>
+                <li><a href="http://www.georgiadowntownassociation.org/" target="_blank">Georgia Downtown
+                        Association</a></li>
+                <li><a href="http://www.preservationnation.org" target="_blank">National Main Street Center</a></li>
+            </ul>
+        </li>
+        <li><a href="better-opportunity-contact-us.php">Contact Us</a></li>
+
+    </ul>
+</nav><hr class="no-line" />
+
+<aside class="clearfix">
+    <ul class="social-media">
+	<!-- <li><a href="#" class="icon-share">Share</a></li> -->
+	<li><a href="https://www.facebook.com/Metter-Candler-Chamber-of-Commerce-404093232943815/timeline/" target="_blank" class="icon-facebook">Facebook</a></li>
+	<li><a href="https://www.youtube.com/channel/UCBztZbQDnTMIPxZmvCARK-A" target="_blank" class="icon-youtube">Youtube</a></li>
+	<li><a href="http://www.pikore.com/betterinmetter" target="_blank" class="icon-instagram">Instagram</a></li>
+	<li><a href="https://twitter.com/betterinmetter" target="_blank" class="icon-twitter">Twitter</a></li>
+	<li><a href="https://www.pinterest.com/betterinmetter/everything-better-in-metter-metter-ga/" target="_blank" class="icon-pinterest">Pinterest</a></li>
+</ul></aside>
+
+<aside class="clearfix">
+    <div class="identity">
+        <img src="img/logo-chamber-side.png" alt="" />
+        <p class="phone">912-685-2159</p>
+        <p class="address">11 N Kennedy St, Metter, GA 30439</p>
+        <p class="copyright">&copy; 2026 Metter-Candler Chamber of Commerce.
+            <br />All Rights Reserved.
+        </p>
+    </div>
+</aside>			</div>
+			<!-- .site-sidebar -->
+		</div>
+		<!-- #content -->
+	</div>
+	</main>
+	<!-- #main -->
+	<footer id="colophone" class="site-footer clearfix" role="contentinfo">
+	<div class="container">
+		<div class="col-right align-right">
+			<div class="footer-wrapper clearfix">
+				<ul>
+					<li class="col-search">
+						<div class="search-form clearfix">
+							<!-- google cse code -->
+							<script>
+  (function() {
+    var cx = '001739123263271204011:gldwk-1vydy';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
+
+
+						</div>
+					</li>
+					<li class="col-translate">
+						<div class="translate-form clearfix">
+							
+							<div id="google_translate_element"></div><script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+}
+</script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+						</div>
+					</li>
+					<li class="col-georgia">
+						<a href="http://www.georgia.org/" target="_blank"><img src="img/logo-georgia.png" alt="" width="66" height="81" /></a>
+					</li>
+					<li class="col-power">
+						<a href="http://www.365degreetotalmarketing.com" target="_blank"><img src="img/logo-365.png" alt="" width="159" height="42" /></a>
+					</li>
+				</ul>
+			</div>
+		</div><!-- .col-right -->
+	</div>
+</footer><!-- #colophone --></div>
+<!-- #page -->
+<script type="text/javascript" src="js/superfish.js"></script>
+<script type="text/javascript" src="js/jquery.flexslider-min.js"></script>
+<script type="text/javascript" src="js/jquery.columnizer.js"></script>
+<script type="text/javascript" src="js/imagesloaded.pkgd.min.js"></script>
+<script type="text/javascript" src="js/customselect.js"></script>
+<script type="text/javascript" src="js/jquery.sticky.js"></script>
+<script type="text/javascript" src="js/jquery.colorbox.js"></script>
+<script type="text/javascript" src="js/velocity.js"></script>
+  <script type="text/javascript" src="js/slideNav.js"></script>
+<script type="text/javascript" src="js/functions.js"></script>
+<script type="text/javascript" src="js/jquery.carouFredSel.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+
+
+
+
+<script src ="https://form.jotform.com/static/feedback2.js" type="text/javascript"></script><script type="text/javascript"> var JFL_222224917148051 = new JotformFeedback({ formId: '222224917148051', base: 'https://form.jotform.com/', windowTitle: 'Metter-Candler Chamber Membership Application', background: '#00589f', fontColor: '#FFFFFF', type: 'false', height: 500, width: 700, openOnLoad: false }); </script> <script type="text/javascript"> MNI.jQuery('#mn-maps select option[value="All"]').attr("selected",true);</script></body>
+</html>
+
+
