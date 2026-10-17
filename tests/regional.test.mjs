@@ -14,7 +14,7 @@ import {
   sidearmScheduleUrl,
 } from "../src/lib/events/parse-regional.ts";
 import { parseTribe } from "../src/lib/events/parse.ts";
-import { chipsFor, chipCounts, filterByChip, isChipId } from "../src/lib/events/chips.ts";
+import { CHIPS, cardLabels, chipsFor, chipCounts, filterByChip, isChipId, resultsHeading } from "../src/lib/events/chips.ts";
 import { DEFAULT_RADIUS_MI, RADIUS_CHOICES, normalizeRadius, wideRadiusFor } from "../src/lib/events/radius.ts";
 import { dedupeAcrossSources, normalizeTitle } from "../src/lib/events/search.ts";
 
@@ -198,4 +198,36 @@ test("Category chips: keyword + source rules, sports never under arts chips", ()
   assert.equal(filterByChip(list, "markets").length, 1);
   assert.equal(filterByChip(list, undefined).length, 2);
   assert.ok(isChipId("performing") && !isChipId("sports"));
+});
+
+test("One taxonomy: each chip shows exactly the cards that carry its label (Vidalia, Oct 17 feed)", () => {
+  const list = JSON.parse(fx("vidalia-weekend-20261017.json"));
+  assert.ok(list.length > 30);
+  const chipLabels = new Set(CHIPS.map((c) => c.label));
+  for (const c of CHIPS) {
+    const byChip = filterByChip(list, c.id).map((e) => e.id).sort();
+    const byLabel = list.filter((e) => cardLabels(e).includes(c.label)).map((e) => e.id).sort();
+    assert.deepEqual(byChip, byLabel, c.label);
+  }
+  // No card carries a chip-like label that its chip would not show.
+  for (const e of list) {
+    const labels = cardLabels(e).filter((l) => chipLabels.has(l));
+    assert.deepEqual(labels, chipsFor(e).map((id) => CHIPS.find((c) => c.id === id).label), e.title);
+  }
+  const book = list.find((e) => e.title === "Fall Used Book Sale");
+  assert.deepEqual(cardLabels(book), ["Family", "Food & markets"]);
+  const farm = list.find((e) => e.title === "Dublin Farm Dinners");
+  assert.ok(filterByChip([farm], "markets").length === 1 && cardLabels(farm).includes("Food & markets"));
+  const rifle = list.find((e) => /Rifle/.test(e.title));
+  assert.deepEqual(cardLabels(rifle), ["Sports"]);
+  const coffee = list.find((e) => e.sourceId === "board");
+  assert.equal(cardLabels(coffee)[0], "Neighbors");
+});
+
+test("Results heading follows the active chip", () => {
+  assert.equal(resultsHeading(17, undefined, 60), "17 things within 60 miles");
+  assert.equal(resultsHeading(2, "festivals", 60), "2 festivals within 60 miles");
+  assert.equal(resultsHeading(1, "festivals", 30), "1 festival within 30 miles");
+  assert.equal(resultsHeading(0, "markets", 15), "No food and market events within 15 miles");
+  assert.equal(resultsHeading(1, undefined, 15), "One thing within 15 miles");
 });

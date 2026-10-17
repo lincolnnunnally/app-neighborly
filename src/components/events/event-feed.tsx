@@ -102,7 +102,10 @@ export function RadiusChips({
   );
 }
 
-/** "What kind?" chips with honest counts for the current radius. Shareable via ?cat=. */
+/**
+ * "What kind?" chips with honest counts for the current radius. Shareable via
+ * ?cat=. Tapping the active chip again clears it back to All.
+ */
 export function CategoryChips({
   chip,
   events,
@@ -115,14 +118,16 @@ export function CategoryChips({
   onPick?: (c: ChipId | undefined) => void;
 }) {
   const counts = chipCounts(events);
-  const item = (id: ChipId | undefined, label: string, n: number) => (
+  const item = (id: ChipId | undefined, label: string, n: number) => {
+    const target = id && chip === id ? undefined : id;
+    return (
     <a
       key={id ?? "all"}
-      href={hrefFor(id)}
+      href={hrefFor(target)}
       onClick={(e) => {
         if (onPick && plainClick(e)) {
           e.preventDefault();
-          onPick(id);
+          onPick(target);
         }
       }}
       aria-current={chip === id ? "true" : undefined}
@@ -134,7 +139,8 @@ export function CategoryChips({
       {label}
       <span className={cn("text-sm", chip === id ? "text-primary-fg/90" : "text-fg-muted")}>{n}</span>
     </a>
-  );
+    );
+  };
   return (
     <nav aria-label="What kind of event" className="flex flex-wrap gap-2">
       {item(undefined, "All", events.length)}

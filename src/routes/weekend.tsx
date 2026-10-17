@@ -7,7 +7,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { PlaceSearch } from "@/components/community/place-search";
 import { JsonLd } from "@/components/community/json-ld";
 import { WeekendFeed, ModeChips, RadiusChips, CategoryChips, filterMode, type FeedMode } from "@/components/events/event-feed";
-import { isChipId, type ChipId } from "@/lib/events/chips";
+import { filterByChip, isChipId, resultsHeading, type ChipId } from "@/lib/events/chips";
 import { DEFAULT_RADIUS_MI, RADIUS_CHOICES } from "@/lib/events/radius";
 import { getMyProfile } from "@/lib/community/server";
 import { readSavedPlace } from "@/lib/community/saved-place";
@@ -211,6 +211,9 @@ function WeekendPage() {
   const widerHref = widerRadius ? hrefWith({ radius: widerRadius }) : undefined;
 
   const total = (feed?.events.length ?? 0) + (feed?.nearby.length ?? 0);
+  // The count follows the active chip and "who's going": "2 festivals within 60 miles".
+  const shownCount = feed ? filterByChip(filterMode(feed.events, mode), search.cat).length : 0;
+  const heading = resultsHeading(shownCount, search.cat, radius);
 
   return (
     <div className="min-h-dvh overflow-x-clip bg-bg">
@@ -254,11 +257,9 @@ function WeekendPage() {
               )}
               {!stale && feed && total > 0 && (
                 <div className="absolute bottom-4 left-4 rounded-[var(--radius-md)] bg-bg-elevated/95 px-4 py-2 text-base font-semibold text-fg shadow-md">
-                  {feed.events.length > 1
-                    ? `${feed.events.length} things within ${radius} miles`
-                    : feed.events.length === 1
-                      ? `One thing within ${radius} miles`
-                      : `${feed.nearby.length > 1 ? `${feed.nearby.length} things` : "One thing"} a short drive away`}
+                  {shownCount > 0 || search.cat || mode !== "all"
+                    ? heading
+                    : `${feed.nearby.length > 1 ? `${feed.nearby.length} things` : "One thing"} a short drive away`}
                 </div>
               )}
             </div>
@@ -284,6 +285,12 @@ function WeekendPage() {
               hrefFor={(c) => hrefWith({ cat: c })}
               onPick={(c) => void navigate({ search: (s) => ({ ...s, cat: c }), replace: true })}
             />
+          )}
+
+          {!stale && feed && shownCount > 0 && (
+            <h2 className="font-display text-2xl font-semibold text-fg" aria-live="polite" data-testid="results-heading">
+              {heading}
+            </h2>
           )}
 
           {stale ? (
