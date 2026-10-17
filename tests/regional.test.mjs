@@ -285,3 +285,29 @@ test("Home intro: Sat/Sun only, local first, two items, through Sun, no genre ta
   // Long names never end on a dangling "of the".
   assert.equal(shortPhrase("Daily Life, Skills, and Tools of the Kolomoki People", "Arlington"), "Daily Life, Skills, and Tools");
 });
+
+test("Header place: board town links its board, no-board town gets a neutral label", async () => {
+  const { placeFromMatches, boardLink, VIDALIA } = await import("../src/lib/community/current-place.ts");
+  const cov = placeFromMatches([{ loaderData: { plan: { place: { slug: "covington-ga", name: "Covington", city: "Covington", state: "GA", zip: "30014", board: false } } } }]);
+  assert.deepEqual(boardLink(cov), { label: "Neighbor board", slug: null });
+  const con = placeFromMatches([{ loaderData: { community: { slug: "conyers", city: "Conyers", state: "GA", kind: "neighborhood" } } }]);
+  assert.deepEqual(boardLink(con), { label: "Conyers board", slug: "conyers" });
+  // An interest group under a town doesn't change the town.
+  assert.equal(placeFromMatches([{ loaderData: { community: { slug: "vidalia-pickleball", city: "Vidalia", state: "GA", kind: "interest" } } }]), null);
+  assert.equal(placeFromMatches([{ loaderData: { plan: { place: { slug: "vidalia", name: "Vidalia", city: "Vidalia", state: "GA", zip: "30474", board: true } } } }]), VIDALIA);
+  assert.deepEqual(boardLink(VIDALIA), { label: "Vidalia board", slug: "vidalia" });
+});
+
+test("Saved-place cookie: parsed safely; header falls back to it when the page names no town", async () => {
+  const { parsePlaceCookie } = await import("../src/lib/community/saved-place.ts");
+  const { placeFromMatches, boardLink } = await import("../src/lib/community/current-place.ts");
+  const raw = encodeURIComponent(JSON.stringify({ zip: "30014", city: "Covington", state: "GA", slug: "" }));
+  const cov = parsePlaceCookie(raw);
+  assert.equal(cov.zip, "30014");
+  assert.equal(cov.slug, undefined);
+  assert.equal(parsePlaceCookie("garbage"), null);
+  assert.equal(parsePlaceCookie(encodeURIComponent(JSON.stringify({ zip: "<script>", city: "" }))), null);
+  const place = placeFromMatches([{ loaderData: { savedPlace: cov } }, { loaderData: { results: [] } }]);
+  assert.equal(place.city, "Covington");
+  assert.deepEqual(boardLink(place), { label: "Neighbor board", slug: null });
+});

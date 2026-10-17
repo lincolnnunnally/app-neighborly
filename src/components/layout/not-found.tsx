@@ -3,8 +3,10 @@ import { Compass } from "lucide-react";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { Button } from "@/components/ui/button";
+import { useCurrentPlace } from "@/lib/community/current-place";
 
 export function NotFoundPage({ title = "We couldn't find that page", line }: { title?: string; line?: string }) {
+  const place = useCurrentPlace();
   return (
     <div className="min-h-dvh bg-bg">
       <SiteHeader />
@@ -19,8 +21,8 @@ export function NotFoundPage({ title = "We couldn't find that page", line }: { t
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <Button asChild size="lg">
-              <Link to="/weekend" search={{ place: "vidalia" }}>
-                This weekend in Vidalia
+              <Link to="/weekend" search={place.board ? { place: place.board } : { q: place.zip || place.city }}>
+                This weekend in {place.city}
               </Link>
             </Button>
             <Button asChild size="lg" variant="secondary">

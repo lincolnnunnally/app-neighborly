@@ -6,18 +6,37 @@ import { authEnabled, signOut } from "@/lib/auth/client";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { boardLink, useCurrentPlace, type CurrentPlace } from "@/lib/community/current-place";
 
 type NavItem = { label: string; to: string; match: (path: string, search: string) => boolean; search?: Record<string, string>; params?: Record<string, string> };
 
-const NAV: NavItem[] = [
-  { label: "This weekend", to: "/weekend", match: (p) => p.startsWith("/weekend") },
-  { label: "Vidalia board", to: "/c/$slug", params: { slug: "vidalia" }, match: (p) => p === "/c/vidalia" },
-  { label: "Search", to: "/search", match: (p) => p.startsWith("/search") },
-  { label: "Churches", to: "/churches", search: { zip: "30474" }, match: (p) => p.startsWith("/churches") },
-  { label: "Ministry", to: "/ministry", search: { place: "vidalia" }, match: (p) => p.startsWith("/ministry") },
-  { label: "Communities", to: "/communities", match: (p) => p.startsWith("/communities") },
-  { label: "How it works", to: "/how-it-works", match: (p) => p.startsWith("/how-it-works") },
-];
+/**
+ * Main nav for the town being viewed (searched or saved, Vidalia by default).
+ * A town with a board links to it; one without gets a neutral "Neighbor board"
+ * that opens the existing "start your town" page (/near).
+ */
+function navFor(place: CurrentPlace): NavItem[] {
+  const board = boardLink(place);
+  return [
+    { label: "This weekend", to: "/weekend", match: (p) => p.startsWith("/weekend") },
+    board.slug
+      ? { label: board.label, to: "/c/$slug", params: { slug: board.slug }, match: (p) => p === `/c/${board.slug}` }
+      : { label: board.label, to: "/near", match: (p) => p === "/near" },
+    { label: "Search", to: "/search", match: (p) => p.startsWith("/search") },
+    {
+      label: "Churches",
+      to: "/churches",
+      search: place.zip ? { zip: place.zip } : { q: place.city },
+      match: (p) => p.startsWith("/churches"),
+    },
+    // Ministry lives on a board, so a town without one doesn't get another town's.
+    ...(place.board
+      ? [{ label: "Ministry", to: "/ministry", search: { place: place.board }, match: (p: string) => p.startsWith("/ministry") }]
+      : []),
+    { label: "Communities", to: "/communities", match: (p) => p.startsWith("/communities") },
+    { label: "How it works", to: "/how-it-works", match: (p) => p.startsWith("/how-it-works") },
+  ];
+}
 
 function NavLink({ item, path, search, className, onClick }: { item: NavItem; path: string; search: string; className?: string; onClick?: () => void }) {
   const current = item.match(path, search);
@@ -77,6 +96,8 @@ export function SiteHeader({ solid: _solid = true }: { solid?: boolean }) {
   const path = loc.pathname;
   const search = loc.searchStr ?? "";
   const [open, setOpen] = useState(false);
+  const place = useCurrentPlace();
+  const NAV = navFor(place);
 
   useEffect(() => {
     setOpen(false);
@@ -174,7 +195,8 @@ export function SiteHeader({ solid: _solid = true }: { solid?: boolean }) {
               {!user && (
                 <Link
                   to="/signup"
-                  search={{ community: "vidalia", code: "VIDALIA-WELCOME" }}
+                  // Vidalia's welcome invite only when the visitor is looking at Vidalia.
+                  search={place.isVidalia ? { community: "vidalia", code: "VIDALIA-WELCOME" } : {}}
                   className="mt-2 inline-flex min-h-12 items-center justify-center rounded-full bg-primary px-5 text-base font-semibold text-primary-fg no-underline"
                 >
                   Create a free account

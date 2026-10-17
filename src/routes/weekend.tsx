@@ -11,6 +11,7 @@ import { filterByChip, isChipId, resultsHeading, type ChipId } from "@/lib/event
 import { DEFAULT_RADIUS_MI, RADIUS_CHOICES } from "@/lib/events/radius";
 import { getMyProfile } from "@/lib/community/server";
 import { readSavedPlace } from "@/lib/community/saved-place";
+import { useRememberPlace } from "@/lib/community/remember-place";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { loadWeekendPlan, weekendWeatherDays, type WeekendPlan } from "@/lib/community/weekend";
 import { cn } from "@/lib/utils";
@@ -158,6 +159,7 @@ function scrollToResults() {
 function WeekendPage() {
   const search = Route.useSearch();
   const loaded = Route.useLoaderData();
+  useRememberPlace(search.place || search.q ? loaded.plan : null);
   const navigate = useNavigate({ from: "/weekend" });
   const { user } = useCurrentUserState();
   const [plan, setPlan] = useState<WeekendPlan | null>(loaded.plan);
@@ -185,6 +187,11 @@ function WeekendPage() {
   useEffect(() => {
     if (!search.place && !search.q) {
       const saved = readSavedPlace();
+      // A saved town without a board goes by its ZIP, never back to Vidalia.
+      if (!saved?.slug && saved?.zip) {
+        void navigate({ search: { q: saved.zip }, replace: true });
+        return;
+      }
       const place = saved?.slug || loaded.plan?.place.slug || "vidalia";
       void navigate({ search: { place }, replace: true });
     }
