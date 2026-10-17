@@ -123,7 +123,12 @@ export function SiteHeader({ solid: _solid = true }: { solid?: boolean }) {
   const loc = useRouterState({ select: (s) => s.location });
   const path = loc.pathname;
   const search = loc.searchStr ?? "";
-  const [open, setOpen] = useMenuOpen(path);
+  const [wantOpen, setOpen] = useMenuOpen(path);
+  // While the next page loads (e.g. Vidalia -> Covington), this header still
+  // holds the old town. A ☰ tap now is remembered for the incoming page and the
+  // menu opens once it has arrived, with that town's links, never the old one's.
+  const settling = useRouterState({ select: (s) => s.status === "pending" || s.isLoading });
+  const open = wantOpen && !settling;
   const place = useCurrentPlace();
   const NAV = navFor(place);
 
@@ -145,11 +150,11 @@ export function SiteHeader({ solid: _solid = true }: { solid?: boolean }) {
   }, [path]);
 
   useEffect(() => {
-    if (!open) return;
+    if (!wantOpen) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMenu(MENU_CLOSED);
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
+  }, [wantOpen]);
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-bg/95 backdrop-blur">
@@ -197,12 +202,19 @@ export function SiteHeader({ solid: _solid = true }: { solid?: boolean }) {
         <button
           type="button"
           className="grid h-11 w-11 place-items-center rounded-[var(--radius-md)] border border-border bg-bg-elevated text-fg min-[1180px]:hidden"
-          aria-label={open ? "Close menu" : "Open menu"}
+          aria-label={open ? "Close menu" : wantOpen ? "Menu opens when the page is ready" : "Open menu"}
           aria-expanded={open}
+          aria-busy={wantOpen && settling ? true : undefined}
           aria-controls="site-menu"
-          onClick={() => setOpen(!open)}
+          data-menu-waiting={wantOpen && settling ? "" : undefined}
+          onClick={() => setOpen(!wantOpen)}
         >
-          {open ? <X className="h-5 w-5" aria-hidden /> : <Menu className="h-5 w-5" aria-hidden />}
+          {open ? (
+            <X className="h-5 w-5" aria-hidden />
+          ) : (
+            // Pulses while a tap waits for the incoming page.
+            <Menu className={cn("h-5 w-5", wantOpen && settling && "animate-pulse text-primary")} aria-hidden />
+          )}
         </button>
       </div>
 
