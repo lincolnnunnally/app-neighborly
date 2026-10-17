@@ -10,6 +10,8 @@ import {
   parseGrowthZoneDetail,
   parseSimpleCalendar,
   NOT_A_PUBLIC_OUTING,
+  SIDEARM_SCHEDULES,
+  sidearmScheduleUrl,
 } from "../src/lib/events/parse-regional.ts";
 import { parseTribe } from "../src/lib/events/parse.ts";
 import { chipsFor, chipCounts, filterByChip, isChipId } from "../src/lib/events/chips.ts";
@@ -55,12 +57,27 @@ test("Sidearm: Georgia Southern home games only, public links, short names, no r
   assert.equal(baseball.url, "https://gseagles.com/sports/baseball/schedule");
   const swim = list.find((e) => /Swimming and Diving vs SCAD/.test(e.title));
   assert.equal(swim.url, "https://gseagles.com/sports/swimming-and-diving/schedule");
-  const rifle = list.find((e) => /Women's Rifle/.test(e.title));
-  assert.equal(rifle.url, "https://gseagles.com/sports/womens-rifle/schedule");
+  // "/sports/womens-rifle/schedule" renders an empty "@season @sport" template; the real page is /sports/rifle/.
+  const rifle = list.filter((e) => /Women's Rifle/.test(e.title));
+  assert.ok(rifle.length > 0);
+  for (const r of rifle) assert.equal(r.url, "https://gseagles.com/sports/rifle/schedule");
   const vb = list.find((e) => /Volleyball vs Arkansas State/.test(e.title));
+  assert.equal(vb.url, "https://gseagles.com/sports/womens-volleyball/schedule");
+  // Every link is a schedule page we checked renders games.
+  for (const e of list) {
+    const slug = e.url.match(/\/sports\/([^/]+)\/schedule$/)?.[1];
+    assert.ok(slug && SIDEARM_SCHEDULES["gseagles.com"].pages.includes(slug), `unchecked link ${e.url}`);
+  }
   assert.equal(vb.venue, "Hanner Fieldhouse");
   // Neutral-site games (SRP Park in North Augusta) are not home games.
   assert.ok(!list.some((e) => /SRP Park/.test(e.venue)));
+});
+
+test("Sidearm: a sport with no checked schedule page gets no link (the game is dropped)", () => {
+  assert.equal(sidearmScheduleUrl("Georgia Southern Women's Rifle vs UAB", GS), "https://gseagles.com/sports/rifle/schedule");
+  assert.equal(sidearmScheduleUrl("Georgia Southern Underwater Hockey vs UAB", GS), null);
+  const ics = "BEGIN:VEVENT\nUID:x1\nSUMMARY:Georgia Southern University Underwater Hockey vs UAB\nLOCATION:Statesboro\\, GA\nURL:https://admin.gseagles.com/calendar.aspx?game_id=1\nDTSTART:20261017T120000Z\nEND:VEVENT\n";
+  assert.equal(parseSidearmIcs(ics, GS, TZ).length, 0);
 });
 
 test("Sidearm: Brewton-Parker home events in Mount Vernon", () => {
@@ -73,6 +90,10 @@ test("Sidearm: Brewton-Parker home events in Mount Vernon", () => {
   const sat = list.filter((e) => iso(e.startMs).startsWith("2026-10-17"));
   assert.ok(sat.some((e) => /Soccer/.test(e.title)), "Sat women's soccer at home");
   assert.ok(list.every((e) => e.url.startsWith("https://bpcuathletics.com/")));
+  for (const e of list) {
+    const slug = e.url.match(/\/sports\/([^/]+)\/schedule$/)?.[1];
+    assert.ok(slug && SIDEARM_SCHEDULES["bpcuathletics.com"].pages.includes(slug), `unchecked link ${e.url}`);
+  }
   assert.equal(sat.find((e) => /Soccer/.test(e.title)).url, "https://bpcuathletics.com/sports/womens-soccer/schedule");
 });
 

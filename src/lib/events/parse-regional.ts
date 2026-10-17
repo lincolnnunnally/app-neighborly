@@ -62,17 +62,49 @@ export type SidearmOptions = Origin & {
 };
 
 /**
+ * Season schedule pages we checked in a real browser (Oct 17, 2026): each one
+ * renders its games with dates. A slug that only looks right can render an
+ * empty template instead ("/sports/womens-rifle/schedule" shows
+ * "@season @sport Schedule"), so the slug derived from a title must map to a
+ * page on this list. `aliases` maps the title's sport to the site's own slug.
+ */
+export const SIDEARM_SCHEDULES: Record<string, { aliases: Record<string, string>; pages: string[] }> = {
+  "gseagles.com": {
+    aliases: { "womens-rifle": "rifle", rifle: "rifle", volleyball: "womens-volleyball", "mens-golf": "golf", "track-and-field-xc": "cross-country" },
+    pages: [
+      "baseball", "cross-country", "football", "golf", "mens-basketball", "mens-soccer", "mens-tennis", "rifle", "softball",
+      "swimming-and-diving", "womens-basketball", "womens-golf", "womens-soccer", "womens-tennis", "womens-volleyball",
+    ],
+  },
+  "bpcuathletics.com": {
+    aliases: { volleyball: "womens-volleyball", wrestling: "mens-wrestling", "competition-cheer": "competitive-cheer" },
+    pages: [
+      "baseball", "bass-fishing", "competitive-cheer", "esports", "jv-baseball", "jv-mens-basketball", "jv-mens-soccer",
+      "mens-basketball", "mens-cross-country", "mens-golf", "mens-soccer", "mens-track-and-field", "mens-wrestling",
+      "powerlifting", "softball", "womens-basketball", "womens-beach-volleyball", "womens-cross-country",
+      "womens-flag-football", "womens-soccer", "womens-track-and-field", "womens-volleyball", "womens-wrestling",
+    ],
+  },
+};
+
+/**
  * Link to the sport's season schedule ("/sports/womens-soccer/schedule"): it
  * renders every game with its date on the page itself, unlike the composite
- * calendar, which fills in by script.
+ * calendar, which fills in by script. Null when the site has no checked page
+ * for the sport; the caller drops the game rather than link a broken page.
  */
 export function sidearmScheduleUrl(title: string, o: Pick<SidearmOptions, "publicHost" | "shortName">): string | null {
   const school = o.shortName?.[1];
   if (!school || !title.startsWith(school)) return null;
-  const sport = title.slice(school.length).split(/\s+vs\.?\s+/i)[0].trim();
+  // "Baseball vs Winthrop", "Men's Golf  Schenkel Invitational" (two spaces before a meet name).
+  const sport = title.slice(school.length).split(/\s+vs\.?\s+|\s{2,}/i).map((p) => p.trim()).filter(Boolean)[0] ?? "";
   if (!sport || sport.length > 40) return null;
-  const slug = sport.toLowerCase().replace(/['’]/g, "").replace(/&/g, " and ").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-  return slug ? `https://${o.publicHost}/sports/${slug}/schedule` : null;
+  const derived = sport.toLowerCase().replace(/['’]/g, "").replace(/&/g, " and ").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  if (!derived) return null;
+  const site = SIDEARM_SCHEDULES[o.publicHost];
+  if (!site) return `https://${o.publicHost}/sports/${derived}/schedule`;
+  const slug = site.aliases[derived] ?? derived;
+  return site.pages.includes(slug) ? `https://${o.publicHost}/sports/${slug}/schedule` : null;
 }
 
 function gamePageUrl(raw: string, host: string): string {
@@ -109,7 +141,10 @@ export function parseSidearmIcs(text: string, o: SidearmOptions, tz = DEFAULT_TZ
       .map((p) => p.trim())
       .filter((p) => p && !/^(ga|ga\.|georgia|tbd)$/i.test(p) && !TOWN_ONLY.test(p))
       .join(", ");
-    const url = sidearmScheduleUrl(title, o) ?? gamePageUrl(e.url, o.publicHost);
+    // Game pages ("calendar.aspx?game_id=") render no game details, so a game
+    // with no checked schedule page is left out.
+    const url = SIDEARM_SCHEDULES[o.publicHost] ? sidearmScheduleUrl(title, o) : (sidearmScheduleUrl(title, o) ?? gamePageUrl(e.url, o.publicHost));
+    if (!url) continue;
     out.push({
       id: `${o.id}:${e.uid || title}:${s.ms}`,
       title,
