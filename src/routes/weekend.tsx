@@ -152,7 +152,8 @@ function WeekendPage() {
 
   useEffect(() => {
     setPlan(loaded.plan);
-    setSearchingFor(null);
+    // searchingFor is cleared by PlaceSearch when the *latest* search ends, so
+    // an older search landing first never flashes its results.
   }, [loaded.plan]);
 
   useEffect(() => {
