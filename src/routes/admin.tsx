@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { getOwnerDashboard } from "@/lib/admin-stats";
+import { EventSourcesPanel } from "@/components/admin/event-sources-panel";
 import {
   getConnectionPulse,
   ownerCreateEvent,
@@ -629,6 +630,8 @@ function AdminPage() {
                 </div>
               </section>
             )}
+
+            <EventSourcesPanel />
 
             <section className="space-y-3">
               <h2 className="font-display text-xl font-semibold">Safety reports</h2>

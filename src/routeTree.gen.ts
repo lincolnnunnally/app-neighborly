@@ -50,6 +50,7 @@ import { Route as EIdRouteImport } from './routes/e.$id'
 import { Route as JoinCodeRouteImport } from './routes/join.$code'
 import { Route as ApiAdminStatsRouteImport } from './routes/api/admin/stats'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ApiCronRefreshEventsRouteImport } from './routes/api/cron/refresh-events'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -256,6 +257,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiCronRefreshEventsRoute = ApiCronRefreshEventsRouteImport.update({
+  id: '/api/cron/refresh-events',
+  path: '/api/cron/refresh-events',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -299,6 +305,7 @@ export interface FileRoutesByFullPath {
   '/app/': typeof AppIndexRoute
   '/api/admin/stats': typeof ApiAdminStatsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/cron/refresh-events': typeof ApiCronRefreshEventsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -341,6 +348,7 @@ export interface FileRoutesByTo {
   '/app': typeof AppIndexRoute
   '/api/admin/stats': typeof ApiAdminStatsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/cron/refresh-events': typeof ApiCronRefreshEventsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -385,6 +393,7 @@ export interface FileRoutesById {
   '/app/': typeof AppIndexRoute
   '/api/admin/stats': typeof ApiAdminStatsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/cron/refresh-events': typeof ApiCronRefreshEventsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -430,6 +439,7 @@ export interface FileRouteTypes {
     | '/app/'
     | '/api/admin/stats'
     | '/api/auth/$'
+    | '/api/cron/refresh-events'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -472,6 +482,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/api/admin/stats'
     | '/api/auth/$'
+    | '/api/cron/refresh-events'
   id:
     | '__root__'
     | '/'
@@ -515,6 +526,7 @@ export interface FileRouteTypes {
     | '/app/'
     | '/api/admin/stats'
     | '/api/auth/$'
+    | '/api/cron/refresh-events'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -549,6 +561,7 @@ export interface RootRouteChildren {
   JoinCodeRoute: typeof JoinCodeRoute
   ApiAdminStatsRoute: typeof ApiAdminStatsRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiCronRefreshEventsRoute: typeof ApiCronRefreshEventsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -840,6 +853,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/cron/refresh-events': {
+      id: '/api/cron/refresh-events'
+      path: '/api/cron/refresh-events'
+      fullPath: '/api/cron/refresh-events'
+      preLoaderRoute: typeof ApiCronRefreshEventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -903,6 +923,7 @@ const rootRouteChildren: RootRouteChildren = {
   JoinCodeRoute: JoinCodeRoute,
   ApiAdminStatsRoute: ApiAdminStatsRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiCronRefreshEventsRoute: ApiCronRefreshEventsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

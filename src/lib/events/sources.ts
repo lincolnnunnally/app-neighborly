@@ -11,10 +11,35 @@
 import { haversineMiles } from "./geo";
 import { GA_PARK_COORDS } from "./ga-parks";
 import { parseGaParks, parseLocalist, parsePalShows, parseTribe, inferCategory } from "./parse";
-import { addDaysKey, DEFAULT_TZ } from "./time";
+import {
+  growthZoneLinks,
+  NOT_A_PUBLIC_OUTING,
+  parseAverittPerformances,
+  parseFestivalDates,
+  parseGrowthZoneDetail,
+  parseSidearmIcs,
+  parseSimpleCalendar,
+} from "./parse-regional";
+import { geocodeAddress, readSourceStates, readStoredEvents, recordSourceError, saveSourceEvents } from "./store";
+import { addDaysKey, DEFAULT_TZ, keyStartMs, localDateKey } from "./time";
 import type { PublicEvent } from "./types";
 
-export type SourceKind = "localist" | "tribe" | "gaparks" | "pal" | "ticketmaster";
+export type SourceKind =
+  | "localist"
+  | "tribe"
+  | "gaparks"
+  | "pal"
+  | "ticketmaster"
+  /** A college athletics site's public ICS (Sidearm): home games only. */
+  | "sidearm"
+  /** The Averitt Center's own performances page. */
+  | "averitt"
+  /** A festival's own home page stating its dates. */
+  | "festival"
+  /** A GrowthZone chamber calendar (detail pages carry schema.org dates). */
+  | "growthzone"
+  /** A WordPress Simple Calendar page (schema.org microdata). */
+  | "simcal";
 
 export type SourceDef = {
   id: string;
@@ -30,6 +55,18 @@ export type SourceDef = {
   city: string;
   /** How far from (lat, lon) this source's events can be. */
   reachMi: number;
+  /** Venue name / street address for single-venue sources (geocoded, cached). */
+  venue?: string;
+  address?: string;
+  /** festival: the event's name; simcal: optional display title. */
+  title?: string;
+  /** sidearm: location text that means a home game. */
+  home?: RegExp;
+  publicHost?: string;
+  shortName?: [RegExp, string];
+  /** simcal: which listings are public. tribe: which titles to drop. */
+  keep?: RegExp;
+  drop?: RegExp;
 };
 
 export const SOURCES: SourceDef[] = [
@@ -37,6 +74,17 @@ export const SOURCES: SourceDef[] = [
   { id: "pal", kind: "pal", name: "The Pal Theatre", url: "https://thepaltheatre.com/shows-events/", lat: 32.2177, lon: -82.4134, city: "Vidalia", reachMi: 1 },
   { id: "toombs", kind: "tribe", name: "Toombs County", url: "https://toombscountyga.gov/events/", base: "https://toombscountyga.gov", lat: 32.2043, lon: -82.3218, city: "Lyons", reachMi: 15 },
   { id: "gasouthern", kind: "localist", name: "Georgia Southern University", url: "https://calendar.georgiasouthern.edu/", base: "https://calendar.georgiasouthern.edu", lat: 32.422, lon: -81.7832, city: "Statesboro", reachMi: 60 },
+  // Around Vidalia, Statesboro and Dublin — all public pages or feeds, robots.txt allows them.
+  { id: "visitdublin", kind: "tribe", name: "Visit Dublin-Laurens", url: "https://visitdublinga.org/events/", base: "https://visitdublinga.org", lat: 32.5404, lon: -82.9038, city: "Dublin", reachMi: 15 },
+  { id: "southeasterntech", kind: "tribe", name: "Southeastern Technical College", url: "https://www.southeasterntech.edu/events/", base: "https://www.southeasterntech.edu", lat: 32.2097, lon: -82.3893, city: "Vidalia", reachMi: 30, drop: NOT_A_PUBLIC_OUTING },
+  { id: "averitt", kind: "averitt", name: "Averitt Center for the Arts", url: "https://www.averittcenterforthearts.org/performances/", base: "https://www.averittcenterforthearts.org", lat: 32.4486, lon: -81.7829, city: "Statesboro", reachMi: 1, venue: "Averitt Center for the Arts", address: "33 East Main Street, Statesboro, GA 30458" },
+  { id: "headinhome", kind: "festival", name: "Headin' Home Fest", url: "https://headinhomefest.com/", title: "Headin' Home Fest (bluegrass festival)", lat: 31.8696, lon: -82.5943, city: "Hazlehurst", reachMi: 5, venue: "Stagger Lee Music Park", address: "902 Vernon Williams Rd, Hazlehurst, GA 31539" },
+  { id: "gseagles", kind: "sidearm", name: "Georgia Southern Athletics", url: "https://gseagles.com/calendar", base: "https://gseagles.com/calendar.ashx/calendar.ics?sport_id=0", publicHost: "gseagles.com", lat: 32.4219, lon: -81.7832, city: "Statesboro", reachMi: 2,
+    home: /statesboro|clements stadium|convocation center|eagle field|aquatics center at the rac|hanner fieldhouse|paulson stadium|bo pitts|wallis tennis|shooting sports/i, shortName: [/^Georgia Southern University\b/, "Georgia Southern"] },
+  { id: "bpcathletics", kind: "sidearm", name: "Brewton-Parker Athletics", url: "https://bpcuathletics.com/calendar", base: "https://bpcuathletics.com/calendar.ashx/calendar.ics?sport_id=0", publicHost: "bpcuathletics.com", lat: 32.179, lon: -82.5946, city: "Mount Vernon", reachMi: 2,
+    home: /mount vernon|mt\.? vernon|gillis gymnasium|bpc (baseball|softball|soccer)/i, shortName: [/^Brewton-Parker College\b/, "Brewton-Parker"] },
+  { id: "metter", kind: "growthzone", name: "Metter-Candler Chamber", url: "https://business.everythingsbetterinmetter.com/events/calendar", base: "https://business.everythingsbetterinmetter.com", lat: 32.3971, lon: -82.0601, city: "Metter", reachMi: 10 },
+  { id: "statesboromarket", kind: "simcal", name: "The Market at Visit Statesboro", url: "https://marketatvisitstatesboro.com/availability/", title: "Statesboro Main Street Farmers Market", lat: 32.4488, lon: -81.7832, city: "Statesboro", reachMi: 1, venue: "The Market at Visit Statesboro", keep: /farmers market/i },
   { id: "gsu", kind: "localist", name: "Georgia State University", url: "https://calendar.gsu.edu/", base: "https://calendar.gsu.edu", lat: 33.7531, lon: -84.3853, city: "Atlanta", reachMi: 25 },
   { id: "agnesscott", kind: "localist", name: "Agnes Scott College", url: "https://calendar.agnesscott.edu/", base: "https://calendar.agnesscott.edu", lat: 33.7687, lon: -84.2941, city: "Decatur", reachMi: 3 },
   { id: "kennesaw", kind: "localist", name: "Kennesaw State University", url: "https://calendar.kennesaw.edu/", base: "https://calendar.kennesaw.edu", lat: 34.0382, lon: -84.5827, city: "Kennesaw", reachMi: 15 },
@@ -111,11 +159,82 @@ async function fetchTribe(src: SourceDef, fromKey: string, toKey: string, tz: st
       if (page > 1) break;
       throw e;
     }
-    const json = JSON.parse(text) as { total_pages?: number };
-    out.push(...parseTribe(json, { id: src.id, organizer: src.name, lat: src.lat, lon: src.lon, city: src.city }, tz));
+    const json = JSON.parse(text) as { total_pages?: number; events?: TribeRaw[] };
+    const parsed = parseTribe(json, { id: src.id, organizer: src.name, lat: src.lat, lon: src.lon, city: src.city }, tz);
+    // A venue with a street address but no map pin gets geocoded (cached) instead of the town center.
+    const raw = new Map((json.events ?? []).map((e) => [String(e.id), e]));
+    for (const e of parsed) {
+      if (src.drop?.test(e.title)) continue;
+      const v = raw.get(e.id.split(":")[1])?.venue;
+      if (v && !Array.isArray(v) && !(Number(v.geo_lat) && Number(v.geo_lng)) && v.address) {
+        const hit = await geocodeAddress([v.address, v.city, v.state || v.province, v.zip].filter(Boolean).join(", "));
+        if (hit) [e.lat, e.lon] = hit;
+      }
+      out.push(e);
+    }
     if (!json.total_pages || page >= json.total_pages) break;
   }
   return out;
+}
+
+type TribeRaw = { id: number | string; venue?: { address?: string; city?: string; state?: string; province?: string; zip?: string; geo_lat?: unknown; geo_lng?: unknown } | unknown[] };
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/** Single-venue sources: pin to the geocoded street address when we have one. */
+async function venuePoint(src: SourceDef): Promise<{ lat: number; lon: number }> {
+  if (!src.address) return { lat: src.lat, lon: src.lon };
+  const hit = await geocodeAddress(src.address);
+  return hit ? { lat: hit[0], lon: hit[1] } : { lat: src.lat, lon: src.lon };
+}
+
+function inRange(list: PublicEvent[], fromKey: string, toKey: string, tz: string): PublicEvent[] {
+  const lo = keyStartMs(fromKey, tz);
+  const hi = keyStartMs(addDaysKey(toKey, 1), tz);
+  return list.filter((e) => e.startMs < hi && (e.endMs ?? e.startMs) >= lo);
+}
+
+async function fetchSidearm(src: SourceDef, fromKey: string, toKey: string, tz: string): Promise<PublicEvent[]> {
+  const text = await getText(src.base!, "text/calendar");
+  const list = parseSidearmIcs(text, { id: src.id, organizer: src.name, lat: src.lat, lon: src.lon, city: src.city, home: src.home!, publicHost: src.publicHost!, shortName: src.shortName }, tz);
+  return inRange(list, fromKey, toKey, tz);
+}
+
+async function fetchAveritt(src: SourceDef, fromKey: string, toKey: string, tz: string): Promise<PublicEvent[]> {
+  const [html, pt] = await Promise.all([getText(src.url, "text/html"), venuePoint(src)]);
+  const list = parseAverittPerformances(html, { id: src.id, organizer: src.name, city: src.city, base: src.base!, venue: src.venue!, ...pt }, tz);
+  return inRange(list, fromKey, toKey, tz);
+}
+
+async function fetchFestival(src: SourceDef, fromKey: string, toKey: string, tz: string): Promise<PublicEvent[]> {
+  const [html, pt] = await Promise.all([getText(src.url, "text/html"), venuePoint(src)]);
+  const list = parseFestivalDates(html, { id: src.id, organizer: src.name, city: src.city, title: src.title!, venue: src.venue!, url: src.url, ...pt }, tz);
+  return inRange(list, fromKey, toKey, tz);
+}
+
+async function fetchGrowthZone(src: SourceDef, fromKey: string, toKey: string, tz: string): Promise<PublicEvent[]> {
+  // The calendar lists the current month; ask for the next one too when the range crosses into it.
+  const months = new Set([fromKey.slice(0, 7), toKey.slice(0, 7)]);
+  const links: ReturnType<typeof growthZoneLinks> = [];
+  for (const m of months) {
+    const page = m === localDateKey(Date.now(), tz).slice(0, 7) ? src.url : `${src.url}/${m}-01`;
+    links.push(...growthZoneLinks(await getText(page, "text/html")));
+  }
+  const wanted = [...new Map(links.map((l) => [l.url, l])).values()].filter((l) => l.dateKey >= fromKey && l.dateKey <= toKey).slice(0, 12);
+  const out: PublicEvent[] = [];
+  for (const l of wanted) {
+    // One detail page at a time, with a pause: a small chamber site, not a CDN.
+    const e = parseGrowthZoneDetail(await getText(l.url, "text/html"), l, { id: src.id, organizer: src.name, lat: src.lat, lon: src.lon, city: src.city }, tz);
+    if (e) out.push(e);
+    await sleep(300);
+  }
+  return out;
+}
+
+async function fetchSimCal(src: SourceDef, fromKey: string, toKey: string, tz: string): Promise<PublicEvent[]> {
+  const [html, pt] = await Promise.all([getText(src.url, "text/html"), venuePoint(src)]);
+  const list = parseSimpleCalendar(html, { id: src.id, organizer: src.name, city: src.city, url: src.url, venue: src.venue!, keep: src.keep!, title: src.title, ...pt });
+  return inRange(list, fromKey, toKey, tz);
 }
 
 async function fetchGaParks(fromKey: string, toKey: string, tz: string): Promise<PublicEvent[]> {
@@ -199,9 +318,15 @@ async function fetchTicketed(lat: number, lon: number, radiusMi: number, fromKey
   return out;
 }
 
-export type SourceRun = { def: SourceDef; events: PublicEvent[]; status: "ok" | "cached" | "stale" | "error"; error?: string };
+export type SourceRun = {
+  def: SourceDef;
+  events: PublicEvent[];
+  /** stored = read from the daily-refreshed table; the rest are live fetches. */
+  status: "stored" | "ok" | "cached" | "stale" | "error";
+  error?: string;
+};
 
-async function cached(key: string, load: () => Promise<PublicEvent[]>): Promise<{ events: PublicEvent[]; status: SourceRun["status"]; error?: string }> {
+async function cached(key: string, load: () => Promise<PublicEvent[]>): Promise<{ events: PublicEvent[]; status: Exclude<SourceRun["status"], "stored">; error?: string }> {
   const hit = cache.get(key);
   const now = Date.now();
   if (hit && now - hit.at < FRESH_MS) return { events: hit.events, status: "cached" };
@@ -235,6 +360,32 @@ export function sourcesNear(lat: number, lon: number, wideMi: number): SourceDef
   return SOURCES.filter((s) => haversineMiles(lat, lon, s.lat, s.lon) <= wideMi + s.reachMi);
 }
 
+function loaderFor(def: SourceDef, fromKey: string, toKey: string, tz: string): () => Promise<PublicEvent[]> {
+  switch (def.kind) {
+    case "localist":
+      return () => fetchLocalist(def, fromKey, toKey, tz);
+    case "tribe":
+      return () => fetchTribe(def, fromKey, toKey, tz);
+    case "gaparks":
+      return () => fetchGaParks(fromKey, toKey, tz);
+    case "sidearm":
+      return () => fetchSidearm(def, fromKey, toKey, tz);
+    case "averitt":
+      return () => fetchAveritt(def, fromKey, toKey, tz);
+    case "festival":
+      return () => fetchFestival(def, fromKey, toKey, tz);
+    case "growthzone":
+      return () => fetchGrowthZone(def, fromKey, toKey, tz);
+    case "simcal":
+      return () => fetchSimCal(def, fromKey, toKey, tz);
+    default:
+      return () => fetchPal(tz);
+  }
+}
+
+/** A stored refresh this old is still served; past it we fetch live again. */
+const STORED_OK_MS = 48 * 3600 * 1000;
+
 export async function runSources(opts: {
   lat: number;
   lon: number;
@@ -245,18 +396,27 @@ export async function runSources(opts: {
 }): Promise<SourceRun[]> {
   const tz = opts.tz || DEFAULT_TZ;
   const defs = sourcesNear(opts.lat, opts.lon, opts.wideMi);
+  const now = Date.now();
+  const states = await readSourceStates(defs.map((d) => d.id));
+  const fresh = defs.filter((d) => {
+    const st = states.get(d.id);
+    return Boolean(
+      st?.lastSuccessMs && now - st.lastSuccessMs < STORED_OK_MS && st.coveredFrom && st.coveredTo && st.coveredFrom <= opts.fromKey && st.coveredTo >= opts.toKey,
+    );
+  });
+  const stored = await readStoredEvents(
+    fresh.map((d) => d.id),
+    keyStartMs(opts.fromKey, tz),
+    keyStartMs(addDaysKey(opts.toKey, 1), tz),
+  );
+  const freshIds = new Set(fresh.map((d) => d.id));
   const runs = defs.map(async (def): Promise<SourceRun> => {
+    if (freshIds.has(def.id)) return { def, events: stored.get(def.id) ?? [], status: "stored" };
+    // Not refreshed yet (new source, empty table, or the daily job failing): fetch live once and save it.
     const key = `${def.id}:${opts.fromKey}:${opts.toKey}`;
-    const loader =
-      def.kind === "localist"
-        ? () => fetchLocalist(def, opts.fromKey, opts.toKey, tz)
-        : def.kind === "tribe"
-          ? () => fetchTribe(def, opts.fromKey, opts.toKey, tz)
-          : def.kind === "gaparks"
-            ? () => fetchGaParks(opts.fromKey, opts.toKey, tz)
-            : () => fetchPal(tz);
-    const r = await cached(key, loader);
+    const r = await cached(key, loaderFor(def, opts.fromKey, opts.toKey, tz));
     if (r.status === "error") console.warn(`[events] ${def.id} failed: ${r.error}`);
+    if (r.status === "ok" || r.status === "cached") await saveSourceEvents(def, r.events, opts.fromKey, opts.toKey);
     return { def, ...r };
   });
   if (ticketedKey()) {
@@ -276,6 +436,43 @@ export async function runSources(opts: {
     );
   }
   return Promise.all(runs);
+}
+
+export type RefreshResult = { id: string; name: string; ok: boolean; count: number; error?: string; ms: number };
+
+/**
+ * Daily job: re-fetch every source for the coming ~2.5 weeks and store it.
+ * Sources are isolated — one failing keeps its last good events and only
+ * records the error. A few at a time, so no site sees a burst from us.
+ */
+export async function refreshAllSources(opts: { nowMs?: number; only?: string[] } = {}): Promise<RefreshResult[]> {
+  const tz = DEFAULT_TZ;
+  const today = localDateKey(opts.nowMs ?? Date.now(), tz);
+  const fromKey = addDaysKey(today, -3);
+  const toKey = addDaysKey(today, 17);
+  const defs = SOURCES.filter((d) => !opts.only || opts.only.includes(d.id));
+  const results: RefreshResult[] = [];
+  const queue = [...defs];
+  async function worker() {
+    for (let def = queue.shift(); def; def = queue.shift()) {
+      const t0 = Date.now();
+      try {
+        const events = await Promise.race([
+          loaderFor(def, fromKey, toKey, tz)(),
+          new Promise<never>((_, reject) => setTimeout(() => reject(new Error("timed out")), 45_000)),
+        ]);
+        const saved = await saveSourceEvents(def, events, fromKey, toKey);
+        cache.set(`${def.id}:${fromKey}:${toKey}`, { at: Date.now(), events });
+        results.push({ id: def.id, name: def.name, ok: saved, count: events.length, ms: Date.now() - t0, error: saved ? undefined : "store write failed" });
+      } catch (e) {
+        const error = e instanceof Error ? e.message : String(e);
+        await recordSourceError(def, error);
+        results.push({ id: def.id, name: def.name, ok: false, count: 0, error, ms: Date.now() - t0 });
+      }
+    }
+  }
+  await Promise.all([worker(), worker(), worker(), worker()]);
+  return results.sort((a, b) => a.id.localeCompare(b.id));
 }
 
 export function ticketedFeedConfigured(): boolean {

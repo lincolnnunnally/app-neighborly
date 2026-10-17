@@ -15,7 +15,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test": "node --experimental-strip-types --no-warnings --import ./tests/register.mjs --test tests/events.test.mjs tests/churches.test.mjs tests/safe-next.test.mjs"
+    "test": "node --experimental-strip-types --no-warnings --import ./tests/register.mjs --test tests/events.test.mjs tests/regional.test.mjs tests/churches.test.mjs tests/safe-next.test.mjs"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.3",

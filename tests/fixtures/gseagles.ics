@@ -1,0 +1,3064 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//SIDEARM Sports//NONSGML SIDEARM//EN
+X-WR-CALNAME:Georgia Southern University Athletics
+X-PUBLISHED-TTL:PT120M
+BEGIN:VEVENT
+UID:vcal_17513-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20260917T220000Z
+DTEND:20260918T000000Z
+LOCATION:Statesboro\, Ga., Hanner Fieldhouse
+SUMMARY:[W] Georgia Southern University Volleyball vs Kennesaw State
+DESCRIPTION:[W] Georgia Southern University Volleyball vs Kennesaw State\nW 3-1\nTV: ESPN+\nStreaming Video: https://www.espn.com/watch/player/_/eventCalendarId/401897400?gameId=401897400&sourceLang=en\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17513&amp;sport_id=15
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17535-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20260918
+DTEND;VALUE=DATE:20260920
+LOCATION:Kennesaw\, GA
+SUMMARY:[N] Georgia Southern University Women's Tennis at Mid Major Mayhem Hidden Duel
+DESCRIPTION:[N] Georgia Southern University Women's Tennis at Mid Major Mayhem Hidden Duel\n\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17535&amp;sport_id=14
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17541-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20260918
+DTEND;VALUE=DATE:20260920
+LOCATION:Nashville\, Tenn.
+SUMMARY:[N] Georgia Southern University Women's Golf  The Mason Rudolph
+DESCRIPTION:[N] Georgia Southern University Women's Golf  The Mason Rudolph\n 6th of 15\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17541&amp;sport_id=22
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17646-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20260918T223000Z
+DTEND:20260919T013000Z
+LOCATION:Dahlonega\, Ga.
+SUMMARY:[N] Georgia Southern University Track & Field/XC  UNG Cross Country Invitational
+DESCRIPTION:[N] Georgia Southern University Track & Field/XC  UNG Cross Country Invitational\n\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17646&amp;sport_id=2
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17491-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20260918T230000Z
+DTEND:20260919T010000Z
+LOCATION:Conway\, SC
+SUMMARY:[T] Georgia Southern University Men's Soccer at Coastal Carolina
+DESCRIPTION:[T] Georgia Southern University Men's Soccer at Coastal Carolina\nT 1-1\nTV: ESPN+\nStreaming Video: https://www.espn.com/watch/player/_/id/3dd156ad-d37b-42f3-83a6-500eb8af9611\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17491&amp;sport_id=7
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17655-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20260919T120000Z
+DTEND:20260919T150000Z
+LOCATION:Atlanta\, Ga. 
+SUMMARY:[N] Georgia Southern University Swimming and Diving vs Swim Across America
+DESCRIPTION:[N] Georgia Southern University Swimming and Diving vs Swim Across America\n\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17655&amp;sport_id=10
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17514-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20260919T160000Z
+DTEND:20260919T180000Z
+LOCATION:Statesboro\, Ga., Hanner Fieldhouse
+SUMMARY:[W] Georgia Southern University Volleyball vs Fordham
+DESCRIPTION:[W] Georgia Southern University Volleyball vs Fordham\nW 3-0\nTV: ESPN+\nStreaming Video: https://www.espn.com/watch/player/_/eventCalendarId/401887514?gameId=401887514&sourceLang=en\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17514&amp;sport_id=15
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_5655-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20260919T230000Z
+DTEND:20260920T020000Z
+LOCATION:Jacksonville\, AL
+SUMMARY:[L] Georgia Southern University Football at Jax State
+DESCRIPTION:[L] Georgia Southern University Football at Jax State\nL 27-31\nTV: ESPN+\nRadio: Georgia Southern Sports Network\nStreaming Audio: https://thevarsitynetwork.com/audioapplink/source/oas-869/content/georgiasouthern:allaccess-Live-2922\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=5655&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17515-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20260920T170000Z
+DTEND:20260920T190000Z
+LOCATION:Statesboro\, Ga., Hanner Fieldhouse
+SUMMARY:[W] Georgia Southern University Volleyball vs North Florida
+DESCRIPTION:[W] Georgia Southern University Volleyball vs North Florida\nW 3-0\nTV: ESPN+\nStreaming Video: https://www.espn.com/watch/player/_/id/8fabb28f-78f9-4a54-aa3c-d77964249e51\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17515&amp;sport_id=15
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17644-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20260921
+DTEND;VALUE=DATE:20260927
+LOCATION:Columbia\, SC
+SUMMARY:[N] Georgia Southern University Men's Tennis at Columbia ITF
+DESCRIPTION:[N] Georgia Southern University Men's Tennis at Columbia ITF\n\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17644&amp;sport_id=8
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17450-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20260924T230000Z
+DTEND:20260925T010000Z
+LOCATION:Atlanta\, Ga.
+SUMMARY:[L] Georgia Southern University Women's Soccer at Georgia State
+DESCRIPTION:[L] Georgia Southern University Women's Soccer at Georgia State\nL 1-2\nTV: ESPN+\nStreaming Video: https://www.espn.com/watch/player/_/id/aef8c7b7-19b1-4776-a3c3-b303ac49f523\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17450&amp;sport_id=13
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17639-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20260925
+DTEND;VALUE=DATE:20260927
+LOCATION:Jacksonville\, FL
+SUMMARY:[N] Georgia Southern University Men's Tennis at UNF Invitational
+DESCRIPTION:[N] Georgia Southern University Men's Tennis at UNF Invitational\n\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17639&amp;sport_id=8
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17516-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20260925T220000Z
+DTEND:20260926T000000Z
+LOCATION:Conway\, SC
+SUMMARY:[W] Georgia Southern University Volleyball at Coastal Carolina
+DESCRIPTION:[W] Georgia Southern University Volleyball at Coastal Carolina\nW 3-0\nTV: ESPN+\nStreaming Video: https://www.espn.com/watch/player/_/id/79c44adb-e43e-4098-95c7-e389871e11cc\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17516&amp;sport_id=15
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17656-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20260926T170000Z
+DTEND:20260926T200000Z
+LOCATION:Moultrie\, Ga.
+SUMMARY:[N] Georgia Southern University Swimming and Diving vs Moultrie Invite - Dive Only
+DESCRIPTION:[N] Georgia Southern University Swimming and Diving vs Moultrie Invite - Dive Only\n\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17656&amp;sport_id=10
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17517-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20260926T180000Z
+DTEND:20260926T200000Z
+LOCATION:Conway\, SC
+SUMMARY:[W] Georgia Southern University Volleyball at Coastal Carolina
+DESCRIPTION:[W] Georgia Southern University Volleyball at Coastal Carolina\nW 3-0\nTV: ESPN+\nStreaming Video: https://www.espn.com/watch/player/_/eventCalendarId/401900493?gameId=401900493&sourceLang=en&om-navmethod=espn:globalsearch:results\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17517&amp;sport_id=15
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_5644-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20260926T200000Z
+DTEND:20260926T230000Z
+LOCATION:Statesboro\, GA, Allen E. Paulson Stadium
+SUMMARY:[L] Georgia Southern University Football vs Houston - Hall of Fame/Celebrate Agriculture Day
+DESCRIPTION:[L] Georgia Southern University Football vs Houston - Hall of Fame/Celebrate Agriculture Day\nL 28-42\nTV: ESPNU\nRadio: Georgia Southern Sports Network\nStreaming Audio: https://thevarsitynetwork.com/audioapplink/source/oas-869/content/georgiasouthern:allaccess-Live-2923\nTickets: https://gseagles.evenue.net/list/FB\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=5644&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17451-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20260927T170000Z
+DTEND:20260927T190000Z
+LOCATION:Statesboro, Bo Pitts Field
+SUMMARY:[W] Georgia Southern University Women's Soccer vs Coastal Carolina - Brunch At Bo Pitts / Teacher Appreciation
+DESCRIPTION:[W] Georgia Southern University Women's Soccer vs Coastal Carolina - Brunch At Bo Pitts / Teacher Appreciation\nW 4-1\nTV: ESPN+\nStreaming Video: https://www.espn.com/watch/player/_/id/a9e43301-4e25-4e26-9879-6175523f6fb6\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17451&amp;sport_id=13
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17492-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20260927T230000Z
+DTEND:20260928T010000Z
+LOCATION:Statesboro, Bo Pitts Field
+SUMMARY:[W] Georgia Southern University Men's Soccer vs #15 Old Dominion
+DESCRIPTION:[W] Georgia Southern University Men's Soccer vs #15 Old Dominion\nW 3-1\nTV: ESPN+\nStreaming Video: https://www.espn.com/watch/player/_/id/cf552d4a-057d-4353-ac8e-f6db194c4489\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17492&amp;sport_id=7
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17592-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20260928
+DTEND;VALUE=DATE:20260929
+LOCATION:Lake Forest\, IL
+SUMMARY:[N] Georgia Southern University Men's Golf  Windon Memorial Classic
+DESCRIPTION:[N] Georgia Southern University Men's Golf  Windon Memorial Classic\n T12th of 16\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17592&amp;sport_id=5
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17536-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20261001
+DTEND;VALUE=DATE:20261003
+LOCATION:Macon\, GA
+SUMMARY:[N] Georgia Southern University Women's Tennis at Mercer Gridiron Classic
+DESCRIPTION:[N] Georgia Southern University Women's Tennis at Mercer Gridiron Classic\n\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17536&amp;sport_id=14
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17640-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20261001
+DTEND;VALUE=DATE:20261003
+LOCATION:Macon\, GA
+SUMMARY:[N] Georgia Southern University Men's Tennis at Mercer Gridiron Classic
+DESCRIPTION:[N] Georgia Southern University Men's Tennis at Mercer Gridiron Classic\n\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17640&amp;sport_id=8
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17647-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261002T132000Z
+DTEND:20261002T162000Z
+LOCATION:Oakwood\, Ga.
+SUMMARY:[N] Georgia Southern University Track & Field/XC  Georgia Tech Cross Country Invitational
+DESCRIPTION:[N] Georgia Southern University Track & Field/XC  Georgia Tech Cross Country Invitational\n\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17647&amp;sport_id=2
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17732-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261002T220000Z
+DTEND:20261003T000000Z
+LOCATION:Columbia\, SC
+SUMMARY:[N] Georgia Southern University Softball at South Carolina (EXH)
+DESCRIPTION:[N] Georgia Southern University Softball at South Carolina (EXH)\n\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17732&amp;sport_id=9
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17518-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261002T220000Z
+DTEND:20261003T000000Z
+LOCATION:Statesboro\, Ga., Hanner Fieldhouse
+SUMMARY:[W] Georgia Southern University Volleyball vs Old Dominion
+DESCRIPTION:[W] Georgia Southern University Volleyball vs Old Dominion\nW 3-0\nTV: ESPN+\nStreaming Video: https://www.espn.com/watch/player/_/eventCalendarId/401900510?gameId=401900510&sourceLang=en&om-navmethod=espn:globalsearch:results\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17518&amp;sport_id=15
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17741-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261002T220000Z
+DTEND:20261003T010000Z
+LOCATION:, SRP Park
+SUMMARY:[N] Georgia Southern University Baseball vs The Citadel - Tickets
+DESCRIPTION:[N] Georgia Southern University Baseball vs The Citadel - Tickets\n Completed\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17741&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17493-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261002T230000Z
+DTEND:20261003T010000Z
+LOCATION:Statesboro, Bo Pitts Field
+SUMMARY:[W] Georgia Southern University Men's Soccer vs Georgia State
+DESCRIPTION:[W] Georgia Southern University Men's Soccer vs Georgia State\nW 3-0\nTV: ESPN+\nStreaming Video: https://www.espn.com/watch/player/_/id/341d8ec6-a531-4d0b-8419-11de2af34448\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17493&amp;sport_id=7
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17463-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261003T120000Z
+DTEND:20261003T150000Z
+LOCATION:Statesboro\, GA, Shooting Sports Education Center
+SUMMARY:[L] Georgia Southern University Women's Rifle vs Kentucky
+DESCRIPTION:[L] Georgia Southern University Women's Rifle vs Kentucky\nL 4723-4724\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17463&amp;sport_id=16
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17519-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261003T170000Z
+DTEND:20261003T190000Z
+LOCATION:Statesboro\, Ga., Hanner Fieldhouse
+SUMMARY:[W] Georgia Southern University Volleyball vs Old Dominion
+DESCRIPTION:[W] Georgia Southern University Volleyball vs Old Dominion\nW 3-0\nTV: ESPN+\nStreaming Video: https://www.espn.com/watch/player/_/eventCalendarId/401900511?gameId=401900511&sourceLang=en&om-navmethod=espn:globalsearch:results\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17519&amp;sport_id=15
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17430-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261003T230000Z
+DTEND:20261004T020000Z
+LOCATION:Conway\, SC
+SUMMARY:[W] Georgia Southern University Football at Coastal Carolina
+DESCRIPTION:[W] Georgia Southern University Football at Coastal Carolina\nW 31-24\nTV: ESPN+\nRadio: Georgia Southern Sports Network\nStreaming Audio: https://thevarsitynetwork.com/audioapplink/source/oas-869/content/georgiasouthern:allaccess-Live-2924\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17430&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17593-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20261004
+DTEND;VALUE=DATE:20261005
+LOCATION:South Bend\, IN
+SUMMARY:[N] Georgia Southern University Men's Golf  Fighting Irish Classic
+DESCRIPTION:[N] Georgia Southern University Men's Golf  Fighting Irish Classic\n 5th of 14\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17593&amp;sport_id=5
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17452-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261004T170000Z
+DTEND:20261004T190000Z
+LOCATION:Huntington\, WV
+SUMMARY:[T] Georgia Southern University Women's Soccer at Marshall
+DESCRIPTION:[T] Georgia Southern University Women's Soccer at Marshall\nT 2-2\nTV: ESPN+\nStreaming Video: https://www.espn.com/watch/player/_/id/04ae813d-214d-41c9-aa8d-b1b1a806e300\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17452&amp;sport_id=13
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17542-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20261005
+DTEND;VALUE=DATE:20261007
+LOCATION:Starkville\, Miss.
+SUMMARY:[N] Georgia Southern University Women's Golf  The Ally
+DESCRIPTION:[N] Georgia Southern University Women's Golf  The Ally\n T10th of 17\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17542&amp;sport_id=22
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17494-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261006T230000Z
+DTEND:20261007T010000Z
+LOCATION:Clemson\, SC
+SUMMARY:[T] Georgia Southern University Men's Soccer at #5 Clemson
+DESCRIPTION:[T] Georgia Southern University Men's Soccer at #5 Clemson\nT 2-2\nTV: ESPN+ / ACCNX\nStreaming Video: https://www.espn.com/watch/player/_/id/9f34c399-24f2-465a-bcdc-562e7aa2df7c\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17494&amp;sport_id=7
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17537-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20261008
+DTEND;VALUE=DATE:20261011
+LOCATION:Miami\, Fla.
+SUMMARY:[N] Georgia Southern University Women's Tennis at ITA Regionals
+DESCRIPTION:[N] Georgia Southern University Women's Tennis at ITA Regionals\n\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17537&amp;sport_id=14
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17453-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261008T210000Z
+DTEND:20261008T230000Z
+LOCATION:Statesboro, Bo Pitts Field
+SUMMARY:[L] Georgia Southern University Women's Soccer vs App State - Kick Cancer
+DESCRIPTION:[L] Georgia Southern University Women's Soccer vs App State - Kick Cancer\nL 0-4\nTV: ESPN+\nStreaming Video: https://www.espn.com/watch/player/_/id/7b306a60-2457-4ee4-b6d4-6ea58c656052\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17453&amp;sport_id=13
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17520-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261008T220000Z
+DTEND:20261009T000000Z
+LOCATION:Boone\, NC
+SUMMARY:[L] Georgia Southern University Volleyball at Appalachian State
+DESCRIPTION:[L] Georgia Southern University Volleyball at Appalachian State\nL 1-3\nTV: ESPN+\nStreaming Video: https://www.espn.com/watch/player/_/id/c50f8bbe-5bb0-419e-aa2e-b61b670db86a\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17520&amp;sport_id=15
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17521-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261009T220000Z
+DTEND:20261010T000000Z
+LOCATION:Boone\, NC
+SUMMARY:[W] Georgia Southern University Volleyball at Appalachian State
+DESCRIPTION:[W] Georgia Southern University Volleyball at Appalachian State\nW 3-1\nTV: ESPN+\nStreaming Video: https://www.espn.com/watch/player/_/id/1cb79577-a081-4d75-ac26-e427452fb116\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17521&amp;sport_id=15
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17657-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261009T220000Z
+DTEND:20261010T035959Z
+LOCATION:Jacksonville\, FL
+SUMMARY:[N] Georgia Southern University Swimming and Diving at Osprey Invite - Swim Only
+DESCRIPTION:[N] Georgia Southern University Swimming and Diving at Osprey Invite - Swim Only\n\nStreaming Video: https://admin.gseagles.com/calendar.ashx/gseagles.com/OspreyInvite-Day1\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17657&amp;sport_id=10
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17495-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261009T231500Z
+DTEND:20261010T011500Z
+LOCATION:Huntington\, WV
+SUMMARY:[T] Georgia Southern University Men's Soccer at Marshall
+DESCRIPTION:[T] Georgia Southern University Men's Soccer at Marshall\nT 2-2\nTV: ESPN+\nStreaming Video: https://www.espn.com/watch/player/_/id/33501473-3e6a-44ca-b1ce-78c616d0ee72\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17495&amp;sport_id=7
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17464-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261010T120000Z
+DTEND:20261010T150000Z
+LOCATION:Charleston\, SC
+SUMMARY:[W] Georgia Southern University Women's Rifle at The Citadel
+DESCRIPTION:[W] Georgia Southern University Women's Rifle at The Citadel\nW 4733-4619\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17464&amp;sport_id=16
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17465-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261010T120000Z
+DTEND:20261010T150000Z
+LOCATION:Charleston\, SC
+SUMMARY:[W] Georgia Southern University Women's Rifle at The Citadel (W)
+DESCRIPTION:[W] Georgia Southern University Women's Rifle at The Citadel (W)\nW 4733-4467\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17465&amp;sport_id=16
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17431-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261010T233000Z
+DTEND:20261011T023000Z
+LOCATION:Statesboro\, GA, Allen E. Paulson Stadium
+SUMMARY:[L] Georgia Southern University Football vs James Madison - Family Weekend/Tackling for a Cure
+DESCRIPTION:[L] Georgia Southern University Football vs James Madison - Family Weekend/Tackling for a Cure\nL 24-27\nTV: ESPNU\nRadio: Georgia Southern Sports Network\nStreaming Audio: https://thevarsitynetwork.com/audioapplink/source/oas-869/content/georgiasouthern:allaccess-Live-2925\nTickets: https://gseagles.evenue.net/list/FB\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17431&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17454-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261011T180000Z
+DTEND:20261011T200000Z
+LOCATION:Mobile\, AL
+SUMMARY:POSTPONED Georgia Southern University Women's Soccer at South Alabama
+DESCRIPTION:POSTPONED Georgia Southern University Women's Soccer at South Alabama\nTV: ESPN+\nStreaming Video: https://www.espn.com/watch/player/_/id/db8da918-ee01-488f-b7b6-c4a139374147\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17454&amp;sport_id=13
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17641-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20261014
+DTEND;VALUE=DATE:20261018
+LOCATION:Atlanta\, Ga.
+SUMMARY:Georgia Southern University Men's Tennis at ITA Regionals
+DESCRIPTION:Georgia Southern University Men's Tennis at ITA Regionals\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17641&amp;sport_id=8
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17432-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261015T233000Z
+DTEND:20261016T023000Z
+LOCATION:Norfolk\, VA
+SUMMARY:[W] Georgia Southern University Football at Old Dominion
+DESCRIPTION:[W] Georgia Southern University Football at Old Dominion\nW 23-15\nTV: ESPN2\nRadio: Georgia Southern Sports Network\nStreaming Audio: https://thevarsitynetwork.com/audioapplink/source/oas-869/content/georgiasouthern:allaccess-Live-2926\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17432&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17594-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20261016
+DTEND;VALUE=DATE:20261018
+LOCATION:Alpharetta\, GA
+SUMMARY:Georgia Southern University Men's Golf  Golf Club of Georgia Collegiate Invitational
+DESCRIPTION:Georgia Southern University Men's Golf  Golf Club of Georgia Collegiate Invitational\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17594&amp;sport_id=5
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17734-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261016T210000Z
+DTEND:20261016T230000Z
+LOCATION:, Eagle Field at GS Softball Complex
+SUMMARY:Georgia Southern University Softball vs Georgia Military College (EXH)
+DESCRIPTION:Georgia Southern University Softball vs Georgia Military College (EXH)\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17734&amp;sport_id=9
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17742-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261016T220000Z
+DTEND:20261017T010000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs Winthrop University
+DESCRIPTION:Georgia Southern University Baseball vs Winthrop University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17742&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17522-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261016T220000Z
+DTEND:20261017T000000Z
+LOCATION:Statesboro\, Ga., Hanner Fieldhouse
+SUMMARY:[L] Georgia Southern University Volleyball vs Arkansas State
+DESCRIPTION:[L] Georgia Southern University Volleyball vs Arkansas State\nL 2-3\nTV: ESPN+\nStreaming Video: https://www.espn.com/watch/player/_/id/f3eabf77-5a35-4761-8a76-988112b75fed\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17522&amp;sport_id=15
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17466-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261017T120000Z
+DTEND:20261017T150000Z
+LOCATION:Statesboro\, GA, Shooting Sports Education Center
+SUMMARY:Georgia Southern University Women's Rifle vs West Virginia
+DESCRIPTION:Georgia Southern University Women's Rifle vs West Virginia\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17466&amp;sport_id=16
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17648-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261017T130000Z
+DTEND:20261017T160000Z
+LOCATION:Spartanburg\, SC
+SUMMARY:Georgia Southern University Track & Field/XC  Upstate Invite
+DESCRIPTION:Georgia Southern University Track & Field/XC  Upstate Invite\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17648&amp;sport_id=2
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17670-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261017T170000Z
+DTEND:20261017T200000Z
+LOCATION:, Aquatics Center at the RAC
+SUMMARY:Georgia Southern University Swimming and Diving vs SCAD/Converse - Alumni Weekend
+DESCRIPTION:Georgia Southern University Swimming and Diving vs SCAD/Converse - Alumni Weekend\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17670&amp;sport_id=10
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17523-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261017T170000Z
+DTEND:20261017T190000Z
+LOCATION:Statesboro\, Ga., Hanner Fieldhouse
+SUMMARY:Georgia Southern University Volleyball vs Arkansas State
+DESCRIPTION:Georgia Southern University Volleyball vs Arkansas State\nTV: ESPN+\nStreaming Video: https://www.espn.com/watch/player/_/id/f4998cdf-b8af-4e7b-8cdd-5661d1d4975d\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17523&amp;sport_id=15
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17743-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261017T170000Z
+DTEND:20261017T200000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs Winthrop University
+DESCRIPTION:Georgia Southern University Baseball vs Winthrop University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17743&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17496-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261017T230000Z
+DTEND:20261018T010000Z
+LOCATION:Statesboro, Bo Pitts Field
+SUMMARY:Georgia Southern University Men's Soccer vs James Madison
+DESCRIPTION:Georgia Southern University Men's Soccer vs James Madison\nTV: ESPN+\nStreaming Video: https://www.espn.com/watch/player/_/id/a8be5f72-fd0f-4232-b9d1-605c9143cbf0\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17496&amp;sport_id=7
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17467-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261018T120000Z
+DTEND:20261018T150000Z
+LOCATION:Statesboro\, GA, Shooting Sports Education Center
+SUMMARY:Georgia Southern University Women's Rifle vs West Virginia
+DESCRIPTION:Georgia Southern University Women's Rifle vs West Virginia\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17467&amp;sport_id=16
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17468-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261018T120000Z
+DTEND:20261018T150000Z
+LOCATION:Statesboro\, GA, Shooting Sports Education Center
+SUMMARY:Georgia Southern University Women's Rifle vs UAB
+DESCRIPTION:Georgia Southern University Women's Rifle vs UAB\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17468&amp;sport_id=16
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17455-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261018T170000Z
+DTEND:20261018T190000Z
+LOCATION:Norfolk\, VA
+SUMMARY:Georgia Southern University Women's Soccer at Old Dominion
+DESCRIPTION:Georgia Southern University Women's Soccer at Old Dominion\nTV: ESPN+\nStreaming Video: https://www.espn.com/watch/player/_/id/9a6e53e5-0647-4432-9e8f-a9c0f34b40b4\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17455&amp;sport_id=13
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17653-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261018T200000Z
+DTEND:20261018T220000Z
+LOCATION:Greenville\, SC
+SUMMARY:Georgia Southern University Men's Basketball at Furman (Exhibition)
+DESCRIPTION:Georgia Southern University Men's Basketball at Furman (Exhibition)\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17653&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17543-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20261019
+DTEND;VALUE=DATE:20261020
+LOCATION:Tulsa\, Okla.
+SUMMARY:Georgia Southern University Women's Golf  Route 66 Invitational
+DESCRIPTION:Georgia Southern University Women's Golf  Route 66 Invitational\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17543&amp;sport_id=22
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17497-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261021T230000Z
+DTEND:20261022T010000Z
+LOCATION:Columbia\, SC
+SUMMARY:Georgia Southern University Men's Soccer at South Carolina
+DESCRIPTION:Georgia Southern University Men's Soccer at South Carolina\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17497&amp;sport_id=7
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17456-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261022T210000Z
+DTEND:20261022T230000Z
+LOCATION:Statesboro, Bo Pitts Field
+SUMMARY:Georgia Southern University Women's Soccer vs Troy - Senior Day / White Out
+DESCRIPTION:Georgia Southern University Women's Soccer vs Troy - Senior Day / White Out\nTV: ESPN+\nStreaming Video: https://www.espn.com/watch/player/_/id/81f2d539-26b5-45bb-9144-732ec6a9223a\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17456&amp;sport_id=13
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17731-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20261023
+DTEND;VALUE=DATE:20261025
+LOCATION:Winston-Salem\, NC
+SUMMARY:Georgia Southern University Men's Tennis at Wake Forest Invitational
+DESCRIPTION:Georgia Southern University Men's Tennis at Wake Forest Invitational\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17731&amp;sport_id=8
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17538-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20261023
+DTEND;VALUE=DATE:20261025
+LOCATION:Statesboro\, Ga., Wallis Tennis Center
+SUMMARY:Georgia Southern University Women's Tennis vs Georgia Southern Fall Shootout
+DESCRIPTION:Georgia Southern University Women's Tennis vs Georgia Southern Fall Shootout\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17538&amp;sport_id=14
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17524-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261023T220000Z
+DTEND:20261024T000000Z
+LOCATION:Statesboro\, Ga., Hanner Fieldhouse
+SUMMARY:Georgia Southern University Volleyball vs James Madison
+DESCRIPTION:Georgia Southern University Volleyball vs James Madison\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17524&amp;sport_id=15
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17469-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261024T130000Z
+DTEND:20261024T160000Z
+LOCATION:Oxford\, MS
+SUMMARY:Georgia Southern University Women's Rifle at Ole Miss
+DESCRIPTION:Georgia Southern University Women's Rifle at Ole Miss\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17469&amp;sport_id=16
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17525-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261024T170000Z
+DTEND:20261024T190000Z
+LOCATION:Statesboro\, Ga., Hanner Fieldhouse
+SUMMARY:Georgia Southern University Volleyball vs James Madison
+DESCRIPTION:Georgia Southern University Volleyball vs James Madison\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17525&amp;sport_id=15
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17654-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261024T210000Z
+DTEND:20261024T230000Z
+LOCATION:, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Men's Basketball vs Winthrop (Exhibition)
+DESCRIPTION:Georgia Southern University Men's Basketball vs Winthrop (Exhibition)\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17654&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17470-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261025T130000Z
+DTEND:20261025T160000Z
+LOCATION:Oxford\, MS
+SUMMARY:Georgia Southern University Women's Rifle vs Wofford
+DESCRIPTION:Georgia Southern University Women's Rifle vs Wofford\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17470&amp;sport_id=16
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17457-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261025T180000Z
+DTEND:20261025T200000Z
+LOCATION:Hattiesburg\, MS
+SUMMARY:Georgia Southern University Women's Soccer at Southern Miss
+DESCRIPTION:Georgia Southern University Women's Soccer at Southern Miss\nTV: ESPN+\nStreaming Video: https://www.espn.com/watch/player/_/id/1649e2a9-95fc-4c6d-bb15-6b732af1a964\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17457&amp;sport_id=13
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17498-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261025T180000Z
+DTEND:20261025T200000Z
+LOCATION:Statesboro, Bo Pitts Field
+SUMMARY:Georgia Southern University Men's Soccer vs West Virginia
+DESCRIPTION:Georgia Southern University Men's Soccer vs West Virginia\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17498&amp;sport_id=7
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17539-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20261029
+DTEND;VALUE=DATE:20261102
+LOCATION:Rome\, Ga.
+SUMMARY:Georgia Southern University Women's Tennis at UTR College Fall Championship
+DESCRIPTION:Georgia Southern University Women's Tennis at UTR College Fall Championship\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17539&amp;sport_id=14
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17859-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261029T220000Z
+DTEND:20261030T010000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs FWS Game One
+DESCRIPTION:Georgia Southern University Baseball vs FWS Game One\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17859&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17527-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261029T220000Z
+DTEND:20261030T000000Z
+LOCATION:Huntington\, WV
+SUMMARY:Georgia Southern University Volleyball at Marshall
+DESCRIPTION:Georgia Southern University Volleyball at Marshall\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17527&amp;sport_id=15
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17649-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261030T131500Z
+DTEND:20261030T161500Z
+LOCATION:Foley\, Al.
+SUMMARY:Georgia Southern University Track & Field/XC  Sun Belt Conference
+DESCRIPTION:Georgia Southern University Track & Field/XC  Sun Belt Conference\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17649&amp;sport_id=2
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17526-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261030T220000Z
+DTEND:20261031T000000Z
+LOCATION:Huntington\, WV
+SUMMARY:Georgia Southern University Volleyball at Marshall
+DESCRIPTION:Georgia Southern University Volleyball at Marshall\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17526&amp;sport_id=15
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17860-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261030T220000Z
+DTEND:20261031T010000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs FWS Game Two
+DESCRIPTION:Georgia Southern University Baseball vs FWS Game Two\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17860&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17499-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261030T230000Z
+DTEND:20261031T010000Z
+LOCATION:Lexington\, KY
+SUMMARY:Georgia Southern University Men's Soccer at Kentucky
+DESCRIPTION:Georgia Southern University Men's Soccer at Kentucky\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17499&amp;sport_id=7
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17433-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20261031
+DTEND;VALUE=DATE:20261101
+LOCATION:Statesboro\, GA, Allen E. Paulson Stadium
+SUMMARY:Georgia Southern University Football vs App State - Erk 100/White Out
+DESCRIPTION:Georgia Southern University Football vs App State - Erk 100/White Out\nRadio: Georgia Southern Sports Network\nTickets: https://gseagles.evenue.net/list/FB\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17433&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17861-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261031T150000Z
+DTEND:20261031T180000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs FWS Game Three
+DESCRIPTION:Georgia Southern University Baseball vs FWS Game Three\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17861&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17458-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261101T180000Z
+DTEND:20261101T200000Z
+LOCATION:Statesboro, Bo Pitts Field
+SUMMARY:Georgia Southern University Women's Soccer vs James Madison - The Last Dance
+DESCRIPTION:Georgia Southern University Women's Soccer vs James Madison - The Last Dance\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17458&amp;sport_id=13
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17534-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261103T000000Z
+DTEND:20261103T020000Z
+LOCATION:Bowling Green\, OH
+SUMMARY:Georgia Southern University Women's Basketball at Bowling Green - MAC/SBC Challenge
+DESCRIPTION:Georgia Southern University Women's Basketball at Bowling Green - MAC/SBC Challenge\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17534&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17609-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261103T000000Z
+DTEND:20261103T020000Z
+LOCATION:, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Men's Basketball vs Ball State
+DESCRIPTION:Georgia Southern University Men's Basketball vs Ball State\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17609&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17500-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261104T000000Z
+DTEND:20261104T020000Z
+LOCATION:Statesboro, Bo Pitts Field
+SUMMARY:Georgia Southern University Men's Soccer vs UCF
+DESCRIPTION:Georgia Southern University Men's Soccer vs UCF\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17500&amp;sport_id=7
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17643-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20261105
+DTEND;VALUE=DATE:20261108
+LOCATION:Rome\, Ga. / Gainesville\, Fla.
+SUMMARY:Georgia Southern University Men's Tennis at ITA Masters / Sectionals
+DESCRIPTION:Georgia Southern University Men's Tennis at ITA Masters / Sectionals\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17643&amp;sport_id=8
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17528-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261105T230000Z
+DTEND:20261106T010000Z
+LOCATION:Statesboro\, Ga., Hanner Fieldhouse
+SUMMARY:Georgia Southern University Volleyball vs Georgia State
+DESCRIPTION:Georgia Southern University Volleyball vs Georgia State\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17528&amp;sport_id=15
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17626-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261106T000000Z
+DTEND:20261106T020000Z
+LOCATION:Macon\, GA
+SUMMARY:Georgia Southern University Women's Basketball at Mercer
+DESCRIPTION:Georgia Southern University Women's Basketball at Mercer\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17626&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17529-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261106T230000Z
+DTEND:20261107T010000Z
+LOCATION:Statesboro\, Ga., Hanner Fieldhouse
+SUMMARY:Georgia Southern University Volleyball vs Georgia State
+DESCRIPTION:Georgia Southern University Volleyball vs Georgia State\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17529&amp;sport_id=15
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17610-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261107T000000Z
+DTEND:20261107T020000Z
+LOCATION:Atlanta\, Ga.
+SUMMARY:Georgia Southern University Men's Basketball at Georgia Tech
+DESCRIPTION:Georgia Southern University Men's Basketball at Georgia Tech\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17610&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17434-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20261107
+DTEND;VALUE=DATE:20261108
+LOCATION:Statesboro\, GA, Allen E. Paulson Stadium
+SUMMARY:Georgia Southern University Football vs Marshall - Homecoming/Salute to Service
+DESCRIPTION:Georgia Southern University Football vs Marshall - Homecoming/Salute to Service\nRadio: Georgia Southern Sports Network\nTickets: https://gseagles.evenue.net/list/FB\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17434&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17665-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20261107
+DTEND;VALUE=DATE:20261108
+LOCATION:Greenville\, NC
+SUMMARY:Georgia Southern University Swimming and Diving at East Carolina
+DESCRIPTION:Georgia Southern University Swimming and Diving at East Carolina\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17665&amp;sport_id=10
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17501-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20261108
+DTEND;VALUE=DATE:20261109
+LOCATION:Statesboro, Bo Pitts Field
+SUMMARY:Georgia Southern University Men's Soccer vs Sun Belt Tournament
+DESCRIPTION:Georgia Southern University Men's Soccer vs Sun Belt Tournament\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17501&amp;sport_id=7
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17472-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261108T130000Z
+DTEND:20261108T160000Z
+LOCATION:Statesboro\, GA, Shooting Sports Education Center
+SUMMARY:Georgia Southern University Women's Rifle vs Nebraska
+DESCRIPTION:Georgia Southern University Women's Rifle vs Nebraska\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17472&amp;sport_id=16
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17459-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20261109
+DTEND;VALUE=DATE:20261114
+LOCATION:Foley\, Ala.
+SUMMARY:Georgia Southern University Women's Soccer vs Sun Belt Conference Championships
+DESCRIPTION:Georgia Southern University Women's Soccer vs Sun Belt Conference Championships\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17459&amp;sport_id=13
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17627-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261109T230000Z
+DTEND:20261110T010000Z
+LOCATION:Statesboro, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Women's Basketball vs Savannah State
+DESCRIPTION:Georgia Southern University Women's Basketball vs Savannah State\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17627&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17611-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261111T000000Z
+DTEND:20261111T020000Z
+LOCATION:, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Men's Basketball vs Mercer
+DESCRIPTION:Georgia Southern University Men's Basketball vs Mercer\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17611&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17530-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261112T230000Z
+DTEND:20261113T010000Z
+LOCATION:Mobile\, AL
+SUMMARY:Georgia Southern University Volleyball at South Alabama
+DESCRIPTION:Georgia Southern University Volleyball at South Alabama\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17530&amp;sport_id=15
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17651-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261113T140000Z
+DTEND:20261113T170000Z
+LOCATION:Tallahasse\, Fl.
+SUMMARY:Georgia Southern University Track & Field/XC  NCAA Regional
+DESCRIPTION:Georgia Southern University Track & Field/XC  NCAA Regional\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17651&amp;sport_id=2
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17531-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261113T230000Z
+DTEND:20261114T010000Z
+LOCATION:Mobile\, AL
+SUMMARY:Georgia Southern University Volleyball at South Alabama
+DESCRIPTION:Georgia Southern University Volleyball at South Alabama\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17531&amp;sport_id=15
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17612-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261114T010000Z
+DTEND:20261114T030000Z
+LOCATION:Orlando\, FL
+SUMMARY:Georgia Southern University Men's Basketball at UCF
+DESCRIPTION:Georgia Southern University Men's Basketball at UCF\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17612&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17435-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20261114
+DTEND;VALUE=DATE:20261115
+LOCATION:Atlanta\, GA
+SUMMARY:Georgia Southern University Football at Georgia State
+DESCRIPTION:Georgia Southern University Football at Georgia State\nRadio: Georgia Southern Sports Network\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17435&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17473-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261114T140000Z
+DTEND:20261114T170000Z
+LOCATION:Murray\, KY
+SUMMARY:Georgia Southern University Women's Rifle at Murray State
+DESCRIPTION:Georgia Southern University Women's Rifle at Murray State\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17473&amp;sport_id=16
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17628-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261114T160000Z
+DTEND:20261114T180000Z
+LOCATION:Statesboro, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Women's Basketball vs Wofford
+DESCRIPTION:Georgia Southern University Women's Basketball vs Wofford\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17628&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17660-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261117T150000Z
+DTEND:20261120T170000Z
+LOCATION:Columbia\, S.C.
+SUMMARY:Georgia Southern University Swimming and Diving vs Gamecock Invite - Swim Only
+DESCRIPTION:Georgia Southern University Swimming and Diving vs Gamecock Invite - Swim Only\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17660&amp;sport_id=10
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17629-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261117T220000Z
+DTEND:20261118T000000Z
+LOCATION:Statesboro, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Women's Basketball vs Coastal Georgia 
+DESCRIPTION:Georgia Southern University Women's Basketball vs Coastal Georgia \nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17629&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17613-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261118T010000Z
+DTEND:20261118T030000Z
+LOCATION:, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Men's Basketball vs Middle Tennessee
+DESCRIPTION:Georgia Southern University Men's Basketball vs Middle Tennessee\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17613&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17532-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20261119
+DTEND;VALUE=DATE:20261120
+LOCATION:Foley\, Ala.
+SUMMARY:Georgia Southern University Volleyball vs Sun Belt Championship
+DESCRIPTION:Georgia Southern University Volleyball vs Sun Belt Championship\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17532&amp;sport_id=15
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17614-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261120T010000Z
+DTEND:20261120T030000Z
+LOCATION:Houston\, TX
+SUMMARY:Georgia Southern University Men's Basketball at Houston Christian
+DESCRIPTION:Georgia Southern University Men's Basketball at Houston Christian\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17614&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17661-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261120T150000Z
+DTEND:20261121T230000Z
+LOCATION:Lynchburg\, VA
+SUMMARY:Georgia Southern University Swimming and Diving at Liberty Invite - Dive Only
+DESCRIPTION:Georgia Southern University Swimming and Diving at Liberty Invite - Dive Only\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17661&amp;sport_id=10
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17630-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261120T230000Z
+DTEND:20261121T010000Z
+LOCATION:Statesboro, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Women's Basketball vs FGCU
+DESCRIPTION:Georgia Southern University Women's Basketball vs FGCU\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17630&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17436-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261121T210000Z
+DTEND:20261122T000000Z
+LOCATION:Troy\, AL
+SUMMARY:Georgia Southern University Football at Troy
+DESCRIPTION:Georgia Southern University Football at Troy\nRadio: Georgia Southern Sports Network\nStreaming Audio: https://thevarsitynetwork.com/audioapplink/source/oas-869/content/georgiasouthern:allaccess-Live-2930\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17436&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17615-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261124T000000Z
+DTEND:20261124T020000Z
+LOCATION:Highland Heights\, KY
+SUMMARY:Georgia Southern University Men's Basketball at Northern Kentucky
+DESCRIPTION:Georgia Southern University Men's Basketball at Northern Kentucky\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17615&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17616-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20261124
+DTEND;VALUE=DATE:20261125
+LOCATION:Highland Heights\, KY
+SUMMARY:Georgia Southern University Men's Basketball vs Bellarmine
+DESCRIPTION:Georgia Southern University Men's Basketball vs Bellarmine\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17616&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17631-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261124T230000Z
+DTEND:20261125T010000Z
+LOCATION:Cleveland\, OH
+SUMMARY:Georgia Southern University Women's Basketball at Cleveland State
+DESCRIPTION:Georgia Southern University Women's Basketball at Cleveland State\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17631&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17632-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261125T170000Z
+DTEND:20261125T190000Z
+LOCATION:Cleveland\, OH
+SUMMARY:Georgia Southern University Women's Basketball vs Western Michigan
+DESCRIPTION:Georgia Southern University Women's Basketball vs Western Michigan\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17632&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17437-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20261128
+DTEND;VALUE=DATE:20261129
+LOCATION:Statesboro\, GA, Allen E. Paulson Stadium
+SUMMARY:Georgia Southern University Football vs Louisiana Tech - Senior Day/Blue Out/First Responders Appreciation
+DESCRIPTION:Georgia Southern University Football vs Louisiana Tech - Senior Day/Blue Out/First Responders Appreciation\nRadio: Georgia Southern Sports Network\nTickets: https://gseagles.evenue.net/list/FB\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17437&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17617-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261128T190000Z
+DTEND:20261128T210000Z
+LOCATION:Asheville\, NC
+SUMMARY:Georgia Southern University Men's Basketball at UNC Asheville
+DESCRIPTION:Georgia Southern University Men's Basketball at UNC Asheville\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17617&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17633-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261129T180000Z
+DTEND:20261129T200000Z
+LOCATION:Greenville\, SC
+SUMMARY:Georgia Southern University Women's Basketball at Furman
+DESCRIPTION:Georgia Southern University Women's Basketball at Furman\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17633&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17618-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261203T000000Z
+DTEND:20261203T020000Z
+LOCATION:Spartanburg\, SC
+SUMMARY:Georgia Southern University Men's Basketball at USC Upstate
+DESCRIPTION:Georgia Southern University Men's Basketball at USC Upstate\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17618&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17619-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261205T180000Z
+DTEND:20261205T200000Z
+LOCATION:, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Men's Basketball vs Johnson C. Smith
+DESCRIPTION:Georgia Southern University Men's Basketball vs Johnson C. Smith\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17619&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17634-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261207T160000Z
+DTEND:20261207T180000Z
+LOCATION:Statesboro, Hanner Fieldhouse
+SUMMARY:Georgia Southern University Women's Basketball vs Charleston Southern - KIDS FIELD TRIP DAY
+DESCRIPTION:Georgia Southern University Women's Basketball vs Charleston Southern - KIDS FIELD TRIP DAY\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17634&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17620-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261209T230000Z
+DTEND:20261210T010000Z
+LOCATION:Spartanburg\, SC
+SUMMARY:Georgia Southern University Men's Basketball at Wofford
+DESCRIPTION:Georgia Southern University Men's Basketball at Wofford\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17620&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17664-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261210T203000Z
+DTEND:20261210T233000Z
+LOCATION:Statesboro\, Ga., Aquatics Center at the RAC
+SUMMARY:Georgia Southern University Swimming and Diving vs UNC Asheville - Dive Only
+DESCRIPTION:Georgia Southern University Swimming and Diving vs UNC Asheville - Dive Only\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17664&amp;sport_id=10
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17635-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261212T180000Z
+DTEND:20261212T200000Z
+LOCATION:Statesboro, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Women's Basketball vs FIU
+DESCRIPTION:Georgia Southern University Women's Basketball vs FIU\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17635&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17621-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261212T220000Z
+DTEND:20261213T000000Z
+LOCATION:, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Men's Basketball vs UNCW
+DESCRIPTION:Georgia Southern University Men's Basketball vs UNCW\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17621&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17636-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261215T230000Z
+DTEND:20261216T010000Z
+LOCATION:Statesboro, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Women's Basketball vs College of Charleston
+DESCRIPTION:Georgia Southern University Women's Basketball vs College of Charleston\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17636&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17572-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261217T000000Z
+DTEND:20261217T020000Z
+LOCATION:, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Men's Basketball vs Coastal Carolina
+DESCRIPTION:Georgia Southern University Men's Basketball vs Coastal Carolina\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17572&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17573-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20261219
+DTEND;VALUE=DATE:20261220
+LOCATION:Jonesboro\, Ark. 
+SUMMARY:Georgia Southern University Men's Basketball at Arkansas State
+DESCRIPTION:Georgia Southern University Men's Basketball at Arkansas State\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17573&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17553-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261219T190000Z
+DTEND:20261219T210000Z
+LOCATION:Statesboro, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Women's Basketball vs Arkansas State
+DESCRIPTION:Georgia Southern University Women's Basketball vs Arkansas State\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17553&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17554-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261222T170000Z
+DTEND:20261222T190000Z
+LOCATION:Harrisonburg\, VA
+SUMMARY:Georgia Southern University Women's Basketball at James Madison
+DESCRIPTION:Georgia Southern University Women's Basketball at James Madison\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17554&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17637-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261228T200000Z
+DTEND:20261228T220000Z
+LOCATION:Athens\, Ga.
+SUMMARY:Georgia Southern University Women's Basketball at Georgia
+DESCRIPTION:Georgia Southern University Women's Basketball at Georgia\nTV: SEC Network+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17637&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17555-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261231T200000Z
+DTEND:20261231T220000Z
+LOCATION:Lafayette\, LA
+SUMMARY:Georgia Southern University Women's Basketball at Louisiana
+DESCRIPTION:Georgia Southern University Women's Basketball at Louisiana\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17555&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17574-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20261231T200000Z
+DTEND:20261231T220000Z
+LOCATION:, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Men's Basketball vs Louisiana
+DESCRIPTION:Georgia Southern University Men's Basketball vs Louisiana\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17574&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17575-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270102T200000Z
+DTEND:20270102T220000Z
+LOCATION:, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Men's Basketball vs Southern Miss
+DESCRIPTION:Georgia Southern University Men's Basketball vs Southern Miss\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17575&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17556-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270102T200000Z
+DTEND:20270102T220000Z
+LOCATION:Hattiesburg\, MS
+SUMMARY:Georgia Southern University Women's Basketball at Southern Miss
+DESCRIPTION:Georgia Southern University Women's Basketball at Southern Miss\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17556&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17663-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270106
+DTEND;VALUE=DATE:20270107
+LOCATION:Miami\, FL
+SUMMARY:Georgia Southern University Swimming and Diving at FIU Invite - Dive Only
+DESCRIPTION:Georgia Southern University Swimming and Diving at FIU Invite - Dive Only\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17663&amp;sport_id=10
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17557-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270106T230000Z
+DTEND:20270107T010000Z
+LOCATION:Statesboro, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Women's Basketball vs South Alabama
+DESCRIPTION:Georgia Southern University Women's Basketball vs South Alabama\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17557&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17576-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270107
+DTEND;VALUE=DATE:20270108
+LOCATION:Mobile\, AL
+SUMMARY:Georgia Southern University Men's Basketball at South Alabama
+DESCRIPTION:Georgia Southern University Men's Basketball at South Alabama\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17576&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17558-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270109T190000Z
+DTEND:20270109T210000Z
+LOCATION:Statesboro, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Women's Basketball vs Troy
+DESCRIPTION:Georgia Southern University Women's Basketball vs Troy\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17558&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17577-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270109T213000Z
+DTEND:20270109T233000Z
+LOCATION:Troy\, AL
+SUMMARY:Georgia Southern University Men's Basketball at Troy
+DESCRIPTION:Georgia Southern University Men's Basketball at Troy\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17577&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17578-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270114T000000Z
+DTEND:20270114T020000Z
+LOCATION:, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Men's Basketball vs James Madison
+DESCRIPTION:Georgia Southern University Men's Basketball vs James Madison\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17578&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17662-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270115
+DTEND;VALUE=DATE:20270116
+LOCATION:
+SUMMARY:Georgia Southern University Swimming and Diving vs UNCA/ SCAD - Dive Only
+DESCRIPTION:Georgia Southern University Swimming and Diving vs UNCA/ SCAD - Dive Only\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17662&amp;sport_id=10
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17658-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270115T230000Z
+DTEND:20270116T020000Z
+LOCATION:Jacksonville\, FL
+SUMMARY:Georgia Southern University Swimming and Diving at North Florida - Swim Only
+DESCRIPTION:Georgia Southern University Swimming and Diving at North Florida - Swim Only\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17658&amp;sport_id=10
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17475-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270116T130000Z
+DTEND:20270116T160000Z
+LOCATION:Lexington\, VA
+SUMMARY:Georgia Southern University Women's Rifle at VMI
+DESCRIPTION:Georgia Southern University Women's Rifle at VMI\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17475&amp;sport_id=16
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17476-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270116T130000Z
+DTEND:20270116T160000Z
+LOCATION:Lexington\, VA
+SUMMARY:Georgia Southern University Women's Rifle at VMI (W)
+DESCRIPTION:Georgia Southern University Women's Rifle at VMI (W)\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17476&amp;sport_id=16
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17668-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270116T170000Z
+DTEND:20270116T200000Z
+LOCATION:, Aquatics Center at the RAC
+SUMMARY:Georgia Southern University Swimming and Diving vs UNF/UNCA/SCAD - Senior Day
+DESCRIPTION:Georgia Southern University Swimming and Diving vs UNF/UNCA/SCAD - Senior Day\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17668&amp;sport_id=10
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17559-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270116T210000Z
+DTEND:20270116T230000Z
+LOCATION:Ruston\, LA
+SUMMARY:Georgia Southern University Women's Basketball at Louisiana Tech
+DESCRIPTION:Georgia Southern University Women's Basketball at Louisiana Tech\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17559&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17579-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270117T000000Z
+DTEND:20270117T020000Z
+LOCATION:Huntington\, WV
+SUMMARY:Georgia Southern University Men's Basketball at Marshall
+DESCRIPTION:Georgia Southern University Men's Basketball at Marshall\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17579&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17477-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270117T130000Z
+DTEND:20270117T160000Z
+LOCATION:Annapolis\, MD
+SUMMARY:Georgia Southern University Women's Rifle at Navy
+DESCRIPTION:Georgia Southern University Women's Rifle at Navy\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17477&amp;sport_id=16
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17580-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270120
+DTEND;VALUE=DATE:20270121
+LOCATION:Atlanta\, Ga.
+SUMMARY:Georgia Southern University Men's Basketball at Georgia State
+DESCRIPTION:Georgia Southern University Men's Basketball at Georgia State\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17580&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17560-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270120T230000Z
+DTEND:20270121T010000Z
+LOCATION:Statesboro, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Women's Basketball vs Marshall
+DESCRIPTION:Georgia Southern University Women's Basketball vs Marshall\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17560&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17478-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270123T130000Z
+DTEND:20270123T160000Z
+LOCATION:Statesboro\, GA, Shooting Sports Education Center
+SUMMARY:Georgia Southern University Women's Rifle vs The Citadel
+DESCRIPTION:Georgia Southern University Women's Rifle vs The Citadel\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17478&amp;sport_id=16
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17659-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270123T170000Z
+DTEND:20270123T200000Z
+LOCATION:Pensacola\, FL
+SUMMARY:Georgia Southern University Swimming and Diving at University of West Florida
+DESCRIPTION:Georgia Southern University Swimming and Diving at University of West Florida\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17659&amp;sport_id=10
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17561-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270123T190000Z
+DTEND:20270123T210000Z
+LOCATION:Statesboro, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Women's Basketball vs Coastal Carolina
+DESCRIPTION:Georgia Southern University Women's Basketball vs Coastal Carolina\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17561&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17581-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270123T220000Z
+DTEND:20270124T000000Z
+LOCATION:, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Men's Basketball vs Appalachian State
+DESCRIPTION:Georgia Southern University Men's Basketball vs Appalachian State\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17581&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17582-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270128T000000Z
+DTEND:20270128T020000Z
+LOCATION:Conway\, SC
+SUMMARY:Georgia Southern University Men's Basketball at Coastal Carolina
+DESCRIPTION:Georgia Southern University Men's Basketball at Coastal Carolina\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17582&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17562-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270128T233000Z
+DTEND:20270129T013000Z
+LOCATION:Boone\, NC
+SUMMARY:Georgia Southern University Women's Basketball at Appalachian State
+DESCRIPTION:Georgia Southern University Women's Basketball at Appalachian State\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17562&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17583-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270130T200000Z
+DTEND:20270130T220000Z
+LOCATION:, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Men's Basketball vs Old Dominion
+DESCRIPTION:Georgia Southern University Men's Basketball vs Old Dominion\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17583&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17563-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270130T230000Z
+DTEND:20270131T010000Z
+LOCATION:Atlanta\, Ga.
+SUMMARY:Georgia Southern University Women's Basketball at Georgia State
+DESCRIPTION:Georgia Southern University Women's Basketball at Georgia State\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17563&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17544-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270131
+DTEND;VALUE=DATE:20270202
+LOCATION:Punta Cana\, DR
+SUMMARY:Georgia Southern University Women's Golf  Purdue Dominican Republic Classic
+DESCRIPTION:Georgia Southern University Women's Golf  Purdue Dominican Republic Classic\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17544&amp;sport_id=22
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17564-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270203T230000Z
+DTEND:20270204T010000Z
+LOCATION:Huntington\, WV
+SUMMARY:Georgia Southern University Women's Basketball at Marshall
+DESCRIPTION:Georgia Southern University Women's Basketball at Marshall\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17564&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17584-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270204T000000Z
+DTEND:20270204T020000Z
+LOCATION:, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Men's Basketball vs Marshall
+DESCRIPTION:Georgia Southern University Men's Basketball vs Marshall\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17584&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17590-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270205T130000Z
+DTEND:20270205T160000Z
+LOCATION:Charleston\, SC
+SUMMARY:Georgia Southern University Women's Rifle at The Citadel
+DESCRIPTION:Georgia Southern University Women's Rifle at The Citadel\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17590&amp;sport_id=16
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17595-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270206
+DTEND;VALUE=DATE:20270207
+LOCATION:Statesboro\, GA
+SUMMARY:Georgia Southern University Men's Golf  Thomas Sharkey Individual Collegiate
+DESCRIPTION:Georgia Southern University Men's Golf  Thomas Sharkey Individual Collegiate\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17595&amp;sport_id=5
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17552-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270206T190000Z
+DTEND:20270206T210000Z
+LOCATION:Statesboro, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Women's Basketball vs MAC/SBC Challenge Opponent
+DESCRIPTION:Georgia Southern University Women's Basketball vs MAC/SBC Challenge Opponent\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17552&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17565-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270210T230000Z
+DTEND:20270211T010000Z
+LOCATION:Statesboro, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Women's Basketball vs Georgia State
+DESCRIPTION:Georgia Southern University Women's Basketball vs Georgia State\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17565&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17585-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270212T000000Z
+DTEND:20270212T020000Z
+LOCATION:Norfolk\, VA
+SUMMARY:Georgia Southern University Men's Basketball at Old Dominion
+DESCRIPTION:Georgia Southern University Men's Basketball at Old Dominion\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17585&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17596-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270213
+DTEND;VALUE=DATE:20270214
+LOCATION:Gainesville\, FL
+SUMMARY:Georgia Southern University Men's Golf  Gators Invitational
+DESCRIPTION:Georgia Southern University Men's Golf  Gators Invitational\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17596&amp;sport_id=5
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17586-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270213T180000Z
+DTEND:20270213T200000Z
+LOCATION:Boone\, NC
+SUMMARY:Georgia Southern University Men's Basketball at Appalachian State
+DESCRIPTION:Georgia Southern University Men's Basketball at Appalachian State\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17586&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17566-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270213T190000Z
+DTEND:20270213T210000Z
+LOCATION:Statesboro, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Women's Basketball vs James Madison - Play4Kay Pink Game
+DESCRIPTION:Georgia Southern University Women's Basketball vs James Madison - Play4Kay Pink Game\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17566&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17666-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270217T140000Z
+DTEND:20270220T230000Z
+LOCATION:Knoxville\, Tenn.
+SUMMARY:Georgia Southern University Swimming and Diving vs ASUN Championship
+DESCRIPTION:Georgia Southern University Swimming and Diving vs ASUN Championship\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17666&amp;sport_id=10
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17479-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270218T190000Z
+DTEND:20270218T220000Z
+LOCATION:Fairbanks\, AK
+SUMMARY:Georgia Southern University Women's Rifle at Alaska Fairbanks
+DESCRIPTION:Georgia Southern University Women's Rifle at Alaska Fairbanks\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17479&amp;sport_id=16
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17567-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270218T233000Z
+DTEND:20270219T013000Z
+LOCATION:Norfolk\, VA
+SUMMARY:Georgia Southern University Women's Basketball at Old Dominion
+DESCRIPTION:Georgia Southern University Women's Basketball at Old Dominion\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17567&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17797-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270219T233000Z
+DTEND:20270220T023000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs Virginia Tech
+DESCRIPTION:Georgia Southern University Baseball vs Virginia Tech\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17797&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17568-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270220T180000Z
+DTEND:20270220T200000Z
+LOCATION:Conway\, SC
+SUMMARY:Georgia Southern University Women's Basketball at Coastal Carolina
+DESCRIPTION:Georgia Southern University Women's Basketball at Coastal Carolina\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17568&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17799-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270220T190000Z
+DTEND:20270220T220000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs Virginia Tech
+DESCRIPTION:Georgia Southern University Baseball vs Virginia Tech\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17799&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17480-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270220T190000Z
+DTEND:20270220T220000Z
+LOCATION:Fairbanks\, AK
+SUMMARY:Georgia Southern University Women's Rifle at Alaska Fairbanks
+DESCRIPTION:Georgia Southern University Women's Rifle at Alaska Fairbanks\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17480&amp;sport_id=16
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17587-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270220T200000Z
+DTEND:20270220T220000Z
+LOCATION:, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Men's Basketball vs Louisiana Tech
+DESCRIPTION:Georgia Southern University Men's Basketball vs Louisiana Tech\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17587&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17798-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270221T180000Z
+DTEND:20270221T210000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs Virginia Tech
+DESCRIPTION:Georgia Southern University Baseball vs Virginia Tech\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17798&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17545-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270223
+DTEND;VALUE=DATE:20270224
+LOCATION:Jacksonville\, Fla.
+SUMMARY:Georgia Southern University Women's Golf  UNF Collegiate
+DESCRIPTION:Georgia Southern University Women's Golf  UNF Collegiate\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17545&amp;sport_id=22
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17569-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270223T230000Z
+DTEND:20270224T010000Z
+LOCATION:Statesboro, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Women's Basketball vs Appalachian State
+DESCRIPTION:Georgia Southern University Women's Basketball vs Appalachian State\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17569&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17588-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270224T010000Z
+DTEND:20270224T030000Z
+LOCATION:Harrisonburg\, VA
+SUMMARY:Georgia Southern University Men's Basketball at James Madison
+DESCRIPTION:Georgia Southern University Men's Basketball at James Madison\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17588&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17800-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270224T230000Z
+DTEND:20270225T020000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs Georgia Tech
+DESCRIPTION:Georgia Southern University Baseball vs Georgia Tech\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17800&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17570-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270226T220000Z
+DTEND:20270227T000000Z
+LOCATION:Statesboro, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Women's Basketball vs Old Dominion
+DESCRIPTION:Georgia Southern University Women's Basketball vs Old Dominion\nTV: ESPN+\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17570&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17801-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270226T233000Z
+DTEND:20270227T023000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs University of West Georgia
+DESCRIPTION:Georgia Southern University Baseball vs University of West Georgia\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17801&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17589-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270227T010000Z
+DTEND:20270227T030000Z
+LOCATION:, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Men's Basketball vs Georgia State
+DESCRIPTION:Georgia Southern University Men's Basketball vs Georgia State\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17589&amp;sport_id=6
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17652-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270227
+DTEND;VALUE=DATE:20270228
+LOCATION:Statesboro\, GA, Forest Heights Country Club
+SUMMARY:Georgia Southern University Men's Golf  West Georgia
+DESCRIPTION:Georgia Southern University Men's Golf  West Georgia\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17652&amp;sport_id=5
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17802-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270227T190000Z
+DTEND:20270227T220000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs University of West Georgia
+DESCRIPTION:Georgia Southern University Baseball vs University of West Georgia\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17802&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17806-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270228T180000Z
+DTEND:20270228T210000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs University of West Georgia
+DESCRIPTION:Georgia Southern University Baseball vs University of West Georgia\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17806&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17598-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270301
+DTEND;VALUE=DATE:20270302
+LOCATION:Daytona Beach\, FL
+SUMMARY:Georgia Southern University Men's Golf  Sam Ryder Intercollegiate
+DESCRIPTION:Georgia Southern University Men's Golf  Sam Ryder Intercollegiate\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17598&amp;sport_id=5
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17571-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270302
+DTEND;VALUE=DATE:20270308
+LOCATION:Foley\, Ala.
+SUMMARY:Georgia Southern University Women's Basketball vs 2027 Sun Belt Conference Championships
+DESCRIPTION:Georgia Southern University Women's Basketball vs 2027 Sun Belt Conference Championships\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17571&amp;sport_id=12
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17807-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270302T230000Z
+DTEND:20270303T020000Z
+LOCATION:Charleston\, SC
+SUMMARY:Georgia Southern University Baseball at College of Charleston
+DESCRIPTION:Georgia Southern University Baseball at College of Charleston\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17807&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17808-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270303T230000Z
+DTEND:20270304T020000Z
+LOCATION:Jacksonville\, FL
+SUMMARY:Georgia Southern University Baseball at University of North Florida
+DESCRIPTION:Georgia Southern University Baseball at University of North Florida\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17808&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17809-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270305T233000Z
+DTEND:20270306T023000Z
+LOCATION:DeLand\, FL
+SUMMARY:Georgia Southern University Baseball at Stetson University
+DESCRIPTION:Georgia Southern University Baseball at Stetson University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17809&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17810-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270306T233000Z
+DTEND:20270307T023000Z
+LOCATION:DeLand\, FL
+SUMMARY:Georgia Southern University Baseball at Stetson University
+DESCRIPTION:Georgia Southern University Baseball at Stetson University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17810&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17667-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270307T140000Z
+DTEND:20270309T230000Z
+LOCATION:Knoxville\, Tenn.
+SUMMARY:Georgia Southern University Swimming and Diving vs Zone B Diving Championships
+DESCRIPTION:Georgia Southern University Swimming and Diving vs Zone B Diving Championships\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17667&amp;sport_id=10
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17813-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270307T180000Z
+DTEND:20270307T210000Z
+LOCATION:DeLand\, FL
+SUMMARY:Georgia Southern University Baseball at Stetson University
+DESCRIPTION:Georgia Southern University Baseball at Stetson University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17813&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17546-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270309
+DTEND;VALUE=DATE:20270310
+LOCATION:San Antonio\, Texas 
+SUMMARY:Georgia Southern University Women's Golf  Alamo Invitational
+DESCRIPTION:Georgia Southern University Women's Golf  Alamo Invitational\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17546&amp;sport_id=22
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17812-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270310T230000Z
+DTEND:20270311T020000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs Kennesaw State University
+DESCRIPTION:Georgia Southern University Baseball vs Kennesaw State University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17812&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17671-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270311T140000Z
+DTEND:20270313T230000Z
+LOCATION:Ocala\, Fla.
+SUMMARY:Georgia Southern University Swimming and Diving vs CSCAA - Swim Only
+DESCRIPTION:Georgia Southern University Swimming and Diving vs CSCAA - Swim Only\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17671&amp;sport_id=10
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17481-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270312
+DTEND;VALUE=DATE:20270313
+LOCATION:Statesboro\, GA, Jack and Ruth Ann Hill Convocation Center
+SUMMARY:Georgia Southern University Women's Rifle vs NCAA Rifle Championships
+DESCRIPTION:Georgia Southern University Women's Rifle vs NCAA Rifle Championships\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17481&amp;sport_id=16
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17814-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270312T233000Z
+DTEND:20270313T023000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs High Point University
+DESCRIPTION:Georgia Southern University Baseball vs High Point University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17814&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17547-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270313
+DTEND;VALUE=DATE:20270314
+LOCATION:Augusta\, Ga.
+SUMMARY:Georgia Southern University Women's Golf  Valspar Invitational
+DESCRIPTION:Georgia Southern University Women's Golf  Valspar Invitational\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17547&amp;sport_id=22
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17815-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270313T190000Z
+DTEND:20270313T220000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs High Point University
+DESCRIPTION:Georgia Southern University Baseball vs High Point University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17815&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17816-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270314T170000Z
+DTEND:20270314T200000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs High Point University
+DESCRIPTION:Georgia Southern University Baseball vs High Point University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17816&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17599-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270315
+DTEND;VALUE=DATE:20270316
+LOCATION:St. Simons Island\, GA
+SUMMARY:Georgia Southern University Men's Golf  Johnnie-O Collegiate
+DESCRIPTION:Georgia Southern University Men's Golf  Johnnie-O Collegiate\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17599&amp;sport_id=5
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17817-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270316T220000Z
+DTEND:20270317T010000Z
+LOCATION:Kennesaw\, GA
+SUMMARY:Georgia Southern University Baseball at Kennesaw State University
+DESCRIPTION:Georgia Southern University Baseball at Kennesaw State University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17817&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17600-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270319
+DTEND;VALUE=DATE:20270321
+LOCATION:Statesboro\, GA
+SUMMARY:Georgia Southern University Men's Golf  Schenkel Invitational
+DESCRIPTION:Georgia Southern University Men's Golf  Schenkel Invitational\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17600&amp;sport_id=5
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17818-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270319T223000Z
+DTEND:20270320T013000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs Old Dominion University
+DESCRIPTION:Georgia Southern University Baseball vs Old Dominion University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17818&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17819-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270320T180000Z
+DTEND:20270320T210000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs Old Dominion University
+DESCRIPTION:Georgia Southern University Baseball vs Old Dominion University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17819&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17820-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270321T170000Z
+DTEND:20270321T200000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs Old Dominion University
+DESCRIPTION:Georgia Southern University Baseball vs Old Dominion University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17820&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17821-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270323T220000Z
+DTEND:20270324T010000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs Charleston Southern University
+DESCRIPTION:Georgia Southern University Baseball vs Charleston Southern University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17821&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17822-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270325T220000Z
+DTEND:20270326T010000Z
+LOCATION:Huntington\, WV
+SUMMARY:Georgia Southern University Baseball at Marshall University
+DESCRIPTION:Georgia Southern University Baseball at Marshall University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17822&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17823-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270326T220000Z
+DTEND:20270327T010000Z
+LOCATION:Huntington\, WV
+SUMMARY:Georgia Southern University Baseball at Marshall University
+DESCRIPTION:Georgia Southern University Baseball at Marshall University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17823&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17824-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270327T170000Z
+DTEND:20270327T200000Z
+LOCATION:Huntington\, WV
+SUMMARY:Georgia Southern University Baseball at Marshall University
+DESCRIPTION:Georgia Southern University Baseball at Marshall University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17824&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17548-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270329
+DTEND;VALUE=DATE:20270330
+LOCATION:St. Augustine\, Fla.
+SUMMARY:Georgia Southern University Women's Golf  Coach Mo Classic
+DESCRIPTION:Georgia Southern University Women's Golf  Coach Mo Classic\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17548&amp;sport_id=22
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17825-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270330T223000Z
+DTEND:20270331T013000Z
+LOCATION:, SRP Park
+SUMMARY:Georgia Southern University Baseball vs Clemson University
+DESCRIPTION:Georgia Southern University Baseball vs Clemson University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17825&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17826-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270402T223000Z
+DTEND:20270403T013000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs Appalachian State University
+DESCRIPTION:Georgia Southern University Baseball vs Appalachian State University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17826&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17601-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270403
+DTEND;VALUE=DATE:20270404
+LOCATION:Augusta\, GA
+SUMMARY:Georgia Southern University Men's Golf  Augusta Haskins Invitational
+DESCRIPTION:Georgia Southern University Men's Golf  Augusta Haskins Invitational\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17601&amp;sport_id=5
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17827-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270403T180000Z
+DTEND:20270403T210000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs Appalachian State University
+DESCRIPTION:Georgia Southern University Baseball vs Appalachian State University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17827&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17828-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270404T170000Z
+DTEND:20270404T200000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs Appalachian State University
+DESCRIPTION:Georgia Southern University Baseball vs Appalachian State University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17828&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17829-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270407T220000Z
+DTEND:20270408T010000Z
+LOCATION:Charleston\, SC
+SUMMARY:Georgia Southern University Baseball at Charleston Southern University
+DESCRIPTION:Georgia Southern University Baseball at Charleston Southern University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17829&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17830-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270409T220000Z
+DTEND:20270410T010000Z
+LOCATION:Conway\, SC
+SUMMARY:Georgia Southern University Baseball at Coastal Carolina University
+DESCRIPTION:Georgia Southern University Baseball at Coastal Carolina University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17830&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17831-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270410
+DTEND;VALUE=DATE:20270411
+LOCATION:Conway\, SC
+SUMMARY:Georgia Southern University Baseball at Coastal Carolina University
+DESCRIPTION:Georgia Southern University Baseball at Coastal Carolina University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17831&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17832-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270411T170000Z
+DTEND:20270411T200000Z
+LOCATION:Conway\, SC
+SUMMARY:Georgia Southern University Baseball at Coastal Carolina University
+DESCRIPTION:Georgia Southern University Baseball at Coastal Carolina University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17832&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17549-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270412
+DTEND;VALUE=DATE:20270413
+LOCATION:Statesboro\, Ga.
+SUMMARY:Georgia Southern University Women's Golf  The Strutting Gus Shootout
+DESCRIPTION:Georgia Southern University Women's Golf  The Strutting Gus Shootout\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17549&amp;sport_id=22
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17602-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270412
+DTEND;VALUE=DATE:20270413
+LOCATION:Richmond Hill\, GA
+SUMMARY:Georgia Southern University Men's Golf  Ford Collegiate
+DESCRIPTION:Georgia Southern University Men's Golf  Ford Collegiate\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17602&amp;sport_id=5
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17833-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270413T220000Z
+DTEND:20270414T010000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs University of North Florida
+DESCRIPTION:Georgia Southern University Baseball vs University of North Florida\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17833&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17834-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270416T220000Z
+DTEND:20270417T010000Z
+LOCATION:Atlanta\, Ga.
+SUMMARY:Georgia Southern University Baseball at Georgia State University
+DESCRIPTION:Georgia Southern University Baseball at Georgia State University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17834&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17835-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270417T220000Z
+DTEND:20270418T010000Z
+LOCATION:Atlanta\, Ga.
+SUMMARY:Georgia Southern University Baseball at Georgia State University
+DESCRIPTION:Georgia Southern University Baseball at Georgia State University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17835&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17836-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270418T170000Z
+DTEND:20270418T200000Z
+LOCATION:Atlanta\, Ga.
+SUMMARY:Georgia Southern University Baseball at Georgia State University
+DESCRIPTION:Georgia Southern University Baseball at Georgia State University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17836&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17604-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270419
+DTEND;VALUE=DATE:20270422
+LOCATION:Point Clear\, Ala.
+SUMMARY:Georgia Southern University Women's Golf  Sun Belt Championship
+DESCRIPTION:Georgia Southern University Women's Golf  Sun Belt Championship\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17604&amp;sport_id=22
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17837-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270420T220000Z
+DTEND:20270421T010000Z
+LOCATION:Atlanta\, Ga.
+SUMMARY:Georgia Southern University Baseball at Georgia Tech
+DESCRIPTION:Georgia Southern University Baseball at Georgia Tech\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17837&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17838-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270423T223000Z
+DTEND:20270424T013000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs James Madison University
+DESCRIPTION:Georgia Southern University Baseball vs James Madison University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17838&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17839-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270424T180000Z
+DTEND:20270424T210000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs James Madison University
+DESCRIPTION:Georgia Southern University Baseball vs James Madison University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17839&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17840-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270425T170000Z
+DTEND:20270425T200000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs James Madison University
+DESCRIPTION:Georgia Southern University Baseball vs James Madison University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17840&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17603-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270426
+DTEND;VALUE=DATE:20270429
+LOCATION:Madison\, MS
+SUMMARY:Georgia Southern University Men's Golf  Sun Belt Championship
+DESCRIPTION:Georgia Southern University Men's Golf  Sun Belt Championship\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17603&amp;sport_id=5
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17841-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270428T220000Z
+DTEND:20270429T010000Z
+LOCATION:Macon\, GA
+SUMMARY:Georgia Southern University Baseball at Mercer University
+DESCRIPTION:Georgia Southern University Baseball at Mercer University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17841&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17842-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270430T230000Z
+DTEND:20270501T020000Z
+LOCATION:Troy\, AL
+SUMMARY:Georgia Southern University Baseball at Troy University
+DESCRIPTION:Georgia Southern University Baseball at Troy University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17842&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17843-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270501T203000Z
+DTEND:20270501T233000Z
+LOCATION:Troy\, AL
+SUMMARY:Georgia Southern University Baseball at Troy University
+DESCRIPTION:Georgia Southern University Baseball at Troy University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17843&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17844-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270502T180000Z
+DTEND:20270502T210000Z
+LOCATION:Troy\, AL
+SUMMARY:Georgia Southern University Baseball at Troy University
+DESCRIPTION:Georgia Southern University Baseball at Troy University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17844&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17845-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270505T220000Z
+DTEND:20270506T010000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs Mercer University
+DESCRIPTION:Georgia Southern University Baseball vs Mercer University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17845&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17846-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270507T223000Z
+DTEND:20270508T013000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs University of Southern Mississippi
+DESCRIPTION:Georgia Southern University Baseball vs University of Southern Mississippi\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17846&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17607-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270508
+DTEND;VALUE=DATE:20270512
+LOCATION:TBD
+SUMMARY:Georgia Southern University Women's Golf  NCAA Regionals
+DESCRIPTION:Georgia Southern University Women's Golf  NCAA Regionals\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17607&amp;sport_id=22
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17847-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270508T180000Z
+DTEND:20270508T210000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs University of Southern Mississippi
+DESCRIPTION:Georgia Southern University Baseball vs University of Southern Mississippi\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17847&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17848-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270509T163000Z
+DTEND:20270509T193000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs University of Southern Mississippi
+DESCRIPTION:Georgia Southern University Baseball vs University of Southern Mississippi\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17848&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17849-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270511T220000Z
+DTEND:20270512T010000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs College of Charleston
+DESCRIPTION:Georgia Southern University Baseball vs College of Charleston\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17849&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17850-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270514T223000Z
+DTEND:20270515T013000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs University of Louisiana at Monroe
+DESCRIPTION:Georgia Southern University Baseball vs University of Louisiana at Monroe\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17850&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17851-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270515T180000Z
+DTEND:20270515T210000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs University of Louisiana at Monroe
+DESCRIPTION:Georgia Southern University Baseball vs University of Louisiana at Monroe\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17851&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17608-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270516
+DTEND;VALUE=DATE:20270521
+LOCATION:Carlsbad\, Calif.
+SUMMARY:Georgia Southern University Women's Golf  NCAA Championship
+DESCRIPTION:Georgia Southern University Women's Golf  NCAA Championship\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17608&amp;sport_id=22
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17852-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270516T170000Z
+DTEND:20270516T200000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs University of Louisiana at Monroe
+DESCRIPTION:Georgia Southern University Baseball vs University of Louisiana at Monroe\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17852&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17605-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270517
+DTEND;VALUE=DATE:20270519
+LOCATION:TBD
+SUMMARY:Georgia Southern University Men's Golf  NCAA Regionals
+DESCRIPTION:Georgia Southern University Men's Golf  NCAA Regionals\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17605&amp;sport_id=5
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17853-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270518T200000Z
+DTEND:20270518T230000Z
+LOCATION:, J.I. Clements Stadium
+SUMMARY:Georgia Southern University Baseball vs The Citadel
+DESCRIPTION:Georgia Southern University Baseball vs The Citadel\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17853&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17854-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270520T230000Z
+DTEND:20270521T020000Z
+LOCATION:State University\, AR
+SUMMARY:Georgia Southern University Baseball at Arkansas State University
+DESCRIPTION:Georgia Southern University Baseball at Arkansas State University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17854&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17855-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270521T230000Z
+DTEND:20270522T020000Z
+LOCATION:State University\, AR
+SUMMARY:Georgia Southern University Baseball at Arkansas State University
+DESCRIPTION:Georgia Southern University Baseball at Arkansas State University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17855&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17856-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270522T180000Z
+DTEND:20270522T210000Z
+LOCATION:State University\, AR
+SUMMARY:Georgia Southern University Baseball at Arkansas State University
+DESCRIPTION:Georgia Southern University Baseball at Arkansas State University\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17856&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17857-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART:20270525T130000Z
+DTEND:20270530T230000Z
+LOCATION:Montgomery\, Ala., Riverwalk Stadium
+SUMMARY:Georgia Southern University Baseball vs Sun Belt Conference
+DESCRIPTION:Georgia Southern University Baseball vs Sun Belt Conference\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17857&amp;sport_id=1
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17606-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270528
+DTEND;VALUE=DATE:20270602
+LOCATION:Carlsbad\, CA
+SUMMARY:Georgia Southern University Men's Golf  NCAA Championship
+DESCRIPTION:Georgia Southern University Men's Golf  NCAA Championship\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17606&amp;sport_id=5
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_13652-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270904
+DTEND;VALUE=DATE:20270905
+LOCATION:Statesboro\, GA, Allen E. Paulson Stadium
+SUMMARY:Georgia Southern University Football vs Samford
+DESCRIPTION:Georgia Southern University Football vs Samford\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=13652&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_13659-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270911
+DTEND;VALUE=DATE:20270912
+LOCATION:Manhattan\, KS
+SUMMARY:Georgia Southern University Football at Kansas State
+DESCRIPTION:Georgia Southern University Football at Kansas State\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=13659&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_5645-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270918
+DTEND;VALUE=DATE:20270919
+LOCATION:Houston\, TX
+SUMMARY:Georgia Southern University Football at Houston
+DESCRIPTION:Georgia Southern University Football at Houston\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=5645&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_13157-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20270925
+DTEND;VALUE=DATE:20270926
+LOCATION:Statesboro\, GA, Allen E. Paulson Stadium
+SUMMARY:Georgia Southern University Football vs Eastern Michigan
+DESCRIPTION:Georgia Southern University Football vs Eastern Michigan\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=13157&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_17282-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20280902
+DTEND;VALUE=DATE:20280903
+LOCATION:Auburn\, AL
+SUMMARY:Georgia Southern University Football at Auburn
+DESCRIPTION:Georgia Southern University Football at Auburn\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=17282&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_10987-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20280916
+DTEND;VALUE=DATE:20280917
+LOCATION:Boise\, ID
+SUMMARY:Georgia Southern University Football at Boise State
+DESCRIPTION:Georgia Southern University Football at Boise State\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=10987&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_8680-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20280923
+DTEND;VALUE=DATE:20280924
+LOCATION:Statesboro\, GA, Allen E. Paulson Stadium
+SUMMARY:Georgia Southern University Football vs Fresno State
+DESCRIPTION:Georgia Southern University Football vs Fresno State\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=8680&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_13154-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20290901
+DTEND;VALUE=DATE:20290902
+LOCATION:Lexington\, KY
+SUMMARY:Georgia Southern University Football at Kentucky
+DESCRIPTION:Georgia Southern University Football at Kentucky\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=13154&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_14120-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20290908
+DTEND;VALUE=DATE:20290909
+LOCATION:Statesboro\, GA, Allen E. Paulson Stadium
+SUMMARY:Georgia Southern University Football vs Sam Houston
+DESCRIPTION:Georgia Southern University Football vs Sam Houston\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=14120&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_14121-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20290915
+DTEND;VALUE=DATE:20290916
+LOCATION:Statesboro\, GA, Allen E. Paulson Stadium
+SUMMARY:Georgia Southern University Football vs Charleston Southern
+DESCRIPTION:Georgia Southern University Football vs Charleston Southern\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=14121&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_13155-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20290922
+DTEND;VALUE=DATE:20290923
+LOCATION:Ypsilanti\, MI
+SUMMARY:Georgia Southern University Football at Eastern Michigan
+DESCRIPTION:Georgia Southern University Football at Eastern Michigan\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=13155&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_13662-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20300831
+DTEND;VALUE=DATE:20300901
+LOCATION:Statesboro\, GA, Allen E. Paulson Stadium
+SUMMARY:Georgia Southern University Football vs Chattanooga
+DESCRIPTION:Georgia Southern University Football vs Chattanooga\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=13662&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_13156-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20300907
+DTEND;VALUE=DATE:20300908
+LOCATION:Oxford\, MS
+SUMMARY:Georgia Southern University Football at Ole Miss
+DESCRIPTION:Georgia Southern University Football at Ole Miss\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=13156&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_14123-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20300921
+DTEND;VALUE=DATE:20300922
+LOCATION:Huntsville\, TX
+SUMMARY:Georgia Southern University Football at Sam Houston
+DESCRIPTION:Georgia Southern University Football at Sam Houston\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=14123&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_16642-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20310913
+DTEND;VALUE=DATE:20310914
+LOCATION:Kalamazoo\, MI
+SUMMARY:Georgia Southern University Football at Western Michigan
+DESCRIPTION:Georgia Southern University Football at Western Michigan\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=16642&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_13709-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20310920
+DTEND;VALUE=DATE:20310921
+LOCATION:Statesboro\, GA, Allen E. Paulson Stadium
+SUMMARY:Georgia Southern University Football vs Middle Tennessee
+DESCRIPTION:Georgia Southern University Football vs Middle Tennessee\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=13709&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_16169-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20320911
+DTEND;VALUE=DATE:20320912
+LOCATION:Statesboro\, GA, Allen E. Paulson Stadium
+SUMMARY:Georgia Southern University Football vs Kennesaw State
+DESCRIPTION:Georgia Southern University Football vs Kennesaw State\nRadio: Georgia Southern Sports Network\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=16169&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_13710-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20320925
+DTEND;VALUE=DATE:20320926
+LOCATION:Murfreesboro\, TN
+SUMMARY:Georgia Southern University Football at Middle Tennessee
+DESCRIPTION:Georgia Southern University Football at Middle Tennessee\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=13710&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_16170-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20330910
+DTEND;VALUE=DATE:20330911
+LOCATION:Kennesaw\, GA
+SUMMARY:Georgia Southern University Football at Kennesaw State
+DESCRIPTION:Georgia Southern University Football at Kennesaw State\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=16170&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:vcal_16643-admin.gseagles.com
+DTSTAMP:20261017T094854Z
+DTSTART;VALUE=DATE:20340923
+DTEND;VALUE=DATE:20340924
+LOCATION:Statesboro\, GA, Allen E. Paulson Stadium
+SUMMARY:Georgia Southern University Football vs Western Michigan
+DESCRIPTION:Georgia Southern University Football vs Western Michigan\n
+URL:https://admin.gseagles.com/calendar.aspx?game_id=16643&amp;sport_id=3
+PRIORITY:3
+END:VEVENT
+END:VCALENDAR

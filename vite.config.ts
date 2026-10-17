@@ -137,7 +137,11 @@ export default defineConfig(({ command }) => ({
     authPopupPlugin(),
     tailwindcss(),
     tanstackStart(),
-    ...(command === "build" ? [nitro({ preset: "vercel" })] : []),
+    ...(command === "build" ? [nitro({
+            preset: "vercel",
+            // Daily weekend-feed refresh, 5:15am Eastern (see src/routes/api/cron/refresh-events.ts).
+            vercel: { config: { crons: [{ path: "/api/cron/refresh-events", schedule: "15 9 * * *" }] } },
+          })] : []),
     viteReact(),
   ],
 }));

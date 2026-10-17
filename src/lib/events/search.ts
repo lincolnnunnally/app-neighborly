@@ -3,19 +3,9 @@ import { runSources } from "./sources";
 import { DEFAULT_TZ, effectiveEndMs, localDateKey, overlapsWindow, weekendWindow, type WeekendWindow } from "./time";
 import type { EventSearchResult, PublicEvent } from "./types";
 
-export const RADIUS_CHOICES = [10, 25, 50, 100] as const;
-export const DEFAULT_RADIUS_MI = 25;
+import { normalizeRadius, wideRadiusFor } from "./radius";
 
-export function normalizeRadius(raw: unknown): number {
-  const n = Number(raw);
-  if (!Number.isFinite(n) || n <= 0) return DEFAULT_RADIUS_MI;
-  return Math.min(150, Math.max(5, Math.round(n)));
-}
-
-/** How far the "a short drive away" ring reaches for a given radius. */
-export function wideRadiusFor(radiusMi: number): number {
-  return Math.min(150, Math.max(60, Math.round(radiusMi * 2.5)));
-}
+export { DEFAULT_RADIUS_MI, normalizeRadius, RADIUS_CHOICES, wideRadiusFor, WORTH_THE_DRIVE_MI } from "./radius";
 
 function windowOut(w: WeekendWindow) {
   return {
@@ -28,9 +18,32 @@ function windowOut(w: WeekendWindow) {
   };
 }
 
-function dedupeKey(e: PublicEvent, tz: string): string {
-  const t = e.title.toLowerCase().replace(/[^a-z0-9]+/g, "").slice(0, 48);
-  return `${t}|${localDateKey(e.startMs, tz)}|${e.lat?.toFixed(2)},${e.lon?.toFixed(2)}`;
+/** "The Merry Widow!" and "Merry Widow" are the same show. */
+export function normalizeTitle(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/&amp;|&/g, " and ")
+    .replace(/\b(the|a|an)\b/g, " ")
+    .replace(/[^a-z0-9]+/g, "")
+    .slice(0, 48);
+}
+
+/** Two sources listing one event: same normalized title, same local day, venues within a mile. */
+const SAME_PLACE_MI = 1;
+
+export function dedupeAcrossSources(pool: PublicEvent[], tz: string): PublicEvent[] {
+  const byKey = new Map<string, PublicEvent[]>();
+  const out: PublicEvent[] = [];
+  for (const e of pool) {
+    if (e.lat == null || e.lon == null || !Number.isFinite(e.startMs)) continue;
+    const key = `${normalizeTitle(e.title)}|${localDateKey(e.startMs, tz)}`;
+    const same = byKey.get(key) ?? [];
+    if (same.some((o) => haversineMiles(o.lat!, o.lon!, e.lat!, e.lon!) <= SAME_PLACE_MI)) continue;
+    same.push(e);
+    byKey.set(key, same);
+    out.push(e);
+  }
+  return out;
 }
 
 /** Day it shows under, timed before all-day/ongoing, then time, then distance. */
@@ -115,15 +128,10 @@ export async function searchPublicEvents(opts: {
   const runs = await runSources({ lat: opts.lat, lon: opts.lon, wideMi, fromKey: w.friKey, toKey: w2.sunKey, tz });
   const pool: PublicEvent[] = [...(opts.extra ?? []), ...runs.flatMap((r) => r.events)];
 
-  const seen = new Set<string>();
-  const located: PublicEvent[] = [];
-  for (const e of pool) {
-    if (e.lat == null || e.lon == null || !Number.isFinite(e.startMs)) continue;
-    const key = dedupeKey(e, tz);
-    if (seen.has(key)) continue;
-    seen.add(key);
-    located.push({ ...e, distanceMi: Math.round(haversineMiles(opts.lat, opts.lon, e.lat, e.lon) * 10) / 10 });
-  }
+  const located: PublicEvent[] = dedupeAcrossSources(pool, tz).map((e) => ({
+    ...e,
+    distanceMi: Math.round(haversineMiles(opts.lat, opts.lon, e.lat!, e.lon!) * 10) / 10,
+  }));
 
   // A months-long exhibit is not "this weekend" news; keep multi-day things under ~2 weeks.
   const reasonable = located.filter((e) => effectiveEndMs(e) - e.startMs < 16 * 24 * 3600 * 1000);
@@ -136,15 +144,15 @@ export async function searchPublicEvents(opts: {
       tz,
     ),
     tz,
-  ).slice(0, 30);
+  ).slice(0, 120);
   const nextWeekend = collapseRepeats(
     sortForWindow(
-      groupMultiVenue(reasonable.filter((e) => overlapsWindow(e, w2, nowMs) && (e.distanceMi ?? 0) <= wideMi)),
+      groupMultiVenue(reasonable.filter((e) => overlapsWindow(e, w2, nowMs) && (e.distanceMi ?? 0) <= radiusMi)),
       w2,
       tz,
     ),
     tz,
-  ).slice(0, 30);
+  ).slice(0, 120);
 
   return {
     place: { label: opts.label, lat: opts.lat, lon: opts.lon, zip: opts.zip || "" },
