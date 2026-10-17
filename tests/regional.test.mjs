@@ -135,8 +135,8 @@ test("Visit Dublin (Tribe): venues carry their own map pins", () => {
 });
 
 test("Community-college filter drops classes and office notices, keeps shows", () => {
-  for (const t of ["HiSET Testing", "CNA Class", "Spring Registration", "Payment Deadline", "CPR Certification Course"]) assert.ok(NOT_A_PUBLIC_OUTING.test(t), t);
-  for (const t of ["Fall Festival", "Holiday Concert Band Showcase".replace("Holiday ", ""), "Car Show"]) assert.ok(!NOT_A_PUBLIC_OUTING.test(t), t);
+  for (const t of ["HiSET Testing", "CNA Class", "Spring Registration", "Payment Deadline", "CPR Certification Course", "OSHA 10 Construction Safety – Continuing Ed", "Tactical Emergency Casualty Care (TECC) – Continuing Ed"]) assert.ok(NOT_A_PUBLIC_OUTING.test(t), t);
+  for (const t of ["Fall Festival", "Holiday Concert Band Showcase".replace("Holiday ", ""), "Car Show", "Medical Job & Community Resource Fair – Swainsboro"]) assert.ok(!NOT_A_PUBLIC_OUTING.test(t), t);
 });
 
 test("Radius: 15/30/60 with 60 default; the drive ring reaches ~100 mi", () => {
