@@ -2,8 +2,14 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SUPPORT_EMAIL } from "@/lib/contact";
+import { pageHead } from "@/lib/seo";
 
-export const Route = createFileRoute("/privacy")({ component: PrivacyPage });
+export const Route = createFileRoute("/privacy")({
+  head: () => pageHead({
+      path: "/privacy",
+      title: "Privacy Policy | Neighborly",
+      description: "What Neighborly collects, how it is used and shared, how long it is kept, and your choices.",
+    }), component: PrivacyPage });
 
 function PrivacyPage() {
   return (

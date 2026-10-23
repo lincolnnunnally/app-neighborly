@@ -9,6 +9,7 @@ import { getCommunityFeed } from "@/lib/community/server";
 import { CC_GET_HELP } from "@/lib/community/pantry";
 import type { CommunityEvent, Need } from "@/lib/community/types";
 import { formatEventWhen } from "@/lib/utils";
+import { canonicalLinks, SITE_URL } from "@/lib/seo";
 
 /**
  * The ministry door.
@@ -55,16 +56,23 @@ export const Route = createFileRoute("/ministry")({
       return EMPTY_FEED;
     }
   },
-  head: () => ({
-    meta: [
-      { title: "Bible studies, ministry & ways to serve — Neighborly" },
-      {
-        name: "description",
-        content:
-          "Bible studies, small groups, and ways to serve, posted by neighbors and local churches.",
-      },
-    ],
-  }),
+  head: ({ match }) => {
+    const place = match.search.place;
+    const path = place ? `/ministry?place=${encodeURIComponent(place)}` : "/ministry";
+    return {
+      links: canonicalLinks(path),
+      meta: [
+        { property: "og:url", content: `${SITE_URL}${path}` },
+        { name: "twitter:card", content: "summary_large_image" },
+        { title: "Bible studies, ministry & ways to serve — Neighborly" },
+        {
+          name: "description",
+          content:
+            "Bible studies, small groups, and ways to serve, posted by neighbors and local churches.",
+        },
+      ],
+    };
+  },
   component: MinistryPage,
 });
 

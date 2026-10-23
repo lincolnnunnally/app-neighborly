@@ -71,6 +71,7 @@ import { PantryMap } from "@/components/community/pantry-map";
 import { formatEventWhen } from "@/lib/utils";
 import { ActivityFilters, matchesDateWindow, type DateWindow } from "@/components/community/activity-filters";
 import { LOOSE_MATCH_MAX, parseQuery, scoreFields, type ScoredField } from "@/lib/community/search";
+import { canonicalLinks, SITE_URL } from "@/lib/seo";
 
 type BoardSearch = { tab?: string; cat?: string; q?: string; host?: string };
 
@@ -112,10 +113,14 @@ export const Route = createFileRoute("/c/$slug")({
     const description = c?.tagline
       ? `${c.tagline}. What's on, who needs a hand, and who's offering one in ${city}.`
       : `Neighbor board for ${city}.`;
+    const path = `/c/${encodeURIComponent(params.slug)}`;
     return {
+      links: canonicalLinks(path),
       meta: [
         { title },
         { name: "description", content: description },
+        { property: "og:url", content: `${SITE_URL}${path}` },
+        { name: "twitter:card", content: "summary_large_image" },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         ...(isListedCommunity(params.slug) ? [] : [{ name: "robots", content: "noindex, nofollow" }]),

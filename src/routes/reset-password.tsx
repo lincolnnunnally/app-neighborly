@@ -12,6 +12,8 @@ import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/
 type ResetSearch = { token?: string; error?: string };
 
 export const Route = createFileRoute("/reset-password")({
+  // Signed-in / account pages stay out of search.
+  head: () => ({ meta: [{ title: "Reset password — Neighborly" }, { name: "robots", content: "noindex, nofollow" }] }),
   validateSearch: (s: Record<string, unknown>): ResetSearch => ({
     token: typeof s.token === "string" ? s.token : undefined,
     error: typeof s.error === "string" ? s.error : undefined,

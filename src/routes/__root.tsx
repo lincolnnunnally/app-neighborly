@@ -4,6 +4,7 @@ import { Toaster } from "sonner";
 import appCss from "../styles.css?url";
 import { NotFoundPage } from "@/components/layout/not-found";
 import { loadSavedPlace } from "@/lib/community/place-cookie";
+import { ldJson, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 
 const MENU_TAP_BEFORE_READY = `window.addEventListener("click",function(e){if(window.__nbMenuReady)return;var t=e.target;var b=t&&t.closest&&t.closest('[aria-controls="site-menu"]');if(b){window.__nbMenuTap=true;e.stopPropagation();}},true);`;
 
@@ -16,6 +17,8 @@ export const Route = createRootRoute({
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "theme-color", content: "#2f5d50" },
       { property: "og:site_name", content: "Neighborly" },
+      ldJson(organizationJsonLd),
+      ldJson(websiteJsonLd),
       { property: "og:image", content: "https://neighborly.unitedundergod.org/img/vidalia/fountain.jpg" },
       {
         title: "Neighborly — what's on this weekend, and the neighbors who'll be there",

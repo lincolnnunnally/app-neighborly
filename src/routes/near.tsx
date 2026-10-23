@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { townPhoto } from "@/components/community/cover";
 import { useCurrentPlace } from "@/lib/community/current-place";
 import { loadWeekendPlan, type WeekendPlan } from "@/lib/community/weekend";
+import { canonicalLinks, SITE_URL } from "@/lib/seo";
 
 type NearSearch = { place?: string; q?: string };
 
@@ -27,7 +28,10 @@ export const Route = createFileRoute("/near")({
     return { plan };
   },
   head: () => ({
+    links: canonicalLinks("/near"),
     meta: [
+      { property: "og:url", content: `${SITE_URL}/near` },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "What's going on near me — Neighborly" },
       {
         name: "description",

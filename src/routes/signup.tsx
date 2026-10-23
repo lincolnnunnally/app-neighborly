@@ -20,6 +20,8 @@ import { isEventNext, readNext } from "@/lib/safe-next";
 type SignupSearch = { community?: string; code?: string; next?: string };
 
 export const Route = createFileRoute("/signup")({
+  // Signed-in / account pages stay out of search.
+  head: () => ({ meta: [{ title: "Join — Neighborly" }, { name: "robots", content: "noindex, nofollow" }] }),
   validateSearch: (s: Record<string, unknown>): SignupSearch => ({
     community: typeof s.community === "string" ? s.community : undefined,
     code: typeof s.code === "string" ? s.code : undefined,

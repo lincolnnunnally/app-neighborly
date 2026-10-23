@@ -2,13 +2,28 @@ import { createFileRoute } from "@tanstack/react-router";
 import { isListedCommunity } from "@/lib/community/public-filters";
 import { getSql } from "@/lib/db";
 import { ensureSeeded } from "@/lib/community/seed";
+import { FEATURES } from "@/lib/features";
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
         const origin = "https://neighborly.unitedundergod.org";
-        const staticPaths = ["/", "/weekend", "/communities", "/how-it-works", "/near", "/churches", "/privacy", "/terms", "/help", "/about"];
+        const staticPaths = [
+          "/",
+          "/weekend",
+          "/communities",
+          "/how-it-works",
+          ...FEATURES.map((f) => f.path),
+          "/search",
+          "/ministry",
+          "/near",
+          "/churches",
+          "/privacy",
+          "/terms",
+          "/help",
+          "/about",
+        ];
         let communityPaths: string[] = ["/c/vidalia", "/c/milstead"];
         try {
           const sql = await getSql();

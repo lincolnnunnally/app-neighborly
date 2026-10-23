@@ -2,10 +2,14 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { Button } from "@/components/ui/button";
+import { canonicalLinks, SITE_URL } from "@/lib/seo";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
+    links: canonicalLinks("/about"),
     meta: [
+      { property: "og:url", content: `${SITE_URL}/about` },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "About Neighborly" },
       {
         name: "description",

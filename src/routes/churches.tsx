@@ -11,6 +11,7 @@ import { readSavedPlace, writeSavedPlace } from "@/lib/community/saved-place";
 import { saveHomePlace } from "@/lib/community/server";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { loadChurchTown } from "@/lib/community/church-town";
+import { canonicalLinks, SITE_URL } from "@/lib/seo";
 
 type ChurchSearch = {
   zip?: string;
@@ -29,6 +30,13 @@ function asSearchString(v: unknown): string | undefined {
   return undefined;
 }
 
+/** One canonical per town: filters (denomination, style, day) fold into it. */
+function churchesPath(s: { zip?: string; city?: string; state?: string }): string {
+  if (s.zip) return `/churches?zip=${encodeURIComponent(s.zip)}`;
+  if (s.city && s.state) return `/churches?city=${encodeURIComponent(s.city)}&state=${encodeURIComponent(s.state)}`;
+  return "/churches";
+}
+
 export const Route = createFileRoute("/churches")({
   validateSearch: (s: Record<string, unknown>): ChurchSearch => ({
     zip: asSearchString(s.zip),
@@ -43,8 +51,11 @@ export const Route = createFileRoute("/churches")({
   // The heading names the town: the URL's city or ZIP, else the saved place.
   loaderDeps: ({ search }) => ({ zip: search.zip, city: search.city, state: search.state }),
   loader: async ({ deps }) => ({ town: await loadChurchTown(deps).catch(() => null) }),
-  head: ({ loaderData }) => ({
+  head: ({ loaderData, match }) => ({
+    links: canonicalLinks(churchesPath(match.search)),
     meta: [
+      { property: "og:url", content: `${SITE_URL}${churchesPath(match.search)}` },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: `Churches near ${loaderData?.town?.city || "you"} — Neighborly` },
       {
         name: "description",

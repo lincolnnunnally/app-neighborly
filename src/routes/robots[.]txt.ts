@@ -4,6 +4,8 @@ const BODY = `User-agent: *
 Allow: /
 Disallow: /app
 Disallow: /admin
+Disallow: /onboarding
+Disallow: /reset-password
 Disallow: /api/
 Allow: /api/weekend
 Allow: /api/near

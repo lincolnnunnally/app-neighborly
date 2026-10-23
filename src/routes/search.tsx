@@ -15,6 +15,7 @@ import {
   type SearchHit,
   type SearchScope,
 } from "@/lib/community/search";
+import { canonicalLinks } from "@/lib/seo";
 
 type SearchParams = { q?: string; scope?: string; slug?: string };
 
@@ -28,8 +29,11 @@ export const Route = createFileRoute("/search")({
     const q = match.search.q;
     const title = q ? `Search: ${q} — Neighborly` : "Search Neighborly";
     return {
+      links: canonicalLinks("/search"),
       meta: [
         { title },
+        // A results page for one query is not a page of its own.
+        ...(q ? [{ name: "robots", content: "noindex, follow" }] : []),
         {
           name: "description",
           content:
