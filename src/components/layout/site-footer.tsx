@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { EXISTING_FEATURE_LINKS, FEATURES } from "@/lib/features";
 
 export const PHOTO_CREDITS =
   "Photos: water tower by Geogre (public domain); downtown park fountain, amphitheater and Municipal Building by Michael Rivera (CC BY-SA 4.0); Vidalia onions by ryan griffis (CC BY-SA 2.0); New Branch United Methodist Church by Michael Rivera (CC BY-SA 4.0); coffee by Artem Beliaikin (CC BY 2.0); pickleball courts by Wikideas1 (CC0); Midtown Atlanta from Piedmont Park by Thomson200 (CC0); downtown Conyers by formulanone (CC BY-SA 2.0); Rockdale County Courthouse by Skarg (CC BY 2.5), via Wikimedia Commons.";
@@ -27,6 +28,13 @@ export function SiteFooter({ credits = false }: { credits?: boolean }) {
           <Link to="/help" className="tap px-2 text-fg-muted no-underline hover:text-fg">
             Need help?
           </Link>
+        </nav>
+        <nav aria-label="Ways to use Neighborly" className="-mx-2 flex flex-wrap gap-x-2 text-sm">
+          {[...FEATURES.map((f) => ({ to: f.path, label: f.label })), ...EXISTING_FEATURE_LINKS].map((l) => (
+            <a key={l.to} href={l.to} className="tap px-2 text-fg-muted no-underline hover:text-fg">
+              {l.label}
+            </a>
+          ))}
         </nav>
         {credits && <p className="text-xs leading-relaxed text-fg-muted">{PHOTO_CREDITS}</p>}
       </div>

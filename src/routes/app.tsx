@@ -6,6 +6,8 @@ import { getMyMemberships, getMyProfile } from "@/lib/community/server";
 import { OFFER_PANTRY_PATH, OFFER_SERVICE_PATH, OFFER_TOOL_PATH } from "@/lib/community/offer-path";
 
 export const Route = createFileRoute("/app")({
+  // Signed-in / account pages stay out of search.
+  head: () => ({ meta: [{ title: "Neighborly" }, { name: "robots", content: "noindex, nofollow" }] }),
   component: AppLayout,
 });
 

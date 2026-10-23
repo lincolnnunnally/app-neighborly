@@ -18,6 +18,8 @@ import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/
 type LoginSearch = { redirect?: string; next?: string; forgot?: string };
 
 export const Route = createFileRoute("/login")({
+  // Signed-in / account pages stay out of search.
+  head: () => ({ meta: [{ title: "Sign in — Neighborly" }, { name: "robots", content: "noindex, nofollow" }] }),
   validateSearch: (s: Record<string, unknown>): LoginSearch => ({
     // `redirect` and `next` both mean "come back here"; only safe same-site paths survive.
     redirect: readNext(s.redirect),

@@ -3,10 +3,14 @@ import { LifeBuoy, Mail, Phone } from "lucide-react";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SUPPORT_EMAIL } from "@/lib/contact";
+import { canonicalLinks, SITE_URL } from "@/lib/seo";
 
 export const Route = createFileRoute("/help")({
   head: () => ({
+    links: canonicalLinks("/help"),
     meta: [
+      { property: "og:url", content: `${SITE_URL}/help` },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Help — Neighborly" },
       { name: "description", content: "Answers to common questions about Neighborly, and how to reach a real person." },
     ],

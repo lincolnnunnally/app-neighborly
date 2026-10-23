@@ -2,8 +2,14 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SUPPORT_EMAIL } from "@/lib/contact";
+import { pageHead } from "@/lib/seo";
 
-export const Route = createFileRoute("/terms")({ component: TermsPage });
+export const Route = createFileRoute("/terms")({
+  head: () => pageHead({
+      path: "/terms",
+      title: "Terms of Service | Neighborly",
+      description: "The terms for using Neighborly: its purpose, your responsibilities, safety and crisis help, and accounts.",
+    }), component: TermsPage });
 
 function TermsPage() {
   return (

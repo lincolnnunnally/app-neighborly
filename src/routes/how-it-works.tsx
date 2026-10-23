@@ -4,8 +4,16 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useCurrentPlace } from "@/lib/community/current-place";
 import { townFigure } from "@/components/community/cover";
+import { FEATURES } from "@/lib/features";
+import { pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/how-it-works")({
+  head: () => pageHead({
+      path: "/how-it-works",
+      title: "How Neighborly Works: Ask, Offer and Gather Nearby",
+      description:
+        "See what's on this weekend, join your town's board, ask for a hand or offer one, lend tools, list services, reserve a pavilion and find food pantries.",
+    }),
   component: HowItWorksPage,
 });
 
@@ -74,6 +82,19 @@ function HowItWorksPage() {
             <p className="mt-2 text-fg-muted">{s.body}</p>
           </Card>
         ))}
+
+        <nav aria-label="Each part of Neighborly" className="space-y-2">
+          <h2 className="font-display text-xl font-semibold">Each part, explained</h2>
+          <ul className="flex flex-wrap gap-x-5 gap-y-2">
+            {FEATURES.map((f) => (
+              <li key={f.path}>
+                <a href={f.path} className="text-primary">
+                  {f.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
         <div className="flex flex-wrap gap-3">
           <Button asChild>

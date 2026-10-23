@@ -13,15 +13,20 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AppRouteImport } from './routes/app'
+import { Route as AskNeighborsForHelpRouteImport } from './routes/ask-neighbors-for-help'
+import { Route as BorrowToolsRouteImport } from './routes/borrow-tools'
 import { Route as ChurchesRouteImport } from './routes/churches'
 import { Route as CommunitiesRouteImport } from './routes/communities'
+import { Route as FoodPantriesRouteImport } from './routes/food-pantries'
 import { Route as HelpRouteImport } from './routes/help'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as LocalServicesRouteImport } from './routes/local-services'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as MinistryRouteImport } from './routes/ministry'
 import { Route as NearRouteImport } from './routes/near'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ReserveAPavilionRouteImport } from './routes/reserve-a-pavilion'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SearchRouteImport } from './routes/search'
@@ -72,6 +77,16 @@ const AppRoute = AppRouteImport.update({
   path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AskNeighborsForHelpRoute = AskNeighborsForHelpRouteImport.update({
+  id: '/ask-neighbors-for-help',
+  path: '/ask-neighbors-for-help',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BorrowToolsRoute = BorrowToolsRouteImport.update({
+  id: '/borrow-tools',
+  path: '/borrow-tools',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ChurchesRoute = ChurchesRouteImport.update({
   id: '/churches',
   path: '/churches',
@@ -82,6 +97,11 @@ const CommunitiesRoute = CommunitiesRouteImport.update({
   path: '/communities',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FoodPantriesRoute = FoodPantriesRouteImport.update({
+  id: '/food-pantries',
+  path: '/food-pantries',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HelpRoute = HelpRouteImport.update({
   id: '/help',
   path: '/help',
@@ -90,6 +110,11 @@ const HelpRoute = HelpRouteImport.update({
 const HowItWorksRoute = HowItWorksRouteImport.update({
   id: '/how-it-works',
   path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LocalServicesRoute = LocalServicesRouteImport.update({
+  id: '/local-services',
+  path: '/local-services',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -115,6 +140,11 @@ const OnboardingRoute = OnboardingRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReserveAPavilionRoute = ReserveAPavilionRouteImport.update({
+  id: '/reserve-a-pavilion',
+  path: '/reserve-a-pavilion',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -268,15 +298,20 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/app': typeof AppRouteWithChildren
+  '/ask-neighbors-for-help': typeof AskNeighborsForHelpRoute
+  '/borrow-tools': typeof BorrowToolsRoute
   '/churches': typeof ChurchesRoute
   '/communities': typeof CommunitiesRoute
+  '/food-pantries': typeof FoodPantriesRoute
   '/help': typeof HelpRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/local-services': typeof LocalServicesRoute
   '/login': typeof LoginRoute
   '/ministry': typeof MinistryRoute
   '/near': typeof NearRoute
   '/onboarding': typeof OnboardingRoute
   '/privacy': typeof PrivacyRoute
+  '/reserve-a-pavilion': typeof ReserveAPavilionRoute
   '/reset-password': typeof ResetPasswordRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/search': typeof SearchRoute
@@ -311,15 +346,20 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
+  '/ask-neighbors-for-help': typeof AskNeighborsForHelpRoute
+  '/borrow-tools': typeof BorrowToolsRoute
   '/churches': typeof ChurchesRoute
   '/communities': typeof CommunitiesRoute
+  '/food-pantries': typeof FoodPantriesRoute
   '/help': typeof HelpRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/local-services': typeof LocalServicesRoute
   '/login': typeof LoginRoute
   '/ministry': typeof MinistryRoute
   '/near': typeof NearRoute
   '/onboarding': typeof OnboardingRoute
   '/privacy': typeof PrivacyRoute
+  '/reserve-a-pavilion': typeof ReserveAPavilionRoute
   '/reset-password': typeof ResetPasswordRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/search': typeof SearchRoute
@@ -356,15 +396,20 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/app': typeof AppRouteWithChildren
+  '/ask-neighbors-for-help': typeof AskNeighborsForHelpRoute
+  '/borrow-tools': typeof BorrowToolsRoute
   '/churches': typeof ChurchesRoute
   '/communities': typeof CommunitiesRoute
+  '/food-pantries': typeof FoodPantriesRoute
   '/help': typeof HelpRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/local-services': typeof LocalServicesRoute
   '/login': typeof LoginRoute
   '/ministry': typeof MinistryRoute
   '/near': typeof NearRoute
   '/onboarding': typeof OnboardingRoute
   '/privacy': typeof PrivacyRoute
+  '/reserve-a-pavilion': typeof ReserveAPavilionRoute
   '/reset-password': typeof ResetPasswordRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/search': typeof SearchRoute
@@ -402,15 +447,20 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/app'
+    | '/ask-neighbors-for-help'
+    | '/borrow-tools'
     | '/churches'
     | '/communities'
+    | '/food-pantries'
     | '/help'
     | '/how-it-works'
+    | '/local-services'
     | '/login'
     | '/ministry'
     | '/near'
     | '/onboarding'
     | '/privacy'
+    | '/reserve-a-pavilion'
     | '/reset-password'
     | '/robots.txt'
     | '/search'
@@ -445,15 +495,20 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/admin'
+    | '/ask-neighbors-for-help'
+    | '/borrow-tools'
     | '/churches'
     | '/communities'
+    | '/food-pantries'
     | '/help'
     | '/how-it-works'
+    | '/local-services'
     | '/login'
     | '/ministry'
     | '/near'
     | '/onboarding'
     | '/privacy'
+    | '/reserve-a-pavilion'
     | '/reset-password'
     | '/robots.txt'
     | '/search'
@@ -489,15 +544,20 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/app'
+    | '/ask-neighbors-for-help'
+    | '/borrow-tools'
     | '/churches'
     | '/communities'
+    | '/food-pantries'
     | '/help'
     | '/how-it-works'
+    | '/local-services'
     | '/login'
     | '/ministry'
     | '/near'
     | '/onboarding'
     | '/privacy'
+    | '/reserve-a-pavilion'
     | '/reset-password'
     | '/robots.txt'
     | '/search'
@@ -534,15 +594,20 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRoute
   AppRoute: typeof AppRouteWithChildren
+  AskNeighborsForHelpRoute: typeof AskNeighborsForHelpRoute
+  BorrowToolsRoute: typeof BorrowToolsRoute
   ChurchesRoute: typeof ChurchesRoute
   CommunitiesRoute: typeof CommunitiesRoute
+  FoodPantriesRoute: typeof FoodPantriesRoute
   HelpRoute: typeof HelpRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  LocalServicesRoute: typeof LocalServicesRoute
   LoginRoute: typeof LoginRoute
   MinistryRoute: typeof MinistryRoute
   NearRoute: typeof NearRoute
   OnboardingRoute: typeof OnboardingRoute
   PrivacyRoute: typeof PrivacyRoute
+  ReserveAPavilionRoute: typeof ReserveAPavilionRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SearchRoute: typeof SearchRoute
@@ -594,6 +659,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ask-neighbors-for-help': {
+      id: '/ask-neighbors-for-help'
+      path: '/ask-neighbors-for-help'
+      fullPath: '/ask-neighbors-for-help'
+      preLoaderRoute: typeof AskNeighborsForHelpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/borrow-tools': {
+      id: '/borrow-tools'
+      path: '/borrow-tools'
+      fullPath: '/borrow-tools'
+      preLoaderRoute: typeof BorrowToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/churches': {
       id: '/churches'
       path: '/churches'
@@ -608,6 +687,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommunitiesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/food-pantries': {
+      id: '/food-pantries'
+      path: '/food-pantries'
+      fullPath: '/food-pantries'
+      preLoaderRoute: typeof FoodPantriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/help': {
       id: '/help'
       path: '/help'
@@ -620,6 +706,13 @@ declare module '@tanstack/react-router' {
       path: '/how-it-works'
       fullPath: '/how-it-works'
       preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/local-services': {
+      id: '/local-services'
+      path: '/local-services'
+      fullPath: '/local-services'
+      preLoaderRoute: typeof LocalServicesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -655,6 +748,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reserve-a-pavilion': {
+      id: '/reserve-a-pavilion'
+      path: '/reserve-a-pavilion'
+      fullPath: '/reserve-a-pavilion'
+      preLoaderRoute: typeof ReserveAPavilionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -896,15 +996,20 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AdminRoute: AdminRoute,
   AppRoute: AppRouteWithChildren,
+  AskNeighborsForHelpRoute: AskNeighborsForHelpRoute,
+  BorrowToolsRoute: BorrowToolsRoute,
   ChurchesRoute: ChurchesRoute,
   CommunitiesRoute: CommunitiesRoute,
+  FoodPantriesRoute: FoodPantriesRoute,
   HelpRoute: HelpRoute,
   HowItWorksRoute: HowItWorksRoute,
+  LocalServicesRoute: LocalServicesRoute,
   LoginRoute: LoginRoute,
   MinistryRoute: MinistryRoute,
   NearRoute: NearRoute,
   OnboardingRoute: OnboardingRoute,
   PrivacyRoute: PrivacyRoute,
+  ReserveAPavilionRoute: ReserveAPavilionRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SearchRoute: SearchRoute,

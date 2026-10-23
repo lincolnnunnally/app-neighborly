@@ -5,7 +5,6 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { PagePending } from "@/components/layout/page-pending";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { PlaceSearch } from "@/components/community/place-search";
-import { JsonLd } from "@/components/community/json-ld";
 import { WeekendFeed } from "@/components/events/event-feed";
 import { listCommunities } from "@/lib/community/server";
 import { loadWeekendPlan, weekendWeatherDays, type WeekendPlan } from "@/lib/community/weekend";
@@ -13,6 +12,7 @@ import type { Community } from "@/lib/community/types";
 import { loadSavedPlace } from "@/lib/community/place-cookie";
 import { CC_GET_HELP } from "@/lib/community/pantry";
 import { useRememberPlace } from "@/lib/community/remember-place";
+import { canonicalLinks, SITE_URL } from "@/lib/seo";
 
 type HomeSearch = { place?: string; q?: string };
 
@@ -100,7 +100,11 @@ export const Route = createFileRoute("/")({
           content:
             "Find what's on near you this weekend. Browse free; join when you want to RSVP or lend a hand.",
         },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: `${SITE_URL}/` },
+        { name: "twitter:card", content: "summary_large_image" },
       ],
+      links: canonicalLinks("/"),
     };
   },
   // Same for home (the logo, a new town): a loading state, never the old page.
@@ -491,19 +495,7 @@ function LandingPage() {
         )}
       </main>
       <SiteFooter credits={isVidalia} />
-      <JsonLd
-        data={{
-          "@context": "https://schema.org",
-          "@type": "WebSite",
-          name: "Neighborly",
-          url: "https://neighborly.unitedundergod.org/",
-          potentialAction: {
-            "@type": "SearchAction",
-            target: "https://neighborly.unitedundergod.org/search?q={search_term_string}",
-            "query-input": "required name=search_term_string",
-          },
-        }}
-      />
+      {/* WebSite + SearchAction JSON-LD is emitted site-wide from the root head (src/lib/seo.ts). */}
     </div>
   );
 }

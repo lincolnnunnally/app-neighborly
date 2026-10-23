@@ -41,6 +41,8 @@ import { cn } from "@/lib/utils";
 type OnboardingSearch = { community?: string; code?: string; next?: string };
 
 export const Route = createFileRoute("/onboarding")({
+  // Signed-in / account pages stay out of search.
+  head: () => ({ meta: [{ title: "Set up your profile — Neighborly" }, { name: "robots", content: "noindex, nofollow" }] }),
   validateSearch: (s: Record<string, unknown>): OnboardingSearch => ({
     community: typeof s.community === "string" ? s.community : undefined,
     code: typeof s.code === "string" ? s.code : undefined,

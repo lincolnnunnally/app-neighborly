@@ -15,6 +15,7 @@ import { useRememberPlace } from "@/lib/community/remember-place";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { loadWeekendPlan, weekendWeatherDays, type WeekendPlan } from "@/lib/community/weekend";
 import { cn } from "@/lib/utils";
+import { canonicalLinks, SITE_URL } from "@/lib/seo";
 
 type WeekendSearch = { place?: string; q?: string; radius?: number; who?: FeedMode; cat?: ChipId };
 
@@ -58,10 +59,14 @@ export const Route = createFileRoute("/weekend")({
     const label = p ? `${p.city || p.name}${p.state ? `, ${p.state}` : ""}` : "your town";
     const title = `What's on in ${label} this weekend — Neighborly`;
     const desc = `Festivals, shows, park days, and neighbor gatherings in and around ${label} this weekend — with the weather and an add-to-calendar button.`;
+    const path = p?.slug && isListedCommunity(p.slug) ? `/weekend?place=${encodeURIComponent(p.slug)}` : "/weekend";
     return {
+      links: canonicalLinks(path),
       meta: [
         { title },
         { name: "description", content: desc },
+        { property: "og:url", content: `${SITE_URL}${path}` },
+        { name: "twitter:card", content: "summary_large_image" },
         { property: "og:title", content: title },
         { property: "og:description", content: desc },
         ...(p?.slug && !isListedCommunity(p.slug) ? [{ name: "robots", content: "noindex, nofollow" }] : []),

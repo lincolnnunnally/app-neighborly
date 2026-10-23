@@ -8,8 +8,15 @@ import { Input } from "@/components/ui/input";
 import { listCommunities } from "@/lib/community/server";
 import { KIND_LABELS, type Community } from "@/lib/community/types";
 import { useCurrentPlace } from "@/lib/community/current-place";
+import { pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/communities")({
+  head: () => pageHead({
+      path: "/communities",
+      title: "Town Boards and Groups on Neighborly",
+      description:
+        "Browse Neighborly's town boards and the groups inside them. Each board is where neighbors ask for a hand, offer one, and post what's going on nearby.",
+    }),
   component: CommunitiesPage,
 });
 
