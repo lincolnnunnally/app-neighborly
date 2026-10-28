@@ -36,7 +36,7 @@ export const Route = createRootRoute({
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap",
       },
-      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      { rel: "icon", href: "/favicon.svg?v=standard1", type: "image/svg+xml" },
       { rel: "stylesheet", href: appCss },
     ],
     // A tap on ☰ before the page has finished loading its script used to be lost
