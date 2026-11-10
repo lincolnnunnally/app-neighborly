@@ -14,11 +14,15 @@ import { parseGaParks, parseLocalist, parsePalShows, parseTribe, inferCategory }
 import {
   growthZoneLinks,
   NOT_A_PUBLIC_OUTING,
+  NOT_A_TOWN_OUTING,
+  parseAi1ecMonth,
   parseAverittPerformances,
   parseFestivalDates,
   parseGrowthZoneDetail,
+  parseRevize,
   parseSidearmIcs,
   parseSimpleCalendar,
+  type RevizePlace,
 } from "./parse-regional";
 import { geocodeAddress, readSourceStates, readStoredEvents, recordSourceError, saveSourceEvents } from "./store";
 import { addDaysKey, DEFAULT_TZ, keyStartMs, localDateKey } from "./time";
@@ -39,7 +43,11 @@ export type SourceKind =
   /** A GrowthZone chamber calendar (detail pages carry schema.org dates). */
   | "growthzone"
   /** A WordPress Simple Calendar page (schema.org microdata). */
-  | "simcal";
+  | "simcal"
+  /** A Revize city or library website's calendar feed (JSON, with repeating entries). */
+  | "revize"
+  /** An All-in-One Event Calendar month page (WordPress). */
+  | "ai1ec";
 
 export type SourceDef = {
   id: string;
@@ -64,9 +72,24 @@ export type SourceDef = {
   home?: RegExp;
   publicHost?: string;
   shortName?: [RegExp, string];
-  /** simcal: which listings are public. tribe: which titles to drop. */
+  /** simcal: which listings are public. tribe, revize, ai1ec: which titles to drop. */
   keep?: RegExp;
   drop?: RegExp;
+  /** revize: a system with several buildings — calendar name -> that building. */
+  calendars?: Record<string, RevizePlace>;
+  /** ai1ec: an "@ place" that names another town we know. */
+  places?: { match: RegExp; city: string; lat: number; lon: number }[];
+};
+
+/** Ohoopee Regional Library branches, by the name of each branch's calendar. Street addresses from ohoopeelibrary.org. */
+const OHOOPEE_BRANCHES: Record<string, RevizePlace> = {
+  Vidalia: { venue: "Dr. Mark and Tonya Spivey Public Library", city: "Vidalia", lat: 32.2122, lon: -82.4145 },
+  Ladson: { venue: "Ladson Genealogical Library", city: "Vidalia", lat: 32.2122, lon: -82.4145 },
+  Lyons: { venue: "Nelle Brown Memorial Library", city: "Lyons", lat: 32.2026, lon: -82.3238 },
+  Montgomery: { venue: "Montgomery County Public Library", city: "Mount Vernon", lat: 32.1764, lon: -82.5951 },
+  "Jeff Davis": { venue: "Jeff Davis County Public Library", city: "Hazlehurst", lat: 31.863, lon: -82.5822 },
+  Reidsville: { venue: "Tattnall County Public Library", city: "Reidsville", lat: 32.0814, lon: -82.1225 },
+  Glennville: { venue: "Glennville Public Library", city: "Glennville", lat: 31.935, lon: -81.9242 },
 };
 
 export const SOURCES: SourceDef[] = [
@@ -85,6 +108,11 @@ export const SOURCES: SourceDef[] = [
     home: /mount vernon|mt\.? vernon|gillis gymnasium|bpc (baseball|softball|soccer)/i, shortName: [/^Brewton-Parker College\b/, "Brewton-Parker"] },
   { id: "metter", kind: "growthzone", name: "Metter-Candler Chamber", url: "https://business.everythingsbetterinmetter.com/events/calendar", base: "https://business.everythingsbetterinmetter.com", lat: 32.3971, lon: -82.0601, city: "Metter", reachMi: 10 },
   { id: "statesboromarket", kind: "simcal", name: "The Market at Visit Statesboro", url: "https://marketatvisitstatesboro.com/availability/", title: "Statesboro Main Street Farmers Market", lat: 32.4488, lon: -81.7832, city: "Statesboro", reachMi: 1, venue: "The Market at Visit Statesboro", keep: /farmers market/i },
+  // Vidalia, Lyons and Toombs County's own calendars. The county's calendar and the Pal are above; these
+  // are the city of Lyons (which also carries Lyons Main Street's events), the library branches and the chamber.
+  { id: "lyonscity", kind: "revize", name: "City of Lyons", url: "https://www.lyonsga.gov/calendar.php", base: "https://www.lyonsga.gov/_assets_/plugins/revizeCalendar/calendar_data_handler.php?webspace=lyonsga&relative_revize_url=//cms6.revize.com&protocol=https:", lat: 32.2043, lon: -82.3218, city: "Lyons", reachMi: 5, drop: NOT_A_TOWN_OUTING },
+  { id: "ohoopeelibrary", kind: "revize", name: "Ohoopee Regional Library", url: "https://ohoopeelibrary.org/calendar.php", base: "https://ohoopeelibrary.org/_assets_/plugins/revizeCalendar/calendar_data_handler.php?webspace=ohoopeelibraryga&relative_revize_url=//webgen1.revize.com&protocol=https:", lat: 32.2122, lon: -82.4145, city: "Vidalia", reachMi: 40, drop: /\bclos(ed|ing|ure)\b/i, calendars: OHOOPEE_BRANCHES },
+  { id: "gvchamber", kind: "ai1ec", name: "Greater Vidalia Chamber", url: "https://www.greatervidaliachamber.com/calendar/", lat: 32.2177, lon: -82.4135, city: "Vidalia", reachMi: 15, drop: NOT_A_TOWN_OUTING, places: [{ match: /\blyons\b/i, city: "Lyons", lat: 32.2043, lon: -82.3218 }] },
   { id: "gsu", kind: "localist", name: "Georgia State University", url: "https://calendar.gsu.edu/", base: "https://calendar.gsu.edu", lat: 33.7531, lon: -84.3853, city: "Atlanta", reachMi: 25 },
   { id: "agnesscott", kind: "localist", name: "Agnes Scott College", url: "https://calendar.agnesscott.edu/", base: "https://calendar.agnesscott.edu", lat: 33.7687, lon: -84.2941, city: "Decatur", reachMi: 3 },
   { id: "kennesaw", kind: "localist", name: "Kennesaw State University", url: "https://calendar.kennesaw.edu/", base: "https://calendar.kennesaw.edu", lat: 34.0382, lon: -84.5827, city: "Kennesaw", reachMi: 15 },
@@ -237,6 +265,30 @@ async function fetchSimCal(src: SourceDef, fromKey: string, toKey: string, tz: s
   return inRange(list, fromKey, toKey, tz);
 }
 
+async function fetchRevize(src: SourceDef, fromKey: string, toKey: string, tz: string): Promise<PublicEvent[]> {
+  const json = JSON.parse(await getText(src.base!));
+  // An error page is not an empty calendar: fail, so the last good listings stay up.
+  if (!Array.isArray(json)) throw new Error("calendar feed was not a list");
+  const list = parseRevize(json, { id: src.id, organizer: src.name, lat: src.lat, lon: src.lon, city: src.city, url: src.url, drop: src.drop, calendars: src.calendars }, fromKey, toKey, tz);
+  if (src.calendars) return list;
+  // One town hall, many venues: a listing that gives a street address is pinned there (cached), else the town center.
+  for (const e of list) {
+    if (!/\d/.test(e.venue)) continue;
+    const hit = await geocodeAddress(e.venue);
+    if (hit) [e.lat, e.lon] = hit;
+  }
+  return list;
+}
+
+async function fetchAi1ec(src: SourceDef, fromKey: string, toKey: string, tz: string): Promise<PublicEvent[]> {
+  // The month page only: this site's robots.txt asks crawlers to stay out of the other calendar views and the export.
+  const html = await getText(src.url, "text/html");
+  // The site's page cache sometimes answers 200 with nothing in it. That is a failed fetch, not an empty month.
+  if (!html.includes("ai1ec-date")) throw new Error("calendar page came back without a calendar");
+  const list = parseAi1ecMonth(html, { id: src.id, organizer: src.name, lat: src.lat, lon: src.lon, city: src.city, drop: src.drop, places: src.places }, tz);
+  return inRange(list, fromKey, toKey, tz);
+}
+
 async function fetchGaParks(fromKey: string, toKey: string, tz: string): Promise<PublicEvent[]> {
   // One page per week; each holds ~150 rows starting at `startdate`.
   const starts = [fromKey];
@@ -378,6 +430,10 @@ function loaderFor(def: SourceDef, fromKey: string, toKey: string, tz: string): 
       return () => fetchGrowthZone(def, fromKey, toKey, tz);
     case "simcal":
       return () => fetchSimCal(def, fromKey, toKey, tz);
+    case "revize":
+      return () => fetchRevize(def, fromKey, toKey, tz);
+    case "ai1ec":
+      return () => fetchAi1ec(def, fromKey, toKey, tz);
     default:
       return () => fetchPal(tz);
   }

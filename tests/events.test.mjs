@@ -105,6 +105,19 @@ test("Pal Theatre parser reads its show list with the right year", () => {
   assert.equal(addams.length, 2);
 });
 
+test("Pal Theatre: a heading wrapped with <br> keeps its whole title", () => {
+  const now = Date.parse("2026-11-10T15:00:00Z");
+  const html = `<h3>Andy &amp; Mandy's Hard <br>Candy Christmas</h3><div>Friday, December 18 | 6PM</div><div>A festive classic country variety show.</div><a>Tickets</a>`;
+  const [show, ...rest] = parsePalShows(html, now, TZ);
+  assert.equal(rest.length, 0);
+  assert.equal(show.title, "Andy & Mandy's Hard Candy Christmas");
+  assert.equal(new Date(show.startMs).toISOString(), "2026-12-18T23:00:00.000Z");
+  // The older fixture's wrapped headings still read whole.
+  const titles = parsePalShows(fx("pal-shows.html"), Date.parse("2026-10-17T04:12:00Z"), TZ).map((s) => s.title);
+  assert.ok(titles.includes("Guys Night Out: Street Fighter"), JSON.stringify(titles));
+  assert.ok(titles.includes("Louis Armstrong: What a Wonderful World"), JSON.stringify(titles));
+});
+
 import { groupMultiVenue } from "../src/lib/events/search.ts";
 import { normalizePlaceQuery } from "../src/lib/community/place-query.ts";
 

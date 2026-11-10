@@ -1,0 +1,223 @@
+[
+ {
+  "title": "Revize Test Event",
+  "primary_calendar_name": "Main",
+  "calendar_displays": [
+   "7"
+  ],
+  "start": "2022-10-26T11:00:00",
+  "url": "https://www.facebook.com",
+  "location": "150 Kirts Blvd Troy, MI 48084",
+  "image": "<img src=\"/revize/plugins/_editforms_/v2/images/placeholder.png\" alt=\"Revize update image\"/>",
+  "rid": "1",
+  "id": "1",
+  "desc": "",
+  "color": "#3787d8",
+  "allDay": true,
+  "options": ""
+ },
+ {
+  "title": "Vidalia Wiggles and Giggles",
+  "primary_calendar_name": "Vidalia",
+  "calendar_displays": [
+   "8"
+  ],
+  "start": "2023-08-04T10:30:00",
+  "url": "",
+  "location": "610 Jackson Street Vidalia, GA 30474",
+  "image": "<img src=\"/revize/plugins/_editforms_/v2/images/placeholder.png\" alt=\"Revize update image\"/>",
+  "rid": "13",
+  "id": "13",
+  "desc": "",
+  "rrule": "DTSTART:20230804T103000\nRDATE:20230804T103000\nRRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=FR\nEXDATE:20231110T103000\nEXDATE:20231124T103000\nEXDATE:20231222T103000\nEXDATE:20240524T103000\nEXDATE:20240719T103000\nEXDATE:20241129T103000\nEXDATE:20241213T103000\nEXDATE:20241227T103000\nEXDATE:20250704T103000\nEXDATE:20251128T103000\nEXDATE:20251226T103000\nEXDATE:20260619T103000\nEXDATE:20260703T103000",
+  "color": "#5c0000",
+  "end": "2023-08-04T11:00:00",
+  "duration": "00:30",
+  "options": ""
+ },
+ {
+  "title": "Vidalia Story Time",
+  "primary_calendar_name": "Vidalia",
+  "calendar_displays": [
+   "8"
+  ],
+  "start": "2025-08-05T11:00:00",
+  "url": "",
+  "location": "610 Jackson Street Vidalia, GA 30474",
+  "image": "<img src=\"/revize/plugins/_editforms_/v2/images/placeholder.png\" alt=\"Revize update image\"/>",
+  "rid": "1310",
+  "id": "1310",
+  "desc": "",
+  "rrule": "DTSTART:20250805T110000\nRDATE:20250805T110000\nRRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=TU\nEXDATE:20251111T110000",
+  "color": "#5c0000",
+  "end": "2025-08-05T12:00:00",
+  "duration": "01:00",
+  "options": ""
+ },
+ {
+  "title": "Vidalia Book Club (Sweet Onion Book Club)",
+  "primary_calendar_name": "Vidalia",
+  "calendar_displays": [
+   "8"
+  ],
+  "start": "2023-10-23T17:00:00",
+  "url": "",
+  "location": "610 Jackson Street Vidalia, GA 30474",
+  "image": "<img src=\"/revize/plugins/_editforms_/v2/images/placeholder.png\" alt=\"Revize update image\"/>",
+  "rid": "139",
+  "id": "139",
+  "desc": "",
+  "rrule": "DTSTART:20231023T170000\nRDATE:20231023T170000\nRRULE:FREQ=MONTHLY;INTERVAL=1;BYSETPOS=-1;BYDAY=MO\nEXDATE:20231225T170000\nEXDATE:20240527T170000\nEXDATE:20241230T170000\nEXDATE:20250526T170000\nEXDATE:20251229T170000",
+  "color": "#5c0000",
+  "end": "2023-10-23T18:00:00",
+  "duration": "01:00",
+  "options": ""
+ },
+ {
+  "title": "Closed for Thanksgiving",
+  "primary_calendar_name": "Jeff Davis",
+  "calendar_displays": [
+   "11"
+  ],
+  "start": "2023-11-23T00:00:00",
+  "url": "",
+  "location": "189 E. Jarman Street Hazlehurst, GA",
+  "image": "<img src=\"/revize/plugins/_editforms_/v2/images/placeholder.png\" alt=\"Revize update image\"/>",
+  "rid": "193",
+  "id": "193",
+  "desc": "",
+  "color": "#48c9af",
+  "allDay": true,
+  "options": ""
+ },
+ {
+  "title": "Closed for Thanksgiving",
+  "primary_calendar_name": "Glennville",
+  "calendar_displays": [
+   "10"
+  ],
+  "start": "2023-11-25T00:00:00",
+  "url": "",
+  "location": "189 E. Jarman Street Hazlehurst, GA",
+  "image": "<img src=\"/revize/plugins/_editforms_/v2/images/placeholder.png\" alt=\"Revize update image\"/>",
+  "rid": "194",
+  "id": "194",
+  "desc": "",
+  "color": "#218b21",
+  "allDay": true,
+  "options": ""
+ },
+ {
+  "title": "Jeff Davis Bingo",
+  "primary_calendar_name": "Jeff Davis",
+  "calendar_displays": [
+   "11"
+  ],
+  "start": "2026-08-20T11:00:00",
+  "url": "",
+  "location": "189 E Jarman Street Hazlehurst, GA 31539",
+  "image": "<img src=\"/revize/plugins/_editforms_/v2/images/placeholder.png\" alt=\"Revize update image\"/>",
+  "rid": "1951",
+  "id": "1951",
+  "desc": "",
+  "rrule": "DTSTART:20260820T110000\nRDATE:20260820T110000\nRRULE:FREQ=MONTHLY;INTERVAL=1;BYSETPOS=3;BYDAY=TH;UNTIL=20270521T000000",
+  "color": "#19748a",
+  "end": "2026-08-20T12:00:00",
+  "duration": "01:00",
+  "options": ""
+ },
+ {
+  "title": "Jeff Davis Bingocize",
+  "primary_calendar_name": "Jeff Davis",
+  "calendar_displays": [
+   "11"
+  ],
+  "start": "2026-10-01T14:00:00",
+  "url": "",
+  "location": "",
+  "image": "<img src=\"/revize/plugins/_editforms_/v2/images/placeholder.png\" alt=\"Revize update image\"/>",
+  "rid": "1982",
+  "id": "1982",
+  "desc": "",
+  "rrule": "DTSTART:20261001T140000\nRDATE:20261001T140000\nRRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=TH;UNTIL=20261106T000000",
+  "color": "#19748a",
+  "end": "2026-10-01T15:00:00",
+  "duration": "01:00",
+  "options": ""
+ },
+ {
+  "title": "Montgomery Story Time",
+  "primary_calendar_name": "Montgomery",
+  "calendar_displays": [
+   "9"
+  ],
+  "start": "2026-10-05T11:00:00",
+  "url": "",
+  "location": "215 Railroad Ave. Mount Vernon, GA 30445",
+  "image": "<img src=\"/revize/plugins/_editforms_/v2/images/placeholder.png\" alt=\"Revize update image\"/>",
+  "rid": "1974",
+  "id": "1974",
+  "desc": "",
+  "rrule": "DTSTART:20261005T110000\nRDATE:20261005T110000\nRRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=MO\nEXDATE:20261012T110000",
+  "color": "#022ced",
+  "end": "2026-10-05T11:45:00",
+  "duration": "00:45",
+  "options": ""
+ },
+ {
+  "title": "Montgomery Homeschool Hangout",
+  "primary_calendar_name": "Montgomery",
+  "calendar_displays": [
+   "9"
+  ],
+  "start": "2026-10-22T11:00:00",
+  "url": "",
+  "location": "215 Railroad Ave. Mount Vernon, GA 30445",
+  "image": "<img src=\"/revize/plugins/_editforms_/v2/images/placeholder.png\" alt=\"Revize update image\"/>",
+  "rid": "1978",
+  "id": "1978",
+  "desc": "",
+  "rrule": "DTSTART:20261022T110000\nRDATE:20261022T110000\nRRULE:FREQ=MONTHLY;INTERVAL=1;BYSETPOS=4;BYDAY=TH\nEXDATE:20261126T110000\nEXDATE:20261224T110000",
+  "color": "#022ced",
+  "end": "2026-10-22T12:00:00",
+  "duration": "01:00",
+  "options": ""
+ },
+ {
+  "title": "Jeff Davis Fall Messtival",
+  "primary_calendar_name": "Jeff Davis",
+  "calendar_displays": [
+   "11"
+  ],
+  "start": "2026-10-10T15:30:00",
+  "url": "",
+  "location": "189 E Jarman Street Hazlehurst, GA 31539",
+  "image": "<img src=\"/revize/plugins/_editforms_/v2/images/placeholder.png\" alt=\"Revize update image\"/>",
+  "rid": "1984",
+  "id": "1984",
+  "desc": "",
+  "color": "#19748a",
+  "end": "2026-10-10T17:30:00",
+  "duration": "02:00",
+  "options": ""
+ },
+ {
+  "title": "Coffee With Library Staff",
+  "primary_calendar_name": "Main",
+  "calendar_displays": [
+   "7"
+  ],
+  "start": "2023-03-31T09:00:00",
+  "url": "",
+  "location": "Library Main Room",
+  "image": "<img src=\"/revize/plugins/_editforms_/v2/images/placeholder.png\" alt=\"Revize update image\"/>",
+  "rid": "4",
+  "id": "4",
+  "desc": "",
+  "rrule": "DTSTART:20230331T090000\nRDATE:20230331T090000\nRRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=FR;COUNT=6",
+  "color": "#3787d8",
+  "end": "2023-03-31T10:00:00",
+  "duration": "01:00",
+  "options": ""
+ }
+]
