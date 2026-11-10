@@ -9,7 +9,11 @@ import {
   growthZoneLinks,
   parseGrowthZoneDetail,
   parseSimpleCalendar,
+  parseRevize,
+  parseAi1ecMonth,
+  recurrenceDays,
   NOT_A_PUBLIC_OUTING,
+  NOT_A_TOWN_OUTING,
   SIDEARM_SCHEDULES,
   sidearmScheduleUrl,
 } from "../src/lib/events/parse-regional.ts";
@@ -337,4 +341,99 @@ test("Churches heading: URL city, then the URL ZIP's town, then the saved place,
   assert.equal((await resolveChurchTown({}, deps(cov))).city, "Covington");
   assert.equal(await resolveChurchTown({}, deps(null)), null);
   assert.equal(await resolveChurchTown({ zip: "99999" }, deps(null)), null);
+});
+
+/* ---- Vidalia, Lyons and Toombs County's own calendars (owner report, 2026-11-10: "not pulling any local events") ---- */
+
+const LYONS = { id: "lyonscity", organizer: "City of Lyons", lat: 32.2043, lon: -82.3218, city: "Lyons", url: "https://www.lyonsga.gov/calendar.php", drop: NOT_A_TOWN_OUTING };
+
+test("City of Lyons calendar: public events kept, council meetings and the vendor's sample rows dropped", () => {
+  const list = parseRevize(JSON.parse(fx("revize-lyons.json")), LYONS, "2026-11-07", "2026-12-31", TZ);
+  assert.deepEqual(list.map((e) => e.title), ["Live in Lyons", "Lyons Lighted Christmas Parade", "2026 Santa on Main"]);
+  const live = list[0];
+  assert.equal(iso(live.startMs), "2026-11-21T23:00:00.000Z", "Sat Nov 21, 6pm Eastern");
+  assert.equal(iso(live.endMs), "2026-11-22T02:00:00.000Z");
+  assert.equal(live.venue, "111 N Washington St, Lyons, GA 30436");
+  assert.equal(live.city, "Lyons");
+  assert.equal(live.url, "https://www.lyonsga.gov/calendar.php", "no link of its own: the calendar that lists it");
+  assert.match(live.summary, /^Lyons Main Street will be hosting a Fall Concert Series/);
+  assert.ok(!/[<>]|%3C/.test(live.summary), "description is decoded text, not markup");
+  assert.equal(live.category, "music");
+  // Nothing outside the asked range, and nothing from the past leaks in.
+  assert.equal(parseRevize(JSON.parse(fx("revize-lyons.json")), LYONS, "2026-11-13", "2026-11-15", TZ).length, 0);
+});
+
+test("Town filter: meetings and office notices out, markets and parades in", () => {
+  for (const t of ["City Council Meeting", "Montgomery County Commissioners Mtg.", "Toombs County Development Authority", "Good Friday", "Event Title1", "Meeting Event title", "Revize Test Event", "Ribbon Cutting – Georgia Hospice Care", "GVYL – Professional Development", "LGV – Culture and Leisure", "Content Editing Training (Part 1)"]) assert.ok(NOT_A_TOWN_OUTING.test(t), t);
+  for (const t of ["Live in Lyons", "Lyons Lighted Christmas Parade", "Hometown Market on Broad", "Awards Gala", "Holiday Market", "Board Game Night", "2026 The Real Squeal BBQ & Music Festival"]) assert.ok(!NOT_A_TOWN_OUTING.test(t), t);
+});
+
+test("Repeating entries: weekly, monthly by position, UNTIL, COUNT and EXDATE", () => {
+  const weekly = "DTSTART:20250805T110000\nRDATE:20250805T110000\nRRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=TU\nEXDATE:20261117T110000";
+  assert.deepEqual(recurrenceDays("2025-08-05T11:00:00", weekly, "2026-11-07", "2026-11-27"), ["2026-11-10", "2026-11-24"]);
+  // Every third week counts from the first one.
+  assert.deepEqual(recurrenceDays("2026-10-06T15:30:00", "RRULE:FREQ=WEEKLY;INTERVAL=3;BYDAY=TU", "2026-10-01", "2026-11-30"), ["2026-10-06", "2026-10-27", "2026-11-17"]);
+  // Last Monday of the month.
+  assert.deepEqual(recurrenceDays("2023-10-23T17:00:00", "RRULE:FREQ=MONTHLY;INTERVAL=1;BYSETPOS=-1;BYDAY=MO", "2026-11-01", "2026-12-31"), ["2026-11-30", "2026-12-28"]);
+  // Third Thursday.
+  assert.deepEqual(recurrenceDays("2026-08-20T11:00:00", "RRULE:FREQ=MONTHLY;INTERVAL=1;BYSETPOS=3;BYDAY=TH;UNTIL=20270521T000000", "2026-11-01", "2026-12-31"), ["2026-11-19", "2026-12-17"]);
+  // UNTIL at midnight ends the series before that day's 2pm session.
+  assert.deepEqual(recurrenceDays("2026-10-01T14:00:00", "RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=TH;UNTIL=20261106T000000", "2026-10-25", "2026-11-30"), ["2026-10-29", "2026-11-05"]);
+  // Six Fridays in 2023 are long over.
+  assert.deepEqual(recurrenceDays("2023-03-31T09:00:00", "RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=FR;COUNT=6", "2023-03-01", "2026-12-31").length, 6);
+  assert.deepEqual(recurrenceDays("2023-03-31T09:00:00", "RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=FR;COUNT=6", "2026-11-01", "2026-12-31"), []);
+  // A rule we do not read gives nothing rather than a guess.
+  assert.deepEqual(recurrenceDays("2025-11-27T00:00:00", "RRULE:FREQ=YEARLY;BYSETPOS=4;BYDAY=TH;BYMONTH=11", "2026-11-01", "2026-12-31"), []);
+});
+
+test("Ohoopee library: story times land on their real days at the right branch; closings and test rows dropped", () => {
+  const branches = {
+    Vidalia: { venue: "Dr. Mark and Tonya Spivey Public Library", city: "Vidalia", lat: 32.2122, lon: -82.4145 },
+    Montgomery: { venue: "Montgomery County Public Library", city: "Mount Vernon", lat: 32.1764, lon: -82.5951 },
+    "Jeff Davis": { venue: "Jeff Davis County Public Library", city: "Hazlehurst", lat: 31.863, lon: -82.5822 },
+  };
+  const o = { id: "ohoopeelibrary", organizer: "Ohoopee Regional Library", lat: 32.2122, lon: -82.4145, city: "Vidalia", url: "https://ohoopeelibrary.org/calendar.php", drop: /\bclos(ed|ing|ure)\b/i, calendars: branches };
+  const list = parseRevize(JSON.parse(fx("revize-ohoopee-library.json")), o, "2026-11-07", "2026-11-27", TZ);
+  const days = (title) => list.filter((e) => e.title === title).map((e) => iso(e.startMs));
+  // Fridays 10:30am Eastern (standard time in November: 15:30Z).
+  assert.deepEqual(days("Vidalia Wiggles and Giggles"), ["2026-11-13T15:30:00.000Z", "2026-11-20T15:30:00.000Z", "2026-11-27T15:30:00.000Z"]);
+  assert.deepEqual(days("Vidalia Story Time"), ["2026-11-10T16:00:00.000Z", "2026-11-17T16:00:00.000Z", "2026-11-24T16:00:00.000Z"]);
+  // The library took Nov 26 (Thanksgiving) off the fourth-Thursday series itself.
+  assert.deepEqual(days("Montgomery Homeschool Hangout"), []);
+  assert.deepEqual(days("Jeff Davis Bingo"), ["2026-11-19T16:00:00.000Z"]);
+  assert.deepEqual(days("Jeff Davis Bingocize"), [], "ended Nov 5");
+  const wiggles = list.find((e) => e.title === "Vidalia Wiggles and Giggles");
+  assert.equal(wiggles.venue, "Dr. Mark and Tonya Spivey Public Library");
+  assert.equal(wiggles.city, "Vidalia");
+  assert.equal(iso(wiggles.endMs), "2026-11-13T16:00:00.000Z");
+  assert.equal(list.find((e) => e.title === "Montgomery Story Time").city, "Mount Vernon");
+  assert.ok(!list.some((e) => /closed|revize|coffee with library staff/i.test(e.title)));
+  assert.equal(new Set(list.map((e) => e.id)).size, list.length, "ids are unique per occurrence");
+  // A one-off Saturday program shows on its day.
+  const oct = parseRevize(JSON.parse(fx("revize-ohoopee-library.json")), o, "2026-10-09", "2026-10-11", TZ);
+  assert.deepEqual(oct.filter((e) => e.title === "Jeff Davis Fall Messtival").map((e) => iso(e.startMs)), ["2026-10-10T19:30:00.000Z"]);
+});
+
+test("Greater Vidalia Chamber calendar: the month page gives day, time, place and each event's own page", () => {
+  const o = { id: "gvchamber", organizer: "Greater Vidalia Chamber", lat: 32.2177, lon: -82.4135, city: "Vidalia", drop: NOT_A_TOWN_OUTING, places: [{ match: /\blyons\b/i, city: "Lyons", lat: 32.2043, lon: -82.3218 }] };
+  const list = parseAi1ecMonth(fx("ai1ec-vidalia-chamber.html"), o, TZ);
+  assert.deepEqual(list.map((e) => e.title), ["Hometown Market on Broad", "Awards Gala", "Live in Lyons"]);
+  const market = list[0];
+  assert.equal(iso(market.startMs), "2026-11-07T14:00:00.000Z", "Sat Nov 7, 9am Eastern");
+  assert.equal(iso(market.endMs), "2026-11-07T17:30:00.000Z");
+  assert.equal(market.venue, "Downtown Lyons");
+  assert.equal(market.city, "Lyons", "pinned to Lyons, not the chamber's office in Vidalia");
+  assert.equal(market.lat, 32.2043);
+  assert.equal(market.url, "https://www.greatervidaliachamber.com/event/hometown-market-on-broad/?instance_id=1813");
+  const gala = list[1];
+  assert.equal(iso(gala.startMs), "2026-11-13T00:00:00.000Z", "Thu Nov 12, 7pm Eastern");
+  assert.equal(gala.venue, "The Pal Theatre");
+  assert.equal(gala.city, "Vidalia");
+  // The city lists the same concert at its street address a block away: one card, not two.
+  const city = parseRevize(JSON.parse(fx("revize-lyons.json")), LYONS, "2026-11-20", "2026-11-22", TZ).map((e) => ({ ...e, lat: 32.2047, lon: -82.3235 }));
+  assert.deepEqual(dedupeAcrossSources([...city, ...list.filter((e) => e.title === "Live in Lyons")], TZ).map((e) => e.sourceId), ["lyonscity"]);
+  // Unfiltered: all eleven listings parse, the all-day ones as all-day.
+  const all = parseAi1ecMonth(fx("ai1ec-vidalia-chamber.html"), { ...o, drop: undefined }, TZ);
+  assert.equal(all.length, 11);
+  assert.equal(all.filter((e) => e.allDay).length, 2);
 });

@@ -4,7 +4,7 @@
  * back to the page that lists it.
  */
 import { decodeEntities, inferCategory, stripHtml } from "./parse";
-import { addDaysKey, DEFAULT_TZ, keyStartMs, parseWallTime } from "./time";
+import { addDaysKey, DEFAULT_TZ, keyStartMs, parseWallTime, weekdayOfKey } from "./time";
 import type { PublicEvent } from "./types";
 
 type Origin = { id: string; organizer: string; lat: number; lon: number; city: string };
@@ -355,6 +355,231 @@ export function parseSimpleCalendar(
       free: null,
       summary: "",
     });
+  }
+  return out;
+}
+
+/* ------------------------------------- Revize city and library calendars */
+
+const RRULE_DAYS = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"];
+const dayNumber = (key: string) => Math.round(Date.parse(`${key}T00:00:00Z`) / 86_400_000);
+
+/**
+ * The days a repeating calendar entry lands on inside [fromKey, toKey].
+ * `start` is the first occurrence in local wall time ("2025-08-05T11:00:00").
+ * Covers what these calendars use: DAILY, WEEKLY (BYDAY) and MONTHLY (BYDAY with
+ * BYSETPOS, or the same day of the month), with INTERVAL, UNTIL, COUNT and
+ * EXDATE. A rule we do not read (YEARLY: holiday closings) gives no days, so a
+ * date is never guessed.
+ */
+export function recurrenceDays(start: string, rrule: string, fromKey: string, toKey: string): string[] {
+  const rule = String(rrule || "").match(/RRULE:([^\r\n]+)/)?.[1];
+  const m0 = String(start || "").match(/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2})(?::(\d{2}))?)?/);
+  if (!rule || !m0) return [];
+  const p: Record<string, string> = {};
+  for (const kv of rule.trim().split(";")) {
+    const [k, v] = kv.split("=");
+    if (k && v) p[k.toUpperCase()] = v.toUpperCase();
+  }
+  const freq = p.FREQ;
+  if (freq !== "DAILY" && freq !== "WEEKLY" && freq !== "MONTHLY") return [];
+  const startKey = `${m0[1]}-${m0[2]}-${m0[3]}`;
+  const clock = `${m0[4] ?? "00"}${m0[5] ?? "00"}${m0[6] ?? "00"}`;
+  const interval = Math.max(1, Number(p.INTERVAL) || 1);
+  const until = p.UNTIL ? (p.UNTIL.includes("T") ? p.UNTIL.replace("Z", "") : `${p.UNTIL}T235959`) : "";
+  const count = Number(p.COUNT) || Infinity;
+  const skip = new Set([...String(rrule).matchAll(/EXDATE[^:\r\n]*:(\d{4})(\d{2})(\d{2})/g)].map((x) => `${x[1]}-${x[2]}-${x[3]}`));
+  const byDay = (p.BYDAY || "").split(",").filter(Boolean);
+  const days = byDay.length ? byDay.map((d) => RRULE_DAYS.indexOf(d.slice(-2))) : [weekdayOfKey(startKey)];
+  const pos = Number(p.BYSETPOS) || parseInt(byDay[0] ?? "", 10) || 0;
+  const day0 = dayNumber(startKey);
+  const sinceMonday = (weekdayOfKey(startKey) + 6) % 7;
+  const out: string[] = [];
+  let seen = 0;
+  // Day by day from the first occurrence, so COUNT is honest. Bounded: ~11 years.
+  for (let key = startKey, i = 0; key <= toKey && i < 4000; key = addDaysKey(key, 1), i++) {
+    const since = dayNumber(key) - day0;
+    const wd = weekdayOfKey(key);
+    let hit = false;
+    if (freq === "DAILY") hit = since % interval === 0;
+    else if (freq === "WEEKLY") hit = days.includes(wd) && Math.floor((since + sinceMonday) / 7) % interval === 0;
+    else {
+      const [y, mo, d] = key.split("-").map(Number);
+      const months = (y - Number(m0[1])) * 12 + (mo - Number(m0[2]));
+      if (months % interval === 0) {
+        if (!byDay.length) hit = d === Number(m0[3]);
+        else if (days.includes(wd)) {
+          const daysInMonth = new Date(Date.UTC(y, mo, 0)).getUTCDate();
+          hit = pos > 0 ? Math.ceil(d / 7) === pos : pos < 0 ? Math.ceil((daysInMonth - d + 1) / 7) === -pos : true;
+        }
+      }
+    }
+    if (!hit) continue;
+    if (until && `${key.replace(/-/g, "")}T${clock}` > until) break;
+    if (++seen > count) break;
+    if (key >= fromKey && !skip.has(key)) out.push(key);
+  }
+  return out;
+}
+
+export type RevizeRaw = {
+  id?: string;
+  title?: string;
+  start?: string;
+  end?: string;
+  allDay?: boolean;
+  location?: string;
+  url?: string;
+  desc?: string;
+  rrule?: string;
+  primary_calendar_name?: string;
+};
+
+export type RevizePlace = { venue: string; city: string; lat: number; lon: number };
+
+export type RevizeOptions = Origin & {
+  /** The public calendar page; an entry without its own link points here. */
+  url: string;
+  /** Titles that are not outings (meetings, closings, the vendor's sample entries). */
+  drop?: RegExp;
+  /**
+   * A system with several buildings: calendar name -> where that building is.
+   * When given, an entry on any other calendar is dropped.
+   */
+  calendars?: Record<string, RevizePlace>;
+};
+
+function safeDecodeUri(s: string): string {
+  try {
+    return decodeURIComponent(s);
+  } catch {
+    return s;
+  }
+}
+
+/**
+ * Revize (a city-website vendor) serves a site's whole calendar as one JSON
+ * list: local wall times, optional RRULE text, URL-encoded HTML descriptions.
+ * Only occurrences inside [fromKey, toKey] come back.
+ */
+export function parseRevize(json: unknown, o: RevizeOptions, fromKey: string, toKey: string, tz = DEFAULT_TZ): PublicEvent[] {
+  const out: PublicEvent[] = [];
+  const seen = new Set<string>();
+  for (const raw of Array.isArray(json) ? (json as RevizeRaw[]) : []) {
+    const title = stripHtml(String(raw?.title ?? ""));
+    const start = String(raw?.start ?? "");
+    const sm = start.match(/^(\d{4}-\d{2}-\d{2})(?:T(\d{2}):(\d{2}))?/);
+    if (!title || !sm || o.drop?.test(title)) continue;
+    const place = o.calendars ? o.calendars[String(raw.primary_calendar_name ?? "")] : undefined;
+    if (o.calendars && !place) continue;
+    const allDay = raw.allDay === true || !sm[2];
+    const startMs0 = parseWallTime(start.replace("T", " ").slice(0, 16), tz);
+    const endMs0 = raw.end ? parseWallTime(String(raw.end).replace("T", " ").slice(0, 16), tz) : null;
+    if (startMs0 == null) continue;
+    const lengthMs = endMs0 != null && endMs0 > startMs0 ? endMs0 - startMs0 : 0;
+    const endKey = raw.end ? String(raw.end).slice(0, 10) : sm[1];
+    const dayKeys = raw.rrule ? recurrenceDays(start, raw.rrule, fromKey, toKey) : endKey >= fromKey && sm[1] <= toKey ? [sm[1]] : [];
+    const location = stripHtml(String(raw.location ?? ""));
+    const link = String(raw.url ?? "").trim();
+    const summary = stripHtml(safeDecodeUri(String(raw.desc ?? "")));
+    for (const key of dayKeys) {
+      const startMs = allDay ? keyStartMs(key, tz) : keyStartMs(key, tz, Number(sm[2]), Number(sm[3]));
+      const id = `${o.id}:${raw.id ?? title}:${key}`;
+      if (seen.has(id)) continue;
+      seen.add(id);
+      out.push({
+        id,
+        title,
+        startMs,
+        endMs: lengthMs && !allDay ? startMs + lengthMs : null,
+        allDay,
+        multiDay: lengthMs > 26 * 3600 * 1000,
+        venue: place?.venue || location || o.organizer,
+        city: place?.city || o.city,
+        lat: place?.lat ?? o.lat,
+        lon: place?.lon ?? o.lon,
+        url: /^https?:\/\/[^\s]+$/i.test(link) ? link : o.url,
+        image: null,
+        organizer: o.organizer,
+        sourceId: o.id,
+        category: inferCategory(title, summary),
+        free: null,
+        summary: summary.length > 280 ? `${summary.slice(0, 279).trimEnd()}…` : summary,
+      });
+    }
+  }
+  return out;
+}
+
+/** City-hall calendars mix public events with meetings, office holidays and the vendor's sample rows. */
+export const NOT_A_TOWN_OUTING =
+  /\b(meeting|mtg|council|commission(ers)?|authority|board of \w+|committee|hearing|work session|training|closed|good friday|ribbon cutting|professional development|gvyl|lgv|event title\w*)\b|^revize\b/i;
+
+/* --------------------------------- All-in-One Event Calendar (month page) */
+
+export type Ai1ecOptions = Origin & {
+  /** Where an event is when its "@ place" names another town we know. */
+  places?: { match: RegExp; city: string; lat: number; lon: number }[];
+  drop?: RegExp;
+};
+
+const SHORT_MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+
+function clock12(h: string, mi: string, ap: string): [number, number] {
+  return [(Number(h) % 12) + (/p/i.test(ap) ? 12 : 0), Number(mi)];
+}
+
+/**
+ * The calendar's own month page: one cell per day, each event with a popup that
+ * carries its title, "@ place" and "Nov 7 @ 9:00 am – 12:30 pm" (or "all-day").
+ * The year comes from the day cell's link; the event links to its own page.
+ */
+export function parseAi1ecMonth(html: string, o: Ai1ecOptions, tz = DEFAULT_TZ): PublicEvent[] {
+  const out: PublicEvent[] = [];
+  const seen = new Set<string>();
+  for (const cell of decodeEntities(String(html || "")).split(/<div class="ai1ec-date">/).slice(1)) {
+    const dm = cell.match(/exact_date~(\d{1,2})-(\d{1,2})-(\d{4})/);
+    if (!dm) continue;
+    for (const pop of cell.split(/<span class="ai1ec-popup-title">/).slice(1)) {
+      const a = pop.match(/<a class="ai1ec-load-event"\s+href="([^"]+)"\s*>([\s\S]*?)<\/a>/);
+      const when = stripHtml(pop.match(/<div class="ai1ec-event-time">([\s\S]*?)<\/div>/)?.[1] ?? "");
+      const title = stripHtml(a?.[2] ?? "");
+      if (!a || !title || !when || o.drop?.test(title)) continue;
+      // A multi-day event is listed again on each day; the popup names the day it starts.
+      const first = when.match(/^([A-Za-z]{3})[a-z]*\s+(\d{1,2})\b/);
+      const month = first ? SHORT_MONTHS.indexOf(first[1].toLowerCase()) + 1 : 0;
+      if (!first || !month) continue;
+      const year = month > Number(dm[2]) + 6 ? Number(dm[3]) - 1 : month < Number(dm[2]) - 6 ? Number(dm[3]) + 1 : Number(dm[3]);
+      const key = `${year}-${pad(month)}-${pad(Number(first[2]))}`;
+      const id = `${o.id}:${a[1].match(/instance_id=(\d+)/)?.[1] ?? `${title}|${key}`}`;
+      if (seen.has(id)) continue;
+      seen.add(id);
+      const t = when.match(/@\s*(\d{1,2}):(\d{2})\s*([ap]m)(?:\s*[–-]\s*(?:(\d{1,2}):(\d{2})\s*([ap]m)\s*$|.+))?/i);
+      const allDay = !t;
+      const startMs = t ? keyStartMs(key, tz, ...clock12(t[1], t[2], t[3])) : keyStartMs(key, tz);
+      const endSame = t?.[4] ? keyStartMs(key, tz, ...clock12(t[4], t[5], t[6])) : null;
+      const venue = stripHtml(pop.match(/<span class="ai1ec-event-location"\s*>([\s\S]*?)<\/span>/)?.[1] ?? "").replace(/^@\s*/, "");
+      const place = o.places?.find((x) => x.match.test(venue));
+      out.push({
+        id,
+        title,
+        startMs,
+        endMs: endSame && endSame > startMs ? endSame : null,
+        allDay,
+        multiDay: false,
+        venue: venue || o.organizer,
+        city: place?.city ?? o.city,
+        lat: place?.lat ?? o.lat,
+        lon: place?.lon ?? o.lon,
+        url: a[1],
+        image: null,
+        organizer: o.organizer,
+        sourceId: o.id,
+        category: inferCategory(title),
+        free: null,
+        summary: "",
+      });
+    }
   }
   return out;
 }

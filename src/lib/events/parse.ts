@@ -331,7 +331,8 @@ export function palClock(raw: string): [number, number] | null {
  */
 export function parsePalShows(html: string, nowMs: number, tz = DEFAULT_TZ): PublicEvent[] {
   const body = html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, "");
-  const lines = decodeEntities(body.replace(/<[^>]+>/g, "\n"))
+  // A <br> inside a heading is a line wrap, not a new line of text ("Andy & Mandy's Hard<br>Candy Christmas").
+  const lines = decodeEntities(body.replace(/<br\s*\/?>/gi, " ").replace(/<[^>]+>/g, "\n"))
     .split("\n")
     .map((l) => l.replace(/\s+/g, " ").trim())
     .filter(Boolean);

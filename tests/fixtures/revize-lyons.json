@@ -1,0 +1,163 @@
+[
+ {
+  "title": "Meeting Event title",
+  "primary_calendar_name": "Meetings",
+  "calendar_displays": [
+   "1"
+  ],
+  "start": "2025-08-22T19:12:00",
+  "url": "./",
+  "location": "loc",
+  "image": "<img src=\"/revize/plugins/_editforms_/v2/images/placeholder.png\" alt=\"Revize update image\"/>",
+  "rid": "1",
+  "id": "1",
+  "desc": "RTETER",
+  "color": "#3787d8",
+  "end": "2025-08-23T19:12:00",
+  "duration": "24:00",
+  "options": ""
+ },
+ {
+  "title": "Event title",
+  "primary_calendar_name": "Events",
+  "calendar_displays": [
+   "2"
+  ],
+  "start": "2025-08-16T18:26:00",
+  "url": "",
+  "location": "",
+  "image": "<img src=\"/revize/plugins/_editforms_/v2/images/placeholder.png\" alt=\"Revize update image\"/>",
+  "rid": "4",
+  "id": "4",
+  "desc": "",
+  "color": "#3787d8",
+  "end": "2025-08-17T18:26:00",
+  "duration": "24:00",
+  "options": ""
+ },
+ {
+  "title": "Content Editing Training (Part 2)",
+  "primary_calendar_name": "Events",
+  "calendar_displays": [
+   "2"
+  ],
+  "start": "2025-12-16T10:30:00",
+  "url": "www.revize.com",
+  "location": "Williamsfield, IL 61489",
+  "image": "<img src=\"./Photo Gallery/Revize Training Items/revize news 440x250.jpg\" alt=\"revize news 440x250\"/>",
+  "rid": "14",
+  "id": "14",
+  "desc": "Location%3A%20Town%20Hall%3Cbr%20%2F%3E%3Cbr%20%2F%3E%3Ca%20href%3D%22http%3A%2F%2Fwww.FL.gov%22%20target%3D%22_blank%22%3EAgendas%20%26amp%3B%20Minutes%3C%2Fa%3E",
+  "color": "#115d37",
+  "allDay": true,
+  "options": ""
+ },
+ {
+  "title": "2026 The Real Squeal BBQ & Music Festival",
+  "primary_calendar_name": "Meetings",
+  "calendar_displays": [
+   "1"
+  ],
+  "start": "2026-10-02T09:00:00",
+  "url": "",
+  "location": "124 NW Broad St, Lyons, GA 30436",
+  "image": "<img src=\".//IMG_2427.jpeg?t=202607061001310\" alt=\"Revize update image\"/>",
+  "rid": "41",
+  "id": "41",
+  "desc": "%3Cp%3E%3Cbr%20%2F%3E%3Cbr%20%2F%3ELyons%20Main%20Street%20looks%20forward%20to%20welcoming%20you%20to%20the%2016th%20Annual%20The%20Real%20Squeal%20BBQ%20%26amp%3B%20Music%20Festival%20%3Cbr%20%2F%3E%3Cbr%20%2F%3EDowntown%20will%20be%20buzzing%20with%20energy%20as%20locals%20and%20visitors%20kick%20off%20the%20weekend%20with%20food%2C%20fun%2C%20and%20festivities%21%20Be%20sure%20to%20stay%20up%20to%20date%20with%20all%20the%20details%20by%20visiting%20%3Ca%20href%3D%22https%3A%2F%2Fwww.lyonsmainstreet.com%2F2026%2F10%2F02%2F546930%2F2026-the-real-squeal-bbq-music-festival%2F%22%20target%3D%22_blank%22%3Ehere%3C%2Fa%3E.%26nbsp%3B%3C%2Fp%3E%0A%3Cp%3E%3Cstrong%3E%3Cimg%20style%3D%22display%3A%20block%3B%20margin-left%3A%20auto%3B%20margin-right%3A%20auto%3B%22%20alt%3D%22IMG_2427%22%20src%3D%22.%2FIMG_2427.jpeg%22%3E%3C%2Fstrong%3E%3C%2Fp%3E%0A%3Ch3%3E%3Cstrong%3EFriday%2C%20October%203%20%26ndash%3B%20Downtown%20Lyons%20-%209%20am%20-%20until%3C%2Fstrong%3E%3C%2Fh3%3E%0A%3Cul%3E%0A%3Cli%3E%0A%3Cp%3E%3Cstrong%3EClassic%20Car%20Cruise-In%3C%2Fstrong%3E%3C%2Fp%3E%0A%3C%2Fli%3E%0A%3Cli%3E%0A%3Cp%3E%3Cstrong%3EArts%20%26amp%3B%20Crafts%20Vendors%3C%2Fstrong%3E%3C%2Fp%3E%0A%3C%2Fli%3E%0A%3Cli%3E%0A%3Cp%3E%3Cstrong%3EStreet%20Dance%20%26amp%3B%20Live%20Music%3C%2Fstrong%3E%3C%2Fp%3E%0A%3C%2Fli%3E%0A%3Cli%3E%0A%3Cp%3E%3Cstrong%3EFestival%20Food%20Vendors%3C%2Fstrong%3E%3C%2Fp%3E%0A%3C%2Fli%3E%0A%3Cli%3E%0A%3Cp%3E%3Cstrong%3EFireworks%20Finale%3C%2Fstrong%3E%3C%2Fp%3E%0A%3C%2Fli%3E%0A%3C%2Ful%3E",
+  "color": "#114881",
+  "end": "2026-10-02T21:00:00",
+  "duration": "12:00",
+  "options": ""
+ },
+ {
+  "title": "2026 The Real Squeal BBQ & Music Festival",
+  "primary_calendar_name": "Meetings",
+  "calendar_displays": [
+   "1"
+  ],
+  "start": "2026-10-03T09:00:00",
+  "url": "",
+  "location": "Partin Park - 168 Miot Dr. Lyons, GA 30436",
+  "image": "<img src=\".//IMG_2427.jpeg?t=202607061001310\" alt=\"Revize update image\"/>",
+  "rid": "42",
+  "id": "42",
+  "desc": "%3Cp%3E%3Cbr%20%2F%3ELyons%20Main%20Street%20is%20hosting%20the%2016th%20Annual%20The%20Real%20Squeal%20BBQ%20%26amp%3B%20Music%20Festival.%20Bring%20the%20whole%20family%20for%20a%20full%20day%20of%20Southern%20hospitality%2C%20barbecue%20bliss%2C%20and%20cultural%20experiences%21%20For%20more%20information%20be%20sure%20to%20check%20it%20out%20%3Ca%20href%3D%22https%3A%2F%2Fwww.lyonsmainstreet.com%2F2026%2F10%2F03%2F546932%2F2026-the-real-squeal-bbq-music-festival-2%2F%22%20target%3D%22_blank%22%3Ehere%3C%2Fa%3E.%26nbsp%3B%3C%2Fp%3E%0A%3Ch3%3E%3Cstrong%3E%3Cimg%20style%3D%22display%3A%20block%3B%20margin-left%3A%20auto%3B%20margin-right%3A%20auto%3B%22%20alt%3D%22IMG_2427%22%20src%3D%22.%2FIMG_2427.jpeg%22%3E%3C%2Fstrong%3E%3C%2Fh3%3E%0A%3Ch3%3E%3Cstrong%3ESaturday%2C%20October%203%20%26ndash%3B%20Partin%20Park%20-%209%20am%26nbsp%3B%3C%2Fstrong%3E%3C%2Fh3%3E%0A%3Ch3%3E%3Cstrong%3E%26nbsp%3B%3C%2Fstrong%3E%3C%2Fh3%3E%0A%3Cul%3E%0A%3Cli%3E%0A%3Cp%3E%3Cstrong%3EBBQ%20Competition%3C%2Fstrong%3E%3C%2Fp%3E%0A%3C%2Fli%3E%0A%3Cli%3E%0A%3Cp%3E%3Cstrong%3EArts%20%26amp%3B%20Crafts%20Vendors%3C%2Fstrong%3E%3C%2Fp%3E%0A%3C%2Fli%3E%0A%3Cli%3E%0A%3Cp%3E%3Cstrong%3EFestival%20Food%20Vendors%3C%2Fstrong%3E%3C%2Fp%3E%0A%3C%2Fli%3E%0A%3Cli%3E%0A%3Cp%3E%3Cstrong%3EKids%26rsquo%3B%20Play%20Zone%3C%2Fstrong%3E%3C%2Fp%3E%0A%3C%2Fli%3E%0A%3Cli%3E%0A%3Cp%3E%3Cstrong%3ELive%20Entertainment%20and%20More%21%3C%2Fstrong%3E%3C%2Fp%3E%0A%3C%2Fli%3E%0A%3C%2Ful%3E",
+  "color": "#114881",
+  "end": "2026-10-03T16:30:00",
+  "duration": "07:30",
+  "options": ""
+ },
+ {
+  "title": "Live in Lyons",
+  "primary_calendar_name": "Meetings",
+  "calendar_displays": [
+   "1"
+  ],
+  "start": "2026-11-21T18:00:00",
+  "url": "",
+  "location": "111 N Washington St, Lyons, GA 30436",
+  "image": "<img src=\".//IMG_2454.png?t=202607061020020\" alt=\"Revize update image\"/>",
+  "rid": "48",
+  "id": "48",
+  "desc": "%3Cdiv%20style%3D%22text-align%3A%20center%3B%22%3E%3Cimg%20style%3D%22display%3A%20block%3B%20margin-left%3A%20auto%3B%20margin-right%3A%20auto%3B%22%20alt%3D%22Live%20In%20Lyons%20-%20Copy%22%20src%3D%22.%2FLive%20In%20Lyons%20-%20Copy.jpg%22%3E%3Cbr%20%2F%3E%3Cbr%20%2F%3ELyons%20Main%20Street%20will%20be%20hosting%20a%20Fall%20Concert%20Series%20at%20304%20Society%20Garden%20for%20more%20information%20be%20sure%20to%20check%20it%20out%20%3Ca%20href%3D%22https%3A%2F%2Fwww.lyonsmainstreet.com%2F2026%2F11%2F21%2F546948%2Flive-in-lyons-4%2F%22%20target%3D%22_blank%22%3Ehere%3C%2Fa%3E%3Ca%20rel%3D%22noopener%22%20href%3D%22https%3A%2F%2Fwww.lyonsmainstreet.com%2F2026%2F09%2F19%2F546945%2Flive-in-lyons-4%2F%22%20target%3D%22_blank%22%3E%3C%2Fa%3E.%26nbsp%3B%3C%2Fdiv%3E",
+  "color": "#114881",
+  "end": "2026-11-21T21:00:00",
+  "duration": "03:00",
+  "options": ""
+ },
+ {
+  "title": "Lyons Lighted Christmas Parade",
+  "primary_calendar_name": "Meetings",
+  "calendar_displays": [
+   "1"
+  ],
+  "start": "2026-12-04T18:00:00",
+  "url": "",
+  "location": "Partin Park 168 Miot St Lyons,GA 30436",
+  "image": "<img src=\".//IMG_2455.jpeg?t=202607061024240\" alt=\"Revize update image\"/>",
+  "rid": "49",
+  "id": "49",
+  "desc": "%3Cdiv%20style%3D%22text-align%3A%20center%3B%22%3E%3Cimg%20style%3D%22display%3A%20block%3B%20margin-left%3A%20auto%3B%20margin-right%3A%20auto%3B%22%20alt%3D%22IMG_2455%22%20src%3D%22.%2FIMG_2455.jpeg%22%3E%3Cbr%20%2F%3EJoin%20us%20Friday%20December%204th%20for%20the%20Lyons%20Lighted%20Christmas%20Parade.%20For%20More%20information%20be%20sure%20to%20check%20it%20out%20%3Ca%20href%3D%22https%3A%2F%2Fwww.lyonsmainstreet.com%2F2026%2F12%2F04%2F546941%2Flyons-lighted-christmas-parade-5%2F%22%20target%3D%22_blank%22%3Ehere%3C%2Fa%3E.%20%26nbsp%3B%3C%2Fdiv%3E",
+  "color": "#114881",
+  "end": "2026-12-04T20:30:00",
+  "duration": "02:30",
+  "options": ""
+ },
+ {
+  "title": "2026 Santa on Main",
+  "primary_calendar_name": "Meetings",
+  "calendar_displays": [
+   "1"
+  ],
+  "start": "2026-12-17T16:00:00",
+  "url": "",
+  "location": "124 NW Broad St, Lyons, GA 30436",
+  "image": "<img src=\"/revize/plugins/_editforms_/v2/images/placeholder.png\" alt=\"Revize update image\"/>",
+  "rid": "50",
+  "id": "50",
+  "desc": "%3Cimg%20%2F%3EJoin%20Lyons%20Main%20Street%20in%20Downtown%20Lyons%20for%20Santa%20on%20Main%21%20Bring%20the%20kids%20for%20pictures%20with%20Santa%2C%20Christmas%20crafts%2C%20cookies%2C%20cocoa%2C%20and%20a%20visit%20from%20our%20special%20guest%26mdash%3BThe%20Grinch%20A%20festive%20evening%20of%20family%20fun%20awaits%21%20For%20more%20information%20be%20sure%20to%20check%20it%20out%20%3Ca%20href%3D%22https%3A%2F%2Fwww.lyonsmainstreet.com%2F2026%2F12%2F17%2F546939%2F2026-santa-on-main%2F%22%20target%3D%22_blank%22%3Ehere%3C%2Fa%3E.",
+  "color": "#114881",
+  "end": "2026-12-17T18:00:00",
+  "duration": "02:00",
+  "options": ""
+ },
+ {
+  "title": "City Council Meeting",
+  "primary_calendar_name": "Events",
+  "calendar_displays": [
+   "2"
+  ],
+  "start": "2026-12-01T18:00:00",
+  "url": "",
+  "location": "161 NE Broad St Lyons,GA 30436",
+  "image": "<img src=\"./Football Program Ad (8.5x11).png\" alt=\"Football Program Ad (8.5x11)\"/>",
+  "rid": "57",
+  "id": "57",
+  "desc": "%3Cdiv%20id%3D%22modal-event-description%22%20class%3D%22modal-description%20clearfix%22%3E%0A%3Cp%3EMeetings%20are%20held%20at%20Lyons%20City%20Hall%2C%20161%20NE%20Broad%20Street%2C%20Lyons%2C%20GA%2C%20and%20are%20open%20to%20the%20public.%20Regular%20council%20meetings%20are%20typically%20held%20on%20the%20first%20Tuesday%20of%20each%20month%20at%206%3A00%20p.m.%3C%2Fp%3E%0A%3C%2Fdiv%3E",
+  "color": "#115d37",
+  "end": "2026-12-01T19:00:00",
+  "duration": "01:00",
+  "options": ""
+ }
+]
