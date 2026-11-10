@@ -754,6 +754,18 @@ export async function refreshVidaliaPublicEvents(sql: Sql): Promise<void> {
       location: "Downtown Vidalia",
       starts_at: easternDateISO("2026-09-17", 18, 0),
     },
+    {
+      // Owner saw the posters around town, 2026-11-10. The museum's own events feed listed nothing upcoming,
+      // so no calendar we read carried it. Details are from the poster only.
+      id: "evt_altama_porchfest_20261114",
+      community_id: "comm_vidalia",
+      title: "Vidalia Porchfest 2026",
+      description:
+        "Public listing from the Altama Museum of Art & History's posters around town: Saturday Nov 14, 2026, 11:00am to 5:00pm. Live music on porches, food trucks and an artisan market. Details at altamamuseum.org/porchfest or @AltamaMuseum on Facebook; confirm before you go.",
+      kind: "family",
+      location: "Around the Altama Museum of Art & History, Vidalia",
+      starts_at: easternDateISO("2026-11-14", 11, 0),
+    },
   ];
 
   for (const row of listings) {
